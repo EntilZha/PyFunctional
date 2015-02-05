@@ -8,7 +8,7 @@ setup(
     author_email="pedro@snowgeek.org",
     license="MIT",
     keywords="functional scala",
-    package_data=find_packages(exclude=['contrib', 'docs', 'tests*']),
+    package_data=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version="0.0.0",
     classifiers=[
         "Development Status :: 3 - Alpha",

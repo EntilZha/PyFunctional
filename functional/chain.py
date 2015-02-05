@@ -5,18 +5,78 @@ class FunctionalSequence:
         else:
             self.sequence = list(sequence)
 
+    def __eq__(self, other):
+        return self.sequence == other
+
+    def __ne__(self, other):
+        return self.sequence != other
+
+    def __hash__(self):
+        return hash(self.sequence)
+
+    def __repr__(self):
+        return repr(self.sequence)
+
+    def __str__(self):
+        return str(self.sequence)
+
+    def __unicode__(self):
+        return unicode(self.sequence)
+
+    def __format__(self, formatstr):
+        return format(self.sequence, formatstr)
+
+    def __nonzero__(self):
+        return self.size() != 0
+
+    def __len__(self):
+        return len(self.sequence)
+
+    def __getitem__(self, key):
+        return self.sequence[key]
+
+    def __setitem__(self, key, value):
+        self.sequence[key] = value
+
+    def __delitem__(self, key):
+        del self.sequence[key]
+
+    def __iter__self(self):
+        return iter(self.sequence)
+
+    def __reversed__(self):
+        return reversed(self.sequence)
+
+    def __contains__(self, item):
+        return self.sequence.__contains__(item)
+
+    def head(self):
+        return FunctionalSequence(self.sequence[0])
+
+    def first(self):
+        return FunctionalSequence(self.sequence[0])
+
+    def last(self):
+        return FunctionalSequence(self.sequence[-1])
+
+    def drop(self, n):
+        return FunctionalSequence(self.sequence[n:])
+
+    def take(self, n):
+        return FunctionalSequence(self.sequence[:n])
+
     def map(self, f):
         return FunctionalSequence(map(f, self.sequence))
 
     def filter(self, f):
         return FunctionalSequence(filter(f, self.sequence))
 
-    def filterNot(self, f):
+    def filter_not(self, f):
         g = lambda x: not f(x)
         return FunctionalSequence(filter(g, self.sequence))
 
-    def reduce(self, f, initial=None):
-        return reduce(f, self.sequence, initial=initial)
+    def reduce(self, f):
+        return reduce(f, self.sequence)
 
     def count(self):
         return len(self.sequence)
@@ -55,13 +115,13 @@ class FunctionalSequence:
         else:
             return None
 
-    def flatMap(self, f):
+    def flat_map(self, f):
         l = []
         for e in self.sequence:
             l.extend(f(e))
         return l
 
-    def groupBy(self, f):
+    def group_by(self, f):
         result = {}
         for e in self.sequence:
             if result.get(f(e)):
@@ -73,7 +133,7 @@ class FunctionalSequence:
     def empty(self):
         return len(self.sequence) == 0
 
-    def nonEmpty(self):
+    def non_empty(self):
         return len(self.sequence) != 0
 
     def string(self, separator):
@@ -91,7 +151,7 @@ class FunctionalSequence:
 
     def partition(self, f):
         p1 = self.filter(f)
-        p2 = self.filternot(f)
+        p2 = self.filter_not(f)
         return p1, p2
 
     def product(self):
@@ -106,16 +166,16 @@ class FunctionalSequence:
     def slice(self, start, until):
         return FunctionalSequence(self.sequence[start:until])
 
-    def sum(self, start=None):
-        return sum(self.sequence, start=start)
+    def sum(self):
+        return sum(self.sequence)
 
     def set(self):
         return set(self.sequence)
 
-    def zip(self, seq):
-        return FunctionalSequence(zip(self.sequence, seq))
+    def zip(self, sequence):
+        return FunctionalSequence(zip(self.sequence, sequence))
 
-    def zipWithIndex(self):
+    def zip_with_index(self):
         return FunctionalSequence(enumerate(self.sequence))
 
     def sorted(self, comp=None, key=None, reverse=False):
@@ -126,4 +186,4 @@ class FunctionalSequence:
 
 
 def seq(l):
-    FunctionalSequence(l)
+    return FunctionalSequence(l)
