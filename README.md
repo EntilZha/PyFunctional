@@ -15,7 +15,7 @@ seq(l).filter(f).map(g).reduce(q)
 ```
 
 # Usage
-To use ScalaFunctional, you need only include: `from functional import seq`. `seq` us a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `FunctionalSequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
+To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `FunctionalSequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
 
 ## List of supported functions
 * head, first: get first element
@@ -50,5 +50,9 @@ To use ScalaFunctional, you need only include: `from functional import seq`. `se
 
 ## Future work
 * Add more robust support and testing for dictionary manipulation
-* Add concurrent version of FunctionalSequence, probably using `ThreadPoolExecutor` from Python futures.
+* Add concurrent version of `FunctionalSequence`, probably using `ThreadPoolExecutor` from Python futures.
 * Continue to find bugs and make improvements in general
+* Continue adding tests
+
+## Contributing and Bug Fixes
+This project is very, very new, so any feedback would be great!
