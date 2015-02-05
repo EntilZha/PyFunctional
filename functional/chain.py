@@ -1,6 +1,6 @@
 class FunctionalSequence:
     def __init__(self, sequence):
-        if isinstance(sequence, list):
+        if isinstance(sequence, list) or isinstance(sequence, dict):
             self.sequence = sequence
         else:
             self.sequence = list(sequence)
@@ -45,7 +45,7 @@ class FunctionalSequence:
         return iter(self.sequence)
 
     def __reversed__(self):
-        return reversed(self.sequence)
+        return FunctionalSequence(reversed(self.sequence))
 
     def __contains__(self, item):
         return self.sequence.__contains__(item)
@@ -88,10 +88,10 @@ class FunctionalSequence:
         return len(self.sequence)
 
     def reverse(self):
-        return reversed(self.sequence)
+        return reversed(self)
 
     def distinct(self):
-        return list(set(self.sequence))
+        return FunctionalSequence(list(set(self.sequence)))
 
     def any(self):
         return any(self.sequence)
@@ -100,7 +100,7 @@ class FunctionalSequence:
         return all(self.sequence)
 
     def enumerate(self, start=0):
-        return enumerate(self.sequence, start=start)
+        return FunctionalSequence(enumerate(self.sequence, start=start))
 
     def max(self):
         return max(self.sequence)
@@ -119,7 +119,7 @@ class FunctionalSequence:
         l = []
         for e in self.sequence:
             l.extend(f(e))
-        return l
+        return FunctionalSequence(l)
 
     def group_by(self, f):
         result = {}
@@ -128,7 +128,7 @@ class FunctionalSequence:
                 result.get(f(e)).append(e)
             else:
                 result[f(e)] = [e]
-        return result
+        return FunctionalSequence(result)
 
     def empty(self):
         return len(self.sequence) == 0
@@ -157,12 +157,6 @@ class FunctionalSequence:
     def product(self):
         return self.reduce(lambda x, y: x * y)
 
-    def repr(self):
-        return self.map(repr)
-
-    def str(self):
-        return self.map(str)
-
     def slice(self, start, until):
         return FunctionalSequence(self.sequence[start:until])
 
@@ -176,7 +170,7 @@ class FunctionalSequence:
         return FunctionalSequence(zip(self.sequence, sequence))
 
     def zip_with_index(self):
-        return FunctionalSequence(enumerate(self.sequence))
+        return FunctionalSequence(list(enumerate(self.sequence)))
 
     def sorted(self, comp=None, key=None, reverse=False):
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
