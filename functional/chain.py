@@ -59,6 +59,9 @@ class FunctionalSequence:
     def last(self):
         return FunctionalSequence(self.sequence[-1])
 
+    def tail(self):
+        return FunctionalSequence(self.sequence[-1])
+
     def drop(self, n):
         return FunctionalSequence(self.sequence[n:])
 
@@ -177,6 +180,10 @@ class FunctionalSequence:
 
     def list(self):
         return self.sequence
+
+    def foreach(self, f):
+        for e in self.sequence:
+            f(e)
 
 
 def seq(l):

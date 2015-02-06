@@ -8,12 +8,12 @@ setup(
     author_email="pedro@snowgeek.org",
     license="MIT",
     keywords="functional scala",
-    package_data=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
-    version="0.0.0",
+    packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
+    version="0.0.1",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: 2.7"
+        "Programming Language :: Python :: 2.7"
     ]
 )
