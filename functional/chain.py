@@ -52,6 +52,18 @@ class FunctionalSequence(object):
     def __contains__(self, item):
         return self.sequence.__contains__(item)
 
+    def values(self):
+        if isinstance(self.sequence, dict):
+            return FunctionalSequence(self.sequence.values())
+        else:
+            raise TypeError("Given sequence is not of type dict")
+
+    def keys(self):
+        if isinstance(self.sequence, dict):
+            return FunctionalSequence(self.sequence.keys())
+        else:
+            raise TypeError("Given sequence is not of type dict")
+
     def head(self):
         return FunctionalSequence(self.sequence[0])
 
@@ -186,6 +198,18 @@ class FunctionalSequence(object):
     def foreach(self, f):
         for e in self.sequence:
             f(e)
+
+    def exists(self, f):
+        for e in self.sequence:
+            if f(e):
+                return True
+        return False
+
+    def forall(self, f):
+        for e in self.sequence:
+            if not f(e):
+                return False
+        return True
 
 
 def seq(l):
