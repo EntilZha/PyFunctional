@@ -197,3 +197,7 @@ class TestChain(unittest.TestCase):
         result = seq(l).enumerate()
         self.assertEqual(result, e)
         self.assertType(result)
+
+    def test_python_slice(self):
+        l = [1, 2, 3]
+        self.assertType(seq(l)[0:1])

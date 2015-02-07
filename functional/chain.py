@@ -1,4 +1,4 @@
-class FunctionalSequence:
+class FunctionalSequence(object):
     def __init__(self, sequence):
         if isinstance(sequence, list) or isinstance(sequence, dict):
             self.sequence = sequence
@@ -33,6 +33,8 @@ class FunctionalSequence:
         return len(self.sequence)
 
     def __getitem__(self, key):
+        if isinstance(key, slice):
+            return FunctionalSequence(self.sequence[key])
         return self.sequence[key]
 
     def __setitem__(self, key, value):
