@@ -1,9 +1,17 @@
 class FunctionalSequence(object):
     def __init__(self, sequence):
-        if isinstance(sequence, list) or isinstance(sequence, dict):
+        if isinstance(sequence, FunctionalSequence):
+            self.sequence = sequence.__get_base_sequence__()
+        elif isinstance(sequence, list) or isinstance(sequence, dict):
             self.sequence = sequence
         else:
             self.sequence = list(sequence)
+
+    def __get_base_sequence__(self):
+        if isinstance(self.sequence, FunctionalSequence):
+            return self.sequence.__get_base_sequence__()
+        else:
+            return self.sequence
 
     def __eq__(self, other):
         return self.sequence == other

@@ -7,6 +7,9 @@ class TestChain(unittest.TestCase):
     def assertType(self, s):
         self.assertTrue(isinstance(s, FunctionalSequence))
 
+    def assertNotType(self, s):
+        self.assertFalse(isinstance(s, FunctionalSequence))
+
     def test_eq(self):
         l = [1, 2, 3]
         self.assertEqual(seq(l), seq(l))
@@ -201,3 +204,10 @@ class TestChain(unittest.TestCase):
     def test_python_slice(self):
         l = [1, 2, 3]
         self.assertType(seq(l)[0:1])
+
+    def test_base_sequence(self):
+        l = []
+        self.assertType(seq(l))
+        self.assertNotType(seq(l).sequence)
+        self.assertType(seq(seq(l)))
+        self.assertNotType(seq(seq(l)).sequence)
