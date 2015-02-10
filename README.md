@@ -9,6 +9,10 @@ q = lambda x, y: 2 * x + y
 
 # Python style
 reduce(q, map(g, filter(f, l)))
+
+# Python list comprehension
+reduce(q, [g(x) for x in l if f(x)])
+
 # ScalaFunction style
 from functional import seq
 seq(l).filter(f).map(g).reduce(q)
