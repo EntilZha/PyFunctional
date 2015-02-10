@@ -10,7 +10,7 @@ q = lambda x, y: 2 * x + y
 # Python style
 reduce(q, map(g, filter(f, l)))
 # ScalaFunction style
-from functional.chain import seq
+from functional import seq
 seq(l).filter(f).map(g).reduce(q)
 ```
 
