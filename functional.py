@@ -161,7 +161,7 @@ class FunctionalSequence(object):
     def non_empty(self):
         return len(self.sequence) != 0
 
-    def string(self, separator):
+    def make_string(self, separator):
         if self.empty():
             return ""
         first = True
@@ -200,10 +200,13 @@ class FunctionalSequence(object):
     def sorted(self, comp=None, key=None, reverse=False):
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
 
-    def list(self):
+    def to_list(self):
         return self.sequence
 
-    def foreach(self, f):
+    def list(self):
+        return self.to_list()
+
+    def for_each(self, f):
         for e in self.sequence:
             f(e)
 
@@ -213,11 +216,17 @@ class FunctionalSequence(object):
                 return True
         return False
 
-    def forall(self, f):
+    def for_all(self, f):
         for e in self.sequence:
             if not f(e):
                 return False
         return True
+
+    def to_dict(self):
+        d = {}
+        for e in self.sequence:
+            d[e[0]] = e[1]
+        return d
 
 
 def seq(l):

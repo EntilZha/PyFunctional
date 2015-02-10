@@ -150,13 +150,13 @@ class TestChain(unittest.TestCase):
     def test_non_empty(self):
         self.assertTrue(seq([1]).non_empty())
 
-    def test_string(self):
+    def test_make_string(self):
         l = [1, 2, 3]
         expect1 = "1 2 3"
         expect2 = "1:2:3"
         s = seq(l)
-        self.assertEqual(expect1, s.string(" "))
-        self.assertEqual(expect2, s.string(":"))
+        self.assertEqual(expect1, s.make_string(" "))
+        self.assertEqual(expect2, s.make_string(":"))
 
     def test_partition(self):
         l = [-1, -2, -3, 1, 2, 3]
@@ -211,3 +211,8 @@ class TestChain(unittest.TestCase):
         self.assertNotType(seq(l).sequence)
         self.assertType(seq(seq(l)))
         self.assertNotType(seq(seq(l)).sequence)
+
+    def test_to_dict(self):
+        l = [(1, 2), (2, 10), (7, 2)]
+        d = {1: 2, 2: 10, 7: 2}
+        self.assertEqual(seq(l).to_dict(), d)
