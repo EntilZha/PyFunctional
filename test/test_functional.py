@@ -1,6 +1,6 @@
 import unittest
 
-from functional.chain import seq, FunctionalSequence
+from functional import seq, FunctionalSequence
 
 
 class TestChain(unittest.TestCase):
