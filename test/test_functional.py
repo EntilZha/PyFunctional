@@ -1,6 +1,6 @@
 import unittest
 
-from functional.chain import seq, FunctionalSequence
+from functional.chain import seq, FunctionalSequence, _wrap
 
 
 class TestChain(unittest.TestCase):
@@ -278,12 +278,14 @@ class TestChain(unittest.TestCase):
         self.assertEqual(l.head(), 1)
         l = seq([[1, 2], 3, 4])
         self.assertEqual(l.head(), [1, 2])
+        self.assertType(l.head())
 
     def test_first(self):
         l = seq([1, 2, 3])
         self.assertEqual(l.first(), 1)
         l = seq([[1, 2], 3, 4])
-        self.assertEqual(l.head(), [1, 2])
+        self.assertEqual(l.first(), [1, 2])
+        self.assertType(l.first())
 
     def test_tail(self):
         l = seq([1, 2, 3, 4])
@@ -295,3 +297,12 @@ class TestChain(unittest.TestCase):
         self.assertEqual(l.last(), 3)
         l = seq([1, 2, [3, 4]])
         self.assertEqual(l.last(), [3, 4])
+        self.assertType(l.last())
+
+    def test_wrap(self):
+        self.assertType(_wrap([1, 2]))
+        self.assertType(_wrap((1, 2)))
+        self.assertNotType(_wrap(1))
+        self.assertNotType(_wrap(1.0))
+        self.assertNotType("test")
+        self.assertNotType(True)
