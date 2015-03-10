@@ -1,1 +1,1 @@
-__author__ = 'prodriguez'
+from chain import seq
