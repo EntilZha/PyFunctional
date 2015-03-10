@@ -1,3 +1,7 @@
+<a href="https://travis-ci.org/EntilZha/ScalaFunctional">
+	<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>
+</a>
+
 # Motivation
 Having programmed functionally in Scala and now using Python I missed the sytax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
 
