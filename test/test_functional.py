@@ -276,10 +276,14 @@ class TestChain(unittest.TestCase):
     def test_head(self):
         l = seq([1, 2, 3])
         self.assertEqual(l.head(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head(), [1, 2])
 
     def test_first(self):
         l = seq([1, 2, 3])
         self.assertEqual(l.first(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head(), [1, 2])
 
     def test_tail(self):
         l = seq([1, 2, 3, 4])
@@ -289,3 +293,5 @@ class TestChain(unittest.TestCase):
     def test_last(self):
         l = seq([1, 2, 3])
         self.assertEqual(l.last(), 3)
+        l = seq([1, 2, [3, 4]])
+        self.assertEqual(l.last(), [3, 4])

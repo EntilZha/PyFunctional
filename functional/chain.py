@@ -5,7 +5,7 @@ from functools import reduce
 class FunctionalSequence(object):
     def __init__(self, sequence):
         if isinstance(sequence, FunctionalSequence):
-            self.sequence = sequence.__get_base_sequence__()
+            self.sequence = sequence._get_base_sequence()
         elif isinstance(sequence, list):
             self.sequence = sequence
         elif isinstance(sequence, collections.Iterable):
@@ -13,9 +13,9 @@ class FunctionalSequence(object):
         else:
             raise TypeError("Given sequence must be a list")
 
-    def __get_base_sequence__(self):
+    def _get_base_sequence(self):
         if isinstance(self.sequence, FunctionalSequence):
-            return self.sequence.__get_base_sequence__()
+            return self.sequence._get_base_sequence()
         else:
             return self.sequence
 
@@ -67,13 +67,13 @@ class FunctionalSequence(object):
         return self.sequence.__contains__(item)
 
     def head(self):
-        return self.sequence[0]
+        return _wrap(self.sequence[0])
 
     def first(self):
-        return self.sequence[0]
+        return _wrap(self.sequence[0])
 
     def last(self):
-        return self.sequence[-1]
+        return _wrap(self.sequence[-1])
 
     def tail(self):
         return FunctionalSequence(self.sequence[1:])
@@ -252,3 +252,21 @@ class FunctionalSequence(object):
 
 def seq(l):
     return FunctionalSequence(l)
+
+
+def _is_primitive(v):
+    return isinstance(v, str) \
+        or isinstance(v, bool) \
+        or isinstance(v, str) \
+        or isinstance(v, int) \
+        or isinstance(v, float) \
+        or isinstance(v, long) \
+        or isinstance(v, complex) \
+        or isinstance(v, unicode)
+
+
+def _wrap(v):
+    if _is_primitive(v):
+        return v
+    else:
+        return FunctionalSequence(v)
