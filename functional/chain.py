@@ -1,4 +1,5 @@
 import collections
+from functools import reduce
 
 
 class FunctionalSequence(object):
