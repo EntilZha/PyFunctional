@@ -52,7 +52,9 @@ seq([1, 2, 3])[-1]
 * head, first: get first element
 * last, tail: get last element
 * drop: drop first n elements
+* drop_while: drop first elements using f
 * take: take first n elements
+* take_while: take first elements using f
 * map: map f onto sequence
 * filter: filter sequence by f
 * filter_not: filter sequence by not f
@@ -69,6 +71,7 @@ seq([1, 2, 3])[-1]
 * max
 * min
 * find
+* flatten
 * flat_map
 * group_by
 * empty

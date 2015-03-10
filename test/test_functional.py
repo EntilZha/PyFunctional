@@ -35,6 +35,22 @@ class TestChain(unittest.TestCase):
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
 
+    def test_drop_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [4, 5, 6, 7, 8]
+        result = seq(l).drop_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
+    def test_take_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [1, 2, 3]
+        result = seq(l).take_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
     def test_map(self):
         f = lambda x: x * 2
         l = [1, 2, 0, 5]
@@ -127,6 +143,13 @@ class TestChain(unittest.TestCase):
         g = lambda x: False
         self.assertEqual(3, seq(l).find(f))
         self.assertIsNone(seq(l).find(g))
+
+    def test_flatten(self):
+        l = [[1, 1, 1], [2, 2, 2], [[3, 3], [4, 4]]]
+        expect = [1, 1, 1, 2, 2, 2, [3, 3], [4, 4]]
+        result = seq(l).flatten()
+        self.assertEqual(expect, result)
+        self.assertType(result)
 
     def test_flat_map(self):
         l = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
