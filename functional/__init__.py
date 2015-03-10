@@ -1,1 +1,1 @@
-from chain import seq
+from functional.chain import seq
