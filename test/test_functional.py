@@ -232,3 +232,17 @@ class TestChain(unittest.TestCase):
         e = {"a": 6, "b": 0, "c": 15}.items()
         result = seq(d).reduce_by_key(lambda x, y: x + y)
         self.assertEqual(result, e)
+
+    def test_iter(self):
+        l = list(enumerate(seq([1, 2, 3])))
+        e = list(enumerate([1, 2, 3]))
+        self.assertEqual(l, e)
+        l = seq([1, 2, 3])
+        e = [1, 2, 3]
+        result = []
+        for n in l:
+            result.append(n)
+        self.assertEqual(result, e)
+        self.assertType(l)
+
+
