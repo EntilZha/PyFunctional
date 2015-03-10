@@ -224,16 +224,14 @@ class TestChain(unittest.TestCase):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
         e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
         result = seq(l).group_by_key()
-        for e0, e1 in zip(result, e):
-            self.assertEqual(e0, e1)
+        self.assertSequenceEqual(result, e)
         self.assertType(result)
 
     def test_reduce_by_key(self):
         d = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
         e = {"a": 6, "b": 0, "c": 15}.items()
         result = seq(d).reduce_by_key(lambda x, y: x + y)
-        for e0, e1 in zip(result, e):
-            self.assertEqual(e0, e1)
+        self.assertSequenceEqual(result, e)
         self.assertType(result)
 
     def test_iter(self):
