@@ -134,6 +134,9 @@ class FunctionalSequence(object):
         else:
             return None
 
+    def flatten(self):
+        return self.flat_map(lambda x: x)
+
     def flat_map(self, f):
         l = []
         for e in self.sequence:

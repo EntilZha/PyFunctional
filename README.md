@@ -69,6 +69,7 @@ seq([1, 2, 3])[-1]
 * max
 * min
 * find
+* flatten
 * flat_map
 * group_by
 * empty

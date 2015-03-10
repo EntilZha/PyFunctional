@@ -128,6 +128,13 @@ class TestChain(unittest.TestCase):
         self.assertEqual(3, seq(l).find(f))
         self.assertIsNone(seq(l).find(g))
 
+    def test_flatten(self):
+        l = [[1, 1, 1], [2, 2, 2], [[3, 3], [4, 4]]]
+        expect = [1, 1, 1, 2, 2, 2, [3, 3], [4, 4]]
+        result = seq(l).flatten()
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
     def test_flat_map(self):
         l = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
         f = lambda x: x
