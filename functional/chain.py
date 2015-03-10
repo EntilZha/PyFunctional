@@ -228,6 +228,14 @@ class FunctionalSequence(object):
             d[e[0]] = e[1]
         return d
 
+    def reduce_by_key(self, f):
+        if not isinstance(self.sequence, dict):
+            raise TypeError("Given sequence is not of type dict")
+        result = {}
+        for k in self.sequence:
+            result[k] = reduce(f, self.sequence[k])
+        return FunctionalSequence(result)
+
 
 def seq(l):
     return FunctionalSequence(l)

@@ -1,6 +1,6 @@
 import unittest
 
-from functional import seq, FunctionalSequence
+from functional.chain import seq, FunctionalSequence
 
 
 class TestChain(unittest.TestCase):
@@ -216,3 +216,9 @@ class TestChain(unittest.TestCase):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         self.assertEqual(seq(l).to_dict(), d)
+
+    def test_reduce_by_key(self):
+        d = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}
+        e = {"a": 6, "b": 0, "c": 15}
+        result = seq(d).reduce_by_key(lambda x, y: x + y)
+        self.assertEqual(result, e)
