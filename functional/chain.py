@@ -1,4 +1,5 @@
 import collections
+import sys
 from functools import reduce
 
 
@@ -254,15 +255,22 @@ def seq(l):
     return FunctionalSequence(l)
 
 
+if sys.version < '3':
+    _integer_types = (int, long)
+    _str_types = (str, unicode)
+else:
+    _integer_types = int
+    _str_types = str
+
+
 def _is_primitive(v):
     return isinstance(v, str) \
         or isinstance(v, bool) \
-        or isinstance(v, str) \
-        or isinstance(v, int) \
+        or isinstance(v, _str_types) \
+        or isinstance(v, _integer_types) \
         or isinstance(v, float) \
-        or isinstance(v, long) \
         or isinstance(v, complex) \
-        or isinstance(v, unicode)
+        or isinstance(v, bytes)
 
 
 def _wrap(v):
