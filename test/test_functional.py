@@ -273,4 +273,19 @@ class TestChain(unittest.TestCase):
         self.assertEqual(result, e)
         self.assertType(l)
 
+    def test_head(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.head(), 1)
 
+    def test_first(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.first(), 1)
+
+    def test_tail(self):
+        l = seq([1, 2, 3, 4])
+        expect = [2, 3, 4]
+        self.assertSequenceEqual(l.tail(), expect)
+
+    def test_last(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.last(), 3)

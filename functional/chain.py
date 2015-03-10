@@ -67,16 +67,16 @@ class FunctionalSequence(object):
         return self.sequence.__contains__(item)
 
     def head(self):
-        return FunctionalSequence(self.sequence[0])
+        return self.sequence[0]
 
     def first(self):
-        return FunctionalSequence(self.sequence[0])
+        return self.sequence[0]
 
     def last(self):
-        return FunctionalSequence(self.sequence[-1])
+        return self.sequence[-1]
 
     def tail(self):
-        return FunctionalSequence(self.sequence[-1])
+        return FunctionalSequence(self.sequence[1:])
 
     def drop(self, n):
         return FunctionalSequence(self.sequence[n:])
