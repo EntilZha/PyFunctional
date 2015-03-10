@@ -68,10 +68,50 @@ class FunctionalSequence(object):
         return self.sequence.__contains__(item)
 
     def head(self):
+        """
+        Returns the first element of the sequence.
+
+        >>> seq([1, 2, 3]).head()
+        1
+
+        Raises IndexError when the sequence is empty.
+
+        >>> seq([]).head()
+        Traceback (most recent call last):
+         ...
+        IndexError: list index out of range
+        """
         return _wrap(self.sequence[0])
 
     def first(self):
+        """
+        Returns the first element of the sequence.
+
+        >>> seq([1, 2, 3]).head()
+        1
+
+        Raises IndexError when the sequence is empty.
+
+        >>> seq([]).head()
+        Traceback (most recent call last):
+         ...
+        IndexError: list index out of range
+        """
         return _wrap(self.sequence[0])
+
+    def head_option(self):
+        """
+        Returns the first element of the sequence or None, if the sequence is empty.
+
+        >>> seq([1, 2, 3]).head_option()
+        1
+
+        >>> seq([]).head_option()
+        None
+        """
+        if not self.sequence:
+            return None
+        return self.head()
 
     def last(self):
         return _wrap(self.sequence[-1])

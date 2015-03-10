@@ -57,6 +57,7 @@ seq([1, 2, 3])[-1]
 
 ## List of supported functions
 * head, first: get first element
+* head_option: get first element or None
 * last: get last element
 * tail: get everything except first element
 * drop: drop first n elements
