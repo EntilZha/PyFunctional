@@ -306,3 +306,11 @@ class TestChain(unittest.TestCase):
         self.assertNotType(_wrap(1.0))
         self.assertNotType("test")
         self.assertNotType(True)
+
+    def test_add(self):
+        l0 = seq([1, 2, 3])
+        l1 = seq([4, 5, 6])
+        l2 = [4, 5, 6]
+        expect = [1, 2, 3, 4, 5, 6]
+        self.assertEqual(l0 + l1, expect)
+        self.assertEqual(l0 + l2, expect)

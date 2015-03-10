@@ -67,6 +67,12 @@ class FunctionalSequence(object):
     def __contains__(self, item):
         return self.sequence.__contains__(item)
 
+    def __add__(self, other):
+        if isinstance(other, FunctionalSequence):
+            return FunctionalSequence(self.sequence + other.sequence)
+        else:
+            return FunctionalSequence(self.sequence + other)
+
     def head(self):
         return _wrap(self.sequence[0])
 
