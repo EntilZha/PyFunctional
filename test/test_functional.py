@@ -137,6 +137,14 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 3]
         self.assertEqual(1, seq(l).min())
 
+    def test_max_by(self):
+        l = ["aa", "bbbb", "c", "dd"]
+        self.assertEqual("bbbb", seq(l).max_by(len))
+
+    def test_min_by(self):
+        l = ["aa", "bbbb", "c", "dd"]
+        self.assertEqual("c", seq(l).min_by(len))
+
     def test_find(self):
         l = [1, 2, 3]
         f = lambda x: x == 3

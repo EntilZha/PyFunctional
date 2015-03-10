@@ -77,8 +77,8 @@ seq([1, 2, 3])[-1]
 * all
 * for_all
 * enumerate, zip_with_index
-* max
-* min
+* max, max_by
+* min, min_by
 * find
 * flatten
 * flat_map

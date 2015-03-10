@@ -175,10 +175,106 @@ class FunctionalSequence(object):
         return FunctionalSequence(enumerate(self.sequence, start=start))
 
     def max(self):
-        return max(self.sequence)
+        """
+        Returns the largest element in the sequence.
+        If the sequence has multiple maximal elements, only the first one is returned.
+
+        The compared objects must have defined comparison methods.
+        Raises TypeError when the objects are not comparable.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).max()
+        5
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').max()
+        'xyz'
+
+        >>> seq([1, "a"]).max()
+        Traceback (most recent call last):
+         ...
+        TypeError: unorderable types: int() < str()
+
+        >>> seq([]).max()
+        Traceback (most recent call last):
+         ...
+        ValueError: max() arg is an empty sequence
+        """
+        return _wrap(max(self.sequence))
 
     def min(self):
-        return min(self.sequence)
+        """
+        Returns the smallest element in the sequence.
+        If the sequence has multiple minimal elements, only the first one is returned.
+
+        The compared objects must have defined comparison methods.
+        Raises TypeError when the objects are not comparable.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).min()
+        1
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').min()
+        'aa'
+
+        >>> seq([1, "a"]).min()
+        Traceback (most recent call last):
+         ...
+        TypeError: unorderable types: int() < str()
+
+        >>> seq([]).min()
+        Traceback (most recent call last):
+         ...
+        ValueError: min() arg is an empty sequence
+        """
+        return _wrap(min(self.sequence))
+
+    def max_by(self, f):
+        """
+        Returns the largest element in the sequence.
+        Provided function is used to generate key used to compare the elements.
+        If the sequence has multiple maximal elements, only the first one is returned.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).max_by(lambda num: num % 4)
+        3
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').max_by(len)
+        'abcd'
+
+        >>> seq([]).max_by(lambda x: x)
+        Traceback (most recent call last):
+         ...
+        ValueError: max() arg is an empty sequence
+        """
+        return _wrap(max(self.sequence, key=f))
+
+    def min_by(self, f):
+        """
+        Returns the smallest element in the sequence.
+        Provided function is used to generate key used to compare the elements.
+        If the sequence has multiple minimal elements, only the first one is returned.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).min_by(lambda num: num % 6)
+        5
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').min_by(len)
+        'aa'
+
+        >>> seq([]).min_by(lambda x: x)
+        Traceback (most recent call last):
+         ...
+        ValueError: min() arg is an empty sequence
+        """
+        return _wrap(min(self.sequence, key=f))
 
     def find(self, f):
         for e in self.sequence:
