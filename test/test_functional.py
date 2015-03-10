@@ -35,6 +35,22 @@ class TestChain(unittest.TestCase):
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
 
+    def test_drop_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [4, 5, 6, 7, 8]
+        result = seq(l).drop_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
+    def test_take_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [1, 2, 3]
+        result = seq(l).take_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
     def test_map(self):
         f = lambda x: x * 2
         l = [1, 2, 0, 5]

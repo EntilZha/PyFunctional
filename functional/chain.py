@@ -81,8 +81,20 @@ class FunctionalSequence(object):
     def drop(self, n):
         return FunctionalSequence(self.sequence[n:])
 
+    def drop_while(self, f):
+        for i, e in enumerate(self.sequence):
+            if not f(e):
+                break
+        return self.drop(i)
+
     def take(self, n):
         return FunctionalSequence(self.sequence[:n])
+
+    def take_while(self, f):
+        for i, e in enumerate(self.sequence):
+            if not f(e):
+                break
+        return self.take(i)
 
     def map(self, f):
         return FunctionalSequence(map(f, self.sequence))
