@@ -141,7 +141,10 @@ class TestChain(unittest.TestCase):
         f = lambda x: x[0]
         expect = {1: [(1, 1), (1, 2), (1, 3)], 2: [(2, 2)]}
         result = seq(l).group_by(f)
-        self.assertEqual(expect, result)
+        result_comparison = {}
+        for kv in result:
+            result_comparison[kv[0]] = kv[1]
+        self.assertEqual(expect, result_comparison)
         self.assertType(result)
 
     def test_empty(self):
@@ -217,8 +220,15 @@ class TestChain(unittest.TestCase):
         d = {1: 2, 2: 10, 7: 2}
         self.assertEqual(seq(l).to_dict(), d)
 
+    def test_group_by_key(self):
+        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
+        e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
+        result = seq(l).group_by_key()
+        self.assertEqual(result, e)
+        self.assertType(result)
+
     def test_reduce_by_key(self):
-        d = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}
-        e = {"a": 6, "b": 0, "c": 15}
+        d = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
+        e = {"a": 6, "b": 0, "c": 15}.items()
         result = seq(d).reduce_by_key(lambda x, y: x + y)
         self.assertEqual(result, e)

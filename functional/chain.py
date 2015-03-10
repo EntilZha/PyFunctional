@@ -1,11 +1,16 @@
+import collections
+
+
 class FunctionalSequence(object):
     def __init__(self, sequence):
         if isinstance(sequence, FunctionalSequence):
             self.sequence = sequence.__get_base_sequence__()
-        elif isinstance(sequence, list) or isinstance(sequence, dict):
+        elif isinstance(sequence, list):
             self.sequence = sequence
-        else:
+        elif isinstance(sequence, collections.Iterable):
             self.sequence = list(sequence)
+        else:
+            raise TypeError("Given sequence must be a list")
 
     def __get_base_sequence__(self):
         if isinstance(self.sequence, FunctionalSequence):
@@ -59,18 +64,6 @@ class FunctionalSequence(object):
 
     def __contains__(self, item):
         return self.sequence.__contains__(item)
-
-    def values(self):
-        if isinstance(self.sequence, dict):
-            return FunctionalSequence(self.sequence.values())
-        else:
-            raise TypeError("Given sequence is not of type dict")
-
-    def keys(self):
-        if isinstance(self.sequence, dict):
-            return FunctionalSequence(self.sequence.keys())
-        else:
-            raise TypeError("Given sequence is not of type dict")
 
     def head(self):
         return FunctionalSequence(self.sequence[0])
@@ -153,7 +146,16 @@ class FunctionalSequence(object):
                 result.get(f(e)).append(e)
             else:
                 result[f(e)] = [e]
-        return FunctionalSequence(result)
+        return FunctionalSequence(result.items())
+
+    def group_by_key(self):
+        result = {}
+        for e in self.sequence:
+            if result.get(e[0]):
+                result.get(e[0]).append(e[1])
+            else:
+                result[e[0]] = [e[1]]
+        return FunctionalSequence(result.items())
 
     def empty(self):
         return len(self.sequence) == 0
@@ -229,12 +231,7 @@ class FunctionalSequence(object):
         return d
 
     def reduce_by_key(self, f):
-        if not isinstance(self.sequence, dict):
-            raise TypeError("Given sequence is not of type dict")
-        result = {}
-        for k in self.sequence:
-            result[k] = reduce(f, self.sequence[k])
-        return FunctionalSequence(result)
+        return FunctionalSequence(self.sequence).map(lambda kv: (kv[0], reduce(f, kv[1])))
 
 
 def seq(l):
