@@ -53,11 +53,13 @@ seq([1, 2, 3])[-1]
 * filter: filter sequence by f
 * filter_not: filter sequence by not f
 * reduce: reduce sequence using f
+* reduce_by_key: reduce the value for each key in the dictionary
 * count, len, size: get count of sequence
 * reverse: reverse sequence
 * distinct: return set of unique/distinct elements
 * any
 * all
+* for_all
 * enumerate, zip_with_index
 * max
 * min
@@ -74,6 +76,7 @@ seq([1, 2, 3])[-1]
 * zip
 * sorted
 * list
+* to_dict
 
 ## Future work
 * Add more robust support and testing for dictionary manipulation
