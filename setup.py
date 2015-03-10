@@ -9,7 +9,7 @@ setup(
     license="MIT",
     keywords="functional scala",
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
-    version="0.1.4",
+    version="0.1.5",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
