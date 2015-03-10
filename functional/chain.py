@@ -56,7 +56,7 @@ class FunctionalSequence(object):
     def __delitem__(self, key):
         del self.sequence[key]
 
-    def __iter__self(self):
+    def __iter__(self):
         return iter(self.sequence)
 
     def __reversed__(self):
