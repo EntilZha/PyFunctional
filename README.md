@@ -57,6 +57,7 @@ seq([1, 2, 3])[-1]
 
 ## List of supported functions
 * head, first: get first element
+* head_option: get first element or None
 * last: get last element
 * tail: get everything except first element
 * drop: drop first n elements
@@ -76,8 +77,8 @@ seq([1, 2, 3])[-1]
 * all
 * for_all
 * enumerate, zip_with_index
-* max
-* min
+* max, max_by
+* min, min_by
 * find
 * flatten
 * flat_map
