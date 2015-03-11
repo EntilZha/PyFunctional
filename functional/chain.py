@@ -357,7 +357,7 @@ class FunctionalSequence(object):
     def partition(self, f):
         p1 = self.filter(f)
         p2 = self.filter_not(f)
-        return p1, p2
+        return FunctionalSequence((p1, p2))
 
     def product(self):
         return self.reduce(lambda x, y: x * y)
@@ -369,6 +369,9 @@ class FunctionalSequence(object):
         return sum(self.sequence)
 
     def set(self):
+        return self.to_set()
+
+    def to_set(self):
         return set(self.sequence)
 
     def zip(self, sequence):
@@ -397,10 +400,7 @@ class FunctionalSequence(object):
         return False
 
     def for_all(self, f):
-        for e in self.sequence:
-            if not f(e):
-                return False
-        return True
+        return self.all()
 
     def to_dict(self):
         d = {}
