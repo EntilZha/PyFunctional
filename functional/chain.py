@@ -50,7 +50,7 @@ class FunctionalSequence(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             return FunctionalSequence(self.sequence[key])
-        return self.sequence[key]
+        return _wrap(self.sequence[key])
 
     def __setitem__(self, key, value):
         self.sequence[key] = value
@@ -342,17 +342,7 @@ class FunctionalSequence(object):
         return len(self.sequence) != 0
 
     def make_string(self, separator):
-        if self.empty():
-            return ""
-        first = True
-        s = ""
-        for e in self.sequence:
-            if first:
-                s += str(e)
-                first = False
-            else:
-                s += separator + str(e)
-        return s
+        return separator.join(str(e) for e in self.sequence)
 
     def partition(self, f):
         p1 = self.filter(f)
