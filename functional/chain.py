@@ -342,17 +342,7 @@ class FunctionalSequence(object):
         return len(self.sequence) != 0
 
     def make_string(self, separator):
-        if self.empty():
-            return ""
-        first = True
-        s = ""
-        for e in self.sequence:
-            if first:
-                s += str(e)
-                first = False
-            else:
-                s += separator + str(e)
-        return s
+        return separator.join(str(e) for e in self.sequence)
 
     def partition(self, f):
         p1 = self.filter(f)
