@@ -10,6 +10,13 @@ class TestChain(unittest.TestCase):
     def assertNotType(self, s):
         self.assertFalse(isinstance(s, FunctionalSequence))
 
+    def test_base_sequence(self):
+        l = []
+        self.assertType(seq(l))
+        self.assertNotType(seq(l).sequence)
+        self.assertType(seq(seq(l)))
+        self.assertNotType(seq(seq(l)).sequence)
+
     def test_eq(self):
         l = [1, 2, 3]
         self.assertEqual(seq(l), seq(l))
@@ -35,6 +42,102 @@ class TestChain(unittest.TestCase):
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
 
+    def test_getitem(self):
+        l = [1, 2, [3, 4, 5]]
+        s = seq(l)
+        self.assertEqual(s[1], 2)
+        self.assertEqual(s[2], [3, 4, 5])
+        self.assertType(s[2])
+        self.assertEqual(s[1:], [2, [3, 4, 5]])
+        self.assertTrue(s[1:])
+
+    def test_setitem(self):
+        l = [1, 2, 3, 4, [5, 6, 7]]
+        s = seq(l)
+        s[1:3] = 8, 9
+        expect = [1, 8, 9, 4, [5, 6, 7]]
+        self.assertEqual(s, expect)
+
+    def test_delitem(self):
+        l = [1, 2, 3, 4, [5, 6, 7]]
+        s = seq(l)
+        del s[1]
+        expected = [1, 3, 4, [5, 6, 7]]
+        self.assertEqual(s, expected)
+
+    def test_iter(self):
+        l = list(enumerate(seq([1, 2, 3])))
+        e = list(enumerate([1, 2, 3]))
+        self.assertEqual(l, e)
+        l = seq([1, 2, 3])
+        e = [1, 2, 3]
+        result = []
+        for n in l:
+            result.append(n)
+        self.assertEqual(result, e)
+        self.assertType(l)
+
+    def test_contains(self):
+        string = "abcdef"
+        s = seq(string)
+        self.assertTrue("c" in s)
+
+    def test_add(self):
+        l0 = seq([1, 2, 3])
+        l1 = seq([4, 5, 6])
+        l2 = [4, 5, 6]
+        expect = [1, 2, 3, 4, 5, 6]
+        self.assertEqual(l0 + l1, expect)
+        self.assertEqual(l0 + l2, expect)
+
+    def test_head(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.head(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head(), [1, 2])
+        self.assertType(l.head())
+        l = seq([])
+        with self.assertRaises(IndexError):
+            l.head()
+
+    def test_first(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.first(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.first(), [1, 2])
+        self.assertType(l.first())
+        l = seq([])
+        with self.assertRaises(IndexError):
+            l.head()
+
+    def test_head_option(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.head_option(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head_option(), [1, 2])
+        self.assertType(l.head_option())
+        l = seq([])
+        self.assertIsNone(l.head_option())
+
+    def test_last(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.last(), 3)
+        l = seq([1, 2, [3, 4]])
+        self.assertEqual(l.last(), [3, 4])
+        self.assertType(l.last())
+
+    def test_tail(self):
+        l = seq([1, 2, 3, 4])
+        expect = [2, 3, 4]
+        self.assertSequenceEqual(l.tail(), expect)
+
+    def test_drop(self):
+        l = [1, 2, 3, 4, 5, 6]
+        expect = [5, 6]
+        result = seq(l).drop(4)
+        self.assertEqual(result, expect)
+        self.assertTrue(result)
+
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
         f = lambda x: x < 4
@@ -42,6 +145,13 @@ class TestChain(unittest.TestCase):
         result = seq(l).drop_while(f)
         self.assertEqual(expect, result)
         self.assertType(result)
+
+    def test_take(self):
+        l = [1, 2, 3, 4, 5, 6]
+        expect = [1, 2, 3, 4]
+        result = seq(l).take(4)
+        self.assertEqual(result, expect)
+        self.assertTrue(result)
 
     def test_take_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -93,10 +203,6 @@ class TestChain(unittest.TestCase):
         s = seq(l)
         self.assertEqual(expect, s.reduce(f))
 
-    def test_sum(self):
-        l = [1, 2, 3]
-        self.assertEqual(6, seq(l).sum())
-
     def test_reverse(self):
         l = [1, 2, 3]
         expect = [3, 2, 1]
@@ -128,6 +234,13 @@ class TestChain(unittest.TestCase):
         self.assertFalse(seq(l).all())
         l = [True, True]
         self.assertTrue(seq(l).all())
+
+    def test_enumerate(self):
+        l = [2, 3, 4]
+        e = [(0, 2), (1, 3), (2, 4)]
+        result = seq(l).enumerate()
+        self.assertEqual(result, e)
+        self.assertType(result)
 
     def test_max(self):
         l = [1, 2, 3]
@@ -178,6 +291,22 @@ class TestChain(unittest.TestCase):
         self.assertEqual(expect, result_comparison)
         self.assertType(result)
 
+    def test_group_by_key(self):
+        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
+        e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
+        result = seq(l).group_by_key()
+        self.assertEqual(len(result), len(e))
+        for e0, e1 in zip(result, e):
+            self.assertEqual(e0, e1)
+        self.assertType(result)
+
+    def test_grouped(self):
+        l = seq([1, 2, 3, 4, 5, 6, 7, 8])
+        expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
+        self.assertEqual(l.grouped(2), expect)
+        expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
+        self.assertEqual(l.grouped(3), expect)
+
     def test_empty(self):
         self.assertTrue(seq([]).empty())
 
@@ -186,11 +315,14 @@ class TestChain(unittest.TestCase):
 
     def test_make_string(self):
         l = [1, 2, 3]
-        expect1 = "1 2 3"
+        expect1 = "123"
         expect2 = "1:2:3"
         s = seq(l)
-        self.assertEqual(expect1, s.make_string(" "))
+        self.assertEqual(expect1, s.make_string(""))
         self.assertEqual(expect2, s.make_string(":"))
+        s = seq([])
+        self.assertEqual("", s.make_string(""))
+        self.assertEqual("", s.make_string(":"))
 
     def test_partition(self):
         l = [-1, -2, -3, 1, 2, 3]
@@ -207,6 +339,10 @@ class TestChain(unittest.TestCase):
     def test_product(self):
         l = [2, 2, 3]
         self.assertEqual(12, seq(l).product())
+
+    def test_sum(self):
+        l = [1, 2, 3]
+        self.assertEqual(6, seq(l).sum())
 
     def test_set(self):
         l = [1, 1, 2, 2, 3]
@@ -228,37 +364,18 @@ class TestChain(unittest.TestCase):
         self.assertEqual(result, e)
         self.assertType(result)
 
-    def test_enumerate(self):
-        l = [2, 3, 4]
-        e = [(0, 2), (1, 3), (2, 4)]
-        result = seq(l).enumerate()
-        self.assertEqual(result, e)
-        self.assertType(result)
+    def test_to_list(self):
+        l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
+        self.assertEqual(seq(l).to_list(), l)
 
-    def test_python_slice(self):
-        l = [1, 2, 3]
-        self.assertType(seq(l)[0:1])
-
-    def test_base_sequence(self):
-        l = []
-        self.assertType(seq(l))
-        self.assertNotType(seq(l).sequence)
-        self.assertType(seq(seq(l)))
-        self.assertNotType(seq(seq(l)).sequence)
+    def test_to_list(self):
+        l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
+        self.assertEqual(seq(l).list(), l)
 
     def test_to_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         self.assertEqual(seq(l).to_dict(), d)
-
-    def test_group_by_key(self):
-        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
-        e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
-        result = seq(l).group_by_key()
-        self.assertEqual(len(result), len(e))
-        for e0, e1 in zip(result, e):
-            self.assertEqual(e0, e1)
-        self.assertType(result)
 
     def test_reduce_by_key(self):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
@@ -269,59 +386,6 @@ class TestChain(unittest.TestCase):
             self.assertEqual(e0, e1)
         self.assertType(result)
 
-    def test_iter(self):
-        l = list(enumerate(seq([1, 2, 3])))
-        e = list(enumerate([1, 2, 3]))
-        self.assertEqual(l, e)
-        l = seq([1, 2, 3])
-        e = [1, 2, 3]
-        result = []
-        for n in l:
-            result.append(n)
-        self.assertEqual(result, e)
-        self.assertType(l)
-
-    def test_head(self):
-        l = seq([1, 2, 3])
-        self.assertEqual(l.head(), 1)
-        l = seq([[1, 2], 3, 4])
-        self.assertEqual(l.head(), [1, 2])
-        self.assertType(l.head())
-        l = seq([])
-        with self.assertRaises(IndexError):
-            l.head()
-
-    def test_first(self):
-        l = seq([1, 2, 3])
-        self.assertEqual(l.first(), 1)
-        l = seq([[1, 2], 3, 4])
-        self.assertEqual(l.first(), [1, 2])
-        self.assertType(l.first())
-        l = seq([])
-        with self.assertRaises(IndexError):
-            l.head()
-
-    def test_head_option(self):
-        l = seq([1, 2, 3])
-        self.assertEqual(l.head_option(), 1)
-        l = seq([[1, 2], 3, 4])
-        self.assertEqual(l.head_option(), [1, 2])
-        self.assertType(l.head_option())
-        l = seq([])
-        self.assertIsNone(l.head_option())
-
-    def test_tail(self):
-        l = seq([1, 2, 3, 4])
-        expect = [2, 3, 4]
-        self.assertSequenceEqual(l.tail(), expect)
-
-    def test_last(self):
-        l = seq([1, 2, 3])
-        self.assertEqual(l.last(), 3)
-        l = seq([1, 2, [3, 4]])
-        self.assertEqual(l.last(), [3, 4])
-        self.assertType(l.last())
-
     def test_wrap(self):
         self.assertType(_wrap([1, 2]))
         self.assertType(_wrap((1, 2)))
@@ -329,18 +393,3 @@ class TestChain(unittest.TestCase):
         self.assertNotType(_wrap(1.0))
         self.assertNotType("test")
         self.assertNotType(True)
-
-    def test_add(self):
-        l0 = seq([1, 2, 3])
-        l1 = seq([4, 5, 6])
-        l2 = [4, 5, 6]
-        expect = [1, 2, 3, 4, 5, 6]
-        self.assertEqual(l0 + l1, expect)
-        self.assertEqual(l0 + l2, expect)
-
-    def test_grouped(self):
-        l = seq([1, 2, 3, 4, 5, 6, 7, 8])
-        expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
-        self.assertEqual(l.grouped(2), expect)
-        expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
-        self.assertEqual(l.grouped(3), expect)
