@@ -3,7 +3,7 @@
 </a>
 
 # Motivation
-Having programmed functionally in Scala and now using Python I missed the sytax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
+Having programmed functionally in Scala and now using Python I missed the syntax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
 
 ```python
 l = [1, 2, -1, -2]
@@ -22,10 +22,17 @@ from functional import seq
 seq(l).filter(f).map(g).reduce(q)
 ```
 
+# Inspiration
+Almost all inspiration is either from [scala docs](http://www.scala-lang.org/api/current/#scala.Array) or [spark docs](https://spark.apache.org/docs/latest/programming-guide.html#transformations)
+
 # Usage
 To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `FunctionalSequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
 
-#Examples
+# Installation
+For common use, you can install via the command line and pip: `pip install scalafunctional`. Then in your code import it via 
+`from functional import seq`. For developers, clone the repo then run `python setup.py develop`.
+
+# Examples
 ```python
 seq([1, 2, 3, 0, -1, -2, 3]).filter(lambda x: x > 0).filter(lambda x: x < 2)
 # -> [1]
@@ -50,9 +57,13 @@ seq([1, 2, 3])[-1]
 
 ## List of supported functions
 * head, first: get first element
-* last, tail: get last element
+* head_option: get first element or None
+* last: get last element
+* tail: get everything except first element
 * drop: drop first n elements
+* drop_while: drop first elements using f
 * take: take first n elements
+* take_while: take first elements using f
 * map: map f onto sequence
 * filter: filter sequence by f
 * filter_not: filter sequence by not f
@@ -66,9 +77,10 @@ seq([1, 2, 3])[-1]
 * all
 * for_all
 * enumerate, zip_with_index
-* max
-* min
+* max, max_by
+* min, min_by
 * find
+* flatten
 * flat_map
 * group_by
 * empty

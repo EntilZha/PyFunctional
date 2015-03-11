@@ -1,11 +1,12 @@
 import collections
+import sys
 from functools import reduce
 
 
 class FunctionalSequence(object):
     def __init__(self, sequence):
         if isinstance(sequence, FunctionalSequence):
-            self.sequence = sequence.__get_base_sequence__()
+            self.sequence = sequence._get_base_sequence()
         elif isinstance(sequence, list):
             self.sequence = sequence
         elif isinstance(sequence, collections.Iterable):
@@ -13,9 +14,9 @@ class FunctionalSequence(object):
         else:
             raise TypeError("Given sequence must be a list")
 
-    def __get_base_sequence__(self):
+    def _get_base_sequence(self):
         if isinstance(self.sequence, FunctionalSequence):
-            return self.sequence.__get_base_sequence__()
+            return self.sequence._get_base_sequence()
         else:
             return self.sequence
 
@@ -66,23 +67,81 @@ class FunctionalSequence(object):
     def __contains__(self, item):
         return self.sequence.__contains__(item)
 
+    def __add__(self, other):
+        if isinstance(other, FunctionalSequence):
+            return FunctionalSequence(self.sequence + other.sequence)
+        else:
+            return FunctionalSequence(self.sequence + other)
+
     def head(self):
-        return FunctionalSequence(self.sequence[0])
+        """
+        Returns the first element of the sequence.
+
+        >>> seq([1, 2, 3]).head()
+        1
+
+        Raises IndexError when the sequence is empty.
+
+        >>> seq([]).head()
+        Traceback (most recent call last):
+         ...
+        IndexError: list index out of range
+        """
+        return _wrap(self.sequence[0])
 
     def first(self):
-        return FunctionalSequence(self.sequence[0])
+        """
+        Returns the first element of the sequence.
+
+        >>> seq([1, 2, 3]).head()
+        1
+
+        Raises IndexError when the sequence is empty.
+
+        >>> seq([]).head()
+        Traceback (most recent call last):
+         ...
+        IndexError: list index out of range
+        """
+        return _wrap(self.sequence[0])
+
+    def head_option(self):
+        """
+        Returns the first element of the sequence or None, if the sequence is empty.
+
+        >>> seq([1, 2, 3]).head_option()
+        1
+
+        >>> seq([]).head_option()
+        None
+        """
+        if not self.sequence:
+            return None
+        return self.head()
 
     def last(self):
-        return FunctionalSequence(self.sequence[-1])
+        return _wrap(self.sequence[-1])
 
     def tail(self):
-        return FunctionalSequence(self.sequence[-1])
+        return FunctionalSequence(self.sequence[1:])
 
     def drop(self, n):
         return FunctionalSequence(self.sequence[n:])
 
+    def drop_while(self, f):
+        for i, e in enumerate(self.sequence):
+            if not f(e):
+                break
+        return self.drop(i)
+
     def take(self, n):
         return FunctionalSequence(self.sequence[:n])
+
+    def take_while(self, f):
+        for i, e in enumerate(self.sequence):
+            if not f(e):
+                break
+        return self.take(i)
 
     def map(self, f):
         return FunctionalSequence(map(f, self.sequence))
@@ -122,10 +181,106 @@ class FunctionalSequence(object):
         return FunctionalSequence(enumerate(self.sequence, start=start))
 
     def max(self):
-        return max(self.sequence)
+        """
+        Returns the largest element in the sequence.
+        If the sequence has multiple maximal elements, only the first one is returned.
+
+        The compared objects must have defined comparison methods.
+        Raises TypeError when the objects are not comparable.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).max()
+        5
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').max()
+        'xyz'
+
+        >>> seq([1, "a"]).max()
+        Traceback (most recent call last):
+         ...
+        TypeError: unorderable types: int() < str()
+
+        >>> seq([]).max()
+        Traceback (most recent call last):
+         ...
+        ValueError: max() arg is an empty sequence
+        """
+        return _wrap(max(self.sequence))
 
     def min(self):
-        return min(self.sequence)
+        """
+        Returns the smallest element in the sequence.
+        If the sequence has multiple minimal elements, only the first one is returned.
+
+        The compared objects must have defined comparison methods.
+        Raises TypeError when the objects are not comparable.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).min()
+        1
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').min()
+        'aa'
+
+        >>> seq([1, "a"]).min()
+        Traceback (most recent call last):
+         ...
+        TypeError: unorderable types: int() < str()
+
+        >>> seq([]).min()
+        Traceback (most recent call last):
+         ...
+        ValueError: min() arg is an empty sequence
+        """
+        return _wrap(min(self.sequence))
+
+    def max_by(self, f):
+        """
+        Returns the largest element in the sequence.
+        Provided function is used to generate key used to compare the elements.
+        If the sequence has multiple maximal elements, only the first one is returned.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).max_by(lambda num: num % 4)
+        3
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').max_by(len)
+        'abcd'
+
+        >>> seq([]).max_by(lambda x: x)
+        Traceback (most recent call last):
+         ...
+        ValueError: max() arg is an empty sequence
+        """
+        return _wrap(max(self.sequence, key=f))
+
+    def min_by(self, f):
+        """
+        Returns the smallest element in the sequence.
+        Provided function is used to generate key used to compare the elements.
+        If the sequence has multiple minimal elements, only the first one is returned.
+
+        The sequence can not be empty.
+        Raises ValueError when the sequence is empty.
+
+        >>> seq([2, 4, 5, 1, 3]).min_by(lambda num: num % 6)
+        5
+
+        >>> seq('aa', 'xyz', 'abcd', 'xyy').min_by(len)
+        'aa'
+
+        >>> seq([]).min_by(lambda x: x)
+        Traceback (most recent call last):
+         ...
+        ValueError: min() arg is an empty sequence
+        """
+        return _wrap(min(self.sequence, key=f))
 
     def find(self, f):
         for e in self.sequence:
@@ -133,6 +288,9 @@ class FunctionalSequence(object):
                 return e
         else:
             return None
+
+    def flatten(self):
+        return self.flat_map(lambda x: x)
 
     def flat_map(self, f):
         l = []
@@ -157,6 +315,25 @@ class FunctionalSequence(object):
             else:
                 result[e[0]] = [e[1]]
         return FunctionalSequence(result.items())
+
+    def grouped(self, size):
+        """
+        Partitions the elements into groups of length size
+
+        The last partition will be at least of size 1 and no more than length size
+        :param size: size of the partitions
+        :return: sequence partitioned into groups of length size
+
+        >>>  seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
+        [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+        >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
+        [[1, 2, 3], [4, 5, 6], [7, 8]]
+        """
+        result = []
+        for i in range(0, self.count(), size):
+            result.append(FunctionalSequence(self.sequence[i:i+size]))
+        return FunctionalSequence(result)
 
     def empty(self):
         return len(self.sequence) == 0
@@ -237,3 +414,28 @@ class FunctionalSequence(object):
 
 def seq(l):
     return FunctionalSequence(l)
+
+
+if sys.version < '3':
+    _integer_types = (int, long)
+    _str_types = (str, unicode)
+else:
+    _integer_types = int
+    _str_types = str
+
+
+def _is_primitive(v):
+    return isinstance(v, str) \
+        or isinstance(v, bool) \
+        or isinstance(v, _str_types) \
+        or isinstance(v, _integer_types) \
+        or isinstance(v, float) \
+        or isinstance(v, complex) \
+        or isinstance(v, bytes)
+
+
+def _wrap(v):
+    if _is_primitive(v):
+        return v
+    else:
+        return FunctionalSequence(v)

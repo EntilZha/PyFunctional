@@ -1,6 +1,6 @@
 import unittest
 
-from functional.chain import seq, FunctionalSequence
+from functional.chain import seq, FunctionalSequence, _wrap
 
 
 class TestChain(unittest.TestCase):
@@ -34,6 +34,22 @@ class TestChain(unittest.TestCase):
         self.assertEqual(len(l), s.count())
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
+
+    def test_drop_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [4, 5, 6, 7, 8]
+        result = seq(l).drop_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
+
+    def test_take_while(self):
+        l = [1, 2, 3, 4, 5, 6, 7, 8]
+        f = lambda x: x < 4
+        expect = [1, 2, 3]
+        result = seq(l).take_while(f)
+        self.assertEqual(expect, result)
+        self.assertType(result)
 
     def test_map(self):
         f = lambda x: x * 2
@@ -121,12 +137,27 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 3]
         self.assertEqual(1, seq(l).min())
 
+    def test_max_by(self):
+        l = ["aa", "bbbb", "c", "dd"]
+        self.assertEqual("bbbb", seq(l).max_by(len))
+
+    def test_min_by(self):
+        l = ["aa", "bbbb", "c", "dd"]
+        self.assertEqual("c", seq(l).min_by(len))
+
     def test_find(self):
         l = [1, 2, 3]
         f = lambda x: x == 3
         g = lambda x: False
         self.assertEqual(3, seq(l).find(f))
         self.assertIsNone(seq(l).find(g))
+
+    def test_flatten(self):
+        l = [[1, 1, 1], [2, 2, 2], [[3, 3], [4, 4]]]
+        expect = [1, 1, 1, 2, 2, 2, [3, 3], [4, 4]]
+        result = seq(l).flatten()
+        self.assertEqual(expect, result)
+        self.assertType(result)
 
     def test_flat_map(self):
         l = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
@@ -250,4 +281,66 @@ class TestChain(unittest.TestCase):
         self.assertEqual(result, e)
         self.assertType(l)
 
+    def test_head(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.head(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head(), [1, 2])
+        self.assertType(l.head())
+        l = seq([])
+        with self.assertRaises(IndexError):
+            l.head()
 
+    def test_first(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.first(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.first(), [1, 2])
+        self.assertType(l.first())
+        l = seq([])
+        with self.assertRaises(IndexError):
+            l.head()
+
+    def test_head_option(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.head_option(), 1)
+        l = seq([[1, 2], 3, 4])
+        self.assertEqual(l.head_option(), [1, 2])
+        self.assertType(l.head_option())
+        l = seq([])
+        self.assertIsNone(l.head_option())
+
+    def test_tail(self):
+        l = seq([1, 2, 3, 4])
+        expect = [2, 3, 4]
+        self.assertSequenceEqual(l.tail(), expect)
+
+    def test_last(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.last(), 3)
+        l = seq([1, 2, [3, 4]])
+        self.assertEqual(l.last(), [3, 4])
+        self.assertType(l.last())
+
+    def test_wrap(self):
+        self.assertType(_wrap([1, 2]))
+        self.assertType(_wrap((1, 2)))
+        self.assertNotType(_wrap(1))
+        self.assertNotType(_wrap(1.0))
+        self.assertNotType("test")
+        self.assertNotType(True)
+
+    def test_add(self):
+        l0 = seq([1, 2, 3])
+        l1 = seq([4, 5, 6])
+        l2 = [4, 5, 6]
+        expect = [1, 2, 3, 4, 5, 6]
+        self.assertEqual(l0 + l1, expect)
+        self.assertEqual(l0 + l2, expect)
+
+    def test_grouped(self):
+        l = seq([1, 2, 3, 4, 5, 6, 7, 8])
+        expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
+        self.assertEqual(l.grouped(2), expect)
+        expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
+        self.assertEqual(l.grouped(3), expect)
