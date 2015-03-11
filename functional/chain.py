@@ -50,7 +50,7 @@ class FunctionalSequence(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             return FunctionalSequence(self.sequence[key])
-        return self.sequence[key]
+        return _wrap(self.sequence[key])
 
     def __setitem__(self, key, value):
         self.sequence[key] = value
