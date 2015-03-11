@@ -156,8 +156,17 @@ class FunctionalSequence(object):
     def reduce(self, f):
         return reduce(f, self.sequence)
 
-    def count(self):
-        return len(self.sequence)
+    def count(self, f):
+        """
+        Counts the number of elements in the sequence which satisfy the predicate f
+        :param f: predicate to count elements on
+        :return: count satisfying predicate
+        """
+        n = 0
+        for e in self.sequence:
+            if f(e):
+                n += 1
+        return n
 
     def len(self):
         return len(self.sequence)
@@ -331,7 +340,7 @@ class FunctionalSequence(object):
         [[1, 2, 3], [4, 5, 6], [7, 8]]
         """
         result = []
-        for i in range(0, self.count(), size):
+        for i in range(0, self.size(), size):
             result.append(FunctionalSequence(self.sequence[i:i+size]))
         return FunctionalSequence(result)
 

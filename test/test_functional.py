@@ -38,9 +38,13 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 3]
         s = seq(l)
         self.assertEqual(len(l), len(s))
-        self.assertEqual(len(l), s.count())
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
+
+    def test_count(self):
+        l = seq([-1, -1, 1, 1, 1])
+        self.assertEqual(l.count(lambda x: x > 0), 3)
+        self.assertEqual(l.count(lambda x: x < 0), 2)
 
     def test_getitem(self):
         l = [1, 2, [3, 4, 5]]
