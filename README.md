@@ -82,9 +82,11 @@ l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 * slice
 * zip
 * sorted
+
 ### List of (Key, Value) to List
 * reduce_by_key
 * group_by_key
+
 ### List to Value
 * head, first: get first element
 * head_option: get first element or None
@@ -100,6 +102,7 @@ l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 * non_empty
 * string: similar to mkString
 * sum
+
 ### Conversion to other types
 * set
 * list
