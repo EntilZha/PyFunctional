@@ -33,6 +33,7 @@ For common use, you can install via the command line and pip: `pip install scala
 `from functional import seq`. For developers, clone the repo then run `python setup.py develop`.
 
 # Examples
+## Number twiddling
 ```python
 seq([1, 2, 3, 0, -1, -2, 3]).filter(lambda x: x > 0).filter(lambda x: x < 2)
 # -> [1]
@@ -54,11 +55,15 @@ seq([1, 2, 3])[0]
 seq([1, 2, 3])[-1]
 # -> 3
 ```
+## Word count in one line
+```python
+l = seq("the why the what of word counting of english".split(" "))
+l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
+# -> [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]
+```
 
 ## List of supported functions
-* head, first: get first element
-* head_option: get first element or None
-* last: get last element
+### List to List
 * tail: get everything except first element
 * drop: drop first n elements
 * drop_while: drop first elements using f
@@ -67,38 +72,45 @@ seq([1, 2, 3])[-1]
 * map: map f onto sequence
 * filter: filter sequence by f
 * filter_not: filter sequence by not f
-* reduce: reduce sequence using f
-* reduce_by_key
-* group_by_key
-* count, len, size: get count of sequence
 * reverse: reverse sequence
 * distinct: return set of unique/distinct elements
-* any
-* all
-* for_all
-* enumerate, zip_with_index
-* max, max_by
-* min, min_by
-* find
 * flatten
 * flat_map
 * group_by
+* enumerate, zip_with_index
+* partition
+* slice
+* zip
+* sorted
+
+### List of (Key, Value) to List
+* reduce_by_key
+* group_by_key
+
+### List to Value
+* head, first: get first element
+* head_option: get first element or None
+* last: get last element
+* reduce: reduce sequence using f
+* count, len, size: get count of sequence
+* any
+* all, for_all
+* max, max_by
+* min, min_by
+* find
 * empty
 * non_empty
 * string: similar to mkString
-* partition
-* slice
 * sum
+
+### Conversion to other types
 * set
-* zip
-* sorted
 * list
 * to_dict
 
 ## Future work
-* Add more robust support and testing for dictionary manipulation
-* Add concurrent version of `FunctionalSequence`, probably using `ThreadPoolExecutor` from Python futures.
-* Continue to find bugs and make improvements in general
+* Continue to find bugs and fix bugs
+* Continue adding features from either scala collections or spark (or other methods in the same spirit)
 * Continue adding tests
 
 ## Contributing and Bug Fixes
