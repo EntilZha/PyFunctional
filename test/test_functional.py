@@ -337,3 +337,10 @@ class TestChain(unittest.TestCase):
         expect = [1, 2, 3, 4, 5, 6]
         self.assertEqual(l0 + l1, expect)
         self.assertEqual(l0 + l2, expect)
+
+    def test_grouped(self):
+        l = seq([1, 2, 3, 4, 5, 6, 7, 8])
+        expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
+        self.assertEqual(l.grouped(2), expect)
+        expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
+        self.assertEqual(l.grouped(3), expect)

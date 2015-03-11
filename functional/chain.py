@@ -316,6 +316,25 @@ class FunctionalSequence(object):
                 result[e[0]] = [e[1]]
         return FunctionalSequence(result.items())
 
+    def grouped(self, size):
+        """
+        Partitions the elements into groups of length size
+
+        The last partition will be at least of size 1 and no more than length size
+        :param size: size of the partitions
+        :return: sequence partitioned into groups of length size
+
+        >>>  seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
+        [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+        >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
+        [[1, 2, 3], [4, 5, 6], [7, 8]]
+        """
+        result = []
+        for i in range(0, self.count(), size):
+            result.append(FunctionalSequence(self.sequence[i:i+size]))
+        return FunctionalSequence(result)
+
     def empty(self):
         return len(self.sequence) == 0
 
