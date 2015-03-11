@@ -400,7 +400,7 @@ class FunctionalSequence(object):
         return False
 
     def for_all(self, f):
-        return self.all()
+        return self.map(f).all()
 
     def to_dict(self):
         d = {}
