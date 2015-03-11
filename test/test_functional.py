@@ -416,3 +416,10 @@ class TestChain(unittest.TestCase):
         self.assertNotType(_wrap(1.0))
         self.assertNotType("test")
         self.assertNotType(True)
+
+    def test_wrap_objects(self):
+        class A(object):
+            a = 1
+        l = [A(), A(), A()]
+        self.assertIsInstance(_wrap(A()), A)
+        self.assertType(seq(l))

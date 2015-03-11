@@ -439,5 +439,7 @@ def _is_primitive(v):
 def _wrap(v):
     if _is_primitive(v):
         return v
-    else:
+    elif isinstance(v, collections.Iterable):
         return FunctionalSequence(v)
+    else:
+        return v
