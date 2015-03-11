@@ -232,7 +232,7 @@ class FunctionalSequence(object):
         return d
 
     def reduce_by_key(self, f):
-        return FunctionalSequence(self.sequence).map(lambda kv: (kv[0], reduce(f, kv[1])))
+        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
 
 
 def seq(l):
