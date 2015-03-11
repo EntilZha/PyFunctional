@@ -368,9 +368,28 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         self.assertEqual(seq(l).to_list(), l)
 
-    def test_to_list(self):
+    def test_list(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         self.assertEqual(seq(l).list(), l)
+
+    def test_for_each(self):
+        l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
+        result = []
+        def f(e):
+            result.append(e)
+        seq(l).for_each(f)
+        self.assertEqual(result, l)
+
+    def test_exists(self):
+        l = ["aaa", "BBB", "ccc"]
+        self.assertTrue(seq(l).exists(str.islower))
+        self.assertTrue(seq(l).exists(str.isupper))
+        self.assertFalse(seq(l).exists(lambda s: "d" in s))
+
+    def test_for_all(self):
+        l = ["aaa", "bbb", "ccc"]
+        self.assertTrue(seq(l).for_all(str.islower))
+        self.assertFalse(seq(l).for_all(str.isupper))
 
     def test_to_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
