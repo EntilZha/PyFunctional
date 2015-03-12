@@ -367,6 +367,31 @@ class FunctionalSequence(object):
     def sum(self):
         return sum(self.sequence)
 
+    def fold_left(self, zero_value, f):
+        """
+        Takes a zero_value and performs a reduction to a value using f. f should take two
+        parameters, 1) the value to accumulate into the result and 2) the current result.
+        Elements are folded left to right.
+
+        :param zero_value: zero value to reduce into
+        :return: value from folding values with f into zero_value
+        """
+        result = zero_value
+        for e in self.sequence:
+            result = f(e, result)
+        return _wrap(result)
+
+    def fold_right(self, zero_value, f):
+        """
+        Takes a zero_value and performs a reduction to a value using f. f should take two
+        parameters, 1) the value to accumulate into the result and 2) the current result.
+        Elements are folded right to left.
+
+        :param zero_value: zero value to reduce into
+        :return: value from folding values with f into zero_value
+        """
+        return self.reverse().fold_left(zero_value, f)
+
     def set(self):
         return self.to_set()
 

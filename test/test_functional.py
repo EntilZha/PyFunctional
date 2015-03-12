@@ -207,6 +207,29 @@ class TestChain(unittest.TestCase):
         s = seq(l)
         self.assertEqual(expect, s.reduce(f))
 
+    def test_fold_left(self):
+        f = lambda x, y: y + x
+        l = seq([1, 2, 3, 4])
+        self.assertEqual(l.fold_left(0, f), 10)
+        self.assertEqual(l.fold_left(-10, f), 0)
+        l = seq(['a', 'b', 'c'])
+        self.assertEqual(l.fold_left("", f), "abc")
+        self.assertEqual(l.fold_left("z", f), "zabc")
+        f = lambda x, y: y + [x]
+        self.assertEqual(l.fold_left([], f), ['a', 'b', 'c'])
+        self.assertEqual(l.fold_left(['z'], f), ['z', 'a', 'b', 'c'])
+
+    def test_fold_right(self):
+        f = lambda x, y: y + x
+        l = seq([1, 2, 3, 4])
+        self.assertEqual(l.fold_right(0, f), 10)
+        self.assertEqual(l.fold_right(-10, f), 0)
+        l = seq(['a', 'b', 'c'])
+        self.assertEqual(l.fold_right("", f), "cba")
+        self.assertEqual(l.fold_right("z", f), "zcba")
+        f = lambda x, y: y + [x]
+        self.assertEqual(l.fold_right([], f), ['c', 'b', 'a'])
+
     def test_reverse(self):
         l = [1, 2, 3]
         expect = [3, 2, 1]
