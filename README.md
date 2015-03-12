@@ -17,9 +17,14 @@ reduce(q, map(g, filter(f, l)))
 # Python list comprehension
 reduce(q, [g(x) for x in l if f(x)])
 
-# ScalaFunction style
+# ScalaFunctional style
 from functional import seq
 seq(l).filter(f).map(g).reduce(q)
+
+# ScalaFunctional word count
+l = seq("the why the what of word counting of english".split(" "))
+l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
+# [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]
 ```
 
 # Inspiration
@@ -54,12 +59,6 @@ seq([1, 2, 3])[0]
 # -> 1
 seq([1, 2, 3])[-1]
 # -> 3
-```
-## Word count in one line
-```python
-l = seq("the why the what of word counting of english".split(" "))
-l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
-# -> [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]
 ```
 
 ## List of supported functions
