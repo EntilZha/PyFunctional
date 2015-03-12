@@ -1,16 +1,16 @@
 <div style="display:inline-block;">
-<b><a href="https://travis-ci.org/EntilZha/ScalaFunctional">Travis CI Build</a></b>
-
-<a href="https://travis-ci.org/EntilZha/ScalaFunctional">
-    <img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>
-</a>
+<div><b><a href="https://travis-ci.org/EntilZha/ScalaFunctional">Travis CI Build</a></b></div>
+<div>
+<a href="https://travis-ci.org/EntilZha/ScalaFunctional"><img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/></a>
+</div>
 </div>
 <div style="display:inline-block;>
-<b><a href="https://readthedocs.org/projects/scalafunctional/">ReadTheDocs Build</a></b>
-
+<div><b><a href="https://readthedocs.org/projects/scalafunctional/">ReadTheDocs Build</a></b></div>
+<div>
 <a href="https://readthedocs.org/projects/scalafunctional/">
     <img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest">
 </a>
+</div>
 </div>
 
 # Motivation
