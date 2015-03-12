@@ -14,6 +14,11 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 2.7"
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Natural Language :: English",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft",
+        "Topic :: Software Development :: Libraries :: Python Modules"
     ]
 )
