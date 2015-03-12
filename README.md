@@ -1,14 +1,17 @@
-[**Travis CI Build**](https://travis-ci.org/EntilZha/ScalaFunctional)
+<div style="display:inline-block;">
+<b><a href="https://travis-ci.org/EntilZha/ScalaFunctional">Travis CI Build</a></b>
 
 <a href="https://travis-ci.org/EntilZha/ScalaFunctional">
     <img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>
 </a>
-
-[**ReadTheDocs Build**](https://readthedocs.org/projects/scalafunctional/)
+</div>
+<div style="display:inline-block;>
+<b><a href="https://readthedocs.org/projects/scalafunctional/">ReadTheDocs Build</a></b>
 
 <a href="https://readthedocs.org/projects/scalafunctional/">
     <img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest">
 </a>
+</div>
 
 # Motivation
 Having programmed functionally in Scala and now using Python I missed the syntax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
