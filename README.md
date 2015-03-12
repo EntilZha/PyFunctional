@@ -1,5 +1,13 @@
+[**Travis CI Build**](https://travis-ci.org/EntilZha/ScalaFunctional)
+
 <a href="https://travis-ci.org/EntilZha/ScalaFunctional">
-	<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>
+    <img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>
+</a>
+
+[**ReadTheDocs Build**](https://readthedocs.org/projects/scalafunctional/)
+
+<a href="https://readthedocs.org/projects/scalafunctional/">
+    <img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest">
 </a>
 
 # Motivation
