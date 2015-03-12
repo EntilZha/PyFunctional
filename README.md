@@ -7,8 +7,7 @@
 <div style="display:inline-block;>
 <div><b><a href="https://readthedocs.org/projects/scalafunctional/">ReadTheDocs Build</a></b></div>
 <div>
-<a href="https://readthedocs.org/projects/scalafunctional/">
-    <img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest">
+<a href="https://readthedocs.org/projects/scalafunctional/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest">
 </a>
 </div>
 </div>
