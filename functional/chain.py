@@ -120,10 +120,58 @@ class FunctionalSequence(object):
         return self.head()
 
     def last(self):
+        """
+        Returns the last element of the sequence.
+
+        >>> seq([1, 2, 3]).last()
+        3
+
+        Raises IndexError when the sequence is empty.
+
+        >>> seq([]).last()
+        Traceback (most recent call last):
+         ...
+        IndexError: list index out of range
+        """
         return _wrap(self.sequence[-1])
 
+    def init(self):
+        """
+        Returns the sequence, without its last element.
+
+        >>> seq([1, 2, 3]).init()
+        [1, 2]
+        """
+        return FunctionalSequence(self.sequence[:-1])
+
     def tail(self):
+        """
+        Returns the sequence, without its first element.
+
+        >>> seq([1, 2, 3]).init()
+        [2, 3]
+        """
         return FunctionalSequence(self.sequence[1:])
+
+    def inits(self):
+        """
+        Returns consecutive inits of the sequence.
+
+        >>> seq([1, 2, 3]).inits()
+        [[1, 2, 3], [1, 2], [1], []]
+        """
+        result = [_wrap(self.sequence[:i]) for i in reversed(range(len(self.sequence)+1))]
+        return FunctionalSequence(result)
+
+    def tails(self):
+        """
+        Returns consecutive tails of the sequence.
+
+        >>> seq([1, 2, 3]).tails()
+        [[1, 2, 3], [2, 3], [3], []]
+        """
+        result = [_wrap(self.sequence[i:]) for i in range(len(self.sequence)+1)]
+        return FunctionalSequence(result)
 
     def drop(self, n):
         return FunctionalSequence(self.sequence[n:])
