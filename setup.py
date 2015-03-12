@@ -17,8 +17,7 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
         "Natural Language :: English",
-        "Operating System :: MacOS",
-        "Operating System :: Microsoft",
+        "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules"
     ]
 )
