@@ -91,6 +91,8 @@ seq([1, 2, 3])[-1]
 * head_option: get first element or None
 * last: get last element
 * reduce: reduce sequence using f
+* fold_left
+* fold_right
 * count, len, size: get count of sequence
 * any
 * all, for_all
