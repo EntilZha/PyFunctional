@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Scalafunctional by EntilZha</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Scalafunctional</h1>
+        <h2>Python library to provide chain functional programming on lists. ScalaFunctional is inspired by Scala and Apache Spark</h2>
+        <a href="https://github.com/EntilZha/ScalaFunctional" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <p><a href="https://travis-ci.org/EntilZha/ScalaFunctional">
+    <img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master">
+</a></p>
+
+<h1>
+<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h1>
+
+<p>Having programmed functionally in Scala and now using Python I missed the syntax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.</p>
+
+<div class="highlight highlight-python"><pre>l <span class="pl-k">=</span> [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-k">-</span><span class="pl-c1">2</span>]
+f <span class="pl-k">=</span> <span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>
+g <span class="pl-k">=</span> <span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x <span class="pl-k">*</span> <span class="pl-c1">2</span>
+q <span class="pl-k">=</span> <span class="pl-st">lambda</span> <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>: <span class="pl-c1">2</span> <span class="pl-k">*</span> x <span class="pl-k">+</span> y
+
+<span class="pl-c"># Python style</span>
+<span class="pl-s3">reduce</span>(q, <span class="pl-s3">map</span>(g, <span class="pl-s3">filter</span>(f, l)))
+
+<span class="pl-c"># Python list comprehension</span>
+<span class="pl-s3">reduce</span>(q, [g(x) <span class="pl-k">for</span> x <span class="pl-k">in</span> l <span class="pl-k">if</span> f(x)])
+
+<span class="pl-c"># ScalaFunction style</span>
+<span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
+seq(l).filter(f).map(g).reduce(q)</pre></div>
+
+<h1>
+<a id="inspiration" class="anchor" href="#inspiration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inspiration</h1>
+
+<p>Almost all inspiration is either from <a href="http://www.scala-lang.org/api/current/#scala.Array">scala docs</a> or <a href="https://spark.apache.org/docs/latest/programming-guide.html#transformations">spark docs</a></p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>To use ScalaFunctional, you need only include: <code>from functional import seq</code>. <code>seq</code> is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class <code>FunctionalSequence</code> also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.</p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>For common use, you can install via the command line and pip: <code>pip install scalafunctional</code>. Then in your code import it via 
+<code>from functional import seq</code>. For developers, clone the repo then run <code>python setup.py develop</code>.</p>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
+
+<h2>
+<a id="number-twiddling" class="anchor" href="#number-twiddling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Number twiddling</h2>
+
+<div class="highlight highlight-python"><pre>seq([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-k">-</span><span class="pl-c1">2</span>, <span class="pl-c1">3</span>]).filter(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>).filter(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x <span class="pl-k">&lt;</span> <span class="pl-c1">2</span>)
+<span class="pl-c"># -&gt; [1]</span>
+seq([<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-k">-</span><span class="pl-c1">2</span>, <span class="pl-c1">5</span>]).distinct()
+<span class="pl-c"># -&gt; [1, 2, -5, -2]</span>
+seq([[<span class="pl-c1">1</span>, <span class="pl-c1">1</span>], [<span class="pl-c1">2</span>, <span class="pl-c1">3</span>], [<span class="pl-c1">5</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>]]).flat_map(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x).sum()
+<span class="pl-c"># -&gt; 11</span>
+seq([(<span class="pl-s1"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>, <span class="pl-c1">1</span>), (<span class="pl-s1"><span class="pl-pds">"</span>b<span class="pl-pds">"</span></span>, <span class="pl-c1">2</span>), (<span class="pl-s1"><span class="pl-pds">"</span>c<span class="pl-pds">"</span></span>, <span class="pl-c1">3</span>), (<span class="pl-s1"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>, <span class="pl-c1">2</span>), (<span class="pl-s1"><span class="pl-pds">"</span>c<span class="pl-pds">"</span></span>, <span class="pl-c1">5</span>)]).group_by(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x[<span class="pl-c1">0</span>])
+<span class="pl-c"># -&gt; {'a': [('a', 1), ('a', 2)], 'c': [('c', 3), ('c', 5)], 'b': [('b', 2)]}</span>
+p1, p2 <span class="pl-k">=</span> seq([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-k">-</span><span class="pl-c1">2</span>, <span class="pl-k">-</span><span class="pl-c1">3</span>]).partition(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>)
+p1.reduce(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>: x <span class="pl-k">*</span> y)
+<span class="pl-c"># -&gt; 6</span>
+p2.reduce(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>: x <span class="pl-k">+</span> y)
+<span class="pl-c"># -&gt; -6</span>
+seq([<span class="pl-c1">2</span>, <span class="pl-c1">1</span>, <span class="pl-c1">3</span>]).sorted()
+<span class="pl-c"># -&gt; [1, 2, 3]</span>
+seq([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>])[<span class="pl-c1">0</span>]
+<span class="pl-c"># -&gt; 1</span>
+seq([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>])[<span class="pl-k">-</span><span class="pl-c1">1</span>]
+<span class="pl-c"># -&gt; 3</span></pre></div>
+
+<h2>
+<a id="word-count-in-one-line" class="anchor" href="#word-count-in-one-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word count in one line</h2>
+
+<div class="highlight highlight-python"><pre>l <span class="pl-k">=</span> seq(<span class="pl-s1"><span class="pl-pds">"</span>the why the what of word counting of english<span class="pl-pds">"</span></span>.split(<span class="pl-s1"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>))
+l.map(<span class="pl-st">lambda</span> <span class="pl-vpf">word</span>: (word, <span class="pl-c1">1</span>)).reduce_by_key(<span class="pl-st">lambda</span> <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>: x <span class="pl-k">+</span> y)
+<span class="pl-c"># -&gt; [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]</span></pre></div>
+
+<h2>
+<a id="list-of-supported-functions" class="anchor" href="#list-of-supported-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of supported functions</h2>
+
+<h3>
+<a id="list-to-list" class="anchor" href="#list-to-list" aria-hidden="true"><span class="octicon octicon-link"></span></a>List to List</h3>
+
+<ul>
+<li>tail: get everything except first element</li>
+<li>drop: drop first n elements</li>
+<li>drop_while: drop first elements using f</li>
+<li>take: take first n elements</li>
+<li>take_while: take first elements using f</li>
+<li>map: map f onto sequence</li>
+<li>filter: filter sequence by f</li>
+<li>filter_not: filter sequence by not f</li>
+<li>reverse: reverse sequence</li>
+<li>distinct: return set of unique/distinct elements</li>
+<li>flatten</li>
+<li>flat_map</li>
+<li>group_by</li>
+<li>enumerate, zip_with_index</li>
+<li>partition</li>
+<li>slice</li>
+<li>zip</li>
+<li>sorted</li>
+</ul>
+
+<h3>
+<a id="list-of-key-value-to-list" class="anchor" href="#list-of-key-value-to-list" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of (Key, Value) to List</h3>
+
+<ul>
+<li>reduce_by_key</li>
+<li>group_by_key</li>
+</ul>
+
+<h3>
+<a id="list-to-value" class="anchor" href="#list-to-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>List to Value</h3>
+
+<ul>
+<li>head, first: get first element</li>
+<li>head_option: get first element or None</li>
+<li>last: get last element</li>
+<li>reduce: reduce sequence using f</li>
+<li>count, len, size: get count of sequence</li>
+<li>any</li>
+<li>all, for_all</li>
+<li>max, max_by</li>
+<li>min, min_by</li>
+<li>find</li>
+<li>empty</li>
+<li>non_empty</li>
+<li>string: similar to mkString</li>
+<li>sum</li>
+</ul>
+
+<h3>
+<a id="conversion-to-other-types" class="anchor" href="#conversion-to-other-types" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conversion to other types</h3>
+
+<ul>
+<li>set</li>
+<li>list</li>
+<li>to_dict</li>
+</ul>
+
+<h2>
+<a id="future-work" class="anchor" href="#future-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future work</h2>
+
+<ul>
+<li>Continue to find bugs and fix bugs</li>
+<li>Continue adding features from either scala collections or spark (or other methods in the same spirit)</li>
+<li>Continue adding tests</li>
+</ul>
+
+<h2>
+<a id="contributing-and-bug-fixes" class="anchor" href="#contributing-and-bug-fixes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing and Bug Fixes</h2>
+
+<p>This project is very, very new, so any feedback would be great!</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/EntilZha/ScalaFunctional/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/EntilZha/ScalaFunctional/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/EntilZha/ScalaFunctional"></a> is maintained by <a href="https://github.com/EntilZha">EntilZha</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
