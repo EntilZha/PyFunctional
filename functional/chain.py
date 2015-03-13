@@ -451,7 +451,7 @@ class FunctionalSequence(object):
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
 
     def to_list(self):
-        return self.sequence
+        return list(self.sequence)
 
     def list(self):
         return self.to_list()
