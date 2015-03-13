@@ -148,13 +148,13 @@ class TestChain(unittest.TestCase):
         l = seq([1, 2, 3])
         expect = [[1, 2, 3], [1, 2], [1], []]
         self.assertSequenceEqual(l.inits(), expect)
-        self.assertEquals(l.inits().map(lambda s: s.sum()), [6, 3, 1, 0])
+        self.assertEqual(l.inits().map(lambda s: s.sum()), [6, 3, 1, 0])
 
     def test_tails(self):
         l = seq([1, 2, 3])
         expect = [[1, 2, 3], [2, 3], [3], []]
         self.assertSequenceEqual(l.tails(), expect)
-        self.assertEquals(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
+        self.assertEqual(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
 
     def test_drop(self):
         l = [1, 2, 3, 4, 5, 6]
