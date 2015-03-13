@@ -48,8 +48,6 @@ class FunctionalSequence(object):
         return len(self.sequence)
 
     def __getitem__(self, key):
-        if isinstance(key, slice):
-            return FunctionalSequence(self.sequence[key])
         return _wrap(self.sequence[key])
 
     def __setitem__(self, key, value):
@@ -511,6 +509,8 @@ def _is_primitive(v):
 
 def _wrap(v):
     if _is_primitive(v):
+        return v
+    if isinstance(v, dict) or isinstance(v, set):
         return v
     elif isinstance(v, collections.Iterable):
         return FunctionalSequence(v)

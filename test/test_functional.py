@@ -54,6 +54,10 @@ class TestChain(unittest.TestCase):
         self.assertType(s[2])
         self.assertEqual(s[1:], [2, [3, 4, 5]])
         self.assertTrue(s[1:])
+        l = [{1, 2}, {2, 3}, {4, 5}]
+        s = seq(l)
+        self.assertIsInstance(s[0], set)
+        self.assertEqual(s[0], l[0])
 
     def test_setitem(self):
         l = [1, 2, 3, 4, [5, 6, 7]]
