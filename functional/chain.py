@@ -53,9 +53,6 @@ class FunctionalSequence(object):
     def __setitem__(self, key, value):
         self.sequence[key] = value
 
-    def __delitem__(self, key):
-        del self.sequence[key]
-
     def __iter__(self):
         return iter(self.sequence)
 

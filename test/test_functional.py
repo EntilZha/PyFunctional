@@ -66,13 +66,6 @@ class TestChain(unittest.TestCase):
         expect = [1, 8, 9, 4, [5, 6, 7]]
         self.assertEqual(s, expect)
 
-    def test_delitem(self):
-        l = [1, 2, 3, 4, [5, 6, 7]]
-        s = seq(l)
-        del s[1]
-        expected = [1, 3, 4, [5, 6, 7]]
-        self.assertEqual(s, expected)
-
     def test_iter(self):
         l = list(enumerate(seq([1, 2, 3])))
         e = list(enumerate([1, 2, 3]))
