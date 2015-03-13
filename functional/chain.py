@@ -186,15 +186,16 @@ class FunctionalSequence(object):
     def map(self, f):
         return FunctionalSequence(map(f, self.sequence))
 
+    def for_each(self, f):
+        for e in self.sequence:
+            f(e)
+
     def filter(self, f):
         return FunctionalSequence(filter(f, self.sequence))
 
     def filter_not(self, f):
         g = lambda x: not f(x)
         return FunctionalSequence(filter(g, self.sequence))
-
-    def reduce(self, f):
-        return reduce(f, self.sequence)
 
     def count(self, f):
         """
@@ -214,11 +215,11 @@ class FunctionalSequence(object):
     def size(self):
         return len(self.sequence)
 
-    def reverse(self):
-        return reversed(self)
+    def empty(self):
+        return len(self.sequence) == 0
 
-    def distinct(self):
-        return FunctionalSequence(list(set(self.sequence)))
+    def non_empty(self):
+        return len(self.sequence) != 0
 
     def any(self):
         return any(self.sequence)
@@ -226,8 +227,17 @@ class FunctionalSequence(object):
     def all(self):
         return all(self.sequence)
 
-    def enumerate(self, start=0):
-        return FunctionalSequence(enumerate(self.sequence, start=start))
+    def exists(self, f):
+        for e in self.sequence:
+            if f(e):
+                return True
+        return False
+
+    def for_all(self, f):
+        for e in self.sequence:
+            if not f(e):
+                return False
+        return True
 
     def max(self):
         """
@@ -365,44 +375,17 @@ class FunctionalSequence(object):
                 result[e[0]] = [e[1]]
         return FunctionalSequence(result.items())
 
-    def grouped(self, size):
-        """
-        Partitions the elements into groups of length size
+    def reduce_by_key(self, f):
+        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
 
-        The last partition will be at least of size 1 and no more than length size
-        :param size: size of the partitions
-        :return: sequence partitioned into groups of length size
-
-        >>>  seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
-        [[1, 2], [3, 4], [5, 6], [7, 8]]
-
-        >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
-        [[1, 2, 3], [4, 5, 6], [7, 8]]
-        """
-        result = []
-        for i in range(0, self.size(), size):
-            result.append(FunctionalSequence(self.sequence[i:i+size]))
-        return FunctionalSequence(result)
-
-    def empty(self):
-        return len(self.sequence) == 0
-
-    def non_empty(self):
-        return len(self.sequence) != 0
+    def reduce(self, f):
+        return reduce(f, self.sequence)
 
     def make_string(self, separator):
         return separator.join(str(e) for e in self.sequence)
 
-    def partition(self, f):
-        p1 = self.filter(f)
-        p2 = self.filter_not(f)
-        return FunctionalSequence((p1, p2))
-
     def product(self):
         return self.reduce(lambda x, y: x * y)
-
-    def slice(self, start, until):
-        return FunctionalSequence(self.sequence[start:until])
 
     def sum(self):
         return sum(self.sequence)
@@ -438,27 +421,44 @@ class FunctionalSequence(object):
     def zip_with_index(self):
         return FunctionalSequence(list(enumerate(self.sequence)))
 
+    def enumerate(self, start=0):
+        return FunctionalSequence(enumerate(self.sequence, start=start))
+
+    def partition(self, f):
+        p1 = self.filter(f)
+        p2 = self.filter_not(f)
+        return FunctionalSequence((p1, p2))
+
+    def grouped(self, size):
+        """
+        Partitions the elements into groups of length size
+
+        The last partition will be at least of size 1 and no more than length size
+        :param size: size of the partitions
+        :return: sequence partitioned into groups of length size
+
+        >>>  seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
+        [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+        >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
+        [[1, 2, 3], [4, 5, 6], [7, 8]]
+        """
+        result = []
+        for i in range(0, self.size(), size):
+            result.append(FunctionalSequence(self.sequence[i:i+size]))
+        return FunctionalSequence(result)
+
     def sorted(self, comp=None, key=None, reverse=False):
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
 
-    def reduce_by_key(self, f):
-        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
+    def reverse(self):
+        return reversed(self)
 
-    def exists(self, f):
-        for e in self.sequence:
-            if f(e):
-                return True
-        return False
+    def distinct(self):
+        return FunctionalSequence(list(set(self.sequence)))
 
-    def for_all(self, f):
-        for e in self.sequence:
-            if not f(e):
-                return False
-        return True
-
-    def for_each(self, f):
-        for e in self.sequence:
-            f(e)
+    def slice(self, start, until):
+        return FunctionalSequence(self.sequence[start:until])
 
     def to_list(self):
         return list(self.sequence)
