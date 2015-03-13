@@ -435,12 +435,6 @@ class FunctionalSequence(object):
         """
         return self.reverse().fold_left(zero_value, f)
 
-    def set(self):
-        return self.to_set()
-
-    def to_set(self):
-        return set(self.sequence)
-
     def zip(self, sequence):
         return FunctionalSequence(zip(self.sequence, sequence))
 
@@ -450,15 +444,8 @@ class FunctionalSequence(object):
     def sorted(self, comp=None, key=None, reverse=False):
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
 
-    def to_list(self):
-        return list(self.sequence)
-
-    def list(self):
-        return self.to_list()
-
-    def for_each(self, f):
-        for e in self.sequence:
-            f(e)
+    def reduce_by_key(self, f):
+        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
 
     def exists(self, f):
         for e in self.sequence:
@@ -472,14 +459,30 @@ class FunctionalSequence(object):
                 return False
         return True
 
+    def for_each(self, f):
+        for e in self.sequence:
+            f(e)
+
+    def to_list(self):
+        return list(self.sequence)
+
+    def list(self):
+        return self.to_list()
+
+    def to_set(self):
+        return set(self.sequence)
+
+    def set(self):
+        return self.to_set()
+
     def to_dict(self):
         d = {}
         for e in self.sequence:
             d[e[0]] = e[1]
         return d
 
-    def reduce_by_key(self, f):
-        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
+    def dict(self):
+        return self.to_dict()
 
 
 def seq(l):
