@@ -59,13 +59,6 @@ class TestChain(unittest.TestCase):
         self.assertIsInstance(s[0], set)
         self.assertEqual(s[0], l[0])
 
-    def test_setitem(self):
-        l = [1, 2, 3, 4, [5, 6, 7]]
-        s = seq(l)
-        s[1:3] = 8, 9
-        expect = [1, 8, 9, 4, [5, 6, 7]]
-        self.assertEqual(s, expect)
-
     def test_iter(self):
         l = list(enumerate(seq([1, 2, 3])))
         e = list(enumerate([1, 2, 3]))

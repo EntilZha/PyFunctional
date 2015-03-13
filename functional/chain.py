@@ -50,9 +50,6 @@ class FunctionalSequence(object):
     def __getitem__(self, key):
         return _wrap(self.sequence[key])
 
-    def __setitem__(self, key, value):
-        self.sequence[key] = value
-
     def __iter__(self):
         return iter(self.sequence)
 
