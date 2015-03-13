@@ -7,7 +7,7 @@ class FunctionalSequence(object):
     def __init__(self, sequence):
         if isinstance(sequence, FunctionalSequence):
             self.sequence = sequence._get_base_sequence()
-        elif isinstance(sequence, list):
+        elif isinstance(sequence, list) or isinstance(sequence, tuple):
             self.sequence = sequence
         elif isinstance(sequence, collections.Iterable):
             self.sequence = list(sequence)
