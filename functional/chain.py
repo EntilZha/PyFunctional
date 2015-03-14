@@ -135,6 +135,20 @@ class FunctionalSequence(object):
         """
         return _wrap(self.sequence[-1])
 
+    def last_option(self):
+        """
+        Returns the last element of the sequence or None, if the sequence is empty.
+
+        >>> seq([1, 2, 3]).last_option()
+        3
+
+        >>> seq([]).last_option()
+        None
+        """
+        if not self.sequence:
+            return None
+        return self.last()
+
     def init(self):
         """
         Returns the sequence, without its last element.
