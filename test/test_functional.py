@@ -120,6 +120,15 @@ class TestChain(unittest.TestCase):
         self.assertEqual(l.last(), [3, 4])
         self.assertType(l.last())
 
+    def test_last_option(self):
+        l = seq([1, 2, 3])
+        self.assertEqual(l.last_option(), 3)
+        l = seq([1, 2, [3, 4]])
+        self.assertEqual(l.last_option(), [3, 4])
+        self.assertType(l.last_option())
+        l = seq([])
+        self.assertIsNone(l.last_option())
+
     def test_init(self):
         l = seq([1, 2, 3, 4])
         expect = [1, 2, 3]

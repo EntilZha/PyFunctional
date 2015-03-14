@@ -69,7 +69,10 @@ seq([1, 2, 3])[-1]
 
 ## List of supported functions
 ### List to List
+* init: get everything except last element
 * tail: get everything except first element
+* inits: get subsequent inits
+* tails: get subsequent tails
 * drop: drop first n elements
 * drop_while: drop first elements using f
 * take: take first n elements
@@ -96,6 +99,7 @@ seq([1, 2, 3])[-1]
 * head, first: get first element
 * head_option: get first element or None
 * last: get last element
+* last_option: get last element or None
 * reduce: reduce sequence using f
 * fold_left
 * fold_right
