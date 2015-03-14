@@ -7,6 +7,8 @@
 [<img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest"/>](https://readthedocs.org/projects/scalafunctional/)
 
 # Motivation
+[Blog post about ScalaFunctional](http://pedrorodriguez.io/2015/03/14/chain-functional-programming-in-python-2/)
+
 Having programmed functionally in Scala and now using Python I missed the syntax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
 
 ```python
