@@ -1,10 +1,9 @@
-[**Travis CI Build**](https://travis-ci.org/EntilZha/ScalaFunctional)
-
+# ScalaFunctional
 [<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>](https://travis-ci.org/EntilZha/ScalaFunctional)
-
-[**ReadTheDocs Build**](https://readthedocs.org/projects/scalafunctional/)
-
-[<img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest"/>](https://readthedocs.org/projects/scalafunctional/)
+[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](https://readthedocs.org/projects/scalafunctional/)
+[![Latest Version](https://pypip.in/version/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
+[![Wheel Status](https://pypip.in/wheel/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
+[![License](https://pypip.in/license/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
 
 # Motivation
 [Blog post about ScalaFunctional](http://pedrorodriguez.io/2015/03/14/chain-functional-programming-in-python-2/)
