@@ -726,8 +726,7 @@ class FunctionalSequence(object):
         'Start:aabcbcdedeffmmnopnop'
 
         :param zero_value: zero value to reduce into
-        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter
-        is the current result
+        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
         result = zero_value
@@ -745,8 +744,7 @@ class FunctionalSequence(object):
         'Start:nopnopmmffdedebcbcaa'
 
         :param zero_value: zero value to reduce into
-        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter
-        is the current result
+        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
         return self.reverse().fold_left(zero_value, f)
