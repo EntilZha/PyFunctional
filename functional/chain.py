@@ -41,6 +41,16 @@ class FunctionalSequence(object):
         else:
             return self.sequence
 
+    def __getattr__(self, item):
+        """
+        Extends attribute access to any attributes that the underlying sequence may have. Since
+        __getattr__ is used instead of __getattribute__, attributes in FunctionalSequence take precedent
+
+        :param item: attribute to get
+        :return: either result of getting the item attribute from the sequence or an error
+        """
+        return getattr(self.sequence, item)
+
     def __eq__(self, other):
         """
         Checks for equality with the sequence's equality operator

@@ -1,4 +1,5 @@
 import unittest
+from collections import namedtuple
 
 from functional.chain import seq, FunctionalSequence, _wrap
 
@@ -16,6 +17,15 @@ class TestChain(unittest.TestCase):
         self.assertNotType(seq(l).sequence)
         self.assertType(seq(seq(l)))
         self.assertNotType(seq(seq(l)).sequence)
+
+    def test_get_attr(self):
+        CustomTuple = namedtuple("CustomTuple", 'x y')
+        t = CustomTuple(1, 2)
+        s = seq(t)
+        self.assertType(s)
+        self.assertEqual(s.sum(), 3)
+        self.assertEqual(s.x, 1)
+        self.assertEqual(s.y, 2)
 
     def test_eq(self):
         l = [1, 2, 3]
