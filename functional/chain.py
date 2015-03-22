@@ -901,7 +901,7 @@ class FunctionalSequence(object):
             result.append(FunctionalSequence(self.sequence[i:i+size]))
         return FunctionalSequence(result)
 
-    def sorted(self, comp=None, key=None, reverse=False):
+    def sorted(self, key=None, reverse=False):
         """
         Uses python sort and its passed arguments to sort the input.
 
@@ -913,7 +913,7 @@ class FunctionalSequence(object):
         :param reverse: return list reversed or not
         :return: sorted sequence
         """
-        return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
+        return FunctionalSequence(sorted(self.sequence, key=key, reverse=reverse))
 
     def reverse(self):
         """

@@ -50,6 +50,11 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 3]
         self.assertEqual(str(l), str(seq(l)))
 
+    def test_hash(self):
+        self.assertRaises(TypeError, lambda: hash(seq([1])))
+        t = (1, 2)
+        self.assertEqual(hash(t), hash(seq(t)))
+
     def test_len(self):
         l = [1, 2, 3]
         s = seq(l)
@@ -262,6 +267,12 @@ class TestChain(unittest.TestCase):
         f = lambda x, y: y + [x]
         self.assertEqual(l.fold_right([], f), ['c', 'b', 'a'])
 
+    def test_sorted(self):
+        s = seq([1, 3, 2, 5, 4])
+        r = s.sorted()
+        self.assertEqual([1, 2, 3, 4, 5], r)
+        self.assertType(r)
+
     def test_reverse(self):
         l = [1, 2, 3]
         expect = [3, 2, 1]
@@ -282,6 +293,15 @@ class TestChain(unittest.TestCase):
             self.assertTrue(e in expect)
         result = s.distinct()
         self.assertEqual(result.size(), len(expect))
+        self.assertType(result)
+
+    def test_slice(self):
+        s = seq([1, 2, 3, 4])
+        result = s.slice(1, 2)
+        self.assertEqual(result, [2])
+        self.assertType(result)
+        result = s.slice(1, 3)
+        self.assertEqual(result, [2, 3])
         self.assertType(result)
 
     def test_any(self):
@@ -465,6 +485,11 @@ class TestChain(unittest.TestCase):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         self.assertEqual(seq(l).to_dict(), d)
+
+    def test_dict(self):
+        l = [(1, 2), (2, 10), (7, 2)]
+        d = {1: 2, 2: 10, 7: 2}
+        self.assertEqual(seq(l).dict(), d)
 
     def test_reduce_by_key(self):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
