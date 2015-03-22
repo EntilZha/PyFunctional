@@ -295,6 +295,17 @@ class TestChain(unittest.TestCase):
         self.assertEqual(result, e)
         self.assertType(result)
 
+    def test_join(self):
+        l0 = [('a', 1), ('b', 2), ('c', 3)]
+        l1 = [('a', 2), ('c', 4), ('d', 5)]
+        result = seq(l0).join(l1)
+        e = [('a', (1, 2)), ('c', (3, 4))]
+        self.assertType(result)
+        self.assertSequenceEqual(dict(result), dict(e))
+        result = seq(l0).join(seq(l1))
+        self.assertType(result)
+        self.assertSequenceEqual(dict(result), dict(e))
+
     def test_max(self):
         l = [1, 2, 3]
         self.assertEqual(3, seq(l).max())

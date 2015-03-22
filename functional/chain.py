@@ -847,6 +847,27 @@ class FunctionalSequence(object):
         """
         return FunctionalSequence(enumerate(self.sequence, start=start))
 
+    def join(self, other):
+        """
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
+        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. Will return only elements
+        where the key exists in both sequences.
+
+        >>> seq([('a', 1), ('b', 2), ('c', 3)]).join([('a', 2), ('c', 5)])
+        [('a', (1, 2)), ('c', (3, 5))]
+
+        :param other: sequence to join with
+        :return: joined sequence of (K, (V, W)) pairs.
+        """
+        seq_kv = self.to_dict()
+        other_kv = dict(other)
+        keys = seq_kv.keys() if len(seq_kv) < len(other_kv) else other_kv.keys()
+        result = {}
+        for k in keys:
+            if k in seq_kv and k in other_kv:
+                result[k] = (seq_kv[k], other_kv[k])
+        return FunctionalSequence(result.items())
+
     def partition(self, f):
         """
         Partition the sequence based on satisfying the predicate f.
