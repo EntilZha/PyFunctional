@@ -179,6 +179,13 @@ class TestChain(unittest.TestCase):
         self.assertEqual(result, expect)
         self.assertTrue(result)
 
+    def test_drop_right(self):
+        s = seq([1, 2, 3, 4])
+        expect = [1, 2]
+        result = s.drop_right(2)
+        self.assertType(result)
+        self.assertEqual(result, expect)
+
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
         f = lambda x: x < 4
@@ -331,6 +338,39 @@ class TestChain(unittest.TestCase):
         result = seq(l0).join(seq(l1))
         self.assertType(result)
         self.assertSequenceEqual(dict(result), dict(e))
+
+    def test_left_join(self):
+        left = [('a', 1), ('b', 2)]
+        right = [('a', 2), ('c', 3)]
+        result = seq(left).left_join(right)
+        expect = [('a', (1, 2)), ('b', (2, None))]
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
+        result = seq(left).left_join(seq(right))
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
+
+    def test_right_join(self):
+        left = [('a', 1), ('b', 2)]
+        right = [('a', 2), ('c', 3)]
+        result = seq(left).right_join(right)
+        expect = [('a', (1, 2)), ('c', (None, 3))]
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
+        result = seq(left).right_join(seq(right))
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
+
+    def test_outer_join(self):
+        left = [('a', 1), ('b', 2)]
+        right = [('a', 2), ('c', 3)]
+        result = seq(left).outer_join(right)
+        expect = [('a', (1, 2)), ('b', (2, None)), ('c', (None, 3))]
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
+        result = seq(left).outer_join(seq(right))
+        self.assertType(result)
+        self.assertEqual(dict(result), dict(expect))
 
     def test_max(self):
         l = [1, 2, 3]

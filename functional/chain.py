@@ -102,6 +102,12 @@ class FunctionalSequence(object):
         return unicode(self.sequence)
 
     def __format__(self, formatstr):
+        """
+        Format the sequence using formatstr and format()
+
+        :param formatstr: format passed to format()
+        :return: formatted string
+        """
         return format(self.sequence, formatstr)
 
     def __nonzero__(self):
@@ -309,6 +315,18 @@ class FunctionalSequence(object):
         :return: sequence without first n elements
         """
         return FunctionalSequence(self.sequence[n:])
+
+    def drop_right(self, n):
+        """
+        Drops the last n elements of the sequence.
+
+        >>> seq([1, 2, 3, 4]).drop_right(2)
+        [1, 2]
+
+        :param n: number of elements to drop
+        :return: sequence with last n elements dropped
+        """
+        return FunctionalSequence(self.sequence[:n])
 
     def drop_while(self, f):
         """
@@ -857,7 +875,7 @@ class FunctionalSequence(object):
         [('a', (1, 2)), ('c', (3, 5))]
 
         :param other: sequence to join with
-        :return: joined sequence of (K, (V, W)) pairs.
+        :return: joined sequence of (K, (V, W)) pairs
         """
         seq_kv = self.to_dict()
         other_kv = dict(other)
@@ -867,6 +885,84 @@ class FunctionalSequence(object):
             if k in seq_kv and k in other_kv:
                 result[k] = (seq_kv[k], other_kv[k])
         return FunctionalSequence(result.items())
+
+    def _general_join(self, other, join_type):
+        """
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
+        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. If join_type is "left",
+        V values will always be present, W values may be present or None. If join_type is "right", W values will
+        always be present, W values may be present or None. If join_type is "outer", V or W may be present or None,
+        but never at the same time.
+
+        >>> seq([('a', 1), ('b', 2)])._general_join([('a', 3), ('c', 4)], "left")
+        [('a', (1, 3)), ('b', (2, None)]
+
+        >>> seq([('a', 1), ('b', 2)])._general_join([('a', 3), ('c', 4)], "right")
+        [('a', (1, 3)), ('c', (None, 4)]
+
+        >>> seq([('a', 1), ('b', 2)])._general_join([('a', 3), ('c', 4)], "outer")
+        [('a', (1, 3)), ('b', (2, None)), ('c', (None, 4))]
+
+        :param other: sequence to join with
+        :param join_type: specifies join_type, may be "left", "right", or "outer"
+        :return: side joined sequence of (K, (V, W)) pairs
+        """
+        seq_kv = self.to_dict()
+        other_kv = dict(other)
+        if join_type == "left":
+            keys = seq_kv.keys()
+        elif join_type == "right":
+            keys = other_kv.keys()
+        elif join_type == "outer":
+            keys = set(list(seq_kv.keys()) + list(other_kv.keys()))
+        else:
+            raise TypeError("Wrong type of join specified")
+        result = {}
+        for k in keys:
+            result[k] = (seq_kv.get(k), other_kv.get(k))
+        return FunctionalSequence(result.items())
+
+    def left_join(self, other):
+        """
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
+        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. V values will always be
+        present, W values may be present or None.
+
+        >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
+        [('a', (1, 3)), ('b', (2, None)]
+
+        :param other: sequence to join with
+        :return: left joined sequence of (K, (V, W)) pairs
+        """
+        return self._general_join(other, "left")
+
+    def right_join(self, other):
+        """
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
+        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. W values will always be
+        present, V values may be present or None.
+
+        >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
+        [('a', (1, 3)), ('b', (2, None)]
+
+        :param other: sequence to join with
+        :return: right joined sequence of (K, (V, W)) pairs
+        """
+        return self._general_join(other, "right")
+
+    def outer_join(self, other):
+        """
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
+        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. One of V or W will always
+        be not None, but the other may be None
+
+        >>> seq([('a', 1), ('b', 2)]).outer_join([('a', 3), ('c', 4)], "outer")
+        [('a', (1, 3)), ('b', (2, None)), ('c', (None, 4))]
+
+        :param other: sequence to join with
+        :return: outer joined sequence of (K, (V, W)) pairs
+        """
+        return self._general_join(other, "outer")
 
     def partition(self, f):
         """
