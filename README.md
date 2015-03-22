@@ -38,6 +38,8 @@ Almost all inspiration is either from [scala docs](http://www.scala-lang.org/api
 # Usage
 To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `FunctionalSequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
 
+For detailed docs on every function, refer to [readthedocs](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.chain)
+
 # Installation
 For common use, you can install via the command line and pip: `pip install scalafunctional`. Then in your code import it via 
 `from functional import seq`. For developers, clone the repo then run `python setup.py develop`.
