@@ -11,12 +11,18 @@ class TestChain(unittest.TestCase):
     def assertNotType(self, s):
         self.assertFalse(isinstance(s, FunctionalSequence))
 
+    def test_constructor(self):
+        self.assertRaises(TypeError, lambda: FunctionalSequence(1))
+
     def test_base_sequence(self):
         l = []
         self.assertType(seq(l))
         self.assertNotType(seq(l).sequence)
         self.assertType(seq(seq(l)))
         self.assertNotType(seq(seq(l)).sequence)
+        l = seq([])
+        l.sequence = seq([])
+        self.assertNotType(l._get_base_sequence())
 
     def test_get_attr(self):
         CustomTuple = namedtuple("CustomTuple", 'x y')
