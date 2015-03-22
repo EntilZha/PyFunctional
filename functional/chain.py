@@ -32,7 +32,7 @@ class FunctionalSequence(object):
 
     def _get_base_sequence(self):
         """
-        Retrieves the root sequence wrapped by one or more FunctionalSequence objects
+        Retrieves the root sequence wrapped by one or more FunctionalSequence objects.
 
         :return: root sequence
         """
@@ -43,7 +43,7 @@ class FunctionalSequence(object):
 
     def __eq__(self, other):
         """
-        Checks for equality with the sequence's equality operator
+        Checks for equality with the sequence's equality operator.
 
         :param other: object to compare to
         :return: true if the underlying sequence is equal to other
@@ -52,7 +52,7 @@ class FunctionalSequence(object):
 
     def __ne__(self, other):
         """
-        Checks for inequality with the sequence's inequality operator
+        Checks for inequality with the sequence's inequality operator.
 
         :param other: object to compare to
         :return: true if the underlying sequence is not equal to other
@@ -61,43 +61,96 @@ class FunctionalSequence(object):
 
     def __hash__(self):
         """
-        Return the hash of the sequence
+        Return the hash of the sequence.
 
         :return: hash of sequence
         """
         return hash(self.sequence)
 
     def __repr__(self):
+        """
+        Return repr using sequence's repr function.
+
+        :return: sequence's repr
+        """
         return repr(self.sequence)
 
     def __str__(self):
+        """
+        Return string using sequence's string function.
+
+        :return: sequence's string
+        """
         return str(self.sequence)
 
     def __unicode__(self):
+        """
+        Return unicode using sequence's unicode function.
+
+        :return: sequence's unicode
+        """
         return unicode(self.sequence)
 
     def __format__(self, formatstr):
         return format(self.sequence, formatstr)
 
     def __nonzero__(self):
+        """
+        Returns True if size is not zero.
+
+        :return: True if size is not zero
+        """
         return self.size() != 0
 
     def __len__(self):
+        """
+        Return length of sequence.
+
+        :return: length of sequence
+        """
         return len(self.sequence)
 
     def __getitem__(self, key):
+        """
+        Kets item at index key.
+
+        :param key: key to use for getitem
+        :return: item at index key
+        """
         return _wrap(self.sequence[key])
 
     def __iter__(self):
+        """
+        Return iterator of sequence.
+
+        :return: iterator of sequence
+        """
         return iter(self.sequence)
 
     def __reversed__(self):
+        """
+        Return reversed sequence using sequence's reverse function
+
+        :return: reversed sequence
+        """
         return FunctionalSequence(reversed(self.sequence))
 
     def __contains__(self, item):
+        """
+        Checks if item is in sequence.
+
+        :param item: item to check
+        :return: True if item is in sequence
+        """
         return self.sequence.__contains__(item)
 
     def __add__(self, other):
+        """
+        Concatenates sequence with other.
+
+        :param other: sequence to concatenate
+        :return: concatenated sequence with other
+        """
         if isinstance(other, FunctionalSequence):
             return FunctionalSequence(self.sequence + other.sequence)
         else:
@@ -750,32 +803,67 @@ class FunctionalSequence(object):
         return self.reverse().fold_left(zero_value, f)
 
     def zip(self, sequence):
+        """
+        Zips the stored sequence with the given sequence.
+
+        >>> seq([1, 2, 3]).zip([4, 5, 6])
+        [(1, 4), (2, 5), (3, 6)]
+
+        :param sequence: second sequence to zip
+        :return: stored sequence zipped with given sequence
+        """
         return FunctionalSequence(zip(self.sequence, sequence))
 
     def zip_with_index(self):
-        return FunctionalSequence(list(enumerate(self.sequence)))
+        """
+        Zips the sequence to its index, with the index being the first element of each tuple.
+
+        >>> seq(['a', 'b', 'c']).zip_with_index()
+        [(0, 'a'), (1, 'b'), (2, 'c')]
+
+        :return: sequence zipped to its index
+        """
+        return FunctionalSequence(enumerate(self.sequence))
 
     def enumerate(self, start=0):
+        """
+        Uses python enumerate to to zip the sequence with indexes starting at start.
+
+        >>> seq(['a', 'b', 'c']).enumerate(start=1)
+        [(1, 'a'), (2, 'b'), (3, 'c')]
+
+        :param start: Beginning of zip
+        :return: enumerated sequence starting at start
+        """
         return FunctionalSequence(enumerate(self.sequence, start=start))
 
     def partition(self, f):
+        """
+        Partition the sequence based on satisfying the predicate f.
+
+        >>> seq([-1, 1, -2, 2]).partition(lambda x: x < 0)
+        ([-1, -2], [1, 2])
+
+        :param f: predicate to partition on
+        :return: tuple of partitioned sequences
+        """
         p1 = self.filter(f)
         p2 = self.filter_not(f)
         return FunctionalSequence((p1, p2))
 
     def grouped(self, size):
         """
-        Partitions the elements into groups of length size
+        Partitions the elements into groups of length size.
 
-        The last partition will be at least of size 1 and no more than length size
-        :param size: size of the partitions
-        :return: sequence partitioned into groups of length size
-
-        >>>  seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
+        >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(2)
         [[1, 2], [3, 4], [5, 6], [7, 8]]
 
         >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
         [[1, 2, 3], [4, 5, 6], [7, 8]]
+
+        The last partition will be at least of size 1 and no more than length size
+        :param size: size of the partitions
+        :return: sequence partitioned into groups of length size
         """
         result = []
         for i in range(0, self.size(), size):
@@ -783,40 +871,176 @@ class FunctionalSequence(object):
         return FunctionalSequence(result)
 
     def sorted(self, comp=None, key=None, reverse=False):
+        """
+        Uses python sort and its passed arguments to sort the input.
+
+        >>> seq([2, 1, 4, 3]).sorted()
+        [1, 2, 3, 4]
+
+        :param comp: comparator
+        :param key:
+        :param reverse: return list reversed or not
+        :return: sorted sequence
+        """
         return FunctionalSequence(sorted(self.sequence, cmp=comp, key=key, reverse=reverse))
 
     def reverse(self):
+        """
+        Returns the reversed sequence.
+
+        >>> seq([1, 2, 3]).reverse()
+        [3, 2, 1]
+
+        :return: reversed sequence
+        """
         return reversed(self)
 
     def distinct(self):
+        """
+        Returns sequence of distinct elements. Elements must be hashable.
+
+        >>> seq([1, 1, 2, 3, 3, 3, 4]).distinct()
+        [1, 2, 3, 4]
+
+        :return: sequence of distinct elements
+        """
         return FunctionalSequence(list(set(self.sequence)))
 
     def slice(self, start, until):
+        """
+        Takes a slice of the sequence starting at start and until but not including until.
+
+        >>> seq([1, 2, 3, 4]).slice(1, 2)
+        [2]
+        >>> seq([1, 2, 3, 4]).slice(1, 3)
+        [2, 3]
+
+        :param start: starting index
+        :param until: ending index
+        :return: slice including start until but not including until
+        """
         return FunctionalSequence(self.sequence[start:until])
 
     def to_list(self):
+        """
+        Converts sequence to list of elements.
+
+        >>> type(seq([]).to_list())
+        list
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([1, 2, 3]).to_list()
+        [1, 2, 3]
+
+        :return: list of elements in sequence
+        """
         return list(self.sequence)
 
     def list(self):
+        """
+        Converts sequence to list of elements.
+
+        >>> type(seq([]).list())
+        list
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([1, 2, 3]).list()
+        [1, 2, 3]
+
+        :return: list of elements in sequence
+        """
         return self.to_list()
 
     def to_set(self):
+        """
+        Converts sequence to a set of elements.
+
+        >>> type(seq([])).to_set()
+        set
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([1, 1, 2, 2]).to_set()
+        {1, 2}
+
+        :return:set of elements in sequence
+        """
         return set(self.sequence)
 
     def set(self):
+        """
+        Converts sequence to a set of elements.
+
+        >>> type(seq([])).to_set()
+        set
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([1, 1, 2, 2]).set()
+        {1, 2}
+
+        :return:set of elements in sequence
+        """
         return self.to_set()
 
     def to_dict(self):
+        """
+        Converts sequence of (Key, Value) pairs to a dictionary.
+
+        >>> type(seq([('a', 1)]).to_dict())
+        dict
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([('a', 1), ('b', 2)]).to_dict()
+        {'a': 1, 'b': 2}
+
+        :return: dictionary from sequence of (Key, Value) elements
+        """
         d = {}
         for e in self.sequence:
             d[e[0]] = e[1]
         return d
 
     def dict(self):
+        """
+        Converts sequence of (Key, Value) pairs to a dictionary.
+
+        >>> type(seq([('a', 1)]).to_dict())
+        dict
+
+        >>> type(seq([]))
+        functional.chain.FunctionalSequence
+
+        >>> seq([('a', 1), ('b', 2)]).to_dict()
+        {'a': 1, 'b': 2}
+
+        :return: dictionary from sequence of (Key, Value) elements
+        """
         return self.to_dict()
 
 
 def seq(l):
+    """
+    Alias function for creating a new FunctionalSequence. Calling seq() and FunctionalSequence() is functionally
+    equivalent
+
+    >>> type(seq([1, 2]))
+    functional.chain.FunctionalSequence
+
+    >>> type(FunctionalSequence([1, 2]))
+    functional.chain.FunctionalSequence
+
+    :param l: sequence to wrap in FunctionalSequence
+    :return: wrapped sequence
+    """
     return FunctionalSequence(l)
 
 
@@ -829,6 +1053,29 @@ else:
 
 
 def _is_primitive(v):
+    """
+    Checks if the passed value is a primitive type.
+
+    >>> _is_primitive(1)
+    True
+
+    >>> _is_primitive("abc")
+    True
+
+    >>> _is_primitive(True)
+    True
+
+    >>> _is_primitive({})
+    False
+
+    >>> _is_primitive([])
+    False
+
+    >>> _is_primitive(set([]))
+
+    :param v: value to check
+    :return: True if value is a primitive, else False
+    """
     return isinstance(v, str) \
         or isinstance(v, bool) \
         or isinstance(v, _str_types) \
@@ -839,6 +1086,22 @@ def _is_primitive(v):
 
 
 def _wrap(v):
+    """
+    Wraps the passed value in a FunctionalSequence if it is not a primitive. If it is a string
+    argument it is expanded to a list of characters.
+
+    >>> _wrap(1)
+    1
+
+    >>> _wrap("abc")
+    ['a', 'b', 'c']
+
+    >>> type(_wrap([1, 2]))
+    functional.chain.FunctionalSequence
+
+    :param v: value to wrap
+    :return: wrapped or not wrapped value
+    """
     if _is_primitive(v):
         return v
     if isinstance(v, dict) or isinstance(v, set):
