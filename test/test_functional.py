@@ -209,6 +209,30 @@ class TestChain(unittest.TestCase):
         self.assertEqual(expect, result)
         self.assertType(result)
 
+    def test_union(self):
+        result = seq([1, 1, 2, 3, 3]).union([1, 4, 5])
+        expect = [1, 2, 3, 4, 5]
+        self.assertType(result)
+        self.assertEqual(result, expect)
+
+    def test_intersection(self):
+        result = seq([1, 2, 2, 3]).intersection([2, 3, 4, 5])
+        expect = [2, 3]
+        self.assertType(result)
+        self.assertEqual(result, expect)
+
+    def test_difference(self):
+        result = seq([1, 2, 3]).difference([2, 3, 4])
+        expect = [1]
+        self.assertType(result)
+        self.assertEqual(result, expect)
+
+    def test_symmetric_difference(self):
+        result = seq([1, 2, 3, 3]).symmetric_difference([2, 4, 5])
+        expect = [1, 3, 4, 5]
+        self.assertType(result)
+        self.assertEqual(result, expect)
+
     def test_map(self):
         f = lambda x: x * 2
         l = [1, 2, 0, 5]

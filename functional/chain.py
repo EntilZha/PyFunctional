@@ -372,6 +372,59 @@ class FunctionalSequence(object):
                 break
         return self.take(i)
 
+    def union(self, other):
+        """
+        New sequence with unique elements from self.sequence and other.
+
+        >>> seq([1, 1, 2, 3, 3]).union([1, 4, 5])
+        [1, 2, 3, 4, 5]
+
+        :param other: sequence to union with
+        :return: union of sequence and other
+        """
+        result = set(self.sequence).union(set(other))
+        return FunctionalSequence(list(result))
+
+    def intersection(self, other):
+        """
+        New sequence with unique elements present in sequence and other.
+
+        >>> seq([1, 1, 2, 3]).intersection([2, 3, 4])
+        [2, 3]
+
+        :param other: sequence to perform intersection with
+        :return: intersection of sequence and other
+        """
+        result = set(self.sequence).intersection(set(other))
+        return FunctionalSequence(list(result))
+
+    def difference(self, other):
+        """
+        New sequence with unique elements present in sequence but not in other.
+
+        >>> seq([1, 2, 3]).difference([2, 3, 4])
+        [1]
+
+        :param other: sequence to perform difference with
+        :return: difference of sequence and other
+        """
+        result = set(self.sequence).difference(set(other))
+        return FunctionalSequence(list(result))
+
+    def symmetric_difference(self, other):
+        """
+        New sequence with elements in either sequence or other, but not both.
+
+        >>> seq([1, 2, 3, 3]).symmetric_difference([2, 4, 5])
+        [1, 3, 4, 5]
+
+        :param other: sequence to perform symmetric difference with
+        :return: symmetric difference of sequence and other
+        """
+
+        result = set(self.sequence).symmetric_difference(set(other))
+        return FunctionalSequence(list(result))
+
     def map(self, f):
         """
         Maps f onto the elements of the sequence.
