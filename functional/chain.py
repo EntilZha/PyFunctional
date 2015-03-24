@@ -99,6 +99,7 @@ class FunctionalSequence(object):
 
         :return: sequence's repr
         """
+        self._expand_iterable()
         return repr(self.sequence)
 
     def __str__(self):
@@ -107,6 +108,7 @@ class FunctionalSequence(object):
 
         :return: sequence's string
         """
+        self._expand_iterable()
         return str(self.sequence)
 
     def __unicode__(self):
@@ -116,15 +118,6 @@ class FunctionalSequence(object):
         :return: sequence's unicode
         """
         return unicode(self.sequence)
-
-    def __format__(self, formatstr):
-        """
-        Format the sequence using formatstr and format()
-
-        :param formatstr: format passed to format()
-        :return: formatted string
-        """
-        return format(self.sequence, formatstr)
 
     def __nonzero__(self):
         """
