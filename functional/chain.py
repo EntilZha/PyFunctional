@@ -1138,6 +1138,7 @@ class FunctionalSequence(object):
 
         :return: list of elements in sequence
         """
+        self._expand_iterable()
         return list(self.sequence)
 
     def list(self):
@@ -1172,6 +1173,7 @@ class FunctionalSequence(object):
 
         :return:set of elements in sequence
         """
+        self._expand_iterable()
         return set(self.sequence)
 
     def set(self):
@@ -1206,6 +1208,7 @@ class FunctionalSequence(object):
 
         :return: dictionary from sequence of (Key, Value) elements
         """
+        self._expand_iterable()
         d = {}
         for e in self.sequence:
             d[e[0]] = e[1]
