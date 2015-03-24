@@ -154,9 +154,9 @@ class TestChain(unittest.TestCase):
         self.assertIsNone(l.last_option())
 
     def test_init(self):
-        l = seq([1, 2, 3, 4]).map(lambda x: x)
+        result = seq([1, 2, 3, 4]).map(lambda x: x).init()
         expect = [1, 2, 3]
-        self.assertSequenceEqual(l.init(), expect)
+        self.assertSequenceEqual(result, expect)
 
     def test_tail(self):
         l = seq([1, 2, 3, 4]).map(lambda x: x)
@@ -241,6 +241,7 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]
         result = seq(l).map(f)
+        self.assert_iterable(result.sequence)
         self.assertSequenceEqual(expect, result)
         self.assert_type(result)
 
