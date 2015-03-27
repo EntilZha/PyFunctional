@@ -77,7 +77,7 @@ class TestChain(unittest.TestCase):
         self.assertEqual(s[2], [3, 4, 5])
         self.assert_type(s[2])
         self.assertEqual(s[1:], [2, [3, 4, 5]])
-        self.assertTrue(s[1:])
+        self.assert_type(s[1:])
         l = [{1, 2}, {2, 3}, {4, 5}]
         s = seq(l)
         self.assertIsInstance(s[0], set)
@@ -180,7 +180,7 @@ class TestChain(unittest.TestCase):
         expect = [5, 6]
         result = s.drop(4)
         self.assertSequenceEqual(result, expect)
-        self.assertTrue(result)
+        self.assert_type(result)
         self.assertSequenceEqual(s.drop(0), s)
         self.assertSequenceEqual(s.drop(-1), s)
 
@@ -206,7 +206,7 @@ class TestChain(unittest.TestCase):
         expect = [1, 2, 3, 4]
         result = s.take(4)
         self.assertSequenceEqual(result, expect)
-        self.assertTrue(result)
+        self.assert_type(result)
         self.assertSequenceEqual(s.take(0), seq([]))
         self.assertSequenceEqual(s.take(-1), seq([]))
 
