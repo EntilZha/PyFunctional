@@ -333,7 +333,10 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence without first n elements
         """
-        return FunctionalSequence(self.slice(n, None))
+        if n <= 0:
+            return self
+        else:
+            return FunctionalSequence(self.slice(n, None))
 
     def drop_right(self, n):
         """
@@ -345,8 +348,11 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
-        self._expand_iterable()
-        return FunctionalSequence(self.sequence[:-n])
+        if n <= 0:
+            return self
+        else:
+            self._expand_iterable()
+            return FunctionalSequence(self.sequence[:-n])
 
     def drop_while(self, f):
         """
@@ -370,7 +376,10 @@ class FunctionalSequence(object):
         :param n: number of elements to take
         :return: first n elements of sequence
         """
-        return FunctionalSequence(self.slice(0, n))
+        if n <= 0:
+            return FunctionalSequence([])
+        else:
+            return FunctionalSequence(self.slice(0, n))
 
     def take_while(self, f):
         """
