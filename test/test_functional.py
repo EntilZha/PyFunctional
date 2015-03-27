@@ -176,18 +176,22 @@ class TestChain(unittest.TestCase):
         self.assertSequenceEqual(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
 
     def test_drop(self):
-        l = [1, 2, 3, 4, 5, 6]
+        s = seq([1, 2, 3, 4, 5, 6])
         expect = [5, 6]
-        result = seq(l).map(lambda x: x).drop(4)
+        result = s.drop(4)
         self.assertSequenceEqual(result, expect)
         self.assertTrue(result)
+        self.assertSequenceEqual(s.drop(0), s)
+        self.assertSequenceEqual(s.drop(-1), s)
 
     def test_drop_right(self):
-        s = seq([1, 2, 3, 4])
-        expect = [1, 2]
+        s = seq([1, 2, 3, 4, 5])
+        expect = [1, 2, 3]
         result = s.drop_right(2)
         self.assert_type(result)
         self.assertSequenceEqual(result, expect)
+        self.assertSequenceEqual(s.drop_right(0), s)
+        self.assertSequenceEqual(s.drop_right(-1), s)
 
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -198,11 +202,13 @@ class TestChain(unittest.TestCase):
         self.assert_type(result)
 
     def test_take(self):
-        l = [1, 2, 3, 4, 5, 6]
+        s = seq([1, 2, 3, 4, 5, 6])
         expect = [1, 2, 3, 4]
-        result = seq(l).take(4)
+        result = s.take(4)
         self.assertSequenceEqual(result, expect)
         self.assertTrue(result)
+        self.assertSequenceEqual(s.take(0), seq([]))
+        self.assertSequenceEqual(s.take(-1), seq([]))
 
     def test_take_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
