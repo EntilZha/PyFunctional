@@ -339,14 +339,14 @@ class FunctionalSequence(object):
         """
         Drops the last n elements of the sequence.
 
-        >>> seq([1, 2, 3, 4]).drop_right(2)
-        [1, 2]
+        >>> seq([1, 2, 3, 4, 5]).drop_right(2)
+        [1, 2, 3]
 
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
         self._expand_iterable()
-        return FunctionalSequence(self.sequence[:n])
+        return FunctionalSequence(self.sequence[:-n])
 
     def drop_while(self, f):
         """

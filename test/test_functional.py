@@ -183,8 +183,8 @@ class TestChain(unittest.TestCase):
         self.assertTrue(result)
 
     def test_drop_right(self):
-        s = seq([1, 2, 3, 4])
-        expect = [1, 2]
+        s = seq([1, 2, 3, 4, 5])
+        expect = [1, 2, 3]
         result = s.drop_right(2)
         self.assert_type(result)
         self.assertSequenceEqual(result, expect)
