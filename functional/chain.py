@@ -2,6 +2,7 @@ import collections
 import sys
 from functools import reduce
 from itertools import dropwhile, takewhile, islice
+from operator import mul
 
 if sys.version < '3':
     _integer_types = (int, long)
@@ -858,9 +859,17 @@ class FunctionalSequence(object):
         >>> seq([1, 2, 3, 4]).product()
         24
 
+        >>> seq([]).product()
+        1
+
         :return: product of elements in sequence
         """
-        return self.reduce(lambda x, y: x * y)
+        if self.empty():
+            return 1
+        if self.size() == 1:
+            return self.first()
+
+        return self.reduce(mul)
 
     def sum(self):
         """
