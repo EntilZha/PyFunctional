@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/EntilZha/ScalaFunctional.png?label=ready&title=Ready)](https://waffle.io/EntilZha/ScalaFunctional)
 # ScalaFunctional
 [<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>](https://travis-ci.org/EntilZha/ScalaFunctional)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](https://readthedocs.org/projects/scalafunctional/)
