@@ -1,7 +1,10 @@
 language: python
 install:
   - pip install -q coverage
+  - pip install python-coveralls
 python:
   - "2.7"
   - "3.4"
 script: nosetests --with-coverage
+after_success:
+  - coveralls
