@@ -27,15 +27,6 @@ class TestChain(unittest.TestCase):
         l.sequence = seq([])
         self.assert_not_type(l._get_base_sequence())
 
-    def test_get_attr(self):
-        CustomTuple = namedtuple("CustomTuple", 'x y')
-        t = CustomTuple(1, 2)
-        s = seq(t)
-        self.assert_type(s)
-        self.assertEqual(s.sum(), 3)
-        self.assertEqual(s.x, 1)
-        self.assertEqual(s.y, 2)
-
     def test_eq(self):
         l = [1, 2, 3]
         self.assertSequenceEqual(seq(l).map(lambda x: x), seq(l))
@@ -55,8 +46,6 @@ class TestChain(unittest.TestCase):
 
     def test_hash(self):
         self.assertRaises(TypeError, lambda: hash(seq([1])))
-        t = (1, 2)
-        self.assertEqual(hash(t), hash(seq(t)))
 
     def test_len(self):
         l = [1, 2, 3]
