@@ -236,7 +236,6 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]
         result = seq(l).map(f)
-        self.assert_iterable(result.sequence)
         self.assertSequenceEqual(expect, result)
         self.assert_type(result)
 

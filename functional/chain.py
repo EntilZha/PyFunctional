@@ -61,18 +61,13 @@ class FunctionalSequence(object):
         else:
             return self._base_sequence
 
-    def _expand_iterable(self):
-        raise NotImplementedError
-        if _is_iterable(self.sequence):
-            self.sequence = list(self.sequence)
-
     def __iter__(self):
         """
         Return iterator of sequence.
 
         :return: iterator of sequence
         """
-        return self._lineage.evaluate(self._base_sequence)
+        return self._evaluate()
 
     def __eq__(self, other):
         """
@@ -106,7 +101,7 @@ class FunctionalSequence(object):
 
         :return: sequence's repr
         """
-        return repr(list(self))
+        return repr(self.to_list())
 
     def __str__(self):
         """
@@ -114,7 +109,7 @@ class FunctionalSequence(object):
 
         :return: sequence's string
         """
-        return str(list(self))
+        return str(self.to_list())
 
     def __nonzero__(self):
         """
@@ -130,7 +125,8 @@ class FunctionalSequence(object):
 
         :return: length of sequence
         """
-        return len(list(iter(self)))
+        self.cache()
+        return len(self._base_sequence)
 
     def __getitem__(self, key):
         """
@@ -149,8 +145,7 @@ class FunctionalSequence(object):
 
         :return: reversed sequence
         """
-        raise NotImplementedError
-        return FunctionalSequence(reversed(self.sequence))
+        return FunctionalSequence(self, transform=reversed_t())
 
     def __contains__(self, item):
         """
@@ -159,8 +154,6 @@ class FunctionalSequence(object):
         :param item: item to check
         :return: True if item is in sequence
         """
-        raise NotImplementedError
-        self._expand_iterable()
         return self.sequence.__contains__(item)
 
     def __add__(self, other):
@@ -177,9 +170,18 @@ class FunctionalSequence(object):
         else:
             return FunctionalSequence(self.sequence + other)
 
+    def _evaluate(self):
+        return self._lineage.evaluate(self._base_sequence)
+
     @property
     def sequence(self):
-        return list(self)
+        return self.to_list()
+
+    def cache(self):
+        if len(self._lineage) == 0 or self._lineage[-1] == CACHE_T:
+            return
+        self._base_sequence = list(self._evaluate())
+        self._lineage.apply(CACHE_T)
 
     def head(self):
         """
@@ -1157,7 +1159,6 @@ class FunctionalSequence(object):
 
         :return: reversed sequence
         """
-        raise NotImplementedError
         return reversed(self)
 
     def distinct(self):
@@ -1203,7 +1204,8 @@ class FunctionalSequence(object):
 
         :return: list of elements in sequence
         """
-        return list(self)
+        self.cache()
+        return self._base_sequence
 
     def list(self):
         """

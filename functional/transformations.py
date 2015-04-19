@@ -15,6 +15,8 @@ else:
 
 Transformation = collections.namedtuple('Transformation', ['name', 'function'])
 
+CACHE_T = Transformation('cache', None)
+
 
 def list_t():
     return Transformation('list', list)
@@ -30,3 +32,7 @@ def filter_t(func):
 
 def filter_not_t(func):
     return Transformation('filter_not({0})'.format(func.__name__), partial(ifilterfalse, func))
+
+
+def reversed_t():
+    return Transformation('reversed', reversed)
