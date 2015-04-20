@@ -128,16 +128,15 @@ class FunctionalSequence(object):
         self.cache()
         return len(self._base_sequence)
 
-    def __getitem__(self, key):
+    def __getitem__(self, item):
         """
-        Kets item at index key.
+        Gets item at given index.
 
-        :param key: key to use for getitem
+        :param index: key to use for getitem
         :return: item at index key
         """
-        raise NotImplementedError
-        self._expand_iterable()
-        return _wrap(self.sequence[key])
+        self.cache()
+        return _wrap(self.sequence[item])
 
     def __reversed__(self):
         """
@@ -145,7 +144,7 @@ class FunctionalSequence(object):
 
         :return: reversed sequence
         """
-        return FunctionalSequence(self, transform=reversed_t())
+        return self._transform(reversed_t())
 
     def __contains__(self, item):
         """
@@ -163,8 +162,6 @@ class FunctionalSequence(object):
         :param other: sequence to concatenate
         :return: concatenated sequence with other
         """
-        raise NotImplementedError
-        self._expand_iterable()
         if isinstance(other, FunctionalSequence):
             return FunctionalSequence(self.sequence + other.sequence)
         else:
@@ -172,6 +169,9 @@ class FunctionalSequence(object):
 
     def _evaluate(self):
         return self._lineage.evaluate(self._base_sequence)
+
+    def _transform(self, transform):
+        return FunctionalSequence(self, transform=transform)
 
     @property
     def sequence(self):
@@ -199,8 +199,6 @@ class FunctionalSequence(object):
 
         :return: first element of sequence
         """
-        raise NotImplementedError
-        self._expand_iterable()
         return _wrap(self.sequence[0])
 
     def first(self):
@@ -219,7 +217,6 @@ class FunctionalSequence(object):
 
         :return: first element of sequence
         """
-        raise NotImplementedError
         return self.head()
 
     def head_option(self):
@@ -234,7 +231,6 @@ class FunctionalSequence(object):
 
         :return: first element of sequence or None if sequence is empty
         """
-        raise NotImplementedError
         if not self.sequence:
             return None
         return self.head()
@@ -255,8 +251,6 @@ class FunctionalSequence(object):
 
         :return: last element of sequence
         """
-        raise NotImplementedError
-        self._expand_iterable()
         return _wrap(self.sequence[-1])
 
     def last_option(self):
@@ -271,7 +265,6 @@ class FunctionalSequence(object):
 
         :return: last element of sequence or None if sequence is empty
         """
-        raise NotImplementedError
         if not self.sequence:
             return None
         return self.last()
@@ -286,7 +279,6 @@ class FunctionalSequence(object):
         :return: sequence without last element
         """
         raise NotImplementedError
-        self._expand_iterable()
         return FunctionalSequence(self.sequence[:-1])
 
     def tail(self):
@@ -311,7 +303,6 @@ class FunctionalSequence(object):
         :return: consecutive init()s on sequence
         """
         raise NotImplementedError
-        self._expand_iterable()
         result = [_wrap(self.sequence[:i]) for i in reversed(range(len(self.sequence) + 1))]
         return FunctionalSequence(result)
 
@@ -325,7 +316,6 @@ class FunctionalSequence(object):
         :return: consecutive tail()s of the sequence
         """
         raise NotImplementedError
-        self._expand_iterable()
         result = [_wrap(self.sequence[i:]) for i in range(len(self.sequence) + 1)]
         return FunctionalSequence(result)
 
@@ -470,7 +460,7 @@ class FunctionalSequence(object):
         :param f: function to map with
         :return: sequence with f mapped onto it
         """
-        return FunctionalSequence(self, transform=map_t(f))
+        return self._transform(map_t(f))
 
     def for_each(self, f):
         """
@@ -498,7 +488,7 @@ class FunctionalSequence(object):
         :param func: function to filter on
         :return: filtered sequence
         """
-        return FunctionalSequence(self, transform=filter_t(func))
+        return self._transform(filter_t(func))
 
     def filter_not(self, func):
         """
@@ -510,22 +500,21 @@ class FunctionalSequence(object):
         :param func: function to filter_not on
         :return: filtered sequence
         """
-        return FunctionalSequence(self, transform=filter_not_t(func))
+        return self._transform(filter_not_t(func))
 
-    def count(self, f):
+    def count(self, func):
         """
         Counts the number of elements in the sequence which satisfy the predicate f.
 
         >>> seq([-1, -2, 1, 2]).count(lambda x: x > 0)
         2
 
-        :param f: predicate to count elements on
+        :param func: predicate to count elements on
         :return: count of elements that satisfy predicate
         """
-        raise NotImplementedError
         n = 0
-        for e in self.sequence:
-            if f(e):
+        for element in self:
+            if func(element):
                 n += 1
         return n
 
@@ -560,7 +549,6 @@ class FunctionalSequence(object):
 
         :return: True if sequence length is zero
         """
-        raise NotImplementedError
         return self.size() == 0
 
     def non_empty(self):
@@ -575,7 +563,6 @@ class FunctionalSequence(object):
 
         :return: True if sequence length is not zero
         """
-        raise NotImplementedError
         return self.size() != 0
 
     def any(self):
@@ -590,8 +577,7 @@ class FunctionalSequence(object):
 
         :return: True if any element is True
         """
-        raise NotImplementedError
-        return any(self.sequence)
+        return any(self)
 
     def all(self):
         """
@@ -605,10 +591,9 @@ class FunctionalSequence(object):
 
         :return: True if all items truth value evaluates to True
         """
-        raise NotImplementedError
-        return all(self.sequence)
+        return all(self)
 
-    def exists(self, f):
+    def exists(self, func):
         """
         Returns True if an element in the sequence makes f evaluate to True.
 
@@ -618,16 +603,15 @@ class FunctionalSequence(object):
         >>> seq([1, 2, 3, 4]).exists(lambda x: x < 0)
         False
 
-        :param f: existence check function
+        :param func: existence check function
         :return: True if any element satisfies f
         """
-        raise NotImplementedError
-        for e in self.sequence:
-            if f(e):
+        for element in self:
+            if func(element):
                 return True
         return False
 
-    def for_all(self, f):
+    def for_all(self, func):
         """
         Returns True if all elements in sequence make f evaluate to True.
 
@@ -637,12 +621,11 @@ class FunctionalSequence(object):
         >>> seq([1, 2, -1]).for_all(lambda x: x > 0)
         False
 
-        :param f: function to check truth value of all elements with
+        :param func: function to check truth value of all elements with
         :return: True if all elements make f evaluate to True
         """
-        raise NotImplementedError
-        for e in self.sequence:
-            if not f(e):
+        for element in self:
+            if not func(element):
                 return False
         return True
 
@@ -673,8 +656,7 @@ class FunctionalSequence(object):
          ...
         ValueError: max() arg is an empty sequence
         """
-        raise NotImplementedError
-        return _wrap(max(self.sequence))
+        return _wrap(max(self))
 
     def min(self):
         """
@@ -703,10 +685,9 @@ class FunctionalSequence(object):
          ...
         ValueError: min() arg is an empty sequence
         """
-        raise NotImplementedError
-        return _wrap(min(self.sequence))
+        return _wrap(min(self))
 
-    def max_by(self, f):
+    def max_by(self, func):
         """
         Returns the largest element in the sequence.
         Provided function is used to generate key used to compare the elements.
@@ -726,10 +707,9 @@ class FunctionalSequence(object):
          ...
         ValueError: max() arg is an empty sequence
         """
-        raise NotImplementedError
-        return _wrap(max(self.sequence, key=f))
+        return _wrap(max(self, key=func))
 
-    def min_by(self, f):
+    def min_by(self, func):
         """
         Returns the smallest element in the sequence.
         Provided function is used to generate key used to compare the elements.
@@ -749,10 +729,9 @@ class FunctionalSequence(object):
          ...
         ValueError: min() arg is an empty sequence
         """
-        raise NotImplementedError
-        return _wrap(min(self.sequence, key=f))
+        return _wrap(min(self, key=func))
 
-    def find(self, f):
+    def find(self, func):
         """
         Finds the first element of the sequence that satisfies f. If no such element exists,
         then return None.
@@ -763,10 +742,9 @@ class FunctionalSequence(object):
         :param f: function to find with
         :return: first element to satisfy f or None
         """
-        raise NotImplementedError
-        for e in self.sequence:
-            if f(e):
-                return e
+        for element in self:
+            if func(element):
+                return element
         else:
             return None
 
@@ -857,18 +835,17 @@ class FunctionalSequence(object):
         raise NotImplementedError
         return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
 
-    def reduce(self, f):
+    def reduce(self, func):
         """
         Reduce sequence of elements using f.
 
         >>> seq([1, 2, 3]).reduce(lambda x, y: x + y)
         6
 
-        :param f: two parameter, associative reduce function
+        :param func: two parameter, associative reduce function
         :return: reduced value using f
         """
-        raise NotImplementedError
-        return reduce(f, self.sequence)
+        return _wrap(reduce(func, self))
 
     def make_string(self, separator):
         """
@@ -880,8 +857,8 @@ class FunctionalSequence(object):
         :param separator: string separating elements in string
         :return: concatenated string separated by separator
         """
-        raise NotImplementedError
-        return separator.join(str(e) for e in self.sequence)
+        self.cache()
+        return separator.join(str(e) for e in self)
 
     def product(self):
         """
@@ -895,7 +872,6 @@ class FunctionalSequence(object):
 
         :return: product of elements in sequence
         """
-        raise NotImplementedError
         if self.empty():
             return 1
         if self.size() == 1:
@@ -912,10 +888,9 @@ class FunctionalSequence(object):
 
         :return: sum of elements in sequence
         """
-        raise NotImplementedError
-        return sum(self.sequence)
+        return sum(self)
 
-    def fold_left(self, zero_value, f):
+    def fold_left(self, zero_value, func):
         """
         Takes a zero_value and performs a reduction to a value using f. f should take two
         parameters, 1) the value to accumulate into the result and 2) the current result.
@@ -925,16 +900,15 @@ class FunctionalSequence(object):
         'Start:aabcbcdedeffmmnopnop'
 
         :param zero_value: zero value to reduce into
-        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
+        :param func: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
-        raise NotImplementedError
         result = zero_value
-        for e in self.sequence:
-            result = f(e, result)
+        for element in self:
+            result = func(element, result)
         return _wrap(result)
 
-    def fold_right(self, zero_value, f):
+    def fold_right(self, zero_value, func):
         """
         Takes a zero_value and performs a reduction to a value using f. f should take two
         parameters, 1) the value to accumulate into the result and 2) the current result.
@@ -944,11 +918,10 @@ class FunctionalSequence(object):
         'Start:nopnopmmffdedebcbcaa'
 
         :param zero_value: zero value to reduce into
-        :param f: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
+        :param func: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
-        raise NotImplementedError
-        return self.reverse().fold_left(zero_value, f)
+        return self.reverse().fold_left(zero_value, func)
 
     def zip(self, sequence):
         """
@@ -1142,13 +1115,11 @@ class FunctionalSequence(object):
         >>> seq([2, 1, 4, 3]).sorted()
         [1, 2, 3, 4]
 
-        :param comp: comparator
         :param key:
         :param reverse: return list reversed or not
         :return: sorted sequence
         """
-        raise NotImplementedError
-        return FunctionalSequence(sorted(self.sequence, key=key, reverse=reverse))
+        return self._transform(sorted_t(key=key, reverse=reverse))
 
     def reverse(self):
         """
@@ -1170,8 +1141,7 @@ class FunctionalSequence(object):
 
         :return: sequence of distinct elements
         """
-        raise NotImplementedError
-        return FunctionalSequence(iter(set(self.sequence)))
+        return self._transform(distinct_t())
 
     def slice(self, start, until):
         """
@@ -1186,8 +1156,7 @@ class FunctionalSequence(object):
         :param until: ending index
         :return: slice including start until but not including until
         """
-        raise NotImplementedError
-        return FunctionalSequence(islice(self.sequence, start, until))
+        return self._transform(slice_t(start, until))
 
     def to_list(self):
         """
@@ -1239,8 +1208,6 @@ class FunctionalSequence(object):
 
         :return:set of elements in sequence
         """
-        raise NotImplementedError
-        self._expand_iterable()
         return set(self.sequence)
 
     def set(self):
@@ -1258,7 +1225,6 @@ class FunctionalSequence(object):
 
         :return:set of elements in sequence
         """
-        raise NotImplementedError
         return self.to_set()
 
     def to_dict(self):
@@ -1276,8 +1242,6 @@ class FunctionalSequence(object):
 
         :return: dictionary from sequence of (Key, Value) elements
         """
-        raise NotImplementedError
-        self._expand_iterable()
         d = {}
         for e in self.sequence:
             d[e[0]] = e[1]
@@ -1298,7 +1262,6 @@ class FunctionalSequence(object):
 
         :return: dictionary from sequence of (Key, Value) elements
         """
-        raise NotImplementedError
         return self.to_dict()
 
 
@@ -1358,7 +1321,7 @@ def _is_iterable(v):
     return isinstance(v, collections.Iterable)
 
 
-def _wrap(v):
+def _wrap(value):
     """
     Wraps the passed value in a FunctionalSequence if it is not a primitive. If it is a string
     argument it is expanded to a list of characters.
@@ -1372,15 +1335,14 @@ def _wrap(v):
     >>> type(_wrap([1, 2]))
     functional.chain.FunctionalSequence
 
-    :param v: value to wrap
+    :param value: value to wrap
     :return: wrapped or not wrapped value
     """
-    raise NotImplementedError
-    if _is_primitive(v):
-        return v
-    if isinstance(v, dict) or isinstance(v, set):
-        return v
-    elif isinstance(v, collections.Iterable):
-        return FunctionalSequence(v)
+    if _is_primitive(value):
+        return value
+    if isinstance(value, dict) or isinstance(value, set):
+        return value
+    elif isinstance(value, collections.Iterable):
+        return FunctionalSequence(value)
     else:
-        return v
+        return value

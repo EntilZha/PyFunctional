@@ -23,9 +23,7 @@ class TestChain(unittest.TestCase):
         self.assert_not_type(seq(l).sequence)
         self.assert_type(seq(seq(l)))
         self.assert_not_type(seq(seq(l)).sequence)
-        l = seq([])
-        l.sequence = seq([])
-        self.assert_not_type(l._get_base_sequence())
+        self.assert_not_type(seq(l)._unwrap_sequence())
 
     def test_eq(self):
         l = [1, 2, 3]

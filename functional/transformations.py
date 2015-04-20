@@ -36,3 +36,21 @@ def filter_not_t(func):
 
 def reversed_t():
     return Transformation('reversed', reversed)
+
+
+def slice_t(start, until):
+    def slice_partial(sequence):
+        return islice(sequence, start, until)
+    return Transformation('slice({0}, {1})'.format(start, until), slice_partial)
+
+
+def distinct_t():
+    def distinct(sequence):
+        return iter(set(sequence))
+    return Transformation('distinct', distinct)
+
+
+def sorted_t(key=None, reverse=False):
+    def sorted_partial(sequence):
+        return sorted(sequence, key=key, reverse=reverse)
+    return Transformation('sorted', sorted_partial)
