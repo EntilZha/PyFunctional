@@ -6,6 +6,7 @@
 [![Wheel Status](https://pypip.in/wheel/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![License](https://pypip.in/license/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![Stories in Ready](https://badge.waffle.io/EntilZha/ScalaFunctional.svg?label=ready&title=Ready)](http://waffle.io/EntilZha/ScalaFunctional)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Motivation
 [Blog post about ScalaFunctional](http://pedrorodriguez.io/2015/03/14/chain-functional-programming-in-python-2/)
