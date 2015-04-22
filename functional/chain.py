@@ -329,11 +329,10 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence without first n elements
         """
-        raise NotImplementedError
         if n <= 0:
-            return self
+            return self._transform(drop_t(0))
         else:
-            return FunctionalSequence(self.slice(n, None))
+            return self._transform(drop_t(n))
 
     def drop_right(self, n):
         """
@@ -345,25 +344,22 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
-        raise NotImplementedError
         if n <= 0:
-            return self
+            return self._transform(drop_right_t(0))
         else:
-            self._expand_iterable()
-            return FunctionalSequence(self.sequence[:-n])
+            return self._transform(drop_right_t(n))
 
-    def drop_while(self, f):
+    def drop_while(self, func):
         """
         Drops elements in the sequence while f evaluates to True, then returns the rest.
 
         >>> seq([1, 2, 3, 4, 5, 1, 2]).drop_while(lambda x: x < 3)
         [3, 4, 5, 1, 2]
 
-        :param f: truth returning function
+        :param func: truth returning function
         :return: elements including and after f evaluates to False
         """
-        raise NotImplementedError
-        return FunctionalSequence(dropwhile(f, self.sequence))
+        return self._transform(drop_while_t(func))
 
     def take(self, n):
         """
@@ -375,24 +371,22 @@ class FunctionalSequence(object):
         :param n: number of elements to take
         :return: first n elements of sequence
         """
-        raise NotImplementedError
         if n <= 0:
-            return FunctionalSequence([])
+            return self._transform(take_t(0))
         else:
-            return FunctionalSequence(self.slice(0, n))
+            return self._transform(take_t(n))
 
-    def take_while(self, f):
+    def take_while(self, func):
         """
         Take elements in the sequence until f evaluates to False, then return them.
 
         >>> seq([1, 2, 3, 4, 5, 1, 2]).take_while(lambda x: x < 3)
         [1, 2]
 
-        :param f: truth returning function
+        :param func: truth returning function
         :return: elements taken until f evaluates to False
         """
-        raise NotImplementedError
-        return FunctionalSequence(takewhile(f, self.sequence))
+        return self._transform(take_while_t(func))
 
     def union(self, other):
         """

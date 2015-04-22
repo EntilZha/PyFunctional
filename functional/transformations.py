@@ -39,9 +39,10 @@ def reversed_t():
 
 
 def slice_t(start, until):
-    def slice_partial(sequence):
-        return islice(sequence, start, until)
-    return Transformation('slice({0}, {1})'.format(start, until), slice_partial)
+    return Transformation(
+        'slice({0}, {1})'.format(start, until),
+        lambda sequence: islice(sequence, start, until)
+    )
 
 
 def distinct_t():
@@ -51,6 +52,42 @@ def distinct_t():
 
 
 def sorted_t(key=None, reverse=False):
-    def sorted_partial(sequence):
-        return sorted(sequence, key=key, reverse=reverse)
-    return Transformation('sorted', sorted_partial)
+    return Transformation(
+        'sorted',
+        lambda sequence: sorted(sequence, key=key, reverse=reverse)
+    )
+
+
+def drop_right_t(n):
+    return Transformation(
+        'drop_right({0})'.format(n),
+        lambda sequence: sequence[:-n]
+    )
+
+
+def drop_t(n):
+    return Transformation(
+        'drop({0})'.format(n),
+        lambda sequence: islice(sequence, n, None)
+    )
+
+
+def drop_while_t(func):
+    return Transformation(
+        'drop_while({0})'.format(func.__name__),
+        partial(dropwhile, func)
+    )
+
+
+def take_t(n):
+    return Transformation(
+        'take({0})'.format(n),
+        lambda sequence: islice(sequence, 0, n)
+    )
+
+
+def take_while_t(func):
+    return Transformation(
+        'take_while({0})'.format(func.__name__),
+        partial(takewhile, func)
+    )
