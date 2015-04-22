@@ -344,10 +344,7 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
-        if n <= 0:
-            return self._transform(drop_right_t(0))
-        else:
-            return self._transform(drop_right_t(n))
+        return self._transform(drop_right_t(n))
 
     def drop_while(self, func):
         """
@@ -456,7 +453,7 @@ class FunctionalSequence(object):
         """
         return self._transform(map_t(f))
 
-    def for_each(self, f):
+    def for_each(self, func):
         """
         Executes f on each element of the sequence.
 
@@ -465,12 +462,11 @@ class FunctionalSequence(object):
         >>> l
         [1, 2, 3, 4]
 
-        :param f: function to execute
+        :param func: function to execute
         :return: None
         """
-        raise NotImplementedError
-        for e in self.sequence:
-            f(e)
+        for e in self:
+            func(e)
 
     def filter(self, func):
         """
@@ -751,10 +747,9 @@ class FunctionalSequence(object):
 
         :return: flattened sequence
         """
-        raise NotImplementedError
-        return self.flat_map(lambda x: x)
+        return self._transform(flatten_t())
 
-    def flat_map(self, f):
+    def flat_map(self, func):
         """
         Applies f to each element of the sequence, which themselves should be sequences.
         Then appends each element of each sequence to a final result
@@ -771,12 +766,7 @@ class FunctionalSequence(object):
         :param f: function to apply to each sequence in the sequence
         :return: application of f to elements followed by flattening
         """
-        raise NotImplementedError
-        def generator():
-            for e in self.sequence:
-                for v in f(e):
-                    yield v
-        return FunctionalSequence(generator())
+        return self._transform(flat_map_t(func))
 
     def group_by(self, f):
         """

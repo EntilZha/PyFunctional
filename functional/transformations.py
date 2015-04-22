@@ -59,9 +59,13 @@ def sorted_t(key=None, reverse=False):
 
 
 def drop_right_t(n):
+    if n <= 0:
+        end_index = None
+    else:
+        end_index = -n
     return Transformation(
         'drop_right({0})'.format(n),
-        lambda sequence: sequence[:-n]
+        lambda sequence: sequence[:end_index]
     )
 
 
@@ -90,4 +94,24 @@ def take_while_t(func):
     return Transformation(
         'take_while({0})'.format(func.__name__),
         partial(takewhile, func)
+    )
+
+
+def flat_map_impl(func, sequence):
+        for element in sequence:
+            for value in func(element):
+                yield value
+
+
+def flat_map_t(func):
+    return Transformation(
+        'flat_map({0})'.format(func.__name__),
+        partial(flat_map_impl, func)
+    )
+
+
+def flatten_t():
+    return Transformation(
+        'flatten',
+        partial(flat_map_impl, lambda x: x)
     )
