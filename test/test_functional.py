@@ -172,7 +172,7 @@ class TestChain(unittest.TestCase):
         self.assertSequenceEqual(s.drop(-1), s)
 
     def test_drop_right(self):
-        s = seq([1, 2, 3, 4, 5])
+        s = seq([1, 2, 3, 4, 5]).map(lambda x: x)
         expect = [1, 2, 3]
         result = s.drop_right(2)
         self.assert_type(result)

@@ -278,8 +278,8 @@ class FunctionalSequence(object):
 
         :return: sequence without last element
         """
-        raise NotImplementedError
-        return FunctionalSequence(self.sequence[:-1])
+        self.cache()
+        return self._transform(init_t())
 
     def tail(self):
         """
@@ -290,8 +290,7 @@ class FunctionalSequence(object):
 
         :return: sequence without first element
         """
-        raise NotImplementedError
-        return FunctionalSequence(self.slice(1, None))
+        return self._transform(tail_t())
 
     def inits(self):
         """
@@ -302,9 +301,8 @@ class FunctionalSequence(object):
 
         :return: consecutive init()s on sequence
         """
-        raise NotImplementedError
-        result = [_wrap(self.sequence[:i]) for i in reversed(range(len(self.sequence) + 1))]
-        return FunctionalSequence(result)
+        self.cache()
+        return self._transform(inits_t(_wrap))
 
     def tails(self):
         """
@@ -315,9 +313,8 @@ class FunctionalSequence(object):
 
         :return: consecutive tail()s of the sequence
         """
-        raise NotImplementedError
-        result = [_wrap(self.sequence[i:]) for i in range(len(self.sequence) + 1)]
-        return FunctionalSequence(result)
+        self.cache()
+        return self._transform(tails_t(_wrap))
 
     def drop(self, n):
         """
@@ -344,6 +341,7 @@ class FunctionalSequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
+        self.cache()
         return self._transform(drop_right_t(n))
 
     def drop_while(self, func):
@@ -917,8 +915,7 @@ class FunctionalSequence(object):
         :param sequence: second sequence to zip
         :return: stored sequence zipped with given sequence
         """
-        raise NotImplementedError
-        return FunctionalSequence(zip(self.sequence, sequence))
+        return self._transform(zip_t(sequence))
 
     def zip_with_index(self):
         """
@@ -929,8 +926,7 @@ class FunctionalSequence(object):
 
         :return: sequence zipped to its index
         """
-        raise NotImplementedError
-        return FunctionalSequence(enumerate(self.sequence))
+        return self._transform(zip_with_index_t())
 
     def enumerate(self, start=0):
         """
@@ -942,8 +938,7 @@ class FunctionalSequence(object):
         :param start: Beginning of zip
         :return: enumerated sequence starting at start
         """
-        raise NotImplementedError
-        return FunctionalSequence(enumerate(self.sequence, start=start))
+        return self._transform(enumerate_t(start))
 
     def inner_join(self, other):
         """

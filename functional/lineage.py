@@ -20,12 +20,12 @@ class Lineage(object):
     def evaluate(self, sequence):
         result = sequence
         last_cache_index = self.cache_scan()
-        for transform in self.transformations[:last_cache_index]:
+        for transform in self.transformations[last_cache_index:]:
             result = transform.function(result)
         return iter(result)
 
     def cache_scan(self):
         try:
-            return self.transformations[::-1].index(CACHE_T)
+            return len(self.transformations) - self.transformations[::-1].index(CACHE_T)
         except ValueError:
-            return len(self.transformations)
+            return 0

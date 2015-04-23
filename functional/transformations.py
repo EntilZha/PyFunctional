@@ -115,3 +115,52 @@ def flatten_t():
         'flatten',
         partial(flat_map_impl, lambda x: x)
     )
+
+
+def zip_t(zip_sequence):
+    return Transformation(
+        'zip(<sequence>)',
+        lambda sequence: zip(sequence, zip_sequence)
+    )
+
+
+def zip_with_index_t():
+    return Transformation(
+        'zip_with_index',
+        lambda sequence: enumerate(sequence)
+    )
+
+
+def enumerate_t(start):
+    return Transformation(
+        'enumerate',
+        lambda sequence: enumerate(sequence, start=start)
+    )
+
+
+def init_t():
+    return Transformation(
+        'init',
+        lambda sequence: sequence[:-1]
+    )
+
+
+def tail_t():
+    return Transformation(
+        'tail',
+        lambda sequence: islice(sequence, 1, None)
+    )
+
+
+def inits_t(wrap):
+    return Transformation(
+        'inits',
+        lambda sequence: [wrap(sequence[:i]) for i in reversed(range(len(sequence) + 1))]
+    )
+
+
+def tails_t(wrap):
+    return Transformation(
+        'tails',
+        lambda sequence: [wrap(sequence[i:]) for i in range(len(sequence) + 1)]
+    )
