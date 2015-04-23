@@ -368,10 +368,10 @@ class TestChain(unittest.TestCase):
         result = seq(l0).inner_join(l1)
         e = [('a', (1, 2)), ('c', (3, 4))]
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(e))
+        self.assertDictEqual(dict(result), dict(e))
         result = seq(l0).inner_join(seq(l1))
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(e))
+        self.assertDictEqual(dict(result), dict(e))
 
     def test_left_join(self):
         left = [('a', 1), ('b', 2)]
@@ -379,10 +379,10 @@ class TestChain(unittest.TestCase):
         result = seq(left).left_join(right)
         expect = [('a', (1, 2)), ('b', (2, None))]
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
         result = seq(left).left_join(seq(right))
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
 
     def test_right_join(self):
         left = [('a', 1), ('b', 2)]
@@ -390,10 +390,10 @@ class TestChain(unittest.TestCase):
         result = seq(left).right_join(right)
         expect = [('a', (1, 2)), ('c', (None, 3))]
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
         result = seq(left).right_join(seq(right))
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
 
     def test_outer_join(self):
         left = [('a', 1), ('b', 2)]
@@ -401,10 +401,10 @@ class TestChain(unittest.TestCase):
         result = seq(left).outer_join(right)
         expect = [('a', (1, 2)), ('b', (2, None)), ('c', (None, 3))]
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
         result = seq(left).outer_join(seq(right))
         self.assert_type(result)
-        self.assertSequenceEqual(dict(result), dict(expect))
+        self.assertDictEqual(dict(result), dict(expect))
 
     def test_max(self):
         l = [1, 2, 3]
@@ -565,14 +565,14 @@ class TestChain(unittest.TestCase):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         result = seq(l).to_dict()
-        self.assertEqual(result, d)
+        self.assertDictEqual(result, d)
         self.assertTrue(isinstance(result, dict))
 
     def test_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         result = seq(l).dict()
-        self.assertEqual(result, d)
+        self.assertDictEqual(result, d)
         self.assertTrue(isinstance(result, dict))
 
     def test_reduce_by_key(self):
