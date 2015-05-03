@@ -716,7 +716,7 @@ class FunctionalSequence(object):
         >>> seq(["abc", "ab", "bc"]).find(lambda x: len(x) == 2)
         'ab'
 
-        :param f: function to find with
+        :param func: function to find with
         :return: first element to satisfy f or None
         """
         for element in self:
@@ -755,7 +755,7 @@ class FunctionalSequence(object):
         """
         return self._transform(flat_map_t(func))
 
-    def group_by(self, f):
+    def group_by(self, func):
         """
         Group elements into a list of (Key, Value) tuples where f creates the key and maps
         to values matching that key.
@@ -763,17 +763,10 @@ class FunctionalSequence(object):
         >>> seq(["abc", "ab", "z", "f", "qw"]).group_by(len)
         [(1, ['z', 'f']), (2, ['ab', 'qw']), (3, ['abc'])]
 
-        :param f: group by result of this function
+        :param func: group by result of this function
         :return: grouped sequence
         """
-        raise NotImplementedError
-        result = {}
-        for e in self.sequence:
-            if result.get(f(e)):
-                result.get(f(e)).append(e)
-            else:
-                result[f(e)] = [e]
-        return FunctionalSequence(dict_item_iter(result))
+        return self._transform(group_by_t(func))
 
     def group_by_key(self):
         """
@@ -784,27 +777,19 @@ class FunctionalSequence(object):
 
         :return: sequence grouped by key
         """
-        raise NotImplementedError
-        result = {}
-        for e in self.sequence:
-            if result.get(e[0]):
-                result.get(e[0]).append(e[1])
-            else:
-                result[e[0]] = [e[1]]
-        return FunctionalSequence(dict_item_iter(result))
+        return self._transform(group_by_key_t())
 
-    def reduce_by_key(self, f):
+    def reduce_by_key(self, func):
         """
         Reduces a sequence of (Key, Value) using f on each Key.
 
         >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]).reduce_by_key(lambda x, y: x + y)
         [('a', 1), ('c', 3), ('b', 9)]
 
-        :param f: reduce each list of values using two parameter, associative f
+        :param func: reduce each list of values using two parameter, associative f
         :return: Sequence of tuples where the value is reduced with f
         """
-        raise NotImplementedError
-        return self.group_by_key().map(lambda kv: (kv[0], reduce(f, kv[1])))
+        return self._transform(reduce_by_key_t(func))
 
     def reduce(self, func):
         """
@@ -1040,20 +1025,17 @@ class FunctionalSequence(object):
         raise NotImplementedError
         return self.join(other, "outer")
 
-    def partition(self, f):
+    def partition(self, func):
         """
         Partition the sequence based on satisfying the predicate f.
 
         >>> seq([-1, 1, -2, 2]).partition(lambda x: x < 0)
         ([-1, -2], [1, 2])
 
-        :param f: predicate to partition on
+        :param func: predicate to partition on
         :return: tuple of partitioned sequences
         """
-        raise NotImplementedError
-        p1 = self.filter(f)
-        p2 = self.filter_not(f)
-        return FunctionalSequence((p1, p2))
+        return self._transform(partition_t(_wrap, func))
 
     def grouped(self, size):
         """
@@ -1069,11 +1051,7 @@ class FunctionalSequence(object):
         :param size: size of the partitions
         :return: sequence partitioned into groups of length size
         """
-        raise NotImplementedError
-        def generator():
-            for i in range(0, self.size(), size):
-                yield FunctionalSequence(self.sequence[i:i+size])
-        return FunctionalSequence(generator())
+        return self._transform(grouped_t(_wrap, size))
 
     def sorted(self, key=None, reverse=False):
         """

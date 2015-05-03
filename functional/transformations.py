@@ -215,3 +215,72 @@ def symmetric_difference_t(other):
         lambda sequence: set(sequence).symmetric_difference(other),
         None
     )
+
+
+def group_by_key_impl(sequence):
+    result = {}
+    for element in sequence:
+        if result.get(element[0]):
+            result.get(element[0]).append(element[1])
+        else:
+            result[element[0]] = [element[1]]
+    return dict_item_iter(result)
+
+
+def group_by_key_t():
+    return Transformation(
+        'group_by_key',
+        group_by_key_impl,
+        None
+    )
+
+
+def reduce_by_key_t(func):
+    return Transformation(
+        'reduce_by_key({0})'.format(func.__name__),
+        lambda sequence: map(
+            lambda kv: (kv[0], reduce(func, kv[1])), group_by_key_impl(sequence)
+        ),
+        None
+    )
+
+
+def group_by_impl(func, sequence):
+    result = {}
+    for element in sequence:
+        if result.get(func(element)):
+            result.get(func(element)).append(element)
+        else:
+            result[func(element)] = [element]
+    return dict_item_iter(result)
+
+
+def group_by_t(func):
+    return Transformation(
+        'group_by({0})'.format(func.__name__),
+        partial(group_by_impl, func),
+        None
+    )
+
+
+def grouped_impl(wrap, size, sequence):
+    for i in range(0, len(sequence), size):
+        yield wrap(sequence[i:i + size])
+
+
+def grouped_t(wrap, size):
+    return Transformation(
+        'grouped({0})'.format(size),
+        partial(grouped_impl, wrap, size),
+        {EXECUTION_STRATEGIES.PRE_COMPUTE}
+    )
+
+
+def partition_t(wrap, func):
+    return Transformation(
+        'partition({0})'.format(func.__name__),
+        lambda sequence: wrap(
+            (filter(func, sequence), filter(lambda val: not func(val), sequence))
+        ),
+        None
+    )
