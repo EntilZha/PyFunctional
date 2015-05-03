@@ -278,7 +278,6 @@ class FunctionalSequence(object):
 
         :return: sequence without last element
         """
-        self.cache()
         return self._transform(init_t())
 
     def tail(self):
@@ -301,7 +300,6 @@ class FunctionalSequence(object):
 
         :return: consecutive init()s on sequence
         """
-        self.cache()
         return self._transform(inits_t(_wrap))
 
     def tails(self):
@@ -313,7 +311,6 @@ class FunctionalSequence(object):
 
         :return: consecutive tail()s of the sequence
         """
-        self.cache()
         return self._transform(tails_t(_wrap))
 
     def drop(self, n):
@@ -839,7 +836,6 @@ class FunctionalSequence(object):
         :param separator: string separating elements in string
         :return: concatenated string separated by separator
         """
-        self.cache()
         return separator.join(str(e) for e in self)
 
     def product(self):
