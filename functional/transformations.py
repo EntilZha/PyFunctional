@@ -183,3 +183,35 @@ def tails_t(wrap):
         lambda sequence: [wrap(sequence[i:]) for i in range(len(sequence) + 1)],
         {EXECUTION_STRATEGIES.PRE_COMPUTE}
     )
+
+
+def union_t(other):
+    return Transformation(
+        'union',
+        lambda sequence: set(sequence).union(other),
+        None
+    )
+
+
+def intersection_t(other):
+    return Transformation(
+        'intersection',
+        lambda sequence: set(sequence).intersection(other),
+        None
+    )
+
+
+def difference_t(other):
+    return Transformation(
+        'difference',
+        lambda sequence: set(sequence).difference(other),
+        None
+    )
+
+
+def symmetric_difference_t(other):
+    return Transformation(
+        'symmetric_difference',
+        lambda sequence: set(sequence).symmetric_difference(other),
+        None
+    )

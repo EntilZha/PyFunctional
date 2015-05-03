@@ -390,9 +390,7 @@ class FunctionalSequence(object):
         :param other: sequence to union with
         :return: union of sequence and other
         """
-        raise NotImplementedError
-        result = set(self.sequence).union(set(other))
-        return FunctionalSequence(iter(result))
+        return self._transform(union_t(other))
 
     def intersection(self, other):
         """
@@ -404,9 +402,7 @@ class FunctionalSequence(object):
         :param other: sequence to perform intersection with
         :return: intersection of sequence and other
         """
-        raise NotImplementedError
-        result = set(self.sequence).intersection(set(other))
-        return FunctionalSequence(iter(result))
+        return self._transform(intersection_t(other))
 
     def difference(self, other):
         """
@@ -418,9 +414,7 @@ class FunctionalSequence(object):
         :param other: sequence to perform difference with
         :return: difference of sequence and other
         """
-        raise NotImplementedError
-        result = set(self.sequence).difference(set(other))
-        return FunctionalSequence(iter(result))
+        return self._transform(difference_t(other))
 
     def symmetric_difference(self, other):
         """
@@ -432,9 +426,7 @@ class FunctionalSequence(object):
         :param other: sequence to perform symmetric difference with
         :return: symmetric difference of sequence and other
         """
-        raise NotImplementedError
-        result = set(self.sequence).symmetric_difference(set(other))
-        return FunctionalSequence(iter(result))
+        return self._transform(symmetric_difference_t(other))
 
     def map(self, f):
         """
