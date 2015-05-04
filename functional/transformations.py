@@ -280,7 +280,51 @@ def partition_t(wrap, func):
     return Transformation(
         'partition({0})'.format(func.__name__),
         lambda sequence: wrap(
-            (filter(func, sequence), filter(lambda val: not func(val), sequence))
+            (wrap(filter(func, sequence)), wrap(filter(lambda val: not func(val), sequence)))
         ),
+        None
+    )
+
+
+def inner_join_impl(other, sequence):
+    seq_dict = {}
+    for element in sequence:
+        seq_dict[element[0]] = element[1]
+    seq_kv = seq_dict
+    other_kv = dict(other)
+    keys = seq_kv.keys() if len(seq_kv) < len(other_kv) else other_kv.keys()
+    result = {}
+    for k in keys:
+        if k in seq_kv and k in other_kv:
+            result[k] = (seq_kv[k], other_kv[k])
+    return dict_item_iter(result)
+
+
+def join_impl(other, join_type, sequence):
+    if join_type == "inner":
+        return inner_join_impl(other, sequence)
+    seq_dict = {}
+    for element in sequence:
+        seq_dict[element[0]] = element[1]
+    seq_kv = seq_dict
+    other_kv = dict(other)
+    if join_type == "left":
+        keys = seq_kv.keys()
+    elif join_type == "right":
+        keys = other_kv.keys()
+    elif join_type == "outer":
+        keys = set(list(seq_kv.keys()) + list(other_kv.keys()))
+    else:
+        raise TypeError("Wrong type of join specified")
+    result = {}
+    for k in keys:
+        result[k] = (seq_kv.get(k), other_kv.get(k))
+    return dict_item_iter(result)
+
+
+def join_t(other, join_type):
+    return Transformation(
+        '{0}_join'.format(join_type),
+        partial(join_impl, other, join_type),
         None
     )

@@ -481,8 +481,8 @@ class TestChain(unittest.TestCase):
         f = lambda x: x > 0
         s = seq(l)
         p1, p2 = s.partition(f)
-        self.assertSequenceEqual(e1, p1)
-        self.assertSequenceEqual(e2, p2)
+        self.assertSequenceEqual(e1, list(p1))
+        self.assertSequenceEqual(e2, list(p2))
         self.assert_type(p1)
         self.assert_type(p2)
 

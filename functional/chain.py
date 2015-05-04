@@ -925,15 +925,7 @@ class FunctionalSequence(object):
         :param other: sequence to join with
         :return: joined sequence of (K, (V, W)) pairs
         """
-        raise NotImplementedError
-        seq_kv = self.to_dict()
-        other_kv = dict(other)
-        keys = seq_kv.keys() if len(seq_kv) < len(other_kv) else other_kv.keys()
-        result = {}
-        for k in keys:
-            if k in seq_kv and k in other_kv:
-                result[k] = (seq_kv[k], other_kv[k])
-        return FunctionalSequence(dict_item_iter(result))
+        return self.join(other, 'inner')
 
     def join(self, other, join_type="inner"):
         """
@@ -962,23 +954,7 @@ class FunctionalSequence(object):
         :param join_type: specifies join_type, may be "left", "right", or "outer"
         :return: side joined sequence of (K, (V, W)) pairs
         """
-        raise NotImplementedError
-        seq_kv = self.to_dict()
-        other_kv = dict(other)
-        if join_type == "inner":
-            return self.inner_join(other)
-        if join_type == "left":
-            keys = seq_kv.keys()
-        elif join_type == "right":
-            keys = other_kv.keys()
-        elif join_type == "outer":
-            keys = set(list(seq_kv.keys()) + list(other_kv.keys()))
-        else:
-            raise TypeError("Wrong type of join specified")
-        result = {}
-        for k in keys:
-            result[k] = (seq_kv.get(k), other_kv.get(k))
-        return FunctionalSequence(dict_item_iter(result))
+        return self._transform(join_t(other, join_type))
 
     def left_join(self, other):
         """
@@ -992,7 +968,6 @@ class FunctionalSequence(object):
         :param other: sequence to join with
         :return: left joined sequence of (K, (V, W)) pairs
         """
-        raise NotImplementedError
         return self.join(other, "left")
 
     def right_join(self, other):
@@ -1007,7 +982,6 @@ class FunctionalSequence(object):
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
         """
-        raise NotImplementedError
         return self.join(other, "right")
 
     def outer_join(self, other):
@@ -1022,7 +996,6 @@ class FunctionalSequence(object):
         :param other: sequence to join with
         :return: outer joined sequence of (K, (V, W)) pairs
         """
-        raise NotImplementedError
         return self.join(other, "outer")
 
     def partition(self, func):
