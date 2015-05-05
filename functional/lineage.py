@@ -1,5 +1,5 @@
-from transformations import CACHE_T
-from transformations import EXECUTION_STRATEGIES
+from functional.transformations import CACHE_T
+from functional.transformations import EXECUTION_STRATEGIES
 
 
 class Lineage(object):
