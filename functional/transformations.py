@@ -1,6 +1,6 @@
 import sys
 from functools import reduce, partial
-from itertools import dropwhile, takewhile, islice, ifilterfalse
+from itertools import dropwhile, takewhile, islice
 import collections
 from enum import Enum
 
@@ -9,9 +9,11 @@ if sys.version < '3':
     from itertools import imap as map
     from itertools import ifilter as filter
     from itertools import izip as zip
+    from itertools import ifilterfalse as filterfalse
     range = xrange
     dict_item_iter = lambda d: d.viewitems()
 else:
+    from itertools import filterfalse
     dict_item_iter = lambda d: d.items()
 
 Transformation = collections.namedtuple('Transformation', ['name', 'function', 'execution_strategies'])
@@ -34,7 +36,7 @@ def filter_t(func):
 
 
 def filter_not_t(func):
-    return Transformation('filter_not({0})'.format(func.__name__), partial(ifilterfalse, func), None)
+    return Transformation('filter_not({0})'.format(func.__name__), partial(filterfalse, func), None)
 
 
 def reversed_t():
