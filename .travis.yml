@@ -2,6 +2,7 @@ language: python
 install:
   - pip install -q coverage
   - pip install python-coveralls
+  - pip install enum34
 python:
   - "2.7"
   - "3.4"
