@@ -1,7 +1,3 @@
-import collections
-import sys
-from functools import reduce
-from itertools import dropwhile, takewhile, islice
 from operator import mul
 from functional.lineage import Lineage
 from functional.transformations import *
@@ -9,9 +5,6 @@ from functional.transformations import *
 if sys.version < '3':
     _integer_types = (int, long)
     _str_types = (str, unicode)
-    from itertools import imap as map
-    from itertools import ifilter as filter
-    from itertools import izip as zip
     range = xrange
     dict_item_iter = lambda d: d.viewitems()
 else:

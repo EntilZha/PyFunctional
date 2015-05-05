@@ -1,6 +1,4 @@
 import unittest
-from collections import namedtuple
-
 from functional.chain import seq, FunctionalSequence, _wrap, _is_iterable
 
 
