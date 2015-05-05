@@ -584,3 +584,13 @@ class TestChain(unittest.TestCase):
         l = [A(), A(), A()]
         self.assertIsInstance(_wrap(A()), A)
         self.assert_type(seq(l))
+
+    def test_iterator_consumption(self):
+        sequence = seq([1, 2, 3])
+        first_transform = sequence.map(lambda x: x)
+        second_transform = first_transform.map(lambda x: x)
+        first_list = list(first_transform)
+        second_list = list(second_transform)
+        expect = [1, 2, 3]
+        self.assertSequenceEqual(first_list, expect)
+        self.assertSequenceEqual(second_list, expect)
