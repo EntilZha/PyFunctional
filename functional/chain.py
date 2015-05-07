@@ -112,15 +112,6 @@ class FunctionalSequence(object):
         """
         return self.size() != 0
 
-    def __len__(self):
-        """
-        Return length of sequence.
-
-        :return: length of sequence
-        """
-        self.cache()
-        return len(self._base_sequence)
-
     def __getitem__(self, item):
         """
         Gets item at given index.
@@ -497,7 +488,8 @@ class FunctionalSequence(object):
 
         :return: length of sequence
         """
-        return len(self)
+        self.cache()
+        return len(self._base_sequence)
 
     def size(self):
         """

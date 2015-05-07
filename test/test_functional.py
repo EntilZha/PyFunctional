@@ -1,4 +1,5 @@
 import unittest
+import sys
 from functional.chain import seq, FunctionalSequence, _wrap, _is_iterable
 
 
@@ -11,6 +12,11 @@ class TestChain(unittest.TestCase):
 
     def assert_iterable(self, s):
         self.assertTrue(_is_iterable(s))
+
+    def assertIteratorEqual(self, iter_0, iter_1):
+        seq_0 = list(iter_0)
+        seq_1 = list(iter_1)
+        self.assertListEqual(seq_0, seq_1)
 
     def test_constructor(self):
         self.assertRaises(TypeError, lambda: FunctionalSequence(1))
@@ -25,7 +31,7 @@ class TestChain(unittest.TestCase):
 
     def test_eq(self):
         l = [1, 2, 3]
-        self.assertSequenceEqual(seq(l).map(lambda x: x), seq(l))
+        self.assertIteratorEqual(seq(l).map(lambda x: x), seq(l))
 
     def test_ne(self):
         a = [1, 2, 3]
@@ -46,7 +52,6 @@ class TestChain(unittest.TestCase):
     def test_len(self):
         l = [1, 2, 3]
         s = seq(l)
-        self.assertEqual(len(l), len(s))
         self.assertEqual(len(l), s.size())
         self.assertEqual(len(l), s.len())
 
@@ -141,66 +146,66 @@ class TestChain(unittest.TestCase):
     def test_init(self):
         result = seq([1, 2, 3, 4]).map(lambda x: x).init()
         expect = [1, 2, 3]
-        self.assertSequenceEqual(result, expect)
+        self.assertIteratorEqual(result, expect)
 
     def test_tail(self):
         l = seq([1, 2, 3, 4]).map(lambda x: x)
         expect = [2, 3, 4]
-        self.assertSequenceEqual(l.tail(), expect)
+        self.assertIteratorEqual(l.tail(), expect)
 
     def test_inits(self):
         l = seq([1, 2, 3]).map(lambda x: x)
         expect = [[1, 2, 3], [1, 2], [1], []]
-        self.assertSequenceEqual(l.inits(), expect)
-        self.assertSequenceEqual(l.inits().map(lambda s: s.sum()), [6, 3, 1, 0])
+        self.assertIteratorEqual(l.inits(), expect)
+        self.assertIteratorEqual(l.inits().map(lambda s: s.sum()), [6, 3, 1, 0])
 
     def test_tails(self):
         l = seq([1, 2, 3]).map(lambda x: x)
         expect = [[1, 2, 3], [2, 3], [3], []]
-        self.assertSequenceEqual(l.tails(), expect)
-        self.assertSequenceEqual(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
+        self.assertIteratorEqual(l.tails(), expect)
+        self.assertIteratorEqual(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
 
     def test_drop(self):
         s = seq([1, 2, 3, 4, 5, 6])
         expect = [5, 6]
         result = s.drop(4)
-        self.assertSequenceEqual(result, expect)
+        self.assertIteratorEqual(result, expect)
         self.assert_type(result)
-        self.assertSequenceEqual(s.drop(0), s)
-        self.assertSequenceEqual(s.drop(-1), s)
+        self.assertIteratorEqual(s.drop(0), s)
+        self.assertIteratorEqual(s.drop(-1), s)
 
     def test_drop_right(self):
         s = seq([1, 2, 3, 4, 5]).map(lambda x: x)
         expect = [1, 2, 3]
         result = s.drop_right(2)
         self.assert_type(result)
-        self.assertSequenceEqual(result, expect)
-        self.assertSequenceEqual(s.drop_right(0), s)
-        self.assertSequenceEqual(s.drop_right(-1), s)
+        self.assertIteratorEqual(result, expect)
+        self.assertIteratorEqual(s.drop_right(0), s)
+        self.assertIteratorEqual(s.drop_right(-1), s)
 
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
         f = lambda x: x < 4
         expect = [4, 5, 6, 7, 8]
         result = seq(l).drop_while(f)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_take(self):
         s = seq([1, 2, 3, 4, 5, 6])
         expect = [1, 2, 3, 4]
         result = s.take(4)
-        self.assertSequenceEqual(result, expect)
+        self.assertIteratorEqual(result, expect)
         self.assert_type(result)
-        self.assertSequenceEqual(s.take(0), seq([]))
-        self.assertSequenceEqual(s.take(-1), seq([]))
+        self.assertIteratorEqual(s.take(0), seq([]))
+        self.assertIteratorEqual(s.take(-1), seq([]))
 
     def test_take_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
         f = lambda x: x < 4
         expect = [1, 2, 3]
         result = seq(l).take_while(f)
-        self.assertSequenceEqual(result, expect)
+        self.assertIteratorEqual(result, expect)
         self.assert_type(result)
 
     def test_union(self):
@@ -232,7 +237,7 @@ class TestChain(unittest.TestCase):
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]
         result = seq(l).map(f)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_filter(self):
@@ -241,7 +246,7 @@ class TestChain(unittest.TestCase):
         expect = [5, 10]
         s = seq(l)
         result = s.filter(f)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_filter_not(self):
@@ -249,7 +254,7 @@ class TestChain(unittest.TestCase):
         l = [0, -1, 5, 10]
         expect = [0, -1]
         result = seq(l).filter_not(f)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_map_filter(self):
@@ -259,7 +264,7 @@ class TestChain(unittest.TestCase):
         s = seq(l)
         expect = [10]
         result = s.filter(f).map(g)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_reduce(self):
@@ -290,12 +295,12 @@ class TestChain(unittest.TestCase):
         self.assertEqual(l.fold_right("", f), "cba")
         self.assertEqual(l.fold_right("z", f), "zcba")
         f = lambda x, y: y + [x]
-        self.assertSequenceEqual(l.fold_right([], f), ['c', 'b', 'a'])
+        self.assertIteratorEqual(l.fold_right([], f), ['c', 'b', 'a'])
 
     def test_sorted(self):
         s = seq([1, 3, 2, 5, 4])
         r = s.sorted()
-        self.assertSequenceEqual([1, 2, 3, 4, 5], r)
+        self.assertIteratorEqual([1, 2, 3, 4, 5], r)
         self.assert_type(r)
 
     def test_reverse(self):
@@ -303,10 +308,10 @@ class TestChain(unittest.TestCase):
         expect = [3, 2, 1]
         s = seq(l)
         result = s.reverse()
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
         result = s.__reversed__()
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_distinct(self):
@@ -323,10 +328,10 @@ class TestChain(unittest.TestCase):
     def test_slice(self):
         s = seq([1, 2, 3, 4])
         result = s.slice(1, 2)
-        self.assertSequenceEqual(result, [2])
+        self.assertIteratorEqual(result, [2])
         self.assert_type(result)
         result = s.slice(1, 3)
-        self.assertSequenceEqual(result, [2, 3])
+        self.assertIteratorEqual(result, [2, 3])
         self.assert_type(result)
 
     def test_any(self):
@@ -343,7 +348,7 @@ class TestChain(unittest.TestCase):
         l = [2, 3, 4]
         e = [(0, 2), (1, 3), (2, 4)]
         result = seq(l).enumerate()
-        self.assertSequenceEqual(result, e)
+        self.assertIteratorEqual(result, e)
         self.assert_type(result)
 
     def test_inner_join(self):
@@ -417,7 +422,7 @@ class TestChain(unittest.TestCase):
         l = [[1, 1, 1], [2, 2, 2], [[3, 3], [4, 4]]]
         expect = [1, 1, 1, 2, 2, 2, [3, 3], [4, 4]]
         result = seq(l).flatten()
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_flat_map(self):
@@ -425,7 +430,7 @@ class TestChain(unittest.TestCase):
         f = lambda x: x
         expect = [1, 1, 1, 2, 2, 2, 3, 3, 3]
         result = seq(l).flat_map(f)
-        self.assertSequenceEqual(expect, result)
+        self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_group_by(self):
@@ -436,24 +441,24 @@ class TestChain(unittest.TestCase):
         result_comparison = {}
         for kv in result:
             result_comparison[kv[0]] = kv[1]
-        self.assertSequenceEqual(expect, result_comparison)
+        self.assertIteratorEqual(expect, result_comparison)
         self.assert_type(result)
 
     def test_group_by_key(self):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
         e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
         result = seq(l).group_by_key()
-        self.assertEqual(len(result), len(e))
+        self.assertEqual(result.len(), len(e))
         for e0, e1 in zip(result, e):
-            self.assertSequenceEqual(e0, e1)
+            self.assertIteratorEqual(e0, e1)
         self.assert_type(result)
 
     def test_grouped(self):
         l = seq([1, 2, 3, 4, 5, 6, 7, 8])
         expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
-        self.assertSequenceEqual(l.grouped(2), expect)
+        self.assertIteratorEqual(l.grouped(2), expect)
         expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
-        self.assertSequenceEqual(l.grouped(3), expect)
+        self.assertIteratorEqual(l.grouped(3), expect)
 
     def test_empty(self):
         self.assertTrue(seq([]).empty())
@@ -479,8 +484,8 @@ class TestChain(unittest.TestCase):
         f = lambda x: x > 0
         s = seq(l)
         p1, p2 = s.partition(f)
-        self.assertSequenceEqual(e1, list(p1))
-        self.assertSequenceEqual(e2, list(p2))
+        self.assertIteratorEqual(e1, list(p1))
+        self.assertIteratorEqual(e2, list(p2))
         self.assert_type(p1)
         self.assert_type(p2)
 
@@ -497,27 +502,27 @@ class TestChain(unittest.TestCase):
     def test_set(self):
         l = [1, 1, 2, 2, 3]
         ls = set(l)
-        self.assertSequenceEqual(ls, seq(l).set())
+        self.assertIteratorEqual(ls, seq(l).set())
 
     def test_zip(self):
         l1 = [1, 2, 3]
         l2 = [-1, -2, -3]
         e = [(1, -1), (2, -2), (3, -3)]
         result = seq(l1).zip(l2)
-        self.assertSequenceEqual(e, result)
+        self.assertIteratorEqual(e, result)
         self.assert_type(result)
 
     def test_zip_with_index(self):
         l = [2, 3, 4]
         e = [(0, 2), (1, 3), (2, 4)]
         result = seq(l).zip_with_index()
-        self.assertSequenceEqual(result, e)
+        self.assertIteratorEqual(result, e)
         self.assert_type(result)
 
     def test_to_list(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = seq(l).to_list()
-        self.assertSequenceEqual(result, l)
+        self.assertIteratorEqual(result, l)
         self.assertTrue(isinstance(result, list))
 
     def test_list(self):
@@ -563,7 +568,7 @@ class TestChain(unittest.TestCase):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
         e = {"a": 6, "b": 0, "c": 15}.items()
         result = seq(l).reduce_by_key(lambda x, y: x + y)
-        self.assertEqual(len(result), len(e))
+        self.assertEqual(result.len(), len(e))
         for e0, e1 in zip(result, e):
             self.assertEqual(e0, e1)
         self.assert_type(result)
@@ -590,5 +595,15 @@ class TestChain(unittest.TestCase):
         first_list = list(first_transform)
         second_list = list(second_transform)
         expect = [1, 2, 3]
-        self.assertSequenceEqual(first_list, expect)
-        self.assertSequenceEqual(second_list, expect)
+        self.assertIteratorEqual(first_list, expect)
+        self.assertIteratorEqual(second_list, expect)
+
+    def test_single_call(self):
+        counter = []
+
+        def counter_func(x):
+            counter.append(1)
+            return x
+
+        list(seq([1, 2, 3, 4]).map(counter_func))
+        self.assertEqual(len(counter), 4)
