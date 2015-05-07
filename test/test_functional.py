@@ -1,5 +1,4 @@
 import unittest
-import sys
 from functional.chain import seq, FunctionalSequence, _wrap, _is_iterable
 
 
