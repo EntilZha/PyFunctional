@@ -735,7 +735,7 @@ class FunctionalSequence(object):
         >>> seq([[1], [2], [3]]).flat_map(lambda x: x * 2)
         [1, 1, 2, 2, 3, 3]
 
-        :param f: function to apply to each sequence in the sequence
+        :param func: function to apply to each sequence in the sequence
         :return: application of f to elements followed by flattening
         """
         return self._transform(flat_map_t(func))
@@ -1168,7 +1168,7 @@ class FunctionalSequence(object):
         return self.to_dict()
 
 
-def seq(l):
+def seq(*args):
     """
     Alias function for creating a new FunctionalSequence. Calling seq() and FunctionalSequence() is functionally
     equivalent
@@ -1179,10 +1179,32 @@ def seq(l):
     >>> type(FunctionalSequence([1, 2]))
     functional.chain.FunctionalSequence
 
-    :param l: sequence to wrap in FunctionalSequence
+    >>> seq([1, 2, 3])
+    [1, 2, 3]
+
+    >>> seq(1, 2, 3)
+    [1, 2, 3]
+
+    >>> seq(1)
+    [1]
+
+    >>> seq(range(4))
+    [0, 1, 2, 3]
+
+    :param args: Three types of arguments are valid.
+        1) Iterable which is then directly wrapped as a FunctionalSequence
+        2) A list of arguments is converted to a FunctionalSequence
+        3) A single non-iterable is converted to a single element FunctionalSequence
     :return: wrapped sequence
     """
-    return FunctionalSequence(l)
+    if len(args) == 0:
+        raise TypeError("seq() takes at least 1 argument ({0} given)".format(len(args)))
+    elif len(args) > 1:
+        return FunctionalSequence(list(args))
+    elif _is_primitive(args[0]):
+        return FunctionalSequence([args[0]])
+    else:
+        return FunctionalSequence(args[0])
 
 
 def _is_primitive(v):

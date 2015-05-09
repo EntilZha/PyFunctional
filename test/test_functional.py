@@ -86,7 +86,7 @@ class TestChain(unittest.TestCase):
 
     def test_contains(self):
         string = "abcdef"
-        s = seq(string).map(lambda x: x)
+        s = seq(iter(string)).map(lambda x: x)
         self.assertTrue("c" in s)
 
     def test_add(self):
@@ -606,3 +606,10 @@ class TestChain(unittest.TestCase):
 
         list(seq([1, 2, 3, 4]).map(counter_func))
         self.assertEqual(len(counter), 4)
+
+    def test_seq(self):
+        self.assertIteratorEqual(seq([1, 2, 3]), [1, 2, 3])
+        self.assertIteratorEqual(seq(1, 2, 3), [1, 2, 3])
+        self.assertIteratorEqual(seq(1), [1])
+        self.assertIteratorEqual(seq(iter([1, 2, 3])), [1, 2, 3])
+        self.assertRaises(TypeError, seq, args=[])
