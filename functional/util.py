@@ -1,3 +1,5 @@
+# pylint: disable=no-name-in-module,unused-import
+
 import sys
 import collections
 

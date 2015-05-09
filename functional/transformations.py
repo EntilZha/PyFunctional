@@ -1,3 +1,5 @@
+# pylint: disable=redefined-builtin
+
 from future.builtins import map, filter, zip, range
 from functools import reduce, partial
 from itertools import dropwhile, takewhile, islice
@@ -102,9 +104,9 @@ def take_while_t(func):
 
 
 def flat_map_impl(func, sequence):
-        for element in sequence:
-            for value in func(element):
-                yield value
+    for element in sequence:
+        for value in func(element):
+            yield value
 
 
 def flat_map_t(func):
@@ -134,7 +136,7 @@ def zip_t(zip_sequence):
 def zip_with_index_t():
     return Transformation(
         'zip_with_index',
-        lambda sequence: enumerate(sequence),
+        enumerate,
         None
     )
 
