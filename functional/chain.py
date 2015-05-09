@@ -1,7 +1,7 @@
 from operator import mul
 from functional.lineage import Lineage
 from functional.transformations import *
-from functional.util import integer_types, str_types, is_primitive, is_iterable, dict_item_iter
+from functional.util import is_primitive, is_iterable
 
 
 class FunctionalSequence(object):
