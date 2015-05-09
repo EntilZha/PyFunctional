@@ -1,16 +1,7 @@
 from operator import mul
 from functional.lineage import Lineage
 from functional.transformations import *
-
-if sys.version < '3':
-    _integer_types = (int, long)
-    _str_types = (str, unicode)
-    range = xrange
-    dict_item_iter = lambda d: d.viewitems()
-else:
-    _integer_types = int
-    _str_types = str
-    dict_item_iter = lambda d: d.items()
+from functional.util import integer_types, str_types, is_primitive, is_iterable, dict_item_iter
 
 
 class FunctionalSequence(object):
@@ -34,7 +25,7 @@ class FunctionalSequence(object):
         if isinstance(sequence, FunctionalSequence):
             self._base_sequence = sequence._unwrap_sequence()
             self._lineage = Lineage(prior_lineage=sequence._lineage)
-        elif isinstance(sequence, list) or isinstance(sequence, tuple) or _is_iterable(sequence):
+        elif isinstance(sequence, list) or isinstance(sequence, tuple) or is_iterable(sequence):
             self._base_sequence = sequence
             self._lineage = Lineage()
         else:
@@ -1201,49 +1192,10 @@ def seq(*args):
         raise TypeError("seq() takes at least 1 argument ({0} given)".format(len(args)))
     elif len(args) > 1:
         return FunctionalSequence(list(args))
-    elif _is_primitive(args[0]):
+    elif is_primitive(args[0]):
         return FunctionalSequence([args[0]])
     else:
         return FunctionalSequence(args[0])
-
-
-def _is_primitive(v):
-    """
-    Checks if the passed value is a primitive type.
-
-    >>> _is_primitive(1)
-    True
-
-    >>> _is_primitive("abc")
-    True
-
-    >>> _is_primitive(True)
-    True
-
-    >>> _is_primitive({})
-    False
-
-    >>> _is_primitive([])
-    False
-
-    >>> _is_primitive(set([]))
-
-    :param v: value to check
-    :return: True if value is a primitive, else False
-    """
-    return isinstance(v, str) \
-        or isinstance(v, bool) \
-        or isinstance(v, _str_types) \
-        or isinstance(v, _integer_types) \
-        or isinstance(v, float) \
-        or isinstance(v, complex) \
-        or isinstance(v, bytes)
-
-
-def _is_iterable(v):
-    if isinstance(v, list):
-        return False
-    return isinstance(v, collections.Iterable)
 
 
 def _wrap(value):
@@ -1263,7 +1215,7 @@ def _wrap(value):
     :param value: value to wrap
     :return: wrapped or not wrapped value
     """
-    if _is_primitive(value):
+    if is_primitive(value):
         return value
     if isinstance(value, dict) or isinstance(value, set):
         return value

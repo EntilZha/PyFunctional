@@ -1,5 +1,5 @@
 import unittest
-from functional.chain import seq, FunctionalSequence, _wrap, _is_iterable
+from functional.chain import seq, FunctionalSequence, _wrap, is_iterable
 
 
 class TestChain(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestChain(unittest.TestCase):
         self.assertFalse(isinstance(s, FunctionalSequence))
 
     def assert_iterable(self, s):
-        self.assertTrue(_is_iterable(s))
+        self.assertTrue(is_iterable(s))
 
     def assertIteratorEqual(self, iter_0, iter_1):
         seq_0 = list(iter_0)

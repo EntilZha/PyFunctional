@@ -1,20 +1,12 @@
-import sys
+from future.builtins import map, filter, zip, range
 from functools import reduce, partial
 from itertools import dropwhile, takewhile, islice
+
 import collections
 from enum import Enum
 
+from functional.util import dict_item_iter, filterfalse
 
-if sys.version < '3':
-    from itertools import imap as map
-    from itertools import ifilter as filter
-    from itertools import izip as zip
-    from itertools import ifilterfalse as filterfalse
-    range = xrange
-    dict_item_iter = lambda d: d.viewitems()
-else:
-    from itertools import filterfalse
-    dict_item_iter = lambda d: d.items()
 
 Transformation = collections.namedtuple('Transformation', ['name', 'function', 'execution_strategies'])
 
