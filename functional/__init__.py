@@ -1,3 +1,7 @@
+"""
+Package which supplies utilities primarily through functional.seq to do pipeline style,
+functional transformations and reductions.
+"""
 __author__ = "Pedro Rodriguez"
 __copyright__ = "Copyright 2015, Pedro Rodriguez"
 __license__ = "MIT"

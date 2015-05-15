@@ -1,4 +1,5 @@
-# pylint: disable=too-many-lines,too-many-public-methods,protected-access,redefined-builtin,no-member
+# pylint: disable=too-many-lines,too-many-public-methods,protected-access,redefined-builtin,
+# pylint: disable=no-member
 
 from operator import mul
 import collections
@@ -9,6 +10,10 @@ import functional.transformations as transformations
 
 
 class FunctionalSequence(object):
+    """
+    FunctionalSequence is a wrapper around any type of sequence which provides access to common
+    functional transformations and reductions in a data pipelining style
+    """
     def __init__(self, sequence, transform=None):
         """
         Takes a sequence and wraps it around a FunctionalSequence object.
@@ -762,7 +767,8 @@ class FunctionalSequence(object):
         """
         Reduces a sequence of (Key, Value) using f on each Key.
 
-        >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]).reduce_by_key(lambda x, y: x + y)
+        >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]) \
+                .reduce_by_key(lambda x, y: x + y)
         [('a', 1), ('c', 3), ('b', 9)]
 
         :param func: reduce each list of values using two parameter, associative f
@@ -830,11 +836,12 @@ class FunctionalSequence(object):
         parameters, 1) the value to accumulate into the result and 2) the current result.
         Elements are folded left to right.
 
-        >>> seq(['a', 'bc', 'de', 'f', 'm', 'nop']).fold_left("Start:", lambda v, curr: curr + 2 * v)
+        >>> seq('a', 'bc', 'de', 'f', 'm', 'nop').fold_left("Start:", lambda v, curr: curr + 2 * v)
         'Start:aabcbcdedeffmmnopnop'
 
         :param zero_value: zero value to reduce into
-        :param func: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
+        :param func: Two parameter function. First parameter is value to be accumulated into result.
+            Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
         result = zero_value
@@ -848,11 +855,12 @@ class FunctionalSequence(object):
         parameters, 1) the value to accumulate into the result and 2) the current result.
         Elements are folded right to left.
 
-        >>> seq(['a', 'bc', 'de', 'f', 'm', 'nop']).fold_right("Start:", lambda v, curr: curr + 2 * v)
+        >>> seq('a', 'bc', 'de', 'f', 'm', 'nop').fold_right("Start:", lambda v, curr: curr + 2 * v)
         'Start:nopnopmmffdedebcbcaa'
 
         :param zero_value: zero value to reduce into
-        :param func: Two parameter function. First parameter is value to be accumulated into the result. Second parameter is the current result
+        :param func: Two parameter function. First parameter is value to be accumulated into result.
+            Second parameter is the current result
         :return: value from folding values with f into zero_value
         """
         return self.reverse().fold_left(zero_value, func)
@@ -894,8 +902,9 @@ class FunctionalSequence(object):
 
     def inner_join(self, other):
         """
-        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
-        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. Will return only elements
+        Sequence and other must be composed of (Key, Value) pairs.
+        If self.sequence contains (K, V) pairs and other contains (K, W) pairs, the return result
+        is a sequence of (K, (V, W)) pairs. Will return only elements
         where the key exists in both sequences.
 
         >>> seq([('a', 1), ('b', 2), ('c', 3)]).inner_join([('a', 2), ('c', 5)])
@@ -908,10 +917,11 @@ class FunctionalSequence(object):
 
     def join(self, other, join_type="inner"):
         """
-        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
-        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. If join_type is "left",
-        V values will always be present, W values may be present or None. If join_type is "right", W values will
-        always be present, W values may be present or None. If join_type is "outer", V or W may be present or None,
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
+        pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
+        If join_type is "left", V values will always be present, W values may be present or None.
+        If join_type is "right", W values will always be present, W values may be present or None.
+        If join_type is "outer", V or W may be present or None,
         but never at the same time.
 
         >>> seq([('a', 1), ('b', 2), ('c', 3)]).join([('a', 2), ('c', 5)], "inner")
@@ -937,9 +947,9 @@ class FunctionalSequence(object):
 
     def left_join(self, other):
         """
-        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
-        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. V values will always be
-        present, W values may be present or None.
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
+        pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
+        V values will always be present, W values may be present or None.
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
         [('a', (1, 3)), ('b', (2, None)]
@@ -951,9 +961,9 @@ class FunctionalSequence(object):
 
     def right_join(self, other):
         """
-        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
-        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. W values will always be
-        present, V values may be present or None.
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
+        pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
+        W values will always bepresent, V values may be present or None.
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
         [('a', (1, 3)), ('b', (2, None)]
@@ -965,9 +975,9 @@ class FunctionalSequence(object):
 
     def outer_join(self, other):
         """
-        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V) pairs and
-        other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs. One of V or W will always
-        be not None, but the other may be None
+        Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
+        pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
+        One of V or W will always be not None, but the other may be None
 
         >>> seq([('a', 1), ('b', 2)]).outer_join([('a', 3), ('c', 4)], "outer")
         [('a', (1, 3)), ('b', (2, None)), ('c', (None, 4))]
@@ -1139,10 +1149,10 @@ class FunctionalSequence(object):
 
         :return: dictionary from sequence of (Key, Value) elements
         """
-        d = {}
+        dictionary = {}
         for e in self.sequence:
-            d[e[0]] = e[1]
-        return d
+            dictionary[e[0]] = e[1]
+        return dictionary
 
     def dict(self):
         """
@@ -1164,8 +1174,8 @@ class FunctionalSequence(object):
 
 def seq(*args):
     """
-    Alias function for creating a new FunctionalSequence. Calling seq() and FunctionalSequence() is functionally
-    equivalent
+    Alias function for creating a new FunctionalSequence. Additionally it also parses various types
+    of input to a FunctionalSequence as best it can.
 
     >>> type(seq([1, 2]))
     functional.chain.FunctionalSequence

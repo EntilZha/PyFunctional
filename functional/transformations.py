@@ -1,4 +1,4 @@
-# pylint: disable=redefined-builtin
+# pylint: disable=redefined-builtin,missing-docstring
 
 from future.builtins import map, filter, zip, range
 from functools import reduce, partial
@@ -10,7 +10,9 @@ from enum import Enum
 from functional.util import dict_item_iter, filterfalse
 
 
-Transformation = collections.namedtuple('Transformation', ['name', 'function', 'execution_strategies'])
+Transformation = collections.namedtuple(
+    'Transformation', ['name', 'function', 'execution_strategies']
+)
 
 EXECUTION_STRATEGIES = Enum('EXECUTION_STRATEGIES', 'PRE_COMPUTE')
 

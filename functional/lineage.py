@@ -7,7 +7,9 @@ class Lineage(object):
         self.transformations = [] if prior_lineage is None else list(prior_lineage.transformations)
 
     def __repr__(self):
-        return 'Lineage: ' + ' -> '.join(['sequence'] + [transform.name for transform in self.transformations])
+        return 'Lineage: ' + ' -> '.join(
+            ['sequence'] + [transform.name for transform in self.transformations]
+        )
 
     def __len__(self):
         return len(self.transformations)

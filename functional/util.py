@@ -5,17 +5,21 @@ import collections
 
 if sys.version < '3':
     from itertools import ifilterfalse as filterfalse
-    dict_item_iter = lambda d: d.viewitems()
-    integer_types = (int, long)
-    str_types = (str, unicode)
+
+    def dict_item_iter(dictionary):
+        return dictionary.viewitems()
+    INTEGER_TYPES = (int, long)
+    STR_TYPES = (str, unicode)
 else:
     from itertools import filterfalse
-    dict_item_iter = lambda d: d.items()
-    integer_types = int
-    str_types = str
+
+    def dict_item_iter(dictionary):
+        return dictionary.items()
+    INTEGER_TYPES = (int,)
+    STR_TYPES = (str,)
 
 
-def is_primitive(v):
+def is_primitive(val):
     """
     Checks if the passed value is a primitive type.
 
@@ -36,19 +40,19 @@ def is_primitive(v):
 
     >>> is_primitive(set([]))
 
-    :param v: value to check
+    :param val: value to check
     :return: True if value is a primitive, else False
     """
-    return isinstance(v, str) \
-        or isinstance(v, bool) \
-        or isinstance(v, str_types) \
-        or isinstance(v, integer_types) \
-        or isinstance(v, float) \
-        or isinstance(v, complex) \
-        or isinstance(v, bytes)
+    return isinstance(val, str) \
+        or isinstance(val, bool) \
+        or isinstance(val, STR_TYPES) \
+        or isinstance(val, INTEGER_TYPES) \
+        or isinstance(val, float) \
+        or isinstance(val, complex) \
+        or isinstance(val, bytes)
 
 
-def is_iterable(v):
-    if isinstance(v, list):
+def is_iterable(val):
+    if isinstance(val, list):
         return False
-    return isinstance(v, collections.Iterable)
+    return isinstance(val, collections.Iterable)
