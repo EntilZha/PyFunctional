@@ -1,22 +1,18 @@
 # pylint: disable=no-name-in-module,unused-import
 
-import sys
 import collections
+import six
 
-if sys.version < '3':
+if six.PY2:
     from itertools import ifilterfalse as filterfalse
 
     def dict_item_iter(dictionary):
         return dictionary.viewitems()
-    INTEGER_TYPES = (int, long)
-    STR_TYPES = (str, unicode)
 else:
     from itertools import filterfalse
 
     def dict_item_iter(dictionary):
         return dictionary.items()
-    INTEGER_TYPES = (int,)
-    STR_TYPES = (str,)
 
 
 def is_primitive(val):
@@ -45,8 +41,8 @@ def is_primitive(val):
     """
     return isinstance(val, str) \
         or isinstance(val, bool) \
-        or isinstance(val, STR_TYPES) \
-        or isinstance(val, INTEGER_TYPES) \
+        or isinstance(val, six.string_types + (six.text_type,)) \
+        or isinstance(val, six.integer_types) \
         or isinstance(val, float) \
         or isinstance(val, complex) \
         or isinstance(val, bytes)
