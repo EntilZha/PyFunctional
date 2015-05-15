@@ -10,7 +10,7 @@ setup(
     keywords="functional scala",
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version="0.2.0",
-    install_requirements=['enum34', 'future'],
+    install_requires=['enum34', 'future'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
