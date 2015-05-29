@@ -30,6 +30,7 @@ class FunctionalSequence(object):
 
         :param sequence: sequence of items to wrap in a FunctionalSequence
         :return: sequence wrapped in a FunctionalSequence
+        :rtype FunctionalSequence
         """
         if isinstance(sequence, FunctionalSequence):
             self._base_sequence = sequence._unwrap_sequence()
@@ -127,6 +128,7 @@ class FunctionalSequence(object):
         Return reversed sequence using sequence's reverse function
 
         :return: reversed sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.reversed_t())
 
@@ -155,6 +157,12 @@ class FunctionalSequence(object):
         return self._lineage.evaluate(self._base_sequence)
 
     def _transform(self, transform):
+        """
+        Copies the given FunctionalSequence and appends new transformation
+        :param transform: transform to apply
+        :return: transformed sequence
+        :rtype FunctionalSequence
+        """
         return FunctionalSequence(self, transform=transform)
 
     @property
@@ -261,6 +269,7 @@ class FunctionalSequence(object):
         [1, 2]
 
         :return: sequence without last element
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.init_t())
 
@@ -272,6 +281,7 @@ class FunctionalSequence(object):
         [2, 3]
 
         :return: sequence without first element
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.tail_t())
 
@@ -283,6 +293,7 @@ class FunctionalSequence(object):
         [[1, 2, 3], [1, 2], [1], []]
 
         :return: consecutive init()s on sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.inits_t(_wrap))
 
@@ -294,6 +305,7 @@ class FunctionalSequence(object):
         [[1, 2, 3], [2, 3], [3], []]
 
         :return: consecutive tail()s of the sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.tails_t(_wrap))
 
@@ -306,6 +318,7 @@ class FunctionalSequence(object):
 
         :param n: number of elements to drop
         :return: sequence without first n elements
+        :rtype FunctionalSequence
         """
         if n <= 0:
             return self._transform(transformations.drop_t(0))
@@ -321,6 +334,7 @@ class FunctionalSequence(object):
 
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
+        :rtype FunctionalSequence
         """
         self.cache()
         return self._transform(transformations.drop_right_t(n))
@@ -334,6 +348,7 @@ class FunctionalSequence(object):
 
         :param func: truth returning function
         :return: elements including and after f evaluates to False
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.drop_while_t(func))
 
@@ -346,6 +361,7 @@ class FunctionalSequence(object):
 
         :param n: number of elements to take
         :return: first n elements of sequence
+        :rtype FunctionalSequence
         """
         if n <= 0:
             return self._transform(transformations.take_t(0))
@@ -361,6 +377,7 @@ class FunctionalSequence(object):
 
         :param func: truth returning function
         :return: elements taken until f evaluates to False
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.take_while_t(func))
 
@@ -373,6 +390,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to union with
         :return: union of sequence and other
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.union_t(other))
 
@@ -385,6 +403,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to perform intersection with
         :return: intersection of sequence and other
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.intersection_t(other))
 
@@ -397,6 +416,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to perform difference with
         :return: difference of sequence and other
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.difference_t(other))
 
@@ -409,6 +429,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to perform symmetric difference with
         :return: symmetric difference of sequence and other
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.symmetric_difference_t(other))
 
@@ -421,6 +442,7 @@ class FunctionalSequence(object):
 
         :param f: function to map with
         :return: sequence with f mapped onto it
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.map_t(f))
 
@@ -448,6 +470,7 @@ class FunctionalSequence(object):
 
         :param func: function to filter on
         :return: filtered sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.filter_t(func))
 
@@ -460,6 +483,7 @@ class FunctionalSequence(object):
 
         :param func: function to filter_not on
         :return: filtered sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.filter_not_t(func))
 
@@ -717,6 +741,7 @@ class FunctionalSequence(object):
         [1, 2, 3, 4, 5, 6]
 
         :return: flattened sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.flatten_t())
 
@@ -736,6 +761,7 @@ class FunctionalSequence(object):
 
         :param func: function to apply to each sequence in the sequence
         :return: application of f to elements followed by flattening
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.flat_map_t(func))
 
@@ -749,6 +775,7 @@ class FunctionalSequence(object):
 
         :param func: group by result of this function
         :return: grouped sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.group_by_t(func))
 
@@ -760,6 +787,7 @@ class FunctionalSequence(object):
         [('a', [1]), ('c', [3, 0]), ('b', [2, 3, 4])]
 
         :return: sequence grouped by key
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.group_by_key_t())
 
@@ -773,6 +801,7 @@ class FunctionalSequence(object):
 
         :param func: reduce each list of values using two parameter, associative f
         :return: Sequence of tuples where the value is reduced with f
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.reduce_by_key_t(func))
 
@@ -785,6 +814,7 @@ class FunctionalSequence(object):
 
         :param func: two parameter, associative reduce function
         :return: reduced value using f
+        :rtype FunctionalSequence
         """
         return _wrap(reduce(func, self))
 
@@ -862,6 +892,7 @@ class FunctionalSequence(object):
         :param func: Two parameter function. First parameter is value to be accumulated into result.
             Second parameter is the current result
         :return: value from folding values with f into zero_value
+        :rtype FunctionalSequence
         """
         return self.reverse().fold_left(zero_value, func)
 
@@ -874,6 +905,7 @@ class FunctionalSequence(object):
 
         :param sequence: second sequence to zip
         :return: stored sequence zipped with given sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.zip_t(sequence))
 
@@ -885,6 +917,7 @@ class FunctionalSequence(object):
         [(0, 'a'), (1, 'b'), (2, 'c')]
 
         :return: sequence zipped to its index
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.zip_with_index_t())
 
@@ -897,6 +930,7 @@ class FunctionalSequence(object):
 
         :param start: Beginning of zip
         :return: enumerated sequence starting at start
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.enumerate_t(start))
 
@@ -912,6 +946,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to join with
         :return: joined sequence of (K, (V, W)) pairs
+        :rtype FunctionalSequence
         """
         return self.join(other, 'inner')
 
@@ -942,6 +977,7 @@ class FunctionalSequence(object):
         :param other: sequence to join with
         :param join_type: specifies join_type, may be "left", "right", or "outer"
         :return: side joined sequence of (K, (V, W)) pairs
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.join_t(other, join_type))
 
@@ -956,6 +992,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to join with
         :return: left joined sequence of (K, (V, W)) pairs
+        :rtype FunctionalSequence
         """
         return self.join(other, "left")
 
@@ -970,6 +1007,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
+        :rtype FunctionalSequence
         """
         return self.join(other, "right")
 
@@ -984,6 +1022,7 @@ class FunctionalSequence(object):
 
         :param other: sequence to join with
         :return: outer joined sequence of (K, (V, W)) pairs
+        :rtype FunctionalSequence
         """
         return self.join(other, "outer")
 
@@ -996,6 +1035,7 @@ class FunctionalSequence(object):
 
         :param func: predicate to partition on
         :return: tuple of partitioned sequences
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.partition_t(_wrap, func))
 
@@ -1012,6 +1052,7 @@ class FunctionalSequence(object):
         The last partition will be at least of size 1 and no more than length size
         :param size: size of the partitions
         :return: sequence partitioned into groups of length size
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.grouped_t(_wrap, size))
 
@@ -1025,6 +1066,7 @@ class FunctionalSequence(object):
         :param key:
         :param reverse: return list reversed or not
         :return: sorted sequence
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.sorted_t(key=key, reverse=reverse))
 
@@ -1036,6 +1078,7 @@ class FunctionalSequence(object):
         [3, 2, 1]
 
         :return: reversed sequence
+        :rtype FunctionalSequence
         """
         return reversed(self)
 
@@ -1047,6 +1090,7 @@ class FunctionalSequence(object):
         [1, 2, 3, 4]
 
         :return: sequence of distinct elements
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.distinct_t())
 
@@ -1062,6 +1106,7 @@ class FunctionalSequence(object):
         :param start: starting index
         :param until: ending index
         :return: slice including start until but not including until
+        :rtype FunctionalSequence
         """
         return self._transform(transformations.slice_t(start, until))
 
@@ -1199,6 +1244,7 @@ def seq(*args):
         1) Iterable which is then directly wrapped as a FunctionalSequence
         2) A list of arguments is converted to a FunctionalSequence
         3) A single non-iterable is converted to a single element FunctionalSequence
+    :rtype FunctionalSequence
     :return: wrapped sequence
     """
     if len(args) == 0:
