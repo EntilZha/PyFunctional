@@ -2,10 +2,7 @@
 [<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>](https://travis-ci.org/EntilZha/ScalaFunctional)
 [![Coverage Status](https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master)](https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](https://readthedocs.org/projects/scalafunctional/)
-[![Latest Version](https://pypip.in/version/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
-[![Wheel Status](https://pypip.in/wheel/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
-[![License](https://pypip.in/license/scalafunctional/badge.svg)](https://pypi.python.org/pypi/scalafunctional/)
-[![Stories in Ready](https://badge.waffle.io/EntilZha/ScalaFunctional.svg?label=ready&title=Ready)](http://waffle.io/EntilZha/ScalaFunctional)
+[![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Motivation
