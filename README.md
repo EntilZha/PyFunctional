@@ -8,24 +8,26 @@
 # Motivation
 [Blog post about ScalaFunctional](http://pedrorodriguez.io/2015/03/14/chain-functional-programming-in-python-2/)
 
-Having programmed functionally in Scala and now using Python I missed the syntax/style for it from Scala. Most of that can be summed up by comparing the Scala style vs Python style for taking a list, filtering on a criteria, mapping a function to it, then reducing it. Below is a comparison of the default Python style and the Scala inspired style that ScalaFunctional uses.
+`ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python. It borrows the functional programming APIs from Scala and Apache Spark.
+
+To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result.
 
 ```python
 l = [1, 2, -1, -2]
-f = lambda x: x > 0
-g = lambda x: x * 2
-q = lambda x, y: 2 * x + y
 
 # Python style
-reduce(q, map(g, filter(f, l)))
+reduce(lambda x, y: x * y, map(lambda x: 2 * x, filter(lambda x: x > 0, l)))
 
 # Python list comprehension
-reduce(q, [g(x) for x in l if f(x)])
+reduce(lambda x, y: x * y, [2 * x for x in l if x > 0])
 
 # ScalaFunctional style
 from functional import seq
-seq(l).filter(f).map(g).reduce(q)
+seq(l).filter(lambda x: x > 0).map(lambda x: 2 * x).reduce(lambda x, y: x * y)
+```
 
+Although a trivial example, the real power of `ScalaFunctional` is composing transformations not available natively in Python. For example, the very common word count example is easy:
+```
 # ScalaFunctional word count
 l = seq("the why the what of word counting of english".split(" "))
 l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
