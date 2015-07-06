@@ -1,6 +1,9 @@
 import unittest
+from collections import namedtuple
 from functional.chain import seq, FunctionalSequence, _wrap, is_iterable
 
+
+Data = namedtuple('Data', 'x y')
 
 class TestChain(unittest.TestCase):
     def assert_type(self, s):
@@ -322,6 +325,13 @@ class TestChain(unittest.TestCase):
             self.assertTrue(e in expect)
         result = s.distinct()
         self.assertEqual(result.size(), len(expect))
+        self.assert_type(result)
+
+    def test_distinct_by(self):
+        s = seq(Data(1, 2), Data(1, 3), Data(2, 0), Data(3, -1), Data(1, 5))
+        expect = {Data(1, 2), Data(2, 0), Data(3, -1)}
+        result = s.distinct_by(lambda data: data.x)
+        self.assertSetEqual(set(result), expect)
         self.assert_type(result)
 
     def test_slice(self):

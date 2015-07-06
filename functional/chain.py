@@ -1094,6 +1094,16 @@ class FunctionalSequence(object):
         """
         return self._transform(transformations.distinct_t())
 
+    def distinct_by(self, func):
+        """
+        Returns sequence of elements who are distinct by the passed function. The return
+        value of func must be hashable. When two elements are distinct by func, the first is taken.
+        :param func: function to use for determining distinctness
+        :return: elements distinct by func
+        :rtype FunctionalSequence
+        """
+        return self._transform(transformations.distinct_by_t(func))
+
     def slice(self, start, until):
         """
         Takes a slice of the sequence starting at start and until but not including until.
