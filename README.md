@@ -6,7 +6,7 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Motivation
-[Blog post about ScalaFunctional](http://pedrorodriguez.io/2015/03/14/chain-functional-programming-in-python-2/)
+[Blog post about ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
 
 `ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python. It borrows the functional programming APIs from Scala and Apache Spark.
 
