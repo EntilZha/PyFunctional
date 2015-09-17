@@ -1134,7 +1134,7 @@ class FunctionalSequence(object):
         """
         return self.to_set()
 
-    def to_dict(self):
+    def to_dict(self, default=None):
         """
         Converts sequence of (Key, Value) pairs to a dictionary.
 
@@ -1147,14 +1147,19 @@ class FunctionalSequence(object):
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
 
+        :param default: a callable zero argument function. When not None, the returned dictionary
+            is a collections.defaultdict with default as value for missing keys.
         :return: dictionary from sequence of (Key, Value) elements
         """
         dictionary = {}
         for e in self.sequence:
             dictionary[e[0]] = e[1]
-        return dictionary
+        if default is None:
+            return dictionary
+        else:
+            return collections.defaultdict(default, dictionary)
 
-    def dict(self):
+    def dict(self, default=None):
         """
         Converts sequence of (Key, Value) pairs to a dictionary.
 
@@ -1167,9 +1172,11 @@ class FunctionalSequence(object):
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
 
+        :param default: a callable zero argument function. When not None, the returned dictionary
+            is a collections.defaultdict with default as value for missing keys.
         :return: dictionary from sequence of (Key, Value) elements
         """
-        return self.to_dict()
+        return self.to_dict(default=default)
 
 
 def seq(*args):

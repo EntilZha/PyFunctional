@@ -555,6 +555,10 @@ class TestChain(unittest.TestCase):
         result = seq(l).to_dict()
         self.assertDictEqual(result, d)
         self.assertTrue(isinstance(result, dict))
+        result = seq(l).to_dict(default=lambda: 100)
+        self.assertTrue(1 in result)
+        self.assertFalse(3 in result)
+        self.assertEqual(result[4], 100)
 
     def test_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
@@ -562,6 +566,10 @@ class TestChain(unittest.TestCase):
         result = seq(l).dict()
         self.assertDictEqual(result, d)
         self.assertTrue(isinstance(result, dict))
+        result = seq(l).to_dict(default=lambda: 100)
+        self.assertTrue(1 in result)
+        self.assertFalse(3 in result)
+        self.assertEqual(result[4], 100)
 
     def test_reduce_by_key(self):
         l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
