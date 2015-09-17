@@ -363,46 +363,80 @@ class TestChain(unittest.TestCase):
     def test_inner_join(self):
         l0 = [('a', 1), ('b', 2), ('c', 3)]
         l1 = [('a', 2), ('c', 4), ('d', 5)]
-        result = seq(l0).inner_join(l1)
+        result0 = seq(l0).inner_join(l1)
+        result1 = seq(l0).join(l1, 'inner')
         e = [('a', (1, 2)), ('c', (3, 4))]
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(e))
-        result = seq(l0).inner_join(seq(l1))
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(e))
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(e))
+        self.assertDictEqual(dict(result1), dict(e))
+
+        result0 = seq(l0).inner_join(seq(l1))
+        result1 = seq(l0).join(seq(l1), 'inner')
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(e))
+        self.assertDictEqual(dict(result1), dict(e))
 
     def test_left_join(self):
         left = [('a', 1), ('b', 2)]
         right = [('a', 2), ('c', 3)]
-        result = seq(left).left_join(right)
+        result0 = seq(left).left_join(right)
+        result1 = seq(left).join(right, 'left')
         expect = [('a', (1, 2)), ('b', (2, None))]
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
-        result = seq(left).left_join(seq(right))
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
+
+        result0 = seq(left).left_join(seq(right))
+        result1 = seq(left).join(seq(right), 'left')
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
 
     def test_right_join(self):
         left = [('a', 1), ('b', 2)]
         right = [('a', 2), ('c', 3)]
-        result = seq(left).right_join(right)
+        result0 = seq(left).right_join(right)
+        result1 = seq(left).join(right, 'right')
         expect = [('a', (1, 2)), ('c', (None, 3))]
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
-        result = seq(left).right_join(seq(right))
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
+
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
+
+        result0 = seq(left).right_join(seq(right))
+        result1 = seq(left).join(seq(right), 'right')
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
 
     def test_outer_join(self):
         left = [('a', 1), ('b', 2)]
         right = [('a', 2), ('c', 3)]
-        result = seq(left).outer_join(right)
+        result0 = seq(left).outer_join(right)
+        result1 = seq(left).join(right, 'outer')
         expect = [('a', (1, 2)), ('b', (2, None)), ('c', (None, 3))]
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
-        result = seq(left).outer_join(seq(right))
-        self.assert_type(result)
-        self.assertDictEqual(dict(result), dict(expect))
+
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
+
+        result0 = seq(left).outer_join(seq(right))
+        result1 = seq(left).join(seq(right), 'outer')
+        self.assert_type(result0)
+        self.assert_type(result1)
+        self.assertDictEqual(dict(result0), dict(expect))
+        self.assertDictEqual(dict(result1), dict(expect))
+
+    def test_join(self):
+        with self.assertRaises(TypeError):
+            seq([(1, 2)]).join([(2, 3)], '').to_list()
 
     def test_max(self):
         l = [1, 2, 3]
