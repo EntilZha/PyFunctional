@@ -676,3 +676,7 @@ class TestChain(unittest.TestCase):
         self.assertIteratorEqual(seq(iter([1, 2, 3])), [1, 2, 3])
         with self.assertRaises(TypeError):
             seq()
+
+    def test_lineage_repr(self):
+        s = seq(1).map(lambda x: x).filter(lambda x: True)
+        self.assertEqual(repr(s._lineage), 'Lineage: sequence -> map(<lambda>) -> filter(<lambda>)')
