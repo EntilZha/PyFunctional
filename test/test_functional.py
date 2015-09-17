@@ -475,6 +475,10 @@ class TestChain(unittest.TestCase):
     def test_non_empty(self):
         self.assertTrue(seq([1]).non_empty())
 
+    def test_non_zero_bool(self):
+        self.assertTrue(bool(seq([1])))
+        self.assertFalse(bool(seq([])))
+
     def test_make_string(self):
         l = [1, 2, 3]
         expect1 = "123"

@@ -105,6 +105,14 @@ class FunctionalSequence(object):
         """
         return str(self.to_list())
 
+    def __bool__(self):
+        """
+        Returns True if size is not zero.
+
+        :return: True if size is not zero
+        """
+        return self.size() != 0
+
     def __nonzero__(self):
         """
         Returns True if size is not zero.
