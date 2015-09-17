@@ -50,10 +50,7 @@ class FunctionalSequence(object):
 
         :return: root sequence
         """
-        if isinstance(self._base_sequence, FunctionalSequence):
-            return self._base_sequence._unwrap_sequence()
-        else:
-            return self._base_sequence
+        return self._base_sequence
 
     def __iter__(self):
         """
