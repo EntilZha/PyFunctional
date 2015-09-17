@@ -53,6 +53,17 @@ def distinct_t():
     return Transformation('distinct', distinct, None)
 
 
+def distinct_by_t(func):
+    def distinct_by(sequence):
+        distinct_lookup = {}
+        for element in sequence:
+            key = func(element)
+            if key not in distinct_lookup:
+                distinct_lookup[key] = element
+        return distinct_lookup.values()
+    return Transformation('distinct_by({0})'.format(func.__name__), distinct_by, None)
+
+
 def sorted_t(key=None, reverse=False):
     return Transformation(
         'sorted',
