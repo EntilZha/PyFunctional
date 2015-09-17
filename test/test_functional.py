@@ -507,6 +507,8 @@ class TestChain(unittest.TestCase):
         self.assertEqual(12, seq(l).product())
         s = seq([])
         self.assertEqual(1, s.product())
+        s = seq([5])
+        self.assertEqual(5, s.product())
 
     def test_sum(self):
         l = [1, 2, 3]
