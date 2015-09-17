@@ -19,10 +19,6 @@ EXECUTION_STRATEGIES = Enum('EXECUTION_STRATEGIES', 'PRE_COMPUTE')
 CACHE_T = Transformation('cache', None, None)
 
 
-def list_t():
-    return Transformation('list', list, None)
-
-
 def map_t(func):
     return Transformation('map({0})'.format(func.__name__), partial(map, func), None)
 
