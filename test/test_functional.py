@@ -670,4 +670,5 @@ class TestChain(unittest.TestCase):
         self.assertIteratorEqual(seq(1, 2, 3), [1, 2, 3])
         self.assertIteratorEqual(seq(1), [1])
         self.assertIteratorEqual(seq(iter([1, 2, 3])), [1, 2, 3])
-        self.assertRaises(TypeError, seq, args=[])
+        with self.assertRaises(TypeError):
+            seq()
