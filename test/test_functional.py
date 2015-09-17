@@ -20,6 +20,10 @@ class TestChain(unittest.TestCase):
         seq_1 = list(iter_1)
         self.assertListEqual(seq_0, seq_1)
 
+    def test_is_iterable(self):
+        self.assertFalse(is_iterable([]))
+        self.assertTrue(is_iterable(iter([1, 2])))
+
     def test_constructor(self):
         self.assertRaises(TypeError, lambda: FunctionalSequence(1))
 
