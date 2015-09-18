@@ -14,6 +14,8 @@ along "data pipelines", or simply "pipelines", but naming is hard.
 To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result. There is a bonus
 at the end using the `_` operator borrowed from `fn.py` (note: `ipython`'s underscore clashes with this, so its not helpful in interactive `ipython` sessions).
 
+You can learn more about [fn.py at their github](https://github.com/kachayev/fn.py).
+
 ```python
 l = [1, 2, -1, -2]
 
