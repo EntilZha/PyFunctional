@@ -1,16 +1,16 @@
 import unittest
 from collections import namedtuple
-from functional.chain import seq, FunctionalSequence, _wrap, is_iterable
+from functional.pipeline import seq, Sequence, _wrap, is_iterable
 
 
 Data = namedtuple('Data', 'x y')
 
-class TestChain(unittest.TestCase):
+class TestPipeline(unittest.TestCase):
     def assert_type(self, s):
-        self.assertTrue(isinstance(s, FunctionalSequence))
+        self.assertTrue(isinstance(s, Sequence))
 
     def assert_not_type(self, s):
-        self.assertFalse(isinstance(s, FunctionalSequence))
+        self.assertFalse(isinstance(s, Sequence))
 
     def assert_iterable(self, s):
         self.assertTrue(is_iterable(s))
@@ -25,7 +25,7 @@ class TestChain(unittest.TestCase):
         self.assertTrue(is_iterable(iter([1, 2])))
 
     def test_constructor(self):
-        self.assertRaises(TypeError, lambda: FunctionalSequence(1))
+        self.assertRaises(TypeError, lambda: Sequence(1))
 
     def test_base_sequence(self):
         l = []

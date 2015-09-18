@@ -43,9 +43,9 @@ l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 Almost all inspiration is either from [scala docs](http://www.scala-lang.org/api/current/#scala.Array) or [spark docs](https://spark.apache.org/docs/latest/programming-guide.html#transformations)
 
 # Usage
-To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `FunctionalSequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
+To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides the extensions for functional programming using Scala style. It also provides some common functions which Python doesn't provide such as group by and flat map. The wrapper class `Sequence` also implements operations such as equals, repr, not equal, str etc by deferring them to the passed sequence.
 
-For detailed docs on every function, refer to [readthedocs](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.chain)
+For detailed docs on every function, refer to [readthedocs](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline)
 
 # Installation
 For common use, you can install via the command line and pip: `pip install scalafunctional`. Then in your code import it via 

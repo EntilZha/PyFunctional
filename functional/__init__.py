@@ -10,5 +10,5 @@ __maintainer__ = "Pedro Rodriguez"
 __email__ = "ski.rodriguez@gmail.com"
 __status__ = "Development"
 
-from functional.chain import seq
+from functional.pipeline import seq
 from fn import _

@@ -4,10 +4,10 @@ functional package
 Submodules
 ----------
 
-functional.chain module
+functional.pipeline module
 -----------------------
 
-.. automodule:: functional.chain
+.. automodule:: functional.pipeline
     :members:
     :undoc-members:
     :show-inheritance:
