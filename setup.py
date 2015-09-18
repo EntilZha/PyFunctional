@@ -1,16 +1,22 @@
 from setuptools import setup, find_packages
+import sys
+
+requirements = ['future', 'six', 'fn']
+if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
+    requirements.append('enum34')
+
 
 setup(
     name='ScalaFunctional',
     description="Scala functional programming style in Python",
     url="https://github.com/EntilZha/ScalaFunctional",
     author="Pedro Rodriguez",
-    author_email="pedro@snowgeek.org",
+    author_email="ski.rodriguez@gmail.com",
     license="MIT",
     keywords="functional scala",
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version="0.3.1",
-    install_requires=['enum34', 'future', 'six'],
+    install_requires=['enum34', 'future', 'six', 'fn'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

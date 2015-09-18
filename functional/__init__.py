@@ -11,3 +11,4 @@ __email__ = "ski.rodriguez@gmail.com"
 __status__ = "Development"
 
 from functional.chain import seq
+from fn import _

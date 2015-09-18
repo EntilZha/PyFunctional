@@ -6,6 +6,7 @@ from itertools import dropwhile, takewhile, islice
 
 import collections
 from enum import Enum
+import types
 
 from functional.util import dict_item_iter, filterfalse
 
@@ -19,16 +20,23 @@ EXECUTION_STRATEGIES = Enum('EXECUTION_STRATEGIES', 'PRE_COMPUTE')
 CACHE_T = Transformation('cache', None, None)
 
 
+def name(function):
+    if isinstance(function, types.FunctionType):
+        return function.__name__
+    else:
+        return str(function)
+
+
 def map_t(func):
-    return Transformation('map({0})'.format(func.__name__), partial(map, func), None)
+    return Transformation('map({0})'.format(name(func)), partial(map, func), None)
 
 
 def filter_t(func):
-    return Transformation('filter({0})'.format(func.__name__), partial(filter, func), None)
+    return Transformation('filter({0})'.format(name(func)), partial(filter, func), None)
 
 
 def filter_not_t(func):
-    return Transformation('filter_not({0})'.format(func.__name__), partial(filterfalse, func), None)
+    return Transformation('filter_not({0})'.format(name(func)), partial(filterfalse, func), None)
 
 
 def reversed_t():
@@ -57,7 +65,7 @@ def distinct_by_t(func):
             if key not in distinct_lookup:
                 distinct_lookup[key] = element
         return distinct_lookup.values()
-    return Transformation('distinct_by({0})'.format(func.__name__), distinct_by, None)
+    return Transformation('distinct_by({0})'.format(name(func)), distinct_by, None)
 
 
 def sorted_t(key=None, reverse=False):
@@ -90,7 +98,7 @@ def drop_t(n):
 
 def drop_while_t(func):
     return Transformation(
-        'drop_while({0})'.format(func.__name__),
+        'drop_while({0})'.format(name(func)),
         partial(dropwhile, func),
         None
     )
@@ -106,7 +114,7 @@ def take_t(n):
 
 def take_while_t(func):
     return Transformation(
-        'take_while({0})'.format(func.__name__),
+        'take_while({0})'.format(name(func)),
         partial(takewhile, func),
         None
     )
@@ -120,7 +128,7 @@ def flat_map_impl(func, sequence):
 
 def flat_map_t(func):
     return Transformation(
-        'flat_map({0})'.format(func.__name__),
+        'flat_map({0})'.format(name(func)),
         partial(flat_map_impl, func),
         None
     )
@@ -242,7 +250,7 @@ def group_by_key_t():
 
 def reduce_by_key_t(func):
     return Transformation(
-        'reduce_by_key({0})'.format(func.__name__),
+        'reduce_by_key({0})'.format(name(func)),
         lambda sequence: map(
             lambda kv: (kv[0], reduce(func, kv[1])), group_by_key_impl(sequence)
         ),
@@ -262,7 +270,7 @@ def group_by_impl(func, sequence):
 
 def group_by_t(func):
     return Transformation(
-        'group_by({0})'.format(func.__name__),
+        'group_by({0})'.format(name(func)),
         partial(group_by_impl, func),
         None
     )
@@ -283,7 +291,7 @@ def grouped_t(wrap, size):
 
 def partition_t(wrap, func):
     return Transformation(
-        'partition({0})'.format(func.__name__),
+        'partition({0})'.format(name(func)),
         lambda sequence: wrap(
             (wrap(filter(func, sequence)), wrap(filter(lambda val: not func(val), sequence)))
         ),
