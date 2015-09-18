@@ -5,6 +5,7 @@ from functional.pipeline import seq, Sequence, _wrap, is_iterable
 
 Data = namedtuple('Data', 'x y')
 
+
 class TestPipeline(unittest.TestCase):
     def assert_type(self, s):
         self.assertTrue(isinstance(s, Sequence))
