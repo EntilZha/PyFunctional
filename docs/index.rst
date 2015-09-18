@@ -6,13 +6,20 @@
 Welcome to ScalaFunctional's documentation!
 ===========================================
 
-Contents:
+The `functional` package has a single entrypoint, the function `seq`. This function
+receives an iterable value and wraps it with a custom class which supports the large
+set of functionality documented below. In the near future other data streams will
+be implemented such as natively reading from csv, json, files, and functions like range.
 
-.. toctree::
-   :maxdepth: 2
+Below are some samples of using `functional`, documentation for `seq`, and documentation
+for all the supported operations.
 
-   functional
+.. autofunction:: functional.seq
 
+.. autoclass:: functional.pipeline.Sequence
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 
 Indices and tables

@@ -29,8 +29,8 @@ def seq(*args):
         1) Iterable which is then directly wrapped as a Sequence
         2) A list of arguments is converted to a Sequence
         3) A single non-iterable is converted to a single element Sequence
-    :rtype Sequence
     :return: wrapped sequence
+
     """
     if len(args) == 0:
         raise TypeError("seq() takes at least 1 argument ({0} given)".format(len(args)))
