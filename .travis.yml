@@ -5,6 +5,7 @@ install:
   - pip install enum34
   - pip install future
   - pip install pylint
+  - pip install fn
 python:
   - "2.7"
   - "3.4"
