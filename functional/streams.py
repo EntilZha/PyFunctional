@@ -1,5 +1,5 @@
-from functional.pipeline import Sequence
-from functional.util import is_primitive
+from .pipeline import Sequence
+from .util import is_primitive
 
 
 def seq(*args):

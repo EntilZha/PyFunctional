@@ -10,5 +10,5 @@ __maintainer__ = "Pedro Rodriguez"
 __email__ = "ski.rodriguez@gmail.com"
 __status__ = "Development"
 
-from functional.streams import seq
+from .streams import seq
 from fn import _

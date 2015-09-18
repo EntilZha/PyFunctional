@@ -5,9 +5,9 @@ from operator import mul
 import collections
 from functools import reduce
 
-from functional.lineage import Lineage
-from functional.util import is_iterable, is_primitive
-import functional.transformations as transformations
+from .lineage import Lineage
+from .util import is_iterable, is_primitive
+from . import transformations
 
 
 class Sequence(object):

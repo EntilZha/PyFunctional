@@ -8,7 +8,7 @@ import collections
 from enum import Enum
 import types
 
-from functional.util import dict_item_iter, filterfalse
+from .util import dict_item_iter, filterfalse
 
 
 Transformation = collections.namedtuple(
