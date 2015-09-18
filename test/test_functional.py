@@ -1,7 +1,7 @@
 import unittest
 from collections import namedtuple
-from functional.pipeline import seq, Sequence, _wrap, is_iterable
-
+from functional.pipeline import Sequence, is_iterable, _wrap
+from functional import seq
 
 Data = namedtuple('Data', 'x y')
 
