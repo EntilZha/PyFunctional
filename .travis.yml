@@ -2,10 +2,10 @@ language: python
 install:
   - pip install -q coverage
   - pip install python-coveralls
-  - pip install enum34
   - pip install future
   - pip install pylint
   - pip install fn
+  - bash .travis-install.sh
 python:
   - "2.7"
   - "3.4"
