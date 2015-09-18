@@ -8,9 +8,11 @@
 # Motivation
 [Blog post about ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
 
-`ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python. It borrows the functional programming APIs from Scala and Apache Spark.
+`ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python. It borrows the functional programming APIs from Scala and Apache Spark. A better name for the package may have been something
+along "data pipelines", or simply "pipelines", but naming is hard.
 
-To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result.
+To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result. There is a bonus
+at the end using the `_` operator borrowed from `fn.py` (note: it works well in python 3, but not well in python 2).
 
 ```python
 l = [1, 2, -1, -2]
@@ -22,12 +24,13 @@ reduce(lambda x, y: x * y, map(lambda x: 2 * x, filter(lambda x: x > 0, l)))
 reduce(lambda x, y: x * y, [2 * x for x in l if x > 0])
 
 # ScalaFunctional style
-from functional import seq
+from functional import seq, _
 seq(l).filter(lambda x: x > 0).map(lambda x: 2 * x).reduce(lambda x, y: x * y)
+seq(l).filter(_ > 0).map(2 * _).reduce(_ * _)
 ```
 
 Although a trivial example, the real power of `ScalaFunctional` is composing transformations not available natively in Python. For example, the very common word count example is easy:
-```
+```python
 # ScalaFunctional word count
 l = seq("the why the what of word counting of english".split(" "))
 l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
