@@ -1,3 +1,7 @@
+# pylint: disable=redefined-builtin,too-many-arguments
+
+import builtins
+import re
 from .pipeline import Sequence
 from .util import is_primitive
 
@@ -42,3 +46,16 @@ def seq(*args):
         return Sequence(args[0])
 
 
+def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
+         errors=None, newline=None):
+    if not re.match('^[rbt]{1,3}$', mode):
+        raise ValueError("mode argument must be only have r, b, and t")
+    with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                       newline=newline) as data:
+        if delimiter is None:
+            return seq(data.readlines())
+        else:
+            return seq(''.join(data.readlines()).split(delimiter))
+
+
+seq.open = open

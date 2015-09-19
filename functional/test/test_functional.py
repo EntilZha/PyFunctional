@@ -1,7 +1,9 @@
+#pylint: skip-file
+
 import unittest
 from collections import namedtuple
-from functional.pipeline import Sequence, is_iterable, _wrap
-from functional import seq
+from ..pipeline import Sequence, is_iterable, _wrap
+from .. import seq
 
 Data = namedtuple('Data', 'x y')
 
