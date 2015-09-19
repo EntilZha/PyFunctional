@@ -75,5 +75,13 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
         else:
             return seq(''.join(data.readlines()).split(delimiter))
 
+def range(*args):
+    """
+    Additional entry point to Sequence which wraps the builtin range generator.
+    seq.range(args) is equivalent to seq(range(args)).
+    """
+    rng = builtins.range(*args)
+    return seq(rng)
 
 seq.open = open
+seq.range = range
