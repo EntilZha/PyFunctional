@@ -3,6 +3,7 @@
 import unittest
 from collections import namedtuple
 from ..pipeline import Sequence, is_iterable, _wrap
+from ..transformations import name
 from .. import seq
 
 Data = namedtuple('Data', 'x y')
@@ -14,9 +15,6 @@ class TestPipeline(unittest.TestCase):
 
     def assert_not_type(self, s):
         self.assertFalse(isinstance(s, Sequence))
-
-    def assert_iterable(self, s):
-        self.assertTrue(is_iterable(s))
 
     def assertIteratorEqual(self, iter_0, iter_1):
         seq_0 = list(iter_0)
@@ -50,6 +48,12 @@ class TestPipeline(unittest.TestCase):
     def test_repr(self):
         l = [1, 2, 3]
         self.assertEqual(repr(l), repr(seq(l)))
+
+    def test_lineage_name(self):
+        f = lambda x: x
+        self.assertEqual(f.__name__, name(f))
+        f = "test"
+        self.assertEqual("test", name(f))
 
     def test_str(self):
         l = [1, 2, 3]
