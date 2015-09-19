@@ -13,3 +13,9 @@ class TestStreams(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             seq.open('LICENSE.txt', mode='w').to_list()
+
+    def test_range(self):
+        self.assertListEqual([0, 1, 2, 3], seq.range(4).to_list())
+
+        data = [-5, -3, -1, 1, 3, 5, 7]
+        self.assertListEqual(data, seq.range(-5, 8, 2).to_list())
