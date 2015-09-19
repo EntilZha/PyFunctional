@@ -39,7 +39,7 @@ class Sequence(object):
             self._base_sequence = sequence
             self._lineage = Lineage()
         else:
-            raise TypeError("Given sequence must be a list")
+            raise TypeError("Given sequence must be an iterable value")
         if transform is not None:
             self._lineage.apply(transform)
 
@@ -184,9 +184,12 @@ class Sequence(object):
         primarily used internally and is no more helpful than to_list() externally
         """
         if len(self._lineage) == 0 or self._lineage[-1] == transformations.CACHE_T:
-            return
-        self._base_sequence = list(self._evaluate())
-        self._lineage.apply(transformations.CACHE_T)
+            if not isinstance(self._base_sequence, list):
+                self._base_sequence = list(self._base_sequence)
+                self._lineage.apply(transformations.CACHE_T)
+        else:
+            self._base_sequence = list(self._evaluate())
+            self._lineage.apply(transformations.CACHE_T)
 
     def head(self):
         """

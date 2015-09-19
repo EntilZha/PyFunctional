@@ -584,12 +584,16 @@ class TestPipeline(unittest.TestCase):
         result = seq(l).to_list()
         self.assertIteratorEqual(result, l)
         self.assertTrue(isinstance(result, list))
+        result = seq(iter([0, 1, 2])).to_list()
+        self.assertIsInstance(result, list)
 
     def test_list(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = seq(l).list()
         self.assertEqual(result, l)
         self.assertTrue(isinstance(result, list))
+        result = seq(iter([0, 1, 2])).to_list()
+        self.assertIsInstance(result, list)
 
     def test_for_each(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
