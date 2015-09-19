@@ -12,9 +12,7 @@
 along "data pipelines", or simply "pipelines", but naming is hard.
 
 To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result. There is a bonus
-at the end using the `_` operator borrowed from `fn.py` (note: `ipython`'s underscore clashes with this, so its not helpful in interactive `ipython` sessions).
-
-You can learn more about [fn.py at their github](https://github.com/kachayev/fn.py).
+at the end using the `_` operator from [`fn.py`](https://github.com/kachayev/fn.py) (note: `ipython`'s underscore clashes with this, so its not helpful in interactive `ipython` sessions).
 
 ```python
 l = [1, 2, -1, -2]
@@ -26,7 +24,8 @@ reduce(lambda x, y: x * y, map(lambda x: 2 * x, filter(lambda x: x > 0, l)))
 reduce(lambda x, y: x * y, [2 * x for x in l if x > 0])
 
 # ScalaFunctional style
-from functional import seq, _
+from functional import seq
+from fn import _
 seq(l).filter(lambda x: x > 0).map(lambda x: 2 * x).reduce(lambda x, y: x * y)
 seq(l).filter(_ > 0).map(2 * _).reduce(_ * _)
 ```

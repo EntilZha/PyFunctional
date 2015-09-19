@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys
 
-requirements = ['future', 'six', 'fn']
+requirements = ['future', 'six']
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
     requirements.append('enum34')
 

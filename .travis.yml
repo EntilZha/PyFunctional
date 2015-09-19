@@ -4,7 +4,6 @@ install:
   - pip install python-coveralls
   - pip install future
   - pip install pylint
-  - pip install fn
   - bash .travis-install.sh
 python:
   - "2.7"

@@ -11,4 +11,3 @@ __email__ = "ski.rodriguez@gmail.com"
 __status__ = "Development"
 
 from .streams import seq
-from fn import _
