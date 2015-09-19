@@ -170,9 +170,19 @@ class Sequence(object):
 
     @property
     def sequence(self):
+        """
+        Alias for to_list used internally for brevity
+
+        :return: result of to_list() on sequence
+        """
         return self.to_list()
 
     def cache(self):
+        """
+        Caches the result of the Sequence so far. This means that any functions applied on the
+        pipeline before cache() are evaluated, and the result is stored in the Sequence. This is
+        primarily used internally and is no more helpful than to_list() externally
+        """
         if len(self._lineage) == 0 or self._lineage[-1] == transformations.CACHE_T:
             return
         self._base_sequence = list(self._evaluate())
