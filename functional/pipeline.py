@@ -1177,10 +1177,10 @@ class Sequence(object):
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
 
-        :param default: Can be a callable zero argument function. When not None, the returned dictionary
-            is a collections.defaultdict with default as value for missing keys. If the value is not
-            callable, then a zero argument lambda function is created returning the value and used
-            for collections.defaultdict
+        :param default: Can be a callable zero argument function. When not None, the returned
+            dictionary is a collections.defaultdict with default as value for missing keys. If the
+            value is not callable, then a zero argument lambda function is created returning the
+            value and used for collections.defaultdict
         :return: dictionary from sequence of (Key, Value) elements
         """
         dictionary = {}
@@ -1207,10 +1207,10 @@ class Sequence(object):
         >>> seq([('a', 1), ('b', 2)]).dict()
         {'a': 1, 'b': 2}
 
-        :param default: Can be a callable zero argument function. When not None, the returned dictionary
-            is a collections.defaultdict with default as value for missing keys. If the value is not
-            callable, then a zero argument lambda function is created returning the value and used
-            for collections.defaultdict
+        :param default: Can be a callable zero argument function. When not None, the returned
+            dictionary is a collections.defaultdict with default as value for missing keys. If the
+            value is not callable, then a zero argument lambda function is created returning the
+            value and used for collections.defaultdict
         :return: dictionary from sequence of (Key, Value) elements
         """
         return self.to_dict(default=default)
