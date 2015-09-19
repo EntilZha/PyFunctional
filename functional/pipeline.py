@@ -1177,8 +1177,10 @@ class Sequence(object):
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
 
-        :param default: a callable zero argument function. When not None, the returned dictionary
-            is a collections.defaultdict with default as value for missing keys.
+        :param default: Can be a callable zero argument function. When not None, the returned dictionary
+            is a collections.defaultdict with default as value for missing keys. If the value is not
+            callable, then a zero argument lambda function is created returning the value and used
+            for collections.defaultdict
         :return: dictionary from sequence of (Key, Value) elements
         """
         dictionary = {}
@@ -1187,23 +1189,28 @@ class Sequence(object):
         if default is None:
             return dictionary
         else:
-            return collections.defaultdict(default, dictionary)
+            if hasattr(default, '__call__'):
+                return collections.defaultdict(default, dictionary)
+            else:
+                return collections.defaultdict(lambda: default, dictionary)
 
     def dict(self, default=None):
         """
         Converts sequence of (Key, Value) pairs to a dictionary.
 
-        >>> type(seq([('a', 1)]).to_dict())
+        >>> type(seq([('a', 1)]).dict())
         dict
 
         >>> type(seq([]))
         functional.pipeline.Sequence
 
-        >>> seq([('a', 1), ('b', 2)]).to_dict()
+        >>> seq([('a', 1), ('b', 2)]).dict()
         {'a': 1, 'b': 2}
 
-        :param default: a callable zero argument function. When not None, the returned dictionary
-            is a collections.defaultdict with default as value for missing keys.
+        :param default: Can be a callable zero argument function. When not None, the returned dictionary
+            is a collections.defaultdict with default as value for missing keys. If the value is not
+            callable, then a zero argument lambda function is created returning the value and used
+            for collections.defaultdict
         :return: dictionary from sequence of (Key, Value) elements
         """
         return self.to_dict(default=default)

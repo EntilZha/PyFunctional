@@ -620,6 +620,10 @@ class TestPipeline(unittest.TestCase):
         self.assertTrue(1 in result)
         self.assertFalse(3 in result)
         self.assertEqual(result[4], 100)
+        result = seq(l).dict(default=100)
+        self.assertTrue(1 in result)
+        self.assertFalse(3 in result)
+        self.assertEqual(result[4], 100)
 
     def test_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
@@ -627,7 +631,11 @@ class TestPipeline(unittest.TestCase):
         result = seq(l).dict()
         self.assertDictEqual(result, d)
         self.assertTrue(isinstance(result, dict))
-        result = seq(l).to_dict(default=lambda: 100)
+        result = seq(l).dict(default=lambda: 100)
+        self.assertTrue(1 in result)
+        self.assertFalse(3 in result)
+        self.assertEqual(result[4], 100)
+        result = seq(l).dict(default=100)
         self.assertTrue(1 in result)
         self.assertFalse(3 in result)
         self.assertEqual(result[4], 100)
