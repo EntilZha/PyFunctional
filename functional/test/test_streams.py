@@ -10,3 +10,6 @@ class TestStreams(unittest.TestCase):
 
         text = ''.join(data).split(',')
         self.assertListEqual(text, seq.open('LICENSE.txt', delimiter=',').to_list())
+
+        with self.assertRaises(ValueError):
+            seq.open('LICENSE.txt', mode='w').to_list()
