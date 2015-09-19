@@ -1171,9 +1171,6 @@ class Sequence(object):
         >>> type(seq([('a', 1)]).to_dict())
         dict
 
-        >>> type(seq([]))
-        functional.pipeline.Sequence
-
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
 
@@ -1200,9 +1197,6 @@ class Sequence(object):
 
         >>> type(seq([('a', 1)]).dict())
         dict
-
-        >>> type(seq([]))
-        functional.pipeline.Sequence
 
         >>> seq([('a', 1), ('b', 2)]).dict()
         {'a': 1, 'b': 2}
