@@ -1,4 +1,4 @@
-# pylint: disable=no-name-in-module,unused-import
+# pylint: disable=no-name-in-module,unused-import,too-many-instance-attributes,too-many-arguments, too-few-public-methods
 
 import collections
 import six
