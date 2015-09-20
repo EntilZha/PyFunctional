@@ -3,7 +3,7 @@
 import builtins
 import re
 from .pipeline import Sequence
-from .util import is_primitive
+from .util import is_primitive, LazyFile
 
 
 def seq(*args):
@@ -68,11 +68,12 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
     """
     if not re.match('^[rbt]{1,3}$', mode):
         raise ValueError('mode argument must be only have r, b, and t')
-    with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                       newline=newline) as data:
-        if delimiter is None:
-            return seq(data.readlines())
-        else:
+    if delimiter is None:
+        return seq(LazyFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                            newline=newline))
+    else:
+        with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                           newline=newline) as data:
             return seq(''.join(data.readlines()).split(delimiter))
 
 
