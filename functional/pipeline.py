@@ -190,6 +190,7 @@ class Sequence(object):
         else:
             self._base_sequence = list(self._evaluate())
             self._lineage.apply(transformations.CACHE_T)
+        return self
 
     def head(self):
         """

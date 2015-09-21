@@ -68,6 +68,8 @@ class LazyFile(object):
         self.file = None
 
     def __iter__(self):
+        if self.file is not None:
+            self.file.close()
         self.file = builtins.open(self.path, mode=self.mode, buffering=self.buffering,
                                   encoding=self.encoding, errors=self.errors, newline=self.newline)
         return self
