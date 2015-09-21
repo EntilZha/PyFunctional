@@ -1,4 +1,4 @@
-# pylint: disable=no-name-in-module,unused-import,too-many-instance-attributes,too-many-arguments, too-few-public-methods
+# pylint: disable=no-name-in-module,unused-import
 
 import collections
 import six
@@ -56,8 +56,10 @@ def is_iterable(val):
 
 
 class LazyFile(object):
+    # pylint: disable=too-few-public-methods,too-many-instance-attributes
     def __init__(self, path, delimiter=None, mode='r', buffering=-1, encoding=None,
                  errors=None, newline=None):
+        # pylint: disable=too-many-arguments
         self.path = path
         self.delimiter = delimiter
         self.mode = mode
