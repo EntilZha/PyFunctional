@@ -5,6 +5,13 @@ install:
   - pip install future
   - pip install pylint
   - bash .travis-install.sh
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/1732ae62130d81fe54d8
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: always     # options: [always|never|change] default: always
 python:
   - "2.7"
   - "3.4"
