@@ -347,8 +347,8 @@ class Sequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
-        self.cache()
-        return self._transform(transformations.drop_right_t(n))
+        cached_sequence = self._transform(transformations.CACHE_T)
+        return cached_sequence._transform(transformations.drop_right_t(n))
 
     def drop_while(self, func):
         """
