@@ -447,7 +447,7 @@ class Sequence(object):
         :param func: function to map with
         :return: sequence with func mapped onto it
         """
-        return self._transform(transformations.map_t(f))
+        return self._transform(transformations.map_t(func))
 
     def for_each(self, func):
         """
