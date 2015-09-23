@@ -352,13 +352,13 @@ class Sequence(object):
 
     def drop_while(self, func):
         """
-        Drops elements in the sequence while f evaluates to True, then returns the rest.
+        Drops elements in the sequence while func evaluates to True, then returns the rest.
 
         >>> seq([1, 2, 3, 4, 5, 1, 2]).drop_while(lambda x: x < 3)
         [3, 4, 5, 1, 2]
 
         :param func: truth returning function
-        :return: elements including and after f evaluates to False
+        :return: elements including and after func evaluates to False
         """
         return self._transform(transformations.drop_while_t(func))
 
@@ -379,19 +379,19 @@ class Sequence(object):
 
     def take_while(self, func):
         """
-        Take elements in the sequence until f evaluates to False, then return them.
+        Take elements in the sequence until func evaluates to False, then return them.
 
         >>> seq([1, 2, 3, 4, 5, 1, 2]).take_while(lambda x: x < 3)
         [1, 2]
 
         :param func: truth returning function
-        :return: elements taken until f evaluates to False
+        :return: elements taken until func evaluates to False
         """
         return self._transform(transformations.take_while_t(func))
 
     def union(self, other):
         """
-        New sequence with unique elements from self.sequence and other.
+        New sequence with unique elements from self and other.
 
         >>> seq([1, 1, 2, 3, 3]).union([1, 4, 5])
         [1, 2, 3, 4, 5]
@@ -437,21 +437,21 @@ class Sequence(object):
         """
         return self._transform(transformations.symmetric_difference_t(other))
 
-    def map(self, f):
+    def map(self, func):
         """
         Maps f onto the elements of the sequence.
 
         >>> seq([1, 2, 3, 4]).map(lambda x: x * -1)
         [-1, -2, -3, -4]
 
-        :param f: function to map with
-        :return: sequence with f mapped onto it
+        :param func: function to map with
+        :return: sequence with func mapped onto it
         """
         return self._transform(transformations.map_t(f))
 
     def for_each(self, func):
         """
-        Executes f on each element of the sequence.
+        Executes func on each element of the sequence.
 
         >>> l = []
         >>> seq([1, 2, 3, 4]).for_each(l.append)
@@ -459,14 +459,13 @@ class Sequence(object):
         [1, 2, 3, 4]
 
         :param func: function to execute
-        :return: None
         """
         for e in self:
             func(e)
 
     def filter(self, func):
         """
-        Filters sequence to include only elements where f is True.
+        Filters sequence to include only elements where func is True.
 
         >>> seq([-1, 1, -2, 2]).filter(lambda x: x > 0)
         [1, 2]
@@ -478,7 +477,7 @@ class Sequence(object):
 
     def filter_not(self, func):
         """
-        Filters sequence to include only elements where f is False.
+        Filters sequence to include only elements where func is False.
 
         >>> seq([-1, 1, -2, 2]).filter_not(lambda x: x > 0)
         [-1, -2]
@@ -490,7 +489,7 @@ class Sequence(object):
 
     def count(self, func):
         """
-        Counts the number of elements in the sequence which satisfy the predicate f.
+        Counts the number of elements in the sequence which satisfy the predicate func.
 
         >>> seq([-1, -2, 1, 2]).count(lambda x: x > 0)
         2
@@ -582,7 +581,7 @@ class Sequence(object):
 
     def exists(self, func):
         """
-        Returns True if an element in the sequence makes f evaluate to True.
+        Returns True if an element in the sequence makes func evaluate to True.
 
         >>> seq([1, 2, 3, 4]).exists(lambda x: x == 2)
         True
@@ -591,7 +590,7 @@ class Sequence(object):
         False
 
         :param func: existence check function
-        :return: True if any element satisfies f
+        :return: True if any element satisfies func
         """
         for element in self:
             if func(element):
@@ -600,7 +599,7 @@ class Sequence(object):
 
     def for_all(self, func):
         """
-        Returns True if all elements in sequence make f evaluate to True.
+        Returns True if all elements in sequence make func evaluate to True.
 
         >>> seq([1, 2, 3]).for_all(lambda x: x > 0)
         True
@@ -609,7 +608,7 @@ class Sequence(object):
         False
 
         :param func: function to check truth value of all elements with
-        :return: True if all elements make f evaluate to True
+        :return: True if all elements make func evaluate to True
         """
         for element in self:
             if not func(element):
@@ -642,6 +641,8 @@ class Sequence(object):
         Traceback (most recent call last):
          ...
         ValueError: max() arg is an empty sequence
+
+        :return: Maximal value of sequence
         """
         return _wrap(max(self))
 
@@ -671,6 +672,8 @@ class Sequence(object):
         Traceback (most recent call last):
          ...
         ValueError: min() arg is an empty sequence
+
+        :return: Minimal value of sequence
         """
         return _wrap(min(self))
 
@@ -693,6 +696,9 @@ class Sequence(object):
         Traceback (most recent call last):
          ...
         ValueError: max() arg is an empty sequence
+
+        :param func: function to compute max by
+        :return: Maximal element by func(element)
         """
         return _wrap(max(self, key=func))
 
@@ -715,19 +721,22 @@ class Sequence(object):
         Traceback (most recent call last):
          ...
         ValueError: min() arg is an empty sequence
+
+        :param func: function to compute min by
+        :return: Maximal element by func(element)
         """
         return _wrap(min(self, key=func))
 
     def find(self, func):
         """
-        Finds the first element of the sequence that satisfies f. If no such element exists,
+        Finds the first element of the sequence that satisfies func. If no such element exists,
         then return None.
 
         >>> seq(["abc", "ab", "bc"]).find(lambda x: len(x) == 2)
         'ab'
 
         :param func: function to find with
-        :return: first element to satisfy f or None
+        :return: first element to satisfy func or None
         """
         for element in self:
             if func(element):
@@ -747,7 +756,7 @@ class Sequence(object):
 
     def flat_map(self, func):
         """
-        Applies f to each element of the sequence, which themselves should be sequences.
+        Applies func to each element of the sequence, which themselves should be sequences.
         Then appends each element of each sequence to a final result
 
         >>> seq([[1, 2], [3, 4], [5, 6]]).flat_map(lambda x: x)
@@ -760,13 +769,13 @@ class Sequence(object):
         [1, 1, 2, 2, 3, 3]
 
         :param func: function to apply to each sequence in the sequence
-        :return: application of f to elements followed by flattening
+        :return: application of func to elements followed by flattening
         """
         return self._transform(transformations.flat_map_t(func))
 
     def group_by(self, func):
         """
-        Group elements into a list of (Key, Value) tuples where f creates the key and maps
+        Group elements into a list of (Key, Value) tuples where func creates the key and maps
         to values matching that key.
 
         >>> seq(["abc", "ab", "z", "f", "qw"]).group_by(len)
@@ -790,26 +799,26 @@ class Sequence(object):
 
     def reduce_by_key(self, func):
         """
-        Reduces a sequence of (Key, Value) using f on each Key.
+        Reduces a sequence of (Key, Value) using func on each sequence of values.
 
         >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]) \
                 .reduce_by_key(lambda x, y: x + y)
         [('a', 1), ('c', 3), ('b', 9)]
 
-        :param func: reduce each list of values using two parameter, associative f
-        :return: Sequence of tuples where the value is reduced with f
+        :param func: reduce each list of values using two parameter, associative func
+        :return: Sequence of tuples where the value is reduced with func
         """
         return self._transform(transformations.reduce_by_key_t(func))
 
     def reduce(self, func):
         """
-        Reduce sequence of elements using f.
+        Reduce sequence of elements using func.
 
         >>> seq([1, 2, 3]).reduce(lambda x, y: x + y)
         6
 
         :param func: two parameter, associative reduce function
-        :return: reduced value using f
+        :return: reduced value using func
         """
         return _wrap(reduce(func, self))
 
@@ -857,7 +866,7 @@ class Sequence(object):
 
     def fold_left(self, zero_value, func):
         """
-        Takes a zero_value and performs a reduction to a value using f. f should take two
+        Takes a zero_value and performs a reduction to a value using func. func should take two
         parameters, 1) the value to accumulate into the result and 2) the current result.
         Elements are folded left to right.
 
@@ -867,7 +876,7 @@ class Sequence(object):
         :param zero_value: zero value to reduce into
         :param func: Two parameter function. First parameter is value to be accumulated into result.
             Second parameter is the current result
-        :return: value from folding values with f into zero_value
+        :return: value from folding values with func into zero_value
         """
         result = zero_value
         for element in self:
@@ -876,7 +885,7 @@ class Sequence(object):
 
     def fold_right(self, zero_value, func):
         """
-        Takes a zero_value and performs a reduction to a value using f. f should take two
+        Takes a zero_value and performs a reduction to a value using func. func should take two
         parameters, 1) the value to accumulate into the result and 2) the current result.
         Elements are folded right to left.
 
@@ -886,7 +895,7 @@ class Sequence(object):
         :param zero_value: zero value to reduce into
         :param func: Two parameter function. First parameter is value to be accumulated into result.
             Second parameter is the current result
-        :return: value from folding values with f into zero_value
+        :return: value from folding values with func into zero_value
         """
         return self.reverse().fold_left(zero_value, func)
 
@@ -1014,7 +1023,7 @@ class Sequence(object):
 
     def partition(self, func):
         """
-        Partition the sequence based on satisfying the predicate f.
+        Partition the sequence based on satisfying the predicate func.
 
         >>> seq([-1, 1, -2, 2]).partition(lambda x: x < 0)
         ([-1, -2], [1, 2])
@@ -1079,6 +1088,7 @@ class Sequence(object):
         """
         Returns sequence of elements who are distinct by the passed function. The return
         value of func must be hashable. When two elements are distinct by func, the first is taken.
+
         :param func: function to use for determining distinctness
         :return: elements distinct by func
         """
