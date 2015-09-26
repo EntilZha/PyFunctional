@@ -2,7 +2,8 @@
 
 import builtins
 import re
-from csv import reader as csvreader
+import csv as csvapi
+import json as jsonapi
 
 from .pipeline import Sequence
 from .util import is_primitive, LazyFile
@@ -89,6 +90,19 @@ def range(*args):
 
 
 def csv(csvfile, dialect='excel', **fmtparams):
+    """
+    Additional entry point to Sequence which parses the input of a csv stream or file according
+    to the defined options. csvfile can be a filepath or an object that implements the iterator
+    interface (defines next() or __next__() depending on python version).
+
+    >>> f = seq.csv('functional/test/data/test.csv').to_list()
+    [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
+
+    :param csvfile: path to file or iterator object
+    :param dialect: dialect of csv, passed to csv.reader
+    :param fmtparams: options passed to csv.reader
+    :return: Sequence wrapping csv file
+    """
     if isinstance(csvfile, str):
         input_file = LazyFile(csvfile, mode='r')
     elif hasattr(csvfile, 'next') or hasattr(csvfile, '__next__'):
@@ -96,7 +110,7 @@ def csv(csvfile, dialect='excel', **fmtparams):
     else:
         raise ValueError('csvfile must be a filepath or implement the iterator interface')
 
-    csv_input = csvreader(input_file, dialect=dialect, **fmtparams)
+    csv_input = csvapi.reader(input_file, dialect=dialect, **fmtparams)
     return seq(csv_input)
 
 
