@@ -19,3 +19,12 @@ class TestStreams(unittest.TestCase):
 
         data = [-5, -3, -1, 1, 3, 5, 7]
         self.assertListEqual(data, seq.range(-5, 8, 2).to_list())
+
+    def test_csv(self):
+        result = seq.csv('functional/test/data/test.csv').to_list()
+        expect = [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
+        self.assertEqual(expect, result)
+        with open('functional/test/data/test.csv', 'r') as csv_file:
+            self.assertEqual(expect, seq.csv(csv_file).to_list())
+        with self.assertRaises(ValueError):
+            seq.csv(1)

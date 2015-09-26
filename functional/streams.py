@@ -2,6 +2,8 @@
 
 import builtins
 import re
+from csv import reader as csvreader
+
 from .pipeline import Sequence
 from .util import is_primitive, LazyFile
 
@@ -85,5 +87,19 @@ def range(*args):
     rng = builtins.range(*args)
     return seq(rng)
 
+
+def csv(csvfile, dialect='excel', **fmtparams):
+    if isinstance(csvfile, str):
+        input_file = LazyFile(csvfile, mode='r')
+    elif hasattr(csvfile, 'next') or hasattr(csvfile, '__next__'):
+        input_file = csvfile
+    else:
+        raise ValueError('csvfile must be a filepath or implement the iterator interface')
+
+    csv_input = csvreader(input_file, dialect=dialect, **fmtparams)
+    return seq(csv_input)
+
+
 seq.open = open
 seq.range = range
+seq.csv = csv
