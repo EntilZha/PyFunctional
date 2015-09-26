@@ -114,6 +114,23 @@ def csv(csvfile, dialect='excel', **fmtparams):
     return seq(csv_input)
 
 
+def jsonl(jsonl_file):
+    """
+    Additional entry point to Sequence which parses the input of a jsonl file stream or file from
+    the given path. Jsonl formatted files have a single valid json value on each line which is
+    parsed by the python json module.
+
+    :param jsonl_file: path or file containing jsonl content
+    :return: Sequence wrapping jsonl file
+    """
+    if isinstance(jsonl_file, str):
+        input_file = LazyFile(jsonl_file)
+    else:
+        input_file = jsonl_file
+    return seq(input_file).map(jsonapi.loads).cache(delete_lineage=True)
+
+
 seq.open = open
 seq.range = range
 seq.csv = csv
+seq.jsonl = jsonl

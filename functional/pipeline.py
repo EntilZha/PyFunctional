@@ -177,7 +177,7 @@ class Sequence(object):
         """
         return self.to_list()
 
-    def cache(self):
+    def cache(self, delete_lineage=False):
         """
         Caches the result of the Sequence so far. This means that any functions applied on the
         pipeline before cache() are evaluated, and the result is stored in the Sequence. This is
@@ -190,6 +190,8 @@ class Sequence(object):
         else:
             self._base_sequence = list(self._evaluate())
             self._lineage.apply(transformations.CACHE_T)
+        if delete_lineage:
+            self._lineage = Lineage()
         return self
 
     def head(self):

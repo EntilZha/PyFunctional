@@ -699,3 +699,14 @@ class TestPipeline(unittest.TestCase):
     def test_lineage_repr(self):
         s = seq(1).map(lambda x: x).filter(lambda x: True)
         self.assertEqual(repr(s._lineage), 'Lineage: sequence -> map(<lambda>) -> filter(<lambda>)')
+
+    def test_cache(self):
+        calls = []
+        func = lambda x: calls.append(x)
+        result = seq(1, 2, 3).map(func).cache().map(lambda x: x).to_list()
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(result, [None, None, None])
+        result = seq(1, 2, 3).map(lambda x: x).cache()
+        self.assertEqual(repr(result._lineage), 'Lineage: sequence -> map(<lambda>) -> cache')
+        result = seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
+        self.assertEqual(repr(result._lineage), 'Lineage: sequence')
