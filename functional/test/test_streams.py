@@ -28,3 +28,11 @@ class TestStreams(unittest.TestCase):
             self.assertEqual(expect, seq.csv(csv_file).to_list())
         with self.assertRaises(ValueError):
             seq.csv(1)
+
+    def test_jsonl(self):
+        result = seq.jsonl('functional/test/data/test.jsonl').to_list()
+        expect = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
+        self.assertEqual(expect, result)
+        result = seq.jsonl(['[1, 2, 3]', '[4, 5, 6]'])
+        expect = [[1, 2, 3], [4, 5, 6]]
+        self.assertEqual(expect, result)
