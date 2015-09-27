@@ -84,7 +84,7 @@ seq(1, 1, 2, 3).map(lambda x: x).to_list()
 
 # Passing a single value
 seq(1).map(lambda x: -x).to_list()
-# [1]
+# [-1]
 ```
 
 ### Collections (transformations and actions) API
