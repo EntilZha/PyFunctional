@@ -64,11 +64,11 @@ Full documentation can be found at [scalafunctional.readthedocs.org](http://scal
 ### Summary of Streams, Transformations and Actions
 `ScalaFunctional` has three types of functions:
 
-1. Streams which read data in. In `0.3.1` the only stream function is `seq`, however in `0.4.0` this is getting expanded
-2. Transformations: This mutate the data from data streams with functions such as `map`, `flat_map`, and `filter`
+1. Streams read data for use by the collections API. In `0.3.1` the only stream function is `seq`, however in `0.4.0` this is getting expanded to read data from text, csv, json, and jsonl files.
+2. Transformations: These mutate data from streams with functions such as `map`, `flat_map`, and `filter`
 3. Actions: These cause a series of transformations to evaluate to a concrete value. For example, `to_list`, `reduce`, and `to_dict` are examples of actions.
 
-To summarize, suppose we have: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, the `seq` is the data stream, the `map` is a transformation, and the `reduce` is an action.
+To summarize, suppose we have: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `seq` is the stream, `map` is the transformation, and  `reduce` is the action.
 
 ### Streams (`seq`) API
 The primary entrypoint to using `ScalaFunctional` is through `functional.seq`. `seq` can take any iterable as input and returns a `functional.Sequence` which exposes the collections API described in the table below. `seq` can be called in various ways demonstrated below:
@@ -84,12 +84,10 @@ seq(1, 1, 2, 3).map(lambda x: x).to_list()
 
 # Passing a single value
 seq(1).map(lambda x: -x).to_list()
-$ [1]
+# [1]
 ```
 
-In the upcoming `0.4.0` release this API is being expanded so that data from text csv, json, and jsonl files can be read directly into `seq`.
-
-### `functional.Sequence` (transformations and actions) API
+### Collections (transformations and actions) API
 Below is the complete list of functions which can be called on the object created by `seq` otherwise known as a `functional.Sequence`.
 
 Function | Description | Type
