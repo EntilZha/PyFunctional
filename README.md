@@ -63,6 +63,7 @@ Full documentation can be found at [scalafunctional.readthedocs.org](http://scal
 
 ### Summary of Streams, Transformations and Actions
 `ScalaFunctional` has three types of functions:
+
 1. Streams which read data in. In `0.3.1` the only stream function is `seq`, however in `0.4.0` this is getting expanded
 2. Transformations: This mutate the data from data streams with functions such as `map`, `flat_map`, and `filter`
 3. Actions: These cause a series of transformations to evaluate to a concrete value. For example, `to_list`, `reduce`, and `to_dict` are examples of actions.
