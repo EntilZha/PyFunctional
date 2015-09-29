@@ -10,7 +10,7 @@
 It implements the Scala collections and Apache Spark RDD APIs in Python to provide access to a rich and
 declarative way of defining data pipelines.
 
-Below is a comparison of Python built functional programming built ins, list comprehensions, and `ScalaFunctional`
+Below is a comparison of using Python builtins, list comprehensions, and `ScalaFunctional`
 
 ```python
 l = [1, 2, -1, -2]
