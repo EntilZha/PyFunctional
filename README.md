@@ -5,13 +5,12 @@
 [![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-# Motivation
-[Blog post about ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
+## Usage
+`ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python.
+It implements the Scala collections and Apache Spark RDD APIs in Python to provide access to a rich and
+declarative way of defining data pipelines.
 
-`ScalaFunctional` exists to make functional programming with collections easy and intuitive in Python. It borrows the collections/RDD APIs from Scala and Apache Spark to provide access to a rich and declarative way of defining data pipelines.
-
-To demonstrate the different style of Python map/filter/reduce, list comprehensions, and `ScalaFunctional`, the code block below does the same thing in all three: manipulate a list of numbers to compute a result. There is a bonus
-at the end using the `_` operator from [`fn.py`](https://github.com/kachayev/fn.py) (note: `ipython`'s underscore clashes with this, so its not helpful in interactive `ipython` sessions).
+Below is a comparison of using Python builtins, list comprehensions, and `ScalaFunctional`
 
 ```python
 l = [1, 2, -1, -2]
@@ -24,39 +23,73 @@ reduce(lambda x, y: x * y, [2 * x for x in l if x > 0])
 
 # ScalaFunctional style
 from functional import seq
-from fn import _
 seq(l).filter(lambda x: x > 0).map(lambda x: 2 * x).reduce(lambda x, y: x * y)
-seq(l).filter(_ > 0).map(2 * _).reduce(_ * _)
 ```
 
-Although a trivial example, the real power of `ScalaFunctional` is composing transformations not available natively in Python. For example, the very common word count example is easy:
+`ScalaFunctional` also makes other tasks much easier than using only python's built in utilities. Below are examples of several tasks such as word count and merging data from two streams.
+
 ```python
 # ScalaFunctional word count
-l = seq("the why the what of word counting of english".split(" "))
+l = seq("I dont want to believe I want to know".split(" "))
 l.map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
-# [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]
+# [('dont', 1), ('I', 2), ('to', 2), ('know', 1), ('want', 2), ('believe', 1)]
+
+# List of key value pairs, where the key is an ID and we want values joined
+names = [(1, 'spark'), (2, 'hadoop'), (3, 'django')]
+languages = [(1, 'scala'), (2, 'java'), (3, 'python')]
+joined = seq(names).inner_join(languages).to_dict()
+# {1: ('spark', 'scala'), 2: ('hadoop', 'java'), 3: ('django', 'python')}
 ```
 
-# Installation and Usage
+[More examples and motivation.](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
+
 ## Installation
+`ScalaFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be installed by running:
 ```bash
 # Install from command line
 $ pip install scalafunctional
 ```
-## Usage
-To use ScalaFunctional, you need only include: `from functional import seq`. `seq` is a function which takes as argument a list and returns a wrapper on that list that provides access to the functions in the API table below. The API consists of a combination of common Python APIs, the Scala Collections API, and the Apache Spark RDD API.
 
-For detailed documentation and more usage examples, refer to [readthedocs](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline)
+Or by
+```bash
+git clone git@github.com:EntilZha/ScalaFunctional.git
+python setup.py install
+```
 
-# Scala Functional API
-## Transformations and Actions
-Fundamentally, there are two types of functions in data pipelines: transformations and actions. After reading/creating data, functions such as `map`, `filter`, `flat_map` and much more do not need to be evaluated immediately. They can be lazily evaluated and only evaluated when the result is required. This helps to boost performance for more intensive work.
+Then import the package using: `from functional import seq`
 
-The second type of function is an action. These force `functional` to compute the result of a sequence of transformations. Functions such as `reduce`, `to_list`, `to_dict`, `str`, and `repr` are common examples.
+## Documentation
+Full documentation can be found at [scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline).
 
-For example, in the code `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `map` is a transformation and `reduce` is an action.
+### Summary of Streams, Transformations and Actions
+`ScalaFunctional` has three types of functions:
 
-## ScalaFunctional API
+1. Streams read data for use by the collections API. In `0.3.1` the only stream function is `seq`, however in `0.4.0` this is getting expanded to read data from text, csv, json, and jsonl files.
+2. Transformations: These mutate data from streams with functions such as `map`, `flat_map`, and `filter`
+3. Actions: These cause a series of transformations to evaluate to a concrete value. For example, `to_list`, `reduce`, and `to_dict` are examples of actions.
+
+To summarize, suppose we have: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `seq` is the stream, `map` is the transformation, and  `reduce` is the action.
+
+### Streams (`seq`) API
+The primary entrypoint to using `ScalaFunctional` is through `functional.seq`. `seq` can take any iterable as input and returns a `functional.Sequence` which exposes the collections API described in the table below. `seq` can be called in various ways demonstrated below:
+
+```python
+# Passing a list
+seq([1, 1, 2, 3]).to_set()
+# [1, 2, 3]
+
+# Passing direct arguments
+seq(1, 1, 2, 3).map(lambda x: x).to_list()
+# [1, 1, 2, 3]
+
+# Passing a single value
+seq(1).map(lambda x: -x).to_list()
+# [-1]
+```
+
+### Collections (transformations and actions) API
+Below is the complete list of functions which can be called on the object created by `seq` otherwise known as a `functional.Sequence`.
+
 Function | Description | Type
  ------- | -----------  | ----
  `map(func)` | Maps `func` onto elements of sequence | transformation
@@ -123,6 +156,17 @@ Function | Description | Type
 `cache()` | Forces evaluation of sequence immediately and caches the result | action
 `for_each(func)` | Executes `func` on each element of the sequence | action
 
+### Tips
+Another python package named `fn` is also helpful. It can be installed via `pip install fn` and can remove the need for direct `lambda`s.
+
+```python
+from functional import seq
+from fn import _
+
+seq(1, 2, 3).map(_ * 2).reduce(_ + _)
+# 12
+```
+
 ## Road Map
 ### Version `0.4.0`
 Implement new ways to have `ScalaFunctional` ingest data and write it out. Principally this means implementing reading from files (csv, json, etc) and writing back to them natively. This is being implemented in `functional.streams` if you would like to check progress
@@ -132,4 +176,4 @@ Implement new ways to have `ScalaFunctional` ingest data and write it out. Princ
 * Decide if package is stable enough to prepare a `1.0` release
 
 ## Contributing and Bug Fixes
-Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull requests and contributors have offered valuable feedback and critique on code. It is also great to hear from users of the package, especially what it is used for, what works well, and what could be improved.
+Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull requests and contributors have offered valuable feedback and critique on code. It is great to hear from users of the package, especially what it is used for, what works well, and what could be improved.
