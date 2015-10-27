@@ -305,27 +305,28 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(expect, s.reduce(f))
 
     def test_fold_left(self):
-        f = lambda x, y: y + x
+        f = lambda current, next_element: current + next_element
         l = seq([1, 2, 3, 4])
         self.assertEqual(l.fold_left(0, f), 10)
         self.assertEqual(l.fold_left(-10, f), 0)
         l = seq(['a', 'b', 'c'])
         self.assertEqual(l.fold_left("", f), "abc")
         self.assertEqual(l.fold_left("z", f), "zabc")
-        f = lambda x, y: y + [x]
+        f = lambda x, y: x + [y]
         self.assertEqual(l.fold_left([], f), ['a', 'b', 'c'])
-        self.assertEqual(l.fold_left(['z'], f), ['z', 'a', 'b', 'c'])
+        self.assertEqual(l.fold_left(['start'], f), ['start', 'a', 'b', 'c'])
 
     def test_fold_right(self):
-        f = lambda x, y: y + x
+        f = lambda next_element, current: current + next_element
         l = seq([1, 2, 3, 4])
         self.assertEqual(l.fold_right(0, f), 10)
         self.assertEqual(l.fold_right(-10, f), 0)
         l = seq(['a', 'b', 'c'])
         self.assertEqual(l.fold_right("", f), "cba")
         self.assertEqual(l.fold_right("z", f), "zcba")
-        f = lambda x, y: y + [x]
-        self.assertIteratorEqual(l.fold_right([], f), ['c', 'b', 'a'])
+        f = lambda next_element, current: current + [next_element]
+        self.assertEqual(l.fold_right([], f), ['c', 'b', 'a'])
+        self.assertEqual(l.fold_right(['start'], f), ['start', 'c', 'b', 'a'])
 
     def test_sorted(self):
         s = seq([1, 3, 2, 5, 4])

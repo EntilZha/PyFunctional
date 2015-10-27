@@ -892,38 +892,41 @@ class Sequence(object):
 
     def fold_left(self, zero_value, func):
         """
-        Takes a zero_value and performs a reduction to a value using func. func should take two
-        parameters, 1) the value to accumulate into the result and 2) the current result.
-        Elements are folded left to right.
+        Assuming that the sequence elements are of type A, folds from left to right starting with
+        the seed value given by zero_value (of type A) using a function of type
+        func(current: B, next: A) => B. current represents the folded value so far and next is the
+        next element from the sequence to fold into current.
 
-        >>> seq('a', 'bc', 'de', 'f', 'm', 'nop').fold_left("Start:", lambda v, curr: curr + 2 * v)
-        'Start:aabcbcdedeffmmnopnop'
+        >>> seq('a', 'b', 'c').fold_left(['start'], lambda current, next: current + [next]))
+        ['start', 'a', 'b', 'c']
 
         :param zero_value: zero value to reduce into
-        :param func: Two parameter function. First parameter is value to be accumulated into result.
-            Second parameter is the current result
-        :return: value from folding values with func into zero_value
+        :param func: Two parameter function as described by function docs
+        :return: value from folding values with func into zero_value from left to right.
         """
         result = zero_value
         for element in self:
-            result = func(element, result)
+            result = func(result, element)
         return _wrap(result)
 
     def fold_right(self, zero_value, func):
         """
-        Takes a zero_value and performs a reduction to a value using func. func should take two
-        parameters, 1) the value to accumulate into the result and 2) the current result.
-        Elements are folded right to left.
+        Assuming that the sequence elements are of type A, folds from right to left starting with
+        the seed value given by zero_value (of type A) using a function of type
+        func(next: A, current: B) => B. current represents the folded value so far and next is the
+        next element from the sequence to fold into current.
 
-        >>> seq('a', 'bc', 'de', 'f', 'm', 'nop').fold_right("Start:", lambda v, curr: curr + 2 * v)
-        'Start:nopnopmmffdedebcbcaa'
+        >>> seq('a', 'b', 'c').fold_left(['start'], lambda next, current: current + [next])
+        ['start', 'c', 'b', a']
 
         :param zero_value: zero value to reduce into
-        :param func: Two parameter function. First parameter is value to be accumulated into result.
-            Second parameter is the current result
-        :return: value from folding values with func into zero_value
+        :param func: Two parameter function as described by function docs
+        :return: value from folding values with func into zero_value from right to left
         """
-        return self.reverse().fold_left(zero_value, func)
+        result = zero_value
+        for element in self.reverse():
+            result = func(element, result)
+        return _wrap(result)
 
     def zip(self, sequence):
         """
