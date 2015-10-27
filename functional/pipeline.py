@@ -1082,11 +1082,23 @@ class Sequence(object):
         >>> seq([2, 1, 4, 3]).sorted()
         [1, 2, 3, 4]
 
-        :param key:
+        :param key: sort using key function
         :param reverse: return list reversed or not
         :return: sorted sequence
         """
         return self._transform(transformations.sorted_t(key=key, reverse=reverse))
+
+    def order_by(self, func):
+        """
+        Orders the input according to func
+
+        >>> seq([(2, 'a'), (1, 'b'), (4, 'c'), (3, 'd')]).order_by(lambda x: x[0])
+        [1, 2, 3, 4]
+
+        :param func: order by funciton
+        :return: ordered sequence
+        """
+        return self._transform(transformations.order_by_t(func))
 
     def reverse(self):
         """

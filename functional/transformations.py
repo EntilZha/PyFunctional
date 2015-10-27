@@ -84,6 +84,14 @@ def sorted_t(key=None, reverse=False):
     )
 
 
+def order_by_t(func):
+    return Transformation(
+        'order_by({0})'.format(name(func)),
+        lambda sequence: sorted(sequence, key=func),
+        None
+    )
+
+
 def drop_right_t(n):
     if n <= 0:
         end_index = None

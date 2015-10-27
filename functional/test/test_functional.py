@@ -333,6 +333,12 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual([1, 2, 3, 4, 5], r)
         self.assert_type(r)
 
+    def test_order_by(self):
+        s = seq([(2, 'a'), (1, 'b'), (4, 'c'), (3, 'd')])
+        r = s.order_by(lambda x: x[0])
+        self.assertIteratorEqual([(1, 'b'), (2, 'a'), (3, 'd'), (4, 'c')], r)
+        self.assert_type(r)
+
     def test_reverse(self):
         l = [1, 2, 3]
         expect = [3, 2, 1]

@@ -125,7 +125,7 @@ Function | Description | Type
 `join(other, join_type='inner')` | Returns join of sequence with other as specified by `join_type`. Must be a sequence of `(key, value)` pairs | transformation
 `partition(func)` | Partitions the sequence into elements which satisfy `func(element)` and those that don't | transformation
 `grouped(size)` | Partitions the elements into groups of size `size` | transformation
-`sorted(key=None, reverse=False)` | Returns elements sorted according to python `sorted` | transformation
+`sorted(key=None, reverse=False)/order_by(func)` | Returns elements sorted according to python `sorted` | transformation
 `reverse()` | Returns the reversed sequence | transformation
 `slice(start, until)` | Sequence starting at `start` and including elements up to `until` | transformation
 `head()` / `first()` | Returns first element in sequence | action
