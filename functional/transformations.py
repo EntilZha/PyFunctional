@@ -31,8 +31,16 @@ def map_t(func):
     return Transformation('map({0})'.format(name(func)), partial(map, func), None)
 
 
+def select_t(func):
+    return Transformation('select({0})'.format(name(func)), partial(map, func), None)
+
+
 def filter_t(func):
     return Transformation('filter({0})'.format(name(func)), partial(filter, func), None)
+
+
+def where_t(func):
+    return Transformation('where({0})'.format(name(func)), partial(filter, func), None)
 
 
 def filter_not_t(func):

@@ -253,12 +253,29 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
+    def test_select(self):
+        f = lambda x: x * 2
+        l = [1, 2, 0, 5]
+        expect = [2, 4, 0, 10]
+        result = seq(l).select(f)
+        self.assertIteratorEqual(expect, result)
+        self.assert_type(result)
+
     def test_filter(self):
         f = lambda x: x > 0
         l = [0, -1, 5, 10]
         expect = [5, 10]
         s = seq(l)
         result = s.filter(f)
+        self.assertIteratorEqual(expect, result)
+        self.assert_type(result)
+
+    def test_where(self):
+        f = lambda x: x > 0
+        l = [0, -1, 5, 10]
+        expect = [5, 10]
+        s = seq(l)
+        result = s.where(f)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 

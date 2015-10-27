@@ -451,6 +451,18 @@ class Sequence(object):
         """
         return self._transform(transformations.map_t(func))
 
+    def select(self, func):
+        """
+        Selects f from the elements of the sequence.
+
+        >>> seq([1, 2, 3, 4]).select(lambda x: x * -1)
+        [-1, -2, -3, -4]
+
+        :param func: function to select with
+        :return: sequence with func mapped onto it
+        """
+        return self._transform(transformations.select_t(func))
+
     def for_each(self, func):
         """
         Executes func on each element of the sequence.
@@ -488,6 +500,18 @@ class Sequence(object):
         :return: filtered sequence
         """
         return self._transform(transformations.filter_not_t(func))
+
+    def where(self, func):
+        """
+        Selects elements where func evaluates to True.
+
+        >>> seq([-1, 1, -2, 2]).where(lambda x: x > 0)
+        [1, 2]
+
+        :param func: function to filter on
+        :return: filtered sequence
+        """
+        return self._transform(transformations.where_t(func))
 
     def count(self, func):
         """
