@@ -92,50 +92,50 @@ Below is the complete list of functions which can be called on the object create
 
 Function | Description | Type
  ------- | -----------  | ----
- `map(func)` | Maps `func` onto elements of sequence | transformation
- `filter(func)` | Filters elements of sequence to only those where `func(element)` is `True` | transformation
- `filter_not(func)` | Filters elements of sequence to only those where `func(element)` is `False` | transformation
- `flatten()` | Flattens sequence of lists to a single sequence | transformation
- `flat_map(func)` | `func` must return an iterable. Maps `func` to each element, then merges the result to one flat sequence | transformation
- `group_by(func)` | Groups sequence into `(key, value)` pairs where `key=func(element)` and `value` is from the original sequence | transformation
- `group_by_key()` | Groups sequence of `(key, value)` pairs by `key` | transformation
- `reduce_by_key(func)` | Reduces list of `(key, value)` pairs using `func` | transformation
- `union(other)` | Union of unique elements in sequence and `other` | transformation
- `intersection(other)` | Intersection of unique elements in sequence and `other` | transformation
- `difference(other)` | New sequence with unique elements present in sequence but not in `other` | transformation
- `symmetric_difference(other)` | New sequence with unique elements present in sequnce or `other`, but not both | transformation
- `distinct()` | Returns distinct elements of sequence. Elements must be hashable | transformation
- `distinct_by(func)` | Returns distinct elements of sequence using `func` as a key | transformation
- `drop(n)` | Drop the first `n` elements of the sequence | transformation
- `drop_right(n)` | Drop the last `n` elements of the sequence | transformation
- `drop_while(func)` | Drop elements while `func` evaluates to `True`, then returns the rest | transformation
- `take(n)` | Returns sequence of first `n` elements | transformation
- `take_while(func)` | Take elements while `func` evaluates to `True`, then drops the rest | transformation
-  `init()` | Returns sequence without the last element | transformation
-  `tail()` | Returns sequence without the first element | transformation
-  `inits()` | Returns consecutive inits of sequence | transformation
-  `tails()` | Returns consecutive tails of sequence | transformation
-  `zip(other)` | Zips the sequence with `other` | transformation
-  `zip_with_index()` | Zips the sequence with the index starting at zero on the left side | transformation
-  `enumerate(start=0)` | Zips the sequence with the index starting at `start` on the left side | transformation
-  `inner_join(other)` | Returns inner join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
-  `outer_join(other)` | Returns outer join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
-  `left_join(other)` | Returns left join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
-  `right_join(other)` | Returns right join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
-  `join(other, join_type='inner')` | Returns join of sequence with other as specified by `join_type`. Must be a sequence of `(key, value)` pairs | transformation
-  `partition(func)` | Partitions the sequence into elements which satisfy `func(element)` and those that don't | transformation
-  `grouped(size)` | Partitions the elements into groups of size `size` | transformation
-  `sorted(key=None, reverse=False)` | Returns elements sorted according to python `sorted` | transformation
-  `reverse()` | Returns the reversed sequence | transformation
-  `slice(start, until)` | Sequence starting at `start` and including elements up to `until` | transformation
- `head()` / `first()` | Returns first element in sequence | action
- `head_option()` | Returns first element in sequence or `None` if its empty | action
- `last()` | Returns last element in sequence | action
- `last_option()` | Returns last element in sequence or `None` if its empty | action
- `len()` / `size()` | Returns length of sequence | action
- `count(func)` | Returns count of elements in sequence where `func(element)` is True | action
- `empty()` | Returns `True` if the sequence has zero length | action
- `non_empty()` | Returns `True` if sequence has non-zero length | action
+`map(func)/select(func)` | Maps `func` onto elements of sequence | transformation
+`filter(func)/where(func)` | Filters elements of sequence to only those where `func(element)` is `True` | transformation
+`filter_not(func)` | Filters elements of sequence to only those where `func(element)` is `False` | transformation
+`flatten()` | Flattens sequence of lists to a single sequence | transformation
+`flat_map(func)` | `func` must return an iterable. Maps `func` to each element, then merges the result to one flat sequence | transformation
+`group_by(func)` | Groups sequence into `(key, value)` pairs where `key=func(element)` and `value` is from the original sequence | transformation
+`group_by_key()` | Groups sequence of `(key, value)` pairs by `key` | transformation
+`reduce_by_key(func)` | Reduces list of `(key, value)` pairs using `func` | transformation
+`union(other)` | Union of unique elements in sequence and `other` | transformation
+`intersection(other)` | Intersection of unique elements in sequence and `other` | transformation
+`difference(other)` | New sequence with unique elements present in sequence but not in `other` | transformation
+`symmetric_difference(other)` | New sequence with unique elements present in sequnce or `other`, but not both | transformation
+`distinct()` | Returns distinct elements of sequence. Elements must be hashable | transformation
+`distinct_by(func)` | Returns distinct elements of sequence using `func` as a key | transformation
+`drop(n)` | Drop the first `n` elements of the sequence | transformation
+`drop_right(n)` | Drop the last `n` elements of the sequence | transformation
+`drop_while(func)` | Drop elements while `func` evaluates to `True`, then returns the rest | transformation
+`take(n)` | Returns sequence of first `n` elements | transformation
+`take_while(func)` | Take elements while `func` evaluates to `True`, then drops the rest | transformation
+`init()` | Returns sequence without the last element | transformation
+`tail()` | Returns sequence without the first element | transformation
+`inits()` | Returns consecutive inits of sequence | transformation
+`tails()` | Returns consecutive tails of sequence | transformation
+`zip(other)` | Zips the sequence with `other` | transformation
+`zip_with_index()` | Zips the sequence with the index starting at zero on the left side | transformation
+`enumerate(start=0)` | Zips the sequence with the index starting at `start` on the left side | transformation
+`inner_join(other)` | Returns inner join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
+`outer_join(other)` | Returns outer join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
+`left_join(other)` | Returns left join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
+`right_join(other)` | Returns right join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
+`join(other, join_type='inner')` | Returns join of sequence with other as specified by `join_type`. Must be a sequence of `(key, value)` pairs | transformation
+`partition(func)` | Partitions the sequence into elements which satisfy `func(element)` and those that don't | transformation
+`grouped(size)` | Partitions the elements into groups of size `size` | transformation
+`sorted(key=None, reverse=False)` | Returns elements sorted according to python `sorted` | transformation
+`reverse()` | Returns the reversed sequence | transformation
+`slice(start, until)` | Sequence starting at `start` and including elements up to `until` | transformation
+`head()` / `first()` | Returns first element in sequence | action
+`head_option()` | Returns first element in sequence or `None` if its empty | action
+`last()` | Returns last element in sequence | action
+`last_option()` | Returns last element in sequence or `None` if its empty | action
+`len()` / `size()` | Returns length of sequence | action
+`count(func)` | Returns count of elements in sequence where `func(element)` is True | action
+`empty()` | Returns `True` if the sequence has zero length | action
+`non_empty()` | Returns `True` if sequence has non-zero length | action
 `all()` | Returns `True` if all elements in sequence are truthy | action
 `exists(func)` | Returns `True` if `func(element)` for any element in the sequence is `True` | action
 `for_all(func)` | Returns `True` if `func(element)` is `True` for all elements in the sequence | action
