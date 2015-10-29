@@ -317,6 +317,10 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(l.aggregate(f), "abc")
         self.assertEqual(l.aggregate("z", f), "zabc")
         self.assertEqual(l.aggregate("z", f, lambda x: x.upper()), "ZABC")
+        with self.assertRaises(ValueError):
+            l.aggregate()
+        with self.assertRaises(ValueError):
+            l.aggregate(None, None, None, None)
 
     def test_fold_left(self):
         f = lambda current, next_element: current + next_element
