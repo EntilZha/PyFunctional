@@ -1,5 +1,6 @@
 import unittest
 from .. import seq
+from .. import util
 
 
 class TestStreams(unittest.TestCase):
@@ -36,3 +37,24 @@ class TestStreams(unittest.TestCase):
         result = seq.jsonl(['[1, 2, 3]', '[4, 5, 6]'])
         expect = [[1, 2, 3], [4, 5, 6]]
         self.assertEqual(expect, result)
+
+    def test_json(self):
+        list_test_path = 'functional/test/data/test_list.json'
+        dict_test_path = 'functional/test/data/test_dict.json'
+        list_expect = [1, 2, 3, 4, 5]
+        dict_expect = list(util.dict_item_iter({u'a': 1, u'b': 2, u'c': 3}))
+
+        result = seq.json(list_test_path).to_list()
+        self.assertEqual(list_expect, result)
+        result = seq.json(dict_test_path).to_list()
+        self.assertEqual(dict_expect, result)
+
+        with open(list_test_path) as file_handle:
+            result = seq.json(file_handle).to_list()
+            self.assertEqual(list_expect, result)
+        with open(dict_test_path) as file_handle:
+            result = seq.json(file_handle).to_list()
+            self.assertEqual(dict_expect, result)
+
+        with self.assertRaises(ValueError):
+            seq.json(1)

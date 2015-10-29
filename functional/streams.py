@@ -6,7 +6,7 @@ import csv as csvapi
 import json as jsonapi
 
 from .pipeline import Sequence
-from .util import is_primitive, LazyFile
+from .util import is_primitive, LazyFile, dict_item_iter
 
 
 def seq(*args):
@@ -89,28 +89,28 @@ def range(*args):
     return seq(rng)
 
 
-def csv(csvfile, dialect='excel', **fmtparams):
+def csv(csv_file, dialect='excel', **fmt_params):
     """
     Additional entry point to Sequence which parses the input of a csv stream or file according
-    to the defined options. csvfile can be a filepath or an object that implements the iterator
+    to the defined options. csv_file can be a filepath or an object that implements the iterator
     interface (defines next() or __next__() depending on python version).
 
     >>> f = seq.csv('functional/test/data/test.csv').to_list()
     [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
 
-    :param csvfile: path to file or iterator object
+    :param csv_file: path to file or iterator object
     :param dialect: dialect of csv, passed to csv.reader
-    :param fmtparams: options passed to csv.reader
+    :param fmt_params: options passed to csv.reader
     :return: Sequence wrapping csv file
     """
-    if isinstance(csvfile, str):
-        input_file = LazyFile(csvfile, mode='r')
-    elif hasattr(csvfile, 'next') or hasattr(csvfile, '__next__'):
-        input_file = csvfile
+    if isinstance(csv_file, str):
+        input_file = LazyFile(csv_file, mode='r')
+    elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
+        input_file = csv_file
     else:
-        raise ValueError('csvfile must be a filepath or implement the iterator interface')
+        raise ValueError('csv_file must be a file path or implement the iterator interface')
 
-    csv_input = csvapi.reader(input_file, dialect=dialect, **fmtparams)
+    csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
     return seq(csv_input)
 
 
@@ -130,7 +130,34 @@ def jsonl(jsonl_file):
     return seq(input_file).map(jsonapi.loads).cache(delete_lineage=True)
 
 
+def json(json_file):
+    """
+    Additional entry point to Sequence which parses the input of a json file handler or file from
+    the given path. Json files are parsed in the following ways depending on if the root is a
+    dictionary or array.
+    1) If the json's root is a dictionary, these are parsed into a sequence of (Key, Value) pairs
+    2) If the json's root is an array, these are parsed into a sequence of entries
+
+    :param json_file: path or file containing json content
+    :return: Sequence wrapping jsonl file
+    """
+    if isinstance(json_file, str):
+        input_file = builtins.open(json_file, mode='r')
+        json_input = jsonapi.load(input_file)
+        input_file.close()
+    elif hasattr(json_file, 'read'):
+        json_input = jsonapi.load(json_file)
+    else:
+        raise ValueError('json_file must be a file path or implement the iterator interface')
+
+    if isinstance(json_input, list):
+        return seq(json_input)
+    else:
+        return seq(dict_item_iter(json_input))
+
+
 seq.open = open
 seq.range = range
 seq.csv = csv
 seq.jsonl = jsonl
+seq.json = json
