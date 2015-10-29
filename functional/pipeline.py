@@ -6,7 +6,7 @@ import collections
 from functools import reduce
 
 from .lineage import Lineage
-from .util import is_iterable, is_primitive
+from .util import is_iterable, is_primitive, identity
 from . import transformations
 
 
@@ -889,6 +889,43 @@ class Sequence(object):
         :return: sum of elements in sequence
         """
         return sum(self)
+
+    def aggregate(self, *args):
+        """
+        Aggregates the sequence by specified arguments. Its behavior varies depending on if one,
+        two, or three arguments are passed. Assuming the type of the sequence is A:
+
+        One Argument: argument specifies a function of the type f(current: B, next: A => result: B.
+        current represents results computed so far, and next is the next element to aggregate into
+        current in order to return result.
+
+        Two Argument: the first argument is the seed value for the aggregation. The second argument
+        is the same as for the one argument case.
+
+        Three Argument: the first two arguments are the same as for one and two argument calls. The
+        additional third parameter is a function applied to the result of the aggregation before
+        returning the value.
+
+        :param args: options for how to execute the aggregation
+        :return: aggregated value
+        """
+        seed = None
+        result_lambda = identity
+        if len(args) == 1:
+            func = args[0]
+        elif len(args) == 2:
+            seed = args[0]
+            func = args[1]
+        elif len(args) == 3:
+            seed = args[0]
+            func = args[1]
+            result_lambda = args[2]
+        else:
+            raise ValueError('aggregate takes 1-3 arguments, {0} were given'.format(len(args)))
+        if len(args) == 1:
+            return result_lambda(self.drop(1).fold_left(self.first(), func))
+        else:
+            return result_lambda(self.fold_left(seed, func))
 
     def fold_left(self, zero_value, func):
         """

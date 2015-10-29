@@ -49,6 +49,10 @@ def is_primitive(val):
         or isinstance(val, bytes)
 
 
+def identity(arg):
+    return arg
+
+
 def is_iterable(val):
     if isinstance(val, list):
         return False

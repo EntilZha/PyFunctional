@@ -304,6 +304,20 @@ class TestPipeline(unittest.TestCase):
         s = seq(l)
         self.assertEqual(expect, s.reduce(f))
 
+    def test_aggregate(self):
+        f = lambda current, next_element: current + next_element
+        l = seq([1, 2, 3, 4])
+        self.assertEqual(l.aggregate(f), 10)
+        self.assertEqual(l.aggregate(0, f), 10)
+        self.assertEqual(l.aggregate(0, f, lambda x: 2 * x), 20)
+        l = seq(['a', 'b', 'c'])
+        self.assertEqual(l.aggregate(f), "abc")
+        self.assertEqual(l.aggregate("", f), "abc")
+        self.assertEqual(l.aggregate("", f, lambda x: x.upper()), "ABC")
+        self.assertEqual(l.aggregate(f), "abc")
+        self.assertEqual(l.aggregate("z", f), "zabc")
+        self.assertEqual(l.aggregate("z", f, lambda x: x.upper()), "ZABC")
+
     def test_fold_left(self):
         f = lambda current, next_element: current + next_element
         l = seq([1, 2, 3, 4])
