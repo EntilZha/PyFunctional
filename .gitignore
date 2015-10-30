@@ -54,3 +54,5 @@ docs/_build/
 
 # PyBuilder
 target/
+
+functional/test/data/tmp

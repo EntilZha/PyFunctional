@@ -7,8 +7,9 @@ from itertools import dropwhile, takewhile, islice
 import collections
 from enum import Enum
 import types
+import six
 
-from .util import dict_item_iter, filterfalse
+from .util import filterfalse
 
 
 Transformation = collections.namedtuple(
@@ -253,7 +254,7 @@ def group_by_key_impl(sequence):
             result.get(element[0]).append(element[1])
         else:
             result[element[0]] = [element[1]]
-    return dict_item_iter(result)
+    return six.viewitems(result)
 
 
 def group_by_key_t():
@@ -281,7 +282,7 @@ def group_by_impl(func, sequence):
             result.get(func(element)).append(element)
         else:
             result[func(element)] = [element]
-    return dict_item_iter(result)
+    return six.viewitems(result)
 
 
 def group_by_t(func):
@@ -326,7 +327,7 @@ def inner_join_impl(other, sequence):
     for k in keys:
         if k in seq_kv and k in other_kv:
             result[k] = (seq_kv[k], other_kv[k])
-    return dict_item_iter(result)
+    return six.viewitems(result)
 
 
 def join_impl(other, join_type, sequence):
@@ -348,7 +349,7 @@ def join_impl(other, join_type, sequence):
     result = {}
     for k in keys:
         result[k] = (seq_kv.get(k), other_kv.get(k))
-    return dict_item_iter(result)
+    return six.viewitems(result)
 
 
 def join_t(other, join_type):

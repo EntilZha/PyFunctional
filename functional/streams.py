@@ -4,9 +4,10 @@ import builtins
 import re
 import csv as csvapi
 import json as jsonapi
+import six
 
 from .pipeline import Sequence
-from .util import is_primitive, LazyFile, dict_item_iter
+from .util import is_primitive, LazyFile
 
 
 def seq(*args):
@@ -153,7 +154,7 @@ def json(json_file):
     if isinstance(json_input, list):
         return seq(json_input)
     else:
-        return seq(dict_item_iter(json_input))
+        return seq(six.viewitems(json_input))
 
 
 seq.open = open

@@ -4,6 +4,8 @@
 from operator import mul
 import collections
 from functools import reduce
+import builtins
+import six
 
 from .lineage import Lineage
 from .util import is_iterable, is_primitive, identity
@@ -1300,6 +1302,15 @@ class Sequence(object):
         :return: dictionary from sequence of (Key, Value) elements
         """
         return self.to_dict(default=default)
+
+    def to_file(self, path, mode='w', buffering=-1, encoding=None, errors=None, newline=None):
+        """
+        Saves the sequence to a file by executing str(self) which becomes str(self.to_list())
+        """
+        # pylint: disable=too-many-arguments
+        with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                           newline=newline) as output:
+            output.write(six.u(str(self)))
 
 
 def _wrap(value):

@@ -1,6 +1,6 @@
 import unittest
+import six
 from .. import seq
-from .. import util
 
 
 class TestStreams(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = 'functional/test/data/test_list.json'
         dict_test_path = 'functional/test/data/test_dict.json'
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list(util.dict_item_iter({u'a': 1, u'b': 2, u'c': 3}))
+        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
 
         result = seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -58,3 +58,11 @@ class TestStreams(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             seq.json(1)
+
+    def test_to_file(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        sequence = seq(1, 2, 3, 4)
+        sequence.to_file(tmp_path)
+        with open('functional/test/data/tmp/output.txt', 'r') as output:
+            self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
+

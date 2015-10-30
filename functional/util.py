@@ -6,14 +6,8 @@ import builtins
 
 if six.PY2:
     from itertools import ifilterfalse as filterfalse
-
-    def dict_item_iter(dictionary):
-        return dictionary.viewitems()
 else:
     from itertools import filterfalse
-
-    def dict_item_iter(dictionary):
-        return dictionary.items()
 
 
 def is_primitive(val):
