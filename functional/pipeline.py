@@ -6,6 +6,7 @@ import collections
 from functools import reduce
 import builtins
 import six
+import json
 
 from .lineage import Lineage
 from .util import is_iterable, is_primitive, identity
@@ -1306,11 +1307,31 @@ class Sequence(object):
     def to_file(self, path, mode='w', buffering=-1, encoding=None, errors=None, newline=None):
         """
         Saves the sequence to a file by executing str(self) which becomes str(self.to_list())
+
+        :param path: path to write file
+        :param delimiter: delimiter to split joined text on. if None, defaults to file.readlines()
+        :param mode: file open mode
+        :param buffering: passed to builtins.open
+        :param encoding: passed to builtins.open
+        :param errors: passed to builtins.open
+        :param newline: passed to builtins.open
         """
         # pylint: disable=too-many-arguments
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as output:
             output.write(six.u(str(self)))
+
+    def to_jsonl(self, path, mode='w'):
+        """
+        Saves the sequence to a jsonl file. Each element is mapped using json.dumps then written
+        with a newline separating each element.
+
+        :param path: path to write file
+        """
+        with builtins.open(path, mode=mode) as output:
+            output.write(six.u(
+                self.map(json.dumps).make_string('\n') + '\n'
+            ))
 
 
 def _wrap(value):
