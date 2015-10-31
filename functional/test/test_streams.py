@@ -73,3 +73,12 @@ class TestStreams(unittest.TestCase):
         sequence.to_jsonl(tmp_path)
         result = seq.jsonl(tmp_path).to_list()
         self.assertEqual(elements, result)
+
+    def test_to_csv(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]
+        expect = [['1', '2', '3'], ['4', '5', '6'], ['a', 'b', 'c']]
+        sequence = seq(elements)
+        sequence.to_csv(tmp_path)
+        result = seq.csv(tmp_path).to_list()
+        self.assertEqual(expect, result)

@@ -4,12 +4,13 @@
 from operator import mul
 import collections
 from functools import reduce
-import builtins
 import six
 import json
+import csv
+import future.builtins as builtins
 
 from .lineage import Lineage
-from .util import is_iterable, is_primitive, identity
+from .util import is_iterable, is_primitive, identity, CSV_WRITE_MODE
 from . import transformations
 
 
@@ -1327,11 +1328,26 @@ class Sequence(object):
         with a newline separating each element.
 
         :param path: path to write file
+        :param mode: mode to write in, defaults to 'w' to overwrite contents
         """
         with builtins.open(path, mode=mode) as output:
             output.write(six.u(
                 self.map(json.dumps).make_string('\n') + '\n'
             ))
+
+    def to_csv(self, path, dialect='excel', **fmtparams):
+        """
+        Saves the sequence to a csv file. Each element should be an iterable which will be expanded
+        to the elements of each row.
+
+        :param path: path to write file
+        :param dialect: passed to csv.writer
+        :param fmtparams: passed to csv.writer
+        """
+        with builtins.open(path, CSV_WRITE_MODE) as output:
+            csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
+            for row in self:
+                csv_writer.writerow([six.u(str(element)) for element in row])
 
 
 def _wrap(value):
