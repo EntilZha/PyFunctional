@@ -1,6 +1,6 @@
 # pylint: disable=redefined-builtin,too-many-arguments
 
-import builtins
+import future.builtins as builtins
 import re
 import csv as csvapi
 import json as jsonapi
