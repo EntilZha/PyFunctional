@@ -74,6 +74,19 @@ class TestStreams(unittest.TestCase):
         result = seq.jsonl(tmp_path).to_list()
         self.assertEqual(elements, result)
 
+    def test_to_json(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [[u'a', 1], [u'b', 2], [u'c', 3]]
+        sequence = seq(elements)
+        sequence.to_json(tmp_path)
+        result = seq.json(tmp_path).to_list()
+        self.assertEqual(elements, result)
+
+        dict_expect = {u'a': 1, u'b': 2, u'c': 3}
+        sequence.to_json(tmp_path, root_array=False)
+        result = seq.json(tmp_path).to_dict()
+        self.assertEqual(dict_expect, result)
+
     def test_to_csv(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]

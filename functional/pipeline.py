@@ -1335,7 +1335,23 @@ class Sequence(object):
                 self.map(json.dumps).make_string('\n') + '\n'
             ))
 
-    def to_csv(self, path, dialect='excel', **fmtparams):
+    def to_json(self, path, root_array=True, mode=CSV_WRITE_MODE):
+        """
+        Saves the sequence to a json file. If root_array is True, then the sequence will be written
+        to json with an array at the root. If it is False, then the sequence will be converted from
+        a sequence of (Key, Value) pairs to a dictionary so that the json root is a dictionary.
+
+        :param path: path to write file
+        :param root_array: write json root as an array or dictionary
+        :param mode: file open mode
+        """
+        with builtins.open(path, mode=mode) as output:
+            if root_array:
+                json.dump(self.to_list(), output)
+            else:
+                json.dump(self.to_dict(), output)
+
+    def to_csv(self, path, mode=CSV_WRITE_MODE, dialect='excel', **fmtparams):
         """
         Saves the sequence to a csv file. Each element should be an iterable which will be expanded
         to the elements of each row.
@@ -1344,7 +1360,7 @@ class Sequence(object):
         :param dialect: passed to csv.writer
         :param fmtparams: passed to csv.writer
         """
-        with builtins.open(path, CSV_WRITE_MODE) as output:
+        with builtins.open(path, mode) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
