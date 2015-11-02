@@ -1,6 +1,8 @@
 # Changelog
 ## Release 0.4.0
 ### New Features
+* Official and tested support for python 3.5. Thus `ScalaFunctional` is tested on Python 2.7, 3.4,
+3.5, pypy, and pypy3
 * `aggregate` from LINQ
 * `order_by` from LINQ
 * `where` from LINQ
