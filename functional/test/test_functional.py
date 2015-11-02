@@ -601,6 +601,10 @@ class TestPipeline(unittest.TestCase):
         l = [1, 2, 3]
         self.assertEqual(6, seq(l).sum())
 
+    def test_average(self):
+        l = [1, 2]
+        self.assertEqual(1.5, seq(l).average())
+
     def test_set(self):
         l = [1, 1, 2, 2, 3]
         ls = set(l)

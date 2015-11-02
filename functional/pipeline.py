@@ -1,6 +1,7 @@
 # pylint: disable=too-many-lines,too-many-public-methods,protected-access,redefined-builtin,
 # pylint: disable=no-member
 
+from __future__ import division
 from operator import mul
 import collections
 from functools import reduce
@@ -893,6 +894,14 @@ class Sequence(object):
         :return: sum of elements in sequence
         """
         return sum(self)
+
+    def average(self):
+        """
+        Takes the average of elements in the sequence
+        :return: average of elements in the sequence
+        """
+        length = self.size()
+        return sum(self) / length
 
     def aggregate(self, *args):
         """
