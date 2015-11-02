@@ -1,11 +1,16 @@
 functional package
 ==================
 
-Submodules
-----------
+functional.streams module
+-------------------------
+
+.. automodule:: functional.streams
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 functional.pipeline module
------------------------
+--------------------------
 
 .. automodule:: functional.pipeline
     :members:

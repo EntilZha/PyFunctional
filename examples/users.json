@@ -1,0 +1,42 @@
+{
+  "bob": {
+    "date_created": "09/01",
+    "email": "bob@gmail.com",
+    "news_mail": true
+  },
+  "dave": {
+    "date_created": "01/01",
+    "email": "dave@python.org",
+    "news_mail": false
+  },
+  "sarah": {
+    "date_created": "08/08",
+    "email": "sarah@gmail.com",
+    "news_email": true
+  },
+  "tim": {
+    "date_created": "10/09",
+    "email": "tim@yahoo.com",
+    "news_email": false
+  },
+  "tom": {
+    "date_created": "10/05",
+    "email": "tom@gmail.com",
+    "news_email": true
+  },
+  "emma": {
+    "date_created": "02/04",
+    "email": "emma@yahoo.com",
+    "news_email": false
+  },
+  "adam": {
+    "date_created": "05/03",
+    "email": "adam@gmail.com",
+    "news_email": true
+  },
+  "fred": {
+    "date_created": "06/03",
+    "email": "fred@gmail.com",
+    "news_email": true
+  }
+}

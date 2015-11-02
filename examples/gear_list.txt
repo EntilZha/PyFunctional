@@ -1,0 +1,17 @@
+tent
+food
+shoes
+sleeping bag
+stove
+backpack
+sunscreen
+plates
+forks
+knives
+spoons
+toilet paper
+lighter
+gas
+jacket
+water bottle
+sleeping pad

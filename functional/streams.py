@@ -112,7 +112,7 @@ def csv(csv_file, dialect='excel', **fmt_params):
         raise ValueError('csv_file must be a file path or implement the iterator interface')
 
     csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
-    return seq(csv_input)
+    return seq(csv_input).cache(delete_lineage=True)
 
 
 def jsonl(jsonl_file):

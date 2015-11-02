@@ -1,0 +1,24 @@
+{"message": "hello anyone there?", "date":"10/09", "user": "bob"}
+{"message": "need some help with a program", "date": "10/09", "user": "bob"}
+{"message": "sure thing. What do you need help with?", "date": "10/09", "user": "dave"}
+{"message": "my python hello world wont work", "date": "10/09", "user": "bob"}
+{"message": "print mystring errors", "date": "10/09", "user": "bob"}
+{"message": "what version of python are you using?", "date": "10/09", "user": "dave"}
+{"message": "python3, it looked shiny", "date": "10/09", "user": "bob"}
+{"message": "python3 doesn't have the keyword print", "date": "10/09", "user": "dave"}
+{"message": "try print(mystring) instead", "date": "10/09", "user": "dave"}
+{"message": "thanks that fixed it", "date": "10/09", "user": "bob"}
+{"message": "what is a good python web framework", "date": "10/10", "user": "sarah"}
+{"message": "there are a bunch, what are you using it for?", "date": "10/10", "user": "tim"}
+{"message": "for example: django, flask, and bottle", "date": "10/10", "user": "tim"}
+{"message": "very minimal API want to build for app", "date": "10/10", "user": "sarah"}
+{"message": "flask might work well then", "date": "10/10", "user": "tim"}
+{"message": "what is a good way to use sql?", "date": "10/11", "user": "adam"}
+{"message": "sql alchemy might be a good idea", "date": "10/11", "user": "fred"}
+{"message": "how do you install packages with python?", "date": "10/12", "user": "tom"}
+{"message": "python has a package manager called pip", "date": "10/12", "user": "emma"}
+{"message": "it pulls packages that authors upload to pypi", "date": "10/12", "user": "emma"}
+{"message": "what are you trying to install?", "date": "10/12", "user": "emma"}
+{"message": "this package called scalafunctional", "date": "10/12", "user": "tom"}
+{"message": "you could do this: pip install scalafunctional", "date": "10/12", "user": "emma"}
+{"message": "thanks", "date": "10/12", "user": "tom"}

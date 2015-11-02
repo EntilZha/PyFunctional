@@ -8,12 +8,12 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
 
 setup(
     name='ScalaFunctional',
-    description="Scala functional programming style in Python",
+    description="Package for creating data pipelines, LINQ, and chain functional programming",
     url="https://github.com/EntilZha/ScalaFunctional",
     author="Pedro Rodriguez",
     author_email="ski.rodriguez@gmail.com",
     license="MIT",
-    keywords="functional scala",
+    keywords="functional LINQ pipeline data collection rdd scala",
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version="0.4.0",
     install_requires=requirements,
