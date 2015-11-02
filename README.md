@@ -304,6 +304,9 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
+## Supported Python Versions
+`ScalaFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
+
 ## Changelog
 [Changelog](https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md)
 
