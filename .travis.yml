@@ -3,7 +3,7 @@ install:
   - pip install -q coverage
   - pip install python-coveralls
   - pip install future
-  - pip install hg+https://bitbucket.org/logilab/pylint/#egg=pylint
+  - pip install hg+https://bitbucket.org/logilab/pylint/@92341b86dca5863f50b090fc0697503d45100240#egg=pylint
   - bash .travis-install.sh
 notifications:
   webhooks:
