@@ -1,4 +1,4 @@
-# pylint: disable=redefined-builtin,missing-docstring
+# pylint: disable=redefined-builtin,missing-docstring,no-member
 
 from future.builtins import map, filter, zip, range
 from functools import reduce, partial

@@ -21,6 +21,7 @@ class Lineage(object):
         self.transformations.append(transform)
 
     def evaluate(self, sequence):
+        # pylint: disable=no-member
         result = sequence
         last_cache_index = self.cache_scan()
         for transform in self.transformations[last_cache_index:]:
