@@ -304,3 +304,6 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
+## Changelog
+[Changelog](https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md)
+

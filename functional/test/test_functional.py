@@ -592,18 +592,23 @@ class TestPipeline(unittest.TestCase):
     def test_product(self):
         l = [2, 2, 3]
         self.assertEqual(12, seq(l).product())
+        self.assertEqual(96, seq(l).product(lambda x: x * 2))
         s = seq([])
         self.assertEqual(1, s.product())
+        self.assertEqual(2, s.product(lambda x: x * 2))
         s = seq([5])
         self.assertEqual(5, s.product())
+        self.assertEqual(10, s.product(lambda x: x * 2))
 
     def test_sum(self):
         l = [1, 2, 3]
         self.assertEqual(6, seq(l).sum())
+        self.assertEqual(12, seq(l).sum(lambda x: x * 2))
 
     def test_average(self):
         l = [1, 2]
         self.assertEqual(1.5, seq(l).average())
+        self.assertEquals(4.5, seq(l).average(lambda x: x * 3))
 
     def test_set(self):
         l = [1, 1, 2, 2, 3]

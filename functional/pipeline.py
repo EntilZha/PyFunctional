@@ -865,7 +865,7 @@ class Sequence(object):
         """
         return separator.join(str(e) for e in self)
 
-    def product(self):
+    def product(self, projection=None):
         """
         Takes product of elements in sequence.
 
@@ -875,33 +875,51 @@ class Sequence(object):
         >>> seq([]).product()
         1
 
+        :param projection: function to project on the sequence before taking the product
         :return: product of elements in sequence
         """
         if self.empty():
-            return 1
+            if projection:
+                return projection(1)
+            else:
+                return 1
         if self.size() == 1:
-            return self.first()
+            if projection:
+                return projection(self.first())
+            else:
+                return self.first()
 
-        return self.reduce(mul)
+        if projection:
+            return self.map(projection).reduce(mul)
+        else:
+            return self.reduce(mul)
 
-    def sum(self):
+    def sum(self, projection=None):
         """
         Takes sum of elements in sequence.
 
         >>> seq([1, 2, 3, 4]).sum()
         10
 
+        :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
-        return sum(self)
+        if projection:
+            return sum(self.map(projection))
+        else:
+            return sum(self)
 
-    def average(self):
+    def average(self, projection=None):
         """
         Takes the average of elements in the sequence
+        :param projection: function to project on the sequence before taking the average
         :return: average of elements in the sequence
         """
         length = self.size()
-        return sum(self) / length
+        if projection:
+            return sum(self.map(projection)) / length
+        else:
+            return sum(self) / length
 
     def aggregate(self, *args):
         """
