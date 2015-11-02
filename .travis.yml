@@ -14,8 +14,8 @@ notifications:
     on_failure: always  # options: [always|never|change] default: always
     on_start: always     # options: [always|never|change] default: always
 python:
+  - "2.6"
   - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "3.5"
