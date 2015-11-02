@@ -15,6 +15,7 @@ notifications:
 python:
   - "2.7"
   - "3.4"
+  - "3.5"
   - "pypy"
   - "pypy3"
 script: nosetests --with-coverage --cover-package=functional && pylint functional
