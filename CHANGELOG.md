@@ -21,7 +21,7 @@
 * `Sequence.to_csv` to save csv files
 * Improved documentation with more examples and mention LINQ explicitly
 * Change PyPi keywords to improve discoverability
-
+* Created [Google groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
 
 ### Bug Fixes
 * `fold_left` and `fold_right` had incorrect order of arguments for passed function

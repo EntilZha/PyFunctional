@@ -304,6 +304,11 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
+## Contact/Email list/Chat
+[Google Groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
+
+[Gitter for chat](https://gitter.im/EntilZha/ScalaFunctional)
+
 ## Supported Python Versions
 `ScalaFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
 
