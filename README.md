@@ -26,6 +26,17 @@ Then in python run: `from functional import seq`
 `ScalaFunctional` is useful for many tasks, and can natively open several common file types. Here
 are a few examples of what you can do.
 
+### Simple Example
+```python
+from functional import seq
+
+seq(1, 2, 3, 4)\
+    .map(lambda x: x * 2)\
+    .filter(lambda x: x > 4)\
+    .reduce(lambda x, y: x + y)
+# 14
+```
+
 ### Filtering a list of account transactions
 ```python
 from functional import seq
