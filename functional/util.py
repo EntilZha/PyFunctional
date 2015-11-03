@@ -55,7 +55,7 @@ def is_iterable(val):
     return isinstance(val, collections.Iterable)
 
 
-class LazyFile(object):
+class ReusableFile(object):
     # pylint: disable=too-few-public-methods,too-many-instance-attributes
     def __init__(self, path, delimiter=None, mode='r', buffering=-1, encoding=None,
                  errors=None, newline=None):
@@ -70,18 +70,11 @@ class LazyFile(object):
         self.file = None
 
     def __iter__(self):
-        if self.file is not None:
-            self.file.close()
-        self.file = builtins.open(self.path, mode=self.mode, buffering=self.buffering,
-                                  encoding=self.encoding, errors=self.errors, newline=self.newline)
-        return self
-
-    def next(self):
-        try:
-            return next(self.file)
-        except StopIteration:
-            self.file.close()
-            raise StopIteration
-
-    def __next__(self):
-        return self.next()
+        with builtins.open(self.path,
+                           mode=self.mode,
+                           buffering=self.buffering,
+                           encoding=self.encoding,
+                           errors=self.errors,
+                           newline=self.newline) as file_content:
+            for line in file_content:
+                yield line

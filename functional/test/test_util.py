@@ -1,14 +1,13 @@
 import unittest
-from ..util import LazyFile
+from ..util import ReusableFile
 
 
 class TestUtil(unittest.TestCase):
-    def test_lazy_file(self):
-        license_file = LazyFile('LICENSE.txt')
-        self.assertTrue(license_file.file is None)
-        iter(license_file)
-        handle_0 = license_file.file
-        iter(license_file)
-        handle_1 = license_file.file
-        self.assertTrue(handle_0.closed)
-        self.assertFalse(handle_1.closed)
+    def test_reusable_file(self):
+        license_file_lf = ReusableFile('LICENSE.txt')
+        with open('LICENSE.txt') as license_file:
+            self.assertEqual(list(license_file), list(license_file_lf))
+        self.assertTrue(license_file_lf.file is None)
+        iter_1 = iter(license_file_lf)
+        iter_2 = iter(license_file_lf)
+        self.assertEqual(list(iter_1), list(iter_2))

@@ -5,9 +5,8 @@ import re
 import csv as csvapi
 import json as jsonapi
 import six
-
 from .pipeline import Sequence
-from .util import is_primitive, LazyFile
+from .util import is_primitive, ReusableFile
 
 
 def seq(*args):
@@ -76,8 +75,9 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
     if not re.match('^[rbt]{1,3}$', mode):
         raise ValueError('mode argument must be only have r, b, and t')
     if delimiter is None:
-        return seq(LazyFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                            newline=newline))
+        return seq(
+            ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                         newline=newline))
     else:
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as data:
@@ -114,7 +114,7 @@ def csv(csv_file, dialect='excel', **fmt_params):
     :return: Sequence wrapping csv file
     """
     if isinstance(csv_file, str):
-        input_file = LazyFile(csv_file, mode='r')
+        input_file = ReusableFile(csv_file, mode='r')
     elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
         input_file = csv_file
     else:
@@ -137,7 +137,7 @@ def jsonl(jsonl_file):
     :return: Sequence wrapping jsonl file
     """
     if isinstance(jsonl_file, str):
-        input_file = LazyFile(jsonl_file)
+        input_file = ReusableFile(jsonl_file)
     else:
         input_file = jsonl_file
     return seq(input_file).map(jsonapi.loads).cache(delete_lineage=True)
