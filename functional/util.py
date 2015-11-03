@@ -77,10 +77,9 @@ class LazyFile(object):
         return self
 
     def next(self):
-        line = self.file.readline()
-        if line:
-            return line
-        else:
+        try:
+            return next(self.file)
+        except StopIteration:
             self.file.close()
             raise StopIteration
 

@@ -3,15 +3,35 @@ from .transformations import EXECUTION_STRATEGIES
 
 
 class Lineage(object):
+    """
+    Class for tracking the lineage of transformations, and applying them to a given sequence.
+    """
     def __init__(self, prior_lineage=None):
+        """
+        Construct an empty lineage if prior_lineage is None or if its not use it as the list of
+        current transformations
+
+        :param prior_lineage: Lineage object to inherit
+        :return: new Lineage object
+        """
         self.transformations = [] if prior_lineage is None else list(prior_lineage.transformations)
 
     def __repr__(self):
+        """
+        Returns readable representation of Lineage
+
+        :return: readable Lineage
+        """
         return 'Lineage: ' + ' -> '.join(
             ['sequence'] + [transform.name for transform in self.transformations]
         )
 
     def __len__(self):
+        """
+        Number of transformations in lineage
+
+        :return: number of transformations
+        """
         return len(self.transformations)
 
     def __getitem__(self, item):
