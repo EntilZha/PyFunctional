@@ -1,7 +1,7 @@
 # ScalaFunctional
 [![TravisCI](https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/ScalaFunctional)
 [![Coverage Status](https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master&service=github)](https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master)
-[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](https://readthedocs.org/projects/scalafunctional/)
+[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://scalafunctional.readthedocs.org/en/)
 [![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
