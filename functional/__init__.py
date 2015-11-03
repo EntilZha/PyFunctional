@@ -1,6 +1,6 @@
 """
-Package which supplies utilities primarily through functional.seq to do pipeline style,
-functional transformations and reductions.
+Package for creating data pipelines, LINQ-style data analysis, and functional programming. Imports
+the primary entrypoint at streams.seq
 """
 from .streams import seq
 
