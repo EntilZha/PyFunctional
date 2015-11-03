@@ -17,6 +17,9 @@ Table of Contents
 .. toctree::
     :maxdepth: 2
 
+    index
+    functional
+
 The `functional` package has a single entrypoint, the function `seq`. This function
 receives an iterable value and wraps it with a custom class which supports the large
 set of functionality documented below. In the near future other data streams will
