@@ -3,8 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ScalaFunctional's documentation!
-===========================================
+ScalaFunctional Documentation
+=============================
+
+`ScalaFunctional` is a library for creating data pipelines and analysis in an easy and accessible
+way. It is primarily inspired by the APIs from
+`Apache Spark RDDs <http://spark.apache.org/docs/latest/programming-guide.html#transformations>`_,
+`Scala Collections <http://www.scala-lang.org/api/current/index.html#scala.collection.AbstractSeq>`_,
+and `Microsoft LINQ <https://code.msdn.microsoft.com/101-LINQ-Samples-3fb9811b>`_.
+
+Table of Contents
+=================
+.. toctree::
+    :maxdepth: 2
 
 The `functional` package has a single entrypoint, the function `seq`. This function
 receives an iterable value and wraps it with a custom class which supports the large
@@ -20,12 +31,3 @@ for all the supported operations.
     :members:
     :undoc-members:
     :show-inheritance:
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

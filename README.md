@@ -291,6 +291,38 @@ Function | Description | Type
 `cache()` | Forces evaluation of sequence immediately and caches the result | action
 `for_each(func)` | Executes `func` on each element of the sequence | action
 
+### Lazy Execution
+Whenever possible, `ScalaFunctional` will compute lazily. This is accomplished by tracking the list
+of transformations that have been applied to the sequence and only evaluating them when an action is
+called. In `ScalaFunctional` this is called tracking lineage. This is also responsible for the
+ability for `ScalaFunctional` to cache results of computation to prevent expensive re-computation.
+This is predominantly done to preserve sensible behavior and used sparingly. For example, calling
+`size()` will cache the underlying sequence. If this was not done and the input was an iterator,
+then further calls would operate on an expired iterator since it was used to compute the length.
+Similarly, `repr` also caches since it is most often used during interactive sessions where its
+undesirable to keep recomputing the same value. Below are some examples of inspecting lineage.
+
+```python
+def times_2(x):
+    print(x)
+    return 2 * x
+elements = seq(1, 1, 2, 3, 4).map(times_2).distinct()
+elements._lineage
+# Lineage: sequence -> map(times_2) -> distinct
+
+l_elements = elements.to_list()
+# Prints: 1
+# Prints: 1
+# Prints: 2
+# Prints: 3
+# Prints: 4
+
+elements._lineage
+# Lineage: sequence -> map(times_2) -> distinct -> cache
+
+l_elements = elements.to_list()
+# The cached result is returned so times_2 is not called and nothing is printed
+```
 
 ## Road Map
 * Parallel execution engine for faster computation `0.5.0`
