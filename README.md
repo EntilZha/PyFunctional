@@ -274,9 +274,9 @@ Function | Description | Type
 `min()` | Returns minimal element in sequence | action
 `max_by(func)` | Returns element with maximal value `func(element)` | action
 `min_by(func)` | Returns element with minimal value `func(element)` | action
-`sum()` | Returns the sum of elements | action
-`product()` | Returns the product of elements | action
-`average()` | Returns the average of elements | action
+`sum()/sum(projection)` | Returns the sum of elements possibly using a projection | action
+`product()/product(projection)` | Returns the product of elements possibly using a projection | action
+`average()/average(projection)` | Returns the average of elements possibly using a projection | action
 `aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)` | Aggregate using `func` starting with `seed` or first element of list then apply `result_map` to the result | action
 `fold_left(zero_value, func)` | Reduces element from left to right using `func` and initial value `zero_value` | action
 `fold_right(zero_value, func)` | Reduces element from right to left using `func` and initial value `zero_value` | action
