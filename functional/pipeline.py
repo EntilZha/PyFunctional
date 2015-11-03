@@ -1,5 +1,8 @@
 # pylint: disable=too-many-lines,too-many-public-methods,protected-access,redefined-builtin,
 # pylint: disable=no-member
+"""
+The pipeline module contains the primary data structure Sequence and entry point seq
+"""
 
 from __future__ import division
 from operator import mul
@@ -163,6 +166,11 @@ class Sequence(object):
             return Sequence(self.sequence + other)
 
     def _evaluate(self):
+        """
+        Creates and returns an iterator which applies all the transformations in the lineage
+
+        :return: iterator over the transformed sequence
+        """
         return self._lineage.evaluate(self._base_sequence)
 
     def _transform(self, transform):
@@ -186,7 +194,11 @@ class Sequence(object):
         """
         Caches the result of the Sequence so far. This means that any functions applied on the
         pipeline before cache() are evaluated, and the result is stored in the Sequence. This is
-        primarily used internally and is no more helpful than to_list() externally
+        primarily used internally and is no more helpful than to_list() externally. delete_lineage
+        allows for cache() to be used in internal initialization calls without the caller having
+        knowledge of the internals via the lineage
+
+        :param delete_lineage: If set to True, it will cache then erase the lineage
         """
         if len(self._lineage) == 0 or self._lineage[-1] == transformations.CACHE_T:
             if not isinstance(self._base_sequence, list):
@@ -875,6 +887,9 @@ class Sequence(object):
         >>> seq([]).product()
         1
 
+        >>> seq([(1, 2), (1, 3), (1, 4)]).product(lambda x: x[0])
+        1
+
         :param projection: function to project on the sequence before taking the product
         :return: product of elements in sequence
         """
@@ -901,6 +916,9 @@ class Sequence(object):
         >>> seq([1, 2, 3, 4]).sum()
         10
 
+        >>> seq([(1, 2), (1, 3), (1, 4)]).sum(lambda x: x[0])
+        3
+
         :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
@@ -912,6 +930,12 @@ class Sequence(object):
     def average(self, projection=None):
         """
         Takes the average of elements in the sequence
+
+        >>> seq([1, 2]).average()
+        1.5
+
+        >>> seq([('a', 1), ('b', 2)]).average(lambda x: x[1])
+
         :param projection: function to project on the sequence before taking the average
         :return: average of elements in the sequence
         """
