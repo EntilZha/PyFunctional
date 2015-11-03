@@ -17,12 +17,6 @@ def seq(*args):
 
     Additionally it parses various types of input to a Sequence as best it can.
 
-    >>> type(seq([1, 2]))
-    functional.pipeline.Sequence
-
-    >>> type(Sequence([1, 2]))
-    functional.pipeline.Sequence
-
     >>> seq([1, 2, 3])
     [1, 2, 3]
 
@@ -34,6 +28,12 @@ def seq(*args):
 
     >>> seq(range(4))
     [0, 1, 2, 3]
+
+    >>> type(seq([1, 2]))
+    functional.pipeline.Sequence
+
+    >>> type(Sequence([1, 2]))
+    functional.pipeline.Sequence
 
     :param args: Three types of arguments are valid.
         1) Iterable which is then directly wrapped as a Sequence
@@ -61,6 +61,9 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
     rest of the options are passed directly to builtins.open with the exception that write/append
     file modes is not allowed.
 
+    >>> seq.open('examples/gear_list.txt').take(1)
+    [u'tent\n']
+
     :param path: path to file
     :param delimiter: delimiter to split joined text on. if None, defaults to file.readlines()
     :param mode: file open mode
@@ -85,6 +88,12 @@ def range(*args):
     """
     Additional entry point to Sequence which wraps the builtin range generator.
     seq.range(args) is equivalent to seq(range(args)).
+
+    >>> seq.range(1, 8, 2)
+    [1, 3, 5, 7]
+
+    :param args: args to range function
+    :return: range(args) wrapped by a sequence
     """
     rng = builtins.range(*args)
     return seq(rng)
@@ -96,8 +105,8 @@ def csv(csv_file, dialect='excel', **fmt_params):
     to the defined options. csv_file can be a filepath or an object that implements the iterator
     interface (defines next() or __next__() depending on python version).
 
-    >>> f = seq.csv('functional/test/data/test.csv').to_list()
-    [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
+    >>> seq.csv('examples/camping_purchases.csv').take(2)
+    [['1', 'tent', '300'], ['2', 'food', '100']]
 
     :param csv_file: path to file or iterator object
     :param dialect: dialect of csv, passed to csv.reader
@@ -121,6 +130,9 @@ def jsonl(jsonl_file):
     the given path. Jsonl formatted files have a single valid json value on each line which is
     parsed by the python json module.
 
+    >>> seq.jsonl('examples/chat_logs.jsonl').first()
+    {u'date': u'10/09', u'message': u'hello anyone there?', u'user': u'bob'}
+
     :param jsonl_file: path or file containing jsonl content
     :return: Sequence wrapping jsonl file
     """
@@ -138,6 +150,9 @@ def json(json_file):
     dictionary or array.
     1) If the json's root is a dictionary, these are parsed into a sequence of (Key, Value) pairs
     2) If the json's root is an array, these are parsed into a sequence of entries
+
+    >>> seq.json('examples/users.json').first()
+    [u'sarah', {u'date_created': u'08/08', u'news_email': True, u'email': u'sarah@gmail.com'}]
 
     :param json_file: path or file containing json content
     :return: Sequence wrapping jsonl file
