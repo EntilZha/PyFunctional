@@ -324,6 +324,11 @@ l_elements = elements.to_list()
 # The cached result is returned so times_2 is not called and nothing is printed
 ```
 
+Files are given special treatment if opened through the `seq.open` and related APIs.
+`functional.util.ReusableFile` implements a wrapper around the standard python file to support
+multiple iteration over a single file object while correctly handling iteration termination and
+file closing.
+
 ## Road Map
 * Parallel execution engine for faster computation `0.5.0`
 * SQL based query planner and interpreter (TBD on if/when/how this would be done)
