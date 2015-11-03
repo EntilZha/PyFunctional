@@ -1,5 +1,5 @@
 # ScalaFunctional
-[<img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"/>](https://travis-ci.org/EntilZha/ScalaFunctional)
+[![TravisCI](https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/ScalaFunctional)
 [![Coverage Status](https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master&service=github)](https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](https://readthedocs.org/projects/scalafunctional/)
 [![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
@@ -84,7 +84,7 @@ In the next example we have chat logs formatted in jsonl which contain messages 
 typical json file will have one valid json on each line of a file. Below are a few lines out of
 `examples/chat_logs.jsonl`.
 
-```jsonl
+```json
 {"message":"hello anyone there?","date":"10/09","user":"bob"}
 {"message":"need some help with a program","date":"10/09","user":"bob"}
 {"message":"sure thing. What do you need help with?","date":"10/09","user":"dave"}
@@ -304,7 +304,16 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
-## Contact/Email list/Chat
+To contribute, create a fork of `ScalaFunctional`, make your changes, then make sure that they pass
+when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
+In order to be merged, all pull requests must:
+* Pass all the tests
+* Must include tests that cover all new code paths
+* Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
+* Must not decrease code coverage (currently at 100% and tested by
+[coveralls.io](coveralls.io/github/EntilZha/ScalaFunctional))
+
+## Contact
 [Google Groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
 
 [Gitter for chat](https://gitter.im/EntilZha/ScalaFunctional)
@@ -315,3 +324,21 @@ improved.
 ## Changelog
 [Changelog](https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md)
 
+## About me
+To learn more about me (the author) visit my webpage at
+[pedrorodriguez.io](http://pedrorodriguez.io).
+
+I am a PhD student in Computer Science at the University of Colorado at Boulder. My research
+interests include large-scale machine learning, distributed computing, and adjacent fields. I
+completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
+research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
+and developed several corporate and personal websites.
+
+I created `ScalaFunctional` while using Python extensively at Trulia, and finding that I missed the
+capability that the Spark RDD and Scala collections API had.
+
+## Contributors
+These people have generously contributed their time to improving `ScalaFunctional`
+* [adrian17](https://github.com/adrian17)
+* [Digenis](https://github.com/Digenis)
+* [ChuyuHsu](https://github.com/ChuyuHsu)
