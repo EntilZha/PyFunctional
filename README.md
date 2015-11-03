@@ -322,7 +322,7 @@ In order to be merged, all pull requests must:
 `ScalaFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
 
 ## Changelog
-[Changelog](https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md)
+[Changelog](https://github.com/EntilZha/ScalaFunctional/blob/master/CHANGELOG.md)
 
 ## About me
 To learn more about me (the author) visit my webpage at
