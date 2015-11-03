@@ -335,7 +335,8 @@ research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data
 and developed several corporate and personal websites.
 
 I created `ScalaFunctional` while using Python extensively at Trulia, and finding that I missed the
-capability that the Spark RDD and Scala collections API had.
+ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
+best ideas from these APIs as well as LINQ to provide an easy way to manipulate data
 
 ## Contributors
 These people have generously contributed their time to improving `ScalaFunctional`
