@@ -37,6 +37,16 @@ seq(1, 2, 3, 4)\
 # 14
 ```
 
+### Streams, Transformations and Actions
+`ScalaFunctional` has three types of functions:
+
+1. Streams: read data for use by the collections API.
+2. Transformations: transform data from streams with functions such as `map`, `flat_map`, and `filter`
+3. Actions: These cause a series of transformations to evaluate to a concrete value. `to_list`, `reduce`, and `to_dict` are examples of actions.
+
+In the expression `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `seq` is the
+stream, `map` is the transformation, and `reduce` is the action.
+
 ### Filtering a list of account transactions
 ```python
 from functional import seq
@@ -162,16 +172,6 @@ them. For complete API documentation see the collections API table or the offici
 ## Documentation
 Summary documentation is below and full documentation is at
 [scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html).
-
-### Streams, Transformations and Actions
-`ScalaFunctional` has three types of functions:
-
-1. Streams: read data for use by the collections API.
-2. Transformations: transform data from streams with functions such as `map`, `flat_map`, and `filter`
-3. Actions: These cause a series of transformations to evaluate to a concrete value. `to_list`, `reduce`, and `to_dict` are examples of actions.
-
-In the expression `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `seq` is the
-stream, `map` is the transformation, and `reduce` is the action.
 
 ### Streams API
 All of `ScalaFunctional` streams can be accessed through the `seq` object. The primary way to create

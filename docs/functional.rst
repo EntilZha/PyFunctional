@@ -1,27 +1,18 @@
-functional package
-==================
+API Documentation
+=================
 
-functional.streams module
--------------------------
+Streams API
+-----------
 
 .. automodule:: functional.streams
     :members:
     :undoc-members:
     :show-inheritance:
 
-functional.pipeline module
---------------------------
+Transformations and Actions API
+-------------------------------
 
 .. automodule:: functional.pipeline
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: functional
     :members:
     :undoc-members:
     :show-inheritance:
