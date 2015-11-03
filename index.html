@@ -23,72 +23,231 @@
 <a id="scalafunctional" class="anchor" href="#scalafunctional" aria-hidden="true"><span class="octicon octicon-link"></span></a>ScalaFunctional</h1>
 
 <p><a href="https://travis-ci.org/EntilZha/ScalaFunctional"><img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"></a>
-<a href="https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master"><img src="https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master"><img src="https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a>
 <a href="https://readthedocs.org/projects/scalafunctional/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs"></a>
 <a href="https://pypi.python.org/pypi/scalafunctional/"><img src="https://badge.fury.io/py/scalafunctional.svg" alt="Latest Version"></a>
 <a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
 
-<h1>
-<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h1>
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p><a href="http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/">Blog post about ScalaFunctional</a></p>
+<p><code>ScalaFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
+several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
+functional programming. The combination of these ideas makes <code>ScalaFunctional</code> a great choice
+for declarative transformation and analysis of data.</p>
 
-<p><code>ScalaFunctional</code> exists to make functional programming with collections easy and intuitive in Python. It borrows the collections/RDD APIs from Scala and Apache Spark to provide access to a rich and declarative way of defining data pipelines.</p>
-
-<p>To demonstrate the different style of Python map/filter/reduce, list comprehensions, and <code>ScalaFunctional</code>, the code block below does the same thing in all three: manipulate a list of numbers to compute a result. There is a bonus
-at the end using the <code>_</code> operator from <a href="https://github.com/kachayev/fn.py"><code>fn.py</code></a> (note: <code>ipython</code>'s underscore clashes with this, so its not helpful in interactive <code>ipython</code> sessions).</p>
-
-<div class="highlight highlight-source-python"><pre>l <span class="pl-k">=</span> [<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-k">-</span><span class="pl-c1">2</span>]
-
-<span class="pl-c"># Python style</span>
-<span class="pl-c1">reduce</span>(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">*</span> y, <span class="pl-c1">map</span>(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: <span class="pl-c1">2</span> <span class="pl-k">*</span> x, <span class="pl-c1">filter</span>(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>, l)))
-
-<span class="pl-c"># Python list comprehension</span>
-<span class="pl-c1">reduce</span>(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">*</span> y, [<span class="pl-c1">2</span> <span class="pl-k">*</span> x <span class="pl-k">for</span> x <span class="pl-k">in</span> l <span class="pl-k">if</span> x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>])
-
-<span class="pl-c"># ScalaFunctional style</span>
-<span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
-<span class="pl-k">from</span> fn <span class="pl-k">import</span> _
-seq(l).filter(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: <span class="pl-c1">2</span> <span class="pl-k">*</span> x).reduce(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">*</span> y)
-seq(l).filter(_ <span class="pl-k">&gt;</span> <span class="pl-c1">0</span>).map(<span class="pl-c1">2</span> <span class="pl-k">*</span> _).reduce(_ <span class="pl-k">*</span> _)</pre></div>
-
-<p>Although a trivial example, the real power of <code>ScalaFunctional</code> is composing transformations not available natively in Python. For example, the very common word count example is easy:</p>
-
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># ScalaFunctional word count</span>
-l <span class="pl-k">=</span> seq(<span class="pl-s"><span class="pl-pds">"</span>the why the what of word counting of english<span class="pl-pds">"</span></span>.split(<span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>))
-l.map(<span class="pl-k">lambda</span> <span class="pl-smi">word</span>: (word, <span class="pl-c1">1</span>)).reduce_by_key(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">+</span> y)
-<span class="pl-c"># [('what', 1), ('word', 1), ('of', 2), ('english', 1), ('the', 2), ('counting', 1), ('why', 1)]</span></pre></div>
-
-<h1>
-<a id="installation-and-usage" class="anchor" href="#installation-and-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation and Usage</h1>
+<p><a href="http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/">Original blog post for ScalaFunctional</a></p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
+<p><code>ScalaFunctional</code> is available on <a href="https://pypi.python.org/pypi/ScalaFunctional">pypi</a> and can be installed by running:</p>
+
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"># Install from command line</span>
 $ pip install scalafunctional</pre></div>
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
-
-<p>To use ScalaFunctional, you need only include: <code>from functional import seq</code>. <code>seq</code> is a function which takes as argument a list and returns a wrapper on that list that provides access to the functions in the API table below. The API consists of a combination of common Python APIs, the Scala Collections API, and the Apache Spark RDD API.</p>
-
-<p>For detailed documentation and more usage examples, refer to <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline">readthedocs</a></p>
-
-<h1>
-<a id="scala-functional-api" class="anchor" href="#scala-functional-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scala Functional API</h1>
+<p>Then in python run: <code>from functional import seq</code></p>
 
 <h2>
-<a id="transformations-and-actions" class="anchor" href="#transformations-and-actions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transformations and Actions</h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
 
-<p>Fundamentally, there are two types of functions in data pipelines: transformations and actions. After reading/creating data, functions such as <code>map</code>, <code>filter</code>, <code>flat_map</code> and much more do not need to be evaluated immediately. They can be lazily evaluated and only evaluated when the result is required. This helps to boost performance for more intensive work.</p>
+<p><code>ScalaFunctional</code> is useful for many tasks, and can natively open several common file types. Here
+are a few examples of what you can do.</p>
 
-<p>The second type of function is an action. These force <code>functional</code> to compute the result of a sequence of transformations. Functions such as <code>reduce</code>, <code>to_list</code>, <code>to_dict</code>, <code>str</code>, and <code>repr</code> are common examples.</p>
+<h3>
+<a id="simple-example" class="anchor" href="#simple-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Example</h3>
 
-<p>For example, in the code <code>seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)</code>, <code>map</code> is a transformation and <code>reduce</code> is an action.</p>
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
+
+seq(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>)\
+    .map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">*</span> <span class="pl-c1">2</span>)\
+    .filter(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">4</span>)\
+    .reduce(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">+</span> y)
+<span class="pl-c"># 14</span></pre></div>
+
+<h3>
+<a id="filtering-a-list-of-account-transactions" class="anchor" href="#filtering-a-list-of-account-transactions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Filtering a list of account transactions</h3>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
+<span class="pl-k">from</span> collections <span class="pl-k">import</span> namedtuple
+
+Transaction <span class="pl-k">=</span> namedtuple(<span class="pl-s"><span class="pl-pds">'</span>Transaction<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>reason amount<span class="pl-pds">'</span></span>)
+transactions <span class="pl-k">=</span> [
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>github<span class="pl-pds">'</span></span>, <span class="pl-c1">7</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>coffee<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>digitalocean<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>riotgames<span class="pl-pds">'</span></span>, <span class="pl-c1">25</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>amazon<span class="pl-pds">'</span></span>, <span class="pl-c1">200</span>),
+    Transaction(<span class="pl-s"><span class="pl-pds">'</span>paycheck<span class="pl-pds">'</span></span>, <span class="pl-k">-</span><span class="pl-c1">1000</span>)
+]
+
+<span class="pl-c"># Using the Scala/Spark inspired APIs</span>
+food_cost <span class="pl-k">=</span> seq(transactions)\
+    .filter(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>)\
+    .map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.amount).sum()
+
+<span class="pl-c"># Using the LINQ inspired APIs</span>
+food_cost <span class="pl-k">=</span> seq(transactions)\
+    .where(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>)\
+    .select(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.amount).sum()
+
+<span class="pl-c"># Using ScalaFunctional with fn</span>
+<span class="pl-k">from</span> fn <span class="pl-k">import</span> _
+food_cost <span class="pl-k">=</span> seq(transactions).filter(_.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>).map(_.amount).sum()</pre></div>
+
+<h3>
+<a id="word-count-and-joins" class="anchor" href="#word-count-and-joins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word Count and Joins</h3>
+
+<p>Tse account transactions example could be done easily in pure python using list comprehensions. To
+show some of the things <code>ScalaFunctional</code> excels at, take a look at a couple of word count examples.</p>
+
+<div class="highlight highlight-source-python"><pre>words <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>I dont want to believe I want to know<span class="pl-pds">'</span></span>.split(<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span>)
+seq(words).map(<span class="pl-k">lambda</span> <span class="pl-smi">word</span>: (word, <span class="pl-c1">1</span>)).reduce_by_key(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">+</span> y)
+<span class="pl-c"># [('dont', 1), ('I', 2), ('to', 2), ('know', 1), ('want', 2), ('believe', 1)]</span></pre></div>
+
+<p>In the next example we have chat logs formatted in jsonl which contain messages and metadata. A
+typical json file will have one valid json on each line of a file. Below are a few lines out of
+<code>examples/chat_logs.jsonl</code>.</p>
+
+<pre lang="jsonl"><code>{"message":"hello anyone there?","date":"10/09","user":"bob"}
+{"message":"need some help with a program","date":"10/09","user":"bob"}
+{"message":"sure thing. What do you need help with?","date":"10/09","user":"dave"}
+</code></pre>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> operator <span class="pl-k">import</span> add
+<span class="pl-k">import</span> re
+messages <span class="pl-k">=</span> seq.jsonl(<span class="pl-s"><span class="pl-pds">'</span>examples/chat_lots.jsonl<span class="pl-pds">'</span></span>)
+
+<span class="pl-c"># Split words on space and normalize before doing word count</span>
+<span class="pl-k">def</span> <span class="pl-en">extract_words</span>(<span class="pl-smi">message</span>):
+    <span class="pl-k">return</span> re.sub(<span class="pl-s"><span class="pl-pds">'</span>[^0-9a-z ]+<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>, message.lower()).split(<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span>)
+
+
+word_counts <span class="pl-k">=</span> messages\
+    .map(<span class="pl-k">lambda</span> <span class="pl-smi">log</span>: extract_words(log[<span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>]))\
+    .flatten().map(<span class="pl-k">lambda</span> <span class="pl-smi">word</span>: (word, <span class="pl-c1">1</span>))\
+    .reduce_by_key(add).order_by(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x[<span class="pl-c1">1</span>])
+</pre></div>
+
+<p>Next, lets continue that example but introduce a json database of users from <code>examples/users.json</code>.
+In the previous example we showed how <code>ScalaFunctional</code> can do word counts, in the next example lets
+show how <code>ScalaFunctional</code> can join different data sources.</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># First read the json file</span>
+users <span class="pl-k">=</span> seq.json(<span class="pl-s"><span class="pl-pds">'</span>examples/users.json<span class="pl-pds">'</span></span>)
+<span class="pl-c">#[('sarah',{'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'}),...]</span>
+
+email_domains <span class="pl-k">=</span> users.map(<span class="pl-k">lambda</span> <span class="pl-smi">u</span>: u[<span class="pl-c1">1</span>][<span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span>].split(<span class="pl-s"><span class="pl-pds">'</span>@<span class="pl-pds">'</span></span>)[<span class="pl-c1">1</span>]).distinct()
+<span class="pl-c"># ['yahoo.com', 'python.org', 'gmail.com']</span>
+
+<span class="pl-c"># Join users with their messages</span>
+message_tuples <span class="pl-k">=</span> messages.group_by(<span class="pl-k">lambda</span> <span class="pl-smi">m</span>: m[<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>])
+data <span class="pl-k">=</span> users.inner_join(message_tuples)
+<span class="pl-c"># [('sarah', </span>
+<span class="pl-c">#    (</span>
+<span class="pl-c">#      {'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'},</span>
+<span class="pl-c">#      [{'date':'10/10','message':'what is a...','user':'sarah'}...]</span>
+<span class="pl-c">#    )</span>
+<span class="pl-c">#  ),...]</span>
+
+<span class="pl-c"># From here you can imagine doing more complex analysis</span></pre></div>
+
+<h3>
+<a id="csv-aggregate-functions-and-set-functions" class="anchor" href="#csv-aggregate-functions-and-set-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>CSV, Aggregate Functions, and Set functions</h3>
+
+<p>In <code>examples/camping_purchases.csv</code> there are a list of camping purchases. Lets do some cost analysis and
+compare it the required camping gear list stored in <code>examples/gear_list.txt</code>.</p>
+
+<div class="highlight highlight-source-python"><pre>purchases <span class="pl-k">=</span> seq.csv(<span class="pl-s"><span class="pl-pds">'</span>examples/camping_purchases.csv<span class="pl-pds">'</span></span>)
+total_cost <span class="pl-k">=</span> purchases.select(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: <span class="pl-c1">int</span>(row[<span class="pl-c1">2</span>])).sum()
+<span class="pl-c"># 1275</span>
+
+most_expensive_item <span class="pl-k">=</span> purchases.max_by(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: <span class="pl-c1">int</span>(row[<span class="pl-c1">2</span>]))
+<span class="pl-c"># ['4', 'sleeping bag', ' 350']</span>
+
+purchased_list <span class="pl-k">=</span> purchases.select(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: row[<span class="pl-c1">1</span>])
+gear_list <span class="pl-k">=</span> seq.open(<span class="pl-s"><span class="pl-pds">'</span>examples/gear_list.txt<span class="pl-pds">'</span></span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: row.strip())
+missing_gear <span class="pl-k">=</span> gear_list.difference(purchased_list)
+<span class="pl-c"># ['water bottle','gas','toilet paper','lighter','spoons','sleeping pad',...]</span></pre></div>
+
+<p>In addition to the aggregate functions show above (<code>sum</code> and <code>max_by</code>) there are many more.
+Similarly, there are several more set like functions in addition to <code>difference</code>.</p>
+
+<h3>
+<a id="writing-to-files" class="anchor" href="#writing-to-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Writing to files</h3>
+
+<p>Just as <code>ScalaFunctional</code> can read from <code>csv</code>, <code>json</code>, <code>jsonl</code>, and text files, it can also write
+them. For complete API documentation see the collections API table or the official docs.</p>
 
 <h2>
-<a id="scalafunctional-api" class="anchor" href="#scalafunctional-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>ScalaFunctional API</h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p>Summary documentation is below and full documentation is at
+<a href="http://scalafunctional.readthedocs.org/en/latest/functional.html">scalafunctional.readthedocs.org</a>.</p>
+
+<h3>
+<a id="streams-transformations-and-actions" class="anchor" href="#streams-transformations-and-actions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streams, Transformations and Actions</h3>
+
+<p><code>ScalaFunctional</code> has three types of functions:</p>
+
+<ol>
+<li>Streams: read data for use by the collections API.</li>
+<li>Transformations: transform data from streams with functions such as <code>map</code>, <code>flat_map</code>, and <code>filter</code>
+</li>
+<li>Actions: These cause a series of transformations to evaluate to a concrete value. <code>to_list</code>, <code>reduce</code>, and <code>to_dict</code> are examples of actions.</li>
+</ol>
+
+<p>In the expression <code>seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)</code>, <code>seq</code> is the
+stream, <code>map</code> is the transformation, and <code>reduce</code> is the action.</p>
+
+<h3>
+<a id="streams-api" class="anchor" href="#streams-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streams API</h3>
+
+<p>All of <code>ScalaFunctional</code> streams can be accessed through the <code>seq</code> object. The primary way to create
+a stream is by calling <code>seq</code> with an iterable. The <code>seq</code> callable is smart and is able to accept
+multiple types of parameters as shown in the examples below.</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># Passing a list</span>
+seq([<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>]).to_set()
+<span class="pl-c"># [1, 2, 3]</span>
+
+<span class="pl-c"># Passing direct arguments</span>
+seq(<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x).to_list()
+<span class="pl-c"># [1, 1, 2, 3]</span>
+
+<span class="pl-c"># Passing a single value</span>
+seq(<span class="pl-c1">1</span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: <span class="pl-k">-</span>x).to_list()
+<span class="pl-c"># [-1]</span></pre></div>
+
+<p><code>seq</code> also provides entry to other streams as attribute functions as shown below.</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># number range</span>
+seq.range(<span class="pl-c1">10</span>)
+
+<span class="pl-c"># text file</span>
+seq.open(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+
+<span class="pl-c"># json file</span>
+seq.json(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+
+<span class="pl-c"># jsonl file</span>
+seq.jsonl(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+
+<span class="pl-c"># csv file</span>
+seq.csv(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)</pre></div>
+
+<p>For more information on the parameters that these functions can take, reference the
+<a href="http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.streams">streams documentation</a></p>
+
+<h3>
+<a id="transformations-and-actions-apis" class="anchor" href="#transformations-and-actions-apis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transformations and Actions APIs</h3>
+
+<p>Below is the complete list of functions which can be called on a stream object from <code>seq</code>. For
+complete documentation reference 
+<a href="http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline">transformation and actions API</a>.</p>
 
 <table>
 <thead>
@@ -100,12 +259,12 @@ $ pip install scalafunctional</pre></div>
 </thead>
 <tbody>
 <tr>
-<td><code>map(func)</code></td>
+<td><code>map(func)/select(func)</code></td>
 <td>Maps <code>func</code> onto elements of sequence</td>
 <td>transformation</td>
 </tr>
 <tr>
-<td><code>filter(func)</code></td>
+<td><code>filter(func)/where(func)</code></td>
 <td>Filters elements of sequence to only those where <code>func(element)</code> is <code>True</code>
 </td>
 <td>transformation</td>
@@ -275,7 +434,7 @@ $ pip install scalafunctional</pre></div>
 <td>transformation</td>
 </tr>
 <tr>
-<td><code>sorted(key=None, reverse=False)</code></td>
+<td><code>sorted(key=None, reverse=False)/order_by(func)</code></td>
 <td>Returns elements sorted according to python <code>sorted</code>
 </td>
 <td>transformation</td>
@@ -395,6 +554,16 @@ $ pip install scalafunctional</pre></div>
 <td>action</td>
 </tr>
 <tr>
+<td><code>average()</code></td>
+<td>Returns the average of elements</td>
+<td>action</td>
+</tr>
+<tr>
+<td><code>aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)</code></td>
+<td>Aggregate using <code>func</code> starting with <code>seed</code> or first element of list then apply <code>result_map</code> to the result</td>
+<td>action</td>
+</tr>
+<tr>
 <td><code>fold_left(zero_value, func)</code></td>
 <td>Reduces element from left to right using <code>func</code> and initial value <code>zero_value</code>
 </td>
@@ -433,6 +602,26 @@ $ pip install scalafunctional</pre></div>
 <td>action</td>
 </tr>
 <tr>
+<td><code>to_file(path)</code></td>
+<td>Saves the sequence to a file at path with each element on a newline</td>
+<td>action</td>
+</tr>
+<tr>
+<td><code>to_csv(path)</code></td>
+<td>Saves the sequence to a csv file at path with each element representing a row</td>
+<td>action</td>
+</tr>
+<tr>
+<td><code>to_jsonl(path)</code></td>
+<td>Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line</td>
+<td>action</td>
+</tr>
+<tr>
+<td><code>to_json(path)</code></td>
+<td>Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary</td>
+<td>action</td>
+</tr>
+<tr>
 <td><code>cache()</code></td>
 <td>Forces evaluation of sequence immediately and caches the result</td>
 <td>action</td>
@@ -448,24 +637,39 @@ $ pip install scalafunctional</pre></div>
 <h2>
 <a id="road-map" class="anchor" href="#road-map" aria-hidden="true"><span class="octicon octicon-link"></span></a>Road Map</h2>
 
-<h3>
-<a id="version-040" class="anchor" href="#version-040" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version <code>0.4.0</code>
-</h3>
-
-<p>Implement new ways to have <code>ScalaFunctional</code> ingest data and write it out. Principally this means implementing reading from files (csv, json, etc) and writing back to them natively. This is being implemented in <code>functional.streams</code> if you would like to check progress</p>
-
-<h3>
-<a id="past-next-release" class="anchor" href="#past-next-release" aria-hidden="true"><span class="octicon octicon-link"></span></a>Past next release</h3>
-
 <ul>
-<li>Parallel execution engine for users wanting to run operations in parallel</li>
-<li>Decide if package is stable enough to prepare a <code>1.0</code> release</li>
+<li>Parallel execution engine for faster computation <code>0.5.0</code>
+</li>
+<li>SQL based query planner and interpreter (TBD on if/when/how this would be done)</li>
+<li>When is this ready for <code>1.0</code>?</li>
+<li>Perhaps think of a better name that better suits this package than <code>ScalaFunctional</code>
+</li>
 </ul>
 
 <h2>
 <a id="contributing-and-bug-fixes" class="anchor" href="#contributing-and-bug-fixes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing and Bug Fixes</h2>
 
-<p>Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull requests and contributors have offered valuable feedback and critique on code. It is also great to hear from users of the package, especially what it is used for, what works well, and what could be improved.</p>
+<p>Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
+requests and contributors have offered valuable feedback and critique on code. It is great to hear
+from users of the package, especially what it is used for, what works well, and what could be
+improved.</p>
+
+<h2>
+<a id="contactemail-listchat" class="anchor" href="#contactemail-listchat" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact/Email list/Chat</h2>
+
+<p><a href="https://groups.google.com/forum/#!forum/scalafunctional">Google Groups mailing list</a></p>
+
+<p><a href="https://gitter.im/EntilZha/ScalaFunctional">Gitter for chat</a></p>
+
+<h2>
+<a id="supported-python-versions" class="anchor" href="#supported-python-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Python Versions</h2>
+
+<p><code>ScalaFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<p><a href="https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md">Changelog</a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/EntilZha/ScalaFunctional">ScalaFunctional</a> is maintained by <a href="https://github.com/EntilZha">EntilZha</a>.</span>
@@ -475,6 +679,16 @@ $ pip install scalafunctional</pre></div>
 
     </section>
 
-  
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-69620309-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
