@@ -25,3 +25,7 @@
 
 ### Bug Fixes
 * `fold_left` and `fold_right` had incorrect order of arguments for passed function
+
+## Release 0.4.1
+
+Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34

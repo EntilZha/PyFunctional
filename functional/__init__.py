@@ -7,7 +7,7 @@ from .streams import seq
 __author__ = "Pedro Rodriguez"
 __copyright__ = "Copyright 2015, Pedro Rodriguez"
 __license__ = "MIT"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __maintainer__ = "Pedro Rodriguez"
 __email__ = "ski.rodriguez@gmail.com"
 __status__ = "Development"

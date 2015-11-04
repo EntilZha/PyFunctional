@@ -5,7 +5,6 @@ install:
   - pip install future
   - pip install hg+https://bitbucket.org/logilab/pylint@master
   - pip install hg+https://bitbucket.org/logilab/astroid@master
-  - bash .travis-install.sh
 notifications:
   webhooks:
     urls:
