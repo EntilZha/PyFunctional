@@ -1,15 +1,10 @@
 from setuptools import setup, find_packages
-import sys
 
 try:
     import pypandoc
     long_description = pypandoc.convert('README.md', 'rst')
 except (IOError, ImportError):
     long_description = open('README.md').read()
-
-requirements = ['future', 'six']
-if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
-    requirements.append('enum34')
 
 setup(
     name='ScalaFunctional',
@@ -24,7 +19,7 @@ setup(
     keywords='functional LINQ pipeline data collection rdd scala',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version='0.4.0',
-    install_requires=requirements,
+    install_requires=['future', 'six'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

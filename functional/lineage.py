@@ -1,5 +1,5 @@
 from .transformations import CACHE_T
-from .transformations import EXECUTION_STRATEGIES
+from .transformations import ExecutionStrategies
 
 
 class Lineage(object):
@@ -46,7 +46,7 @@ class Lineage(object):
         last_cache_index = self.cache_scan()
         for transform in self.transformations[last_cache_index:]:
             if transform.execution_strategies is not None \
-                    and EXECUTION_STRATEGIES.PRE_COMPUTE in transform.execution_strategies:
+                    and ExecutionStrategies.PRE_COMPUTE in transform.execution_strategies:
                 result = transform.function(list(result))
             else:
                 result = transform.function(result)

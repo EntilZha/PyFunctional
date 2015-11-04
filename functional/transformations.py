@@ -5,7 +5,6 @@ from functools import reduce, partial
 from itertools import dropwhile, takewhile, islice
 
 import collections
-from enum import Enum
 import types
 import six
 
@@ -17,8 +16,14 @@ Transformation = collections.namedtuple(
     'Transformation', ['name', 'function', 'execution_strategies']
 )
 
-#: List of available execution strategies
-EXECUTION_STRATEGIES = Enum('EXECUTION_STRATEGIES', 'PRE_COMPUTE')
+
+class ExecutionStrategies(object):
+    # pylint: disable=too-few-public-methods
+    """
+    Enum like object listing the types of execution strategies
+    """
+    PRE_COMPUTE = 0
+
 
 #: Cache transformation
 CACHE_T = Transformation('cache', None, None)
@@ -308,7 +313,7 @@ def init_t():
     return Transformation(
         'init',
         lambda sequence: sequence[:-1],
-        {EXECUTION_STRATEGIES.PRE_COMPUTE}
+        {ExecutionStrategies.PRE_COMPUTE}
     )
 
 
@@ -333,7 +338,7 @@ def inits_t(wrap):
     return Transformation(
         'inits',
         lambda sequence: [wrap(sequence[:i]) for i in reversed(range(len(sequence) + 1))],
-        {EXECUTION_STRATEGIES.PRE_COMPUTE}
+        {ExecutionStrategies.PRE_COMPUTE}
     )
 
 
@@ -346,7 +351,7 @@ def tails_t(wrap):
     return Transformation(
         'tails',
         lambda sequence: [wrap(sequence[i:]) for i in range(len(sequence) + 1)],
-        {EXECUTION_STRATEGIES.PRE_COMPUTE}
+        {ExecutionStrategies.PRE_COMPUTE}
     )
 
 
@@ -495,7 +500,7 @@ def grouped_t(wrap, size):
     return Transformation(
         'grouped({0})'.format(size),
         partial(grouped_impl, wrap, size),
-        {EXECUTION_STRATEGIES.PRE_COMPUTE}
+        {ExecutionStrategies.PRE_COMPUTE}
     )
 
 
