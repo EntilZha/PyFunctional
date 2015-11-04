@@ -373,7 +373,8 @@ and developed several corporate and personal websites.
 
 I created `ScalaFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
-best ideas from these APIs as well as LINQ to provide an easy way to manipulate data
+best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
+Scala is not an option or Spark is overkill.
 
 ## Contributors
 These people have generously contributed their time to improving `ScalaFunctional`
