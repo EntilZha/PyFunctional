@@ -81,7 +81,7 @@ food_cost = seq(transactions).filter(_.reason == 'food').map(_.amount).sum()
 ```
 
 ### Word Count and Joins
-Tse account transactions example could be done easily in pure python using list comprehensions. To
+The account transactions example could be done easily in pure python using list comprehensions. To
 show some of the things `ScalaFunctional` excels at, take a look at a couple of word count examples.
 
 ```python
@@ -160,7 +160,7 @@ missing_gear = gear_list.difference(purchased_list)
 # ['water bottle','gas','toilet paper','lighter','spoons','sleeping pad',...]
 ```
 
-In addition to the aggregate functions show above (`sum` and `max_by`) there are many more.
+In addition to the aggregate functions shown above (`sum` and `max_by`) there are many more.
 Similarly, there are several more set like functions in addition to `difference`.
 
 ### Writing to files
