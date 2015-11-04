@@ -11,7 +11,6 @@ requirements = ['future', 'six']
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
     requirements.append('enum34')
 
-
 setup(
     name='ScalaFunctional',
     description='Package for creating data pipelines, LINQ, and chain functional programming',
