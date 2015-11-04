@@ -344,6 +344,7 @@ improved.
 To contribute, create a fork of `ScalaFunctional`, make your changes, then make sure that they pass
 when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
 In order to be merged, all pull requests must:
+
 * Pass all the tests
 * Must include tests that cover all new code paths
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
@@ -378,6 +379,7 @@ Scala is not an option or Spark is overkill.
 
 ## Contributors
 These people have generously contributed their time to improving `ScalaFunctional`
+
 * [adrian17](https://github.com/adrian17)
 * [Digenis](https://github.com/Digenis)
 * [ChuyuHsu](https://github.com/ChuyuHsu)

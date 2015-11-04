@@ -1,0 +1,8 @@
+recursive-include examples
+recursive-include functional/tests/data
+include README.md
+include CHANGELOG.md
+include DEVELOPER.md
+include LICENSE.txt
+include pylintrc
+include run-tests.sh
