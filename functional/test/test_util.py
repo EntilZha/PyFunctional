@@ -1,5 +1,7 @@
+from __future__ import absolute_import
+
 import unittest
-from ..util import ReusableFile
+from functional.util import ReusableFile
 
 
 class TestUtil(unittest.TestCase):

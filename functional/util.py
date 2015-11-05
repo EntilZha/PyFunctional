@@ -1,5 +1,7 @@
 # pylint: disable=no-name-in-module,unused-import
 
+from __future__ import absolute_import
+
 import collections
 import six
 import future.builtins as builtins

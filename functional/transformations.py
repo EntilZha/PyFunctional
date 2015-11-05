@@ -1,4 +1,5 @@
 # pylint: disable=redefined-builtin,missing-docstring,no-member,invalid-name
+from __future__ import absolute_import
 
 from future.builtins import map, filter, zip, range
 from functools import reduce, partial
@@ -8,7 +9,7 @@ import collections
 import types
 import six
 
-from .util import filterfalse
+from functional.util import filterfalse
 
 
 #: Defines a Transformation from a name, function, and execution_strategies

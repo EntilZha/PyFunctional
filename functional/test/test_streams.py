@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+
 import unittest
 import six
-from .. import seq
+from functional import seq
 
 
 class TestStreams(unittest.TestCase):

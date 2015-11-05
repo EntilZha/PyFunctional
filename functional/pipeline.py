@@ -4,7 +4,7 @@
 The pipeline module contains the primary data structure Sequence and entry point seq
 """
 
-from __future__ import division
+from __future__ import division, absolute_import
 from operator import mul
 import collections
 from functools import reduce
@@ -13,9 +13,9 @@ import json
 import csv
 import future.builtins as builtins
 
-from .lineage import Lineage
-from .util import is_iterable, is_primitive, identity, CSV_WRITE_MODE
-from . import transformations
+from functional.lineage import Lineage
+from functional.util import is_iterable, is_primitive, identity, CSV_WRITE_MODE
+from functional import transformations
 
 
 class Sequence(object):
