@@ -1,4 +1,11 @@
 # Changelog
+## Next Release
+### Internal Changes
+* Changed all relative imports to absolute imports with `__future__.absolute_import`
+
+## Release 0.4.1
+Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34
+
 ## Release 0.4.0
 ### New Features
 * Official and tested support for python 3.5. Thus `ScalaFunctional` is tested on Python 2.7, 3.3,
@@ -25,7 +32,3 @@
 
 ### Bug Fixes
 * `fold_left` and `fold_right` had incorrect order of arguments for passed function
-
-## Release 0.4.1
-
-Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34

@@ -132,7 +132,7 @@ email_domains = users.map(lambda u: u[1]['email'].split('@')[1]).distinct()
 # Join users with their messages
 message_tuples = messages.group_by(lambda m: m['user'])
 data = users.inner_join(message_tuples)
-# [('sarah', 
+# [('sarah',
 #    (
 #      {'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'},
 #      [{'date':'10/10','message':'what is a...','user':'sarah'}...]
@@ -216,7 +216,7 @@ For more information on the parameters that these functions can take, reference 
 
 ### Transformations and Actions APIs
 Below is the complete list of functions which can be called on a stream object from `seq`. For
-complete documentation reference 
+complete documentation reference
 [transformation and actions API](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline).
 
 Function | Description | Type
@@ -345,11 +345,12 @@ To contribute, create a fork of `ScalaFunctional`, make your changes, then make 
 when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
 In order to be merged, all pull requests must:
 
-* Pass all the tests
-* Must include tests that cover all new code paths
+* Pass all the unit tests
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
+* Must include tests that cover all new code paths
 * Must not decrease code coverage (currently at 100% and tested by
 [coveralls.io](coveralls.io/github/EntilZha/ScalaFunctional))
+* Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
 [Google Groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
