@@ -1,5 +1,7 @@
-from .transformations import CACHE_T
-from .transformations import ExecutionStrategies
+from __future__ import absolute_import
+
+from functional.transformations import CACHE_T
+from functional.transformations import ExecutionStrategies
 
 
 class Lineage(object):

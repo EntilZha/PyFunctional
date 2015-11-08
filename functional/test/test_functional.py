@@ -1,10 +1,11 @@
 #pylint: skip-file
+from __future__ import absolute_import
 
 import unittest
 from collections import namedtuple
-from ..pipeline import Sequence, is_iterable, _wrap
-from ..transformations import name
-from .. import seq
+from functional.pipeline import Sequence, is_iterable, _wrap
+from functional.transformations import name
+from functional import seq
 
 Data = namedtuple('Data', 'x y')
 
