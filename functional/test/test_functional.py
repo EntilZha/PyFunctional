@@ -710,8 +710,9 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(_wrap((1, 2)))
         self.assert_not_type(_wrap(1))
         self.assert_not_type(_wrap(1.0))
-        self.assert_not_type("test")
-        self.assert_not_type(True)
+        self.assert_not_type(_wrap("test"))
+        self.assert_not_type(_wrap(True))
+        self.assert_not_type(_wrap(Data(1, 2)))
 
     def test_wrap_objects(self):
         class A(object):

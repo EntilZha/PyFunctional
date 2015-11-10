@@ -14,7 +14,7 @@ import csv
 import future.builtins as builtins
 
 from functional.lineage import Lineage
-from functional.util import is_iterable, is_primitive, identity, CSV_WRITE_MODE
+from functional.util import is_iterable, is_primitive, is_namedtuple, identity, CSV_WRITE_MODE
 from functional import transformations
 
 
@@ -1436,7 +1436,7 @@ def _wrap(value):
     """
     if is_primitive(value):
         return value
-    if isinstance(value, dict) or isinstance(value, set):
+    if isinstance(value, dict) or isinstance(value, set) or is_namedtuple(value):
         return value
     elif isinstance(value, collections.Iterable):
         return Sequence(value)

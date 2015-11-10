@@ -3,6 +3,9 @@
 ### Internal Changes
 * Changed all relative imports to absolute imports with `__future__.absolute_import`
 
+### Bug Fixes
+* Fixed case where `_wrap` is changing named tuples to arrays when it should preserve them
+
 ## Release 0.4.1
 Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34
 

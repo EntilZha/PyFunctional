@@ -47,6 +47,23 @@ def is_primitive(val):
         or isinstance(val, bytes)
 
 
+def is_namedtuple(val):
+    """
+    Use Duck Typing to check if val is a named tuple. Checks that val is of type tuple and contains
+    the attribute _fields which is defined for named tuples.
+    :param val: value to check type of
+    :return: True if val is a namedtuple
+    """
+    val_type = type(val)
+    bases = val_type.__bases__
+    if len(bases) != 1 or bases[0] != tuple:
+        return False
+    fields = getattr(val_type, '_fields', None)
+    if not isinstance(fields, tuple):
+        return False
+    return all(isinstance(n, str) for n in fields)
+
+
 def identity(arg):
     """
     Function which returns the argument. Used as a default lambda function.
