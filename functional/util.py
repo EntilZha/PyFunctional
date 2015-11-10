@@ -59,8 +59,6 @@ def is_namedtuple(val):
     if len(bases) != 1 or bases[0] != tuple:
         return False
     fields = getattr(val_type, '_fields', None)
-    if not isinstance(fields, tuple):
-        return False
     return all(isinstance(n, str) for n in fields)
 
 
