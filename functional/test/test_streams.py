@@ -68,6 +68,10 @@ class TestStreams(unittest.TestCase):
         with open(tmp_path, 'r') as output:
             self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
 
+        sequence.to_file(tmp_path, delimiter=":")
+        with open(tmp_path, 'r') as output:
+            self.assertEqual('1:2:3:4', output.readlines()[0])
+
     def test_to_jsonl(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [{'a': 1, 'b': 2}, {'c': 3}, {'d': 4}]

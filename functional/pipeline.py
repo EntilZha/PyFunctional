@@ -1356,12 +1356,14 @@ class Sequence(object):
         """
         return self.to_dict(default=default)
 
-    def to_file(self, path, mode='w', buffering=-1, encoding=None, errors=None, newline=None):
+    def to_file(self, path, delimiter=None,
+                mode='w', buffering=-1, encoding=None, errors=None, newline=None):
         """
-        Saves the sequence to a file by executing str(self) which becomes str(self.to_list())
+        Saves the sequence to a file by executing str(self) which becomes str(self.to_list()). If
+        delimiter is defined will instead execute self.make_string(delimiter)
 
         :param path: path to write file
-        :param delimiter: delimiter to split joined text on. if None, defaults to file.readlines()
+        :param delimiter: if defined, will call make_string(delimiter) and save that to file.
         :param mode: file open mode
         :param buffering: passed to builtins.open
         :param encoding: passed to builtins.open
@@ -1371,7 +1373,10 @@ class Sequence(object):
         # pylint: disable=too-many-arguments
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as output:
-            output.write(six.u(str(self)))
+            if delimiter:
+                output.write(six.u(self.make_string(delimiter)))
+            else:
+                output.write(six.u(str(self)))
 
     def to_jsonl(self, path, mode='w'):
         """
