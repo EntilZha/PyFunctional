@@ -1,11 +1,13 @@
 # pylint: disable=redefined-builtin,too-many-arguments
 from __future__ import absolute_import
 
-import future.builtins as builtins
 import re
 import csv as csvapi
 import json as jsonapi
+
+import future.builtins as builtins
 import six
+
 from functional.pipeline import Sequence
 from functional.util import is_primitive, ReusableFile
 

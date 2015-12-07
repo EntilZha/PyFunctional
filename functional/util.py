@@ -7,10 +7,8 @@ import six
 import future.builtins as builtins
 
 if six.PY2:
-    from itertools import ifilterfalse as filterfalse
     CSV_WRITE_MODE = 'wb'
 else:
-    from itertools import filterfalse
     CSV_WRITE_MODE = 'w'
 
 

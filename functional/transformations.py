@@ -1,15 +1,14 @@
 # pylint: disable=redefined-builtin,missing-docstring,no-member,invalid-name
 from __future__ import absolute_import
 
-from future.builtins import map, filter, zip, range
 from functools import reduce, partial
 from itertools import dropwhile, takewhile, islice
-
 import collections
 import types
-import six
 
-from functional.util import filterfalse
+from future.builtins import map, filter, zip, range
+
+import six
 
 
 #: Defines a Transformation from a name, function, and execution_strategies
@@ -84,7 +83,8 @@ def filter_not_t(func):
     :param func: filter_not function
     :return: transformation
     """
-    return Transformation('filter_not({0})'.format(name(func)), partial(filterfalse, func), None)
+    return Transformation('filter_not({0})'.format(name(func)),
+                          partial(six.moves.filterfalse, func), None)
 
 
 def reversed_t():

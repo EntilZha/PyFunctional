@@ -33,12 +33,12 @@ class TestStreams(unittest.TestCase):
             seq.csv(1)
 
     def test_jsonl(self):
-        result = seq.jsonl('functional/test/data/test.jsonl').to_list()
-        expect = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
-        self.assertEqual(expect, result)
-        result = seq.jsonl(['[1, 2, 3]', '[4, 5, 6]'])
-        expect = [[1, 2, 3], [4, 5, 6]]
-        self.assertEqual(expect, result)
+        result_0 = seq.jsonl('functional/test/data/test.jsonl').to_list()
+        expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
+        self.assertEqual(expect_0, result_0)
+        result_1 = seq.jsonl(['[1, 2, 3]', '[4, 5, 6]'])
+        expect_1 = [[1, 2, 3], [4, 5, 6]]
+        self.assertEqual(expect_1, result_1)
 
     def test_json(self):
         list_test_path = 'functional/test/data/test_list.json'

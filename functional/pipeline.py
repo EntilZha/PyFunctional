@@ -5,12 +5,15 @@ The pipeline module contains the primary data structure Sequence and entry point
 """
 
 from __future__ import division, absolute_import
+
 from operator import mul
 import collections
 from functools import reduce
-import six
+
 import json
 import csv
+
+import six
 import future.builtins as builtins
 
 from functional.lineage import Lineage
