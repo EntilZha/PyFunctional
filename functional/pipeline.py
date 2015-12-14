@@ -1167,11 +1167,24 @@ class Sequence(object):
         >>> seq([1, 2, 3, 4, 5, 6, 7, 8]).grouped(3)
         [[1, 2, 3], [4, 5, 6], [7, 8]]
 
-        The last partition will be at least of size 1 and no more than length size
+        The last partition has at least one element but may have less than size elements.
+
         :param size: size of the partitions
         :return: sequence partitioned into groups of length size
         """
         return self._transform(transformations.grouped_t(_wrap, size))
+
+    def sliding(self, size, step=1):
+        """
+        Groups elements in fixed size blocks by passing a sliding window over them.
+
+        The last window has at least one element but may have less than size elements
+
+        :param size: size of sliding window
+        :param step: step size between windows
+        :return: sequence of sliding windows
+        """
+        return self._transform(transformations.sliding_t(_wrap, size, step))
 
     def sorted(self, key=None, reverse=False):
         """

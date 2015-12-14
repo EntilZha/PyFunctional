@@ -505,6 +505,37 @@ def grouped_t(wrap, size):
     )
 
 
+def sliding_impl(wrap, size, step, sequence):
+    """
+    Implementation for sliding_t
+    :param wrap: wrap children values with this
+    :param size: size of window
+    :param step: step size
+    :param sequence: sequence to create sliding windows from
+    :return: sequence of sliding windows
+    """
+    i = 0
+    n = len(sequence)
+    while i + size <= n or (step != 1 and i < n):
+        yield wrap(sequence[i: i + size])
+        i += step
+
+
+def sliding_t(wrap, size, step):
+    """
+    Transformation for Sequence.sliding
+    :param wrap: wrap children values with this
+    :param size: size of window
+    :param step: step size
+    :return: transformation
+    """
+    return Transformation(
+        'sliding({0}, {1})'.format(size, step),
+        partial(sliding_impl, wrap, size, step),
+        {ExecutionStrategies.PRE_COMPUTE}
+    )
+
+
 def partition_t(wrap, func):
     """
     Transformation for Sequence.partition

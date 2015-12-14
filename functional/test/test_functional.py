@@ -557,6 +557,16 @@ class TestPipeline(unittest.TestCase):
         expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
         self.assertIteratorEqual(l.grouped(3), expect)
 
+    def test_sliding(self):
+        l = seq([1, 2, 3, 4, 5, 6, 7])
+        expect = [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]]
+        self.assertIteratorEqual(l.sliding(2), expect)
+        l = seq([1, 2, 3])
+        expect = [[1, 2], [3]]
+        self.assertIteratorEqual(l.sliding(2, 2), expect)
+        expect = [[1, 2]]
+        self.assertIteratorEqual(l.sliding(2, 3), expect)
+
     def test_empty(self):
         self.assertTrue(seq([]).empty())
 
