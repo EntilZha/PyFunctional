@@ -1,6 +1,7 @@
 # Changelog
 ## Next Release
 
+## Release 0.5.0
 ### New Features
 * Added delimiter option on `to_file`
 * `Sequence.sliding` to create a sliding window from a list of elements
