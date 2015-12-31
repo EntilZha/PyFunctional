@@ -636,8 +636,12 @@ class TestPipeline(unittest.TestCase):
 
     def test_zip_with_index(self):
         l = [2, 3, 4]
-        e = [(0, 2), (1, 3), (2, 4)]
+        e = [(2, 0), (3, 1), (4, 2)]
         result = seq(l).zip_with_index()
+        self.assertIteratorEqual(result, e)
+        self.assert_type(result)
+        e = [(2, 5), (3, 6), (4, 7)]
+        result = seq(l).zip_with_index(5)
         self.assertIteratorEqual(result, e)
         self.assert_type(result)
 

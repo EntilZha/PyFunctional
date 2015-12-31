@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 from functools import reduce, partial
-from itertools import dropwhile, takewhile, islice
+from itertools import dropwhile, takewhile, islice, count
 import collections
 import types
 
@@ -281,14 +281,14 @@ def zip_t(zip_sequence):
     )
 
 
-def zip_with_index_t():
+def zip_with_index_t(start):
     """
     Transformation for Sequence.zip_with_index
     :return: transformation
     """
     return Transformation(
         'zip_with_index',
-        enumerate,
+        lambda sequence: zip(sequence, count(start=start)),
         None
     )
 

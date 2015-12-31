@@ -11,6 +11,9 @@
 ### Bug Fixes
 * Fixed case where `_wrap` is changing named tuples to arrays when it should preserve them
 * Fixed documentation on `to_file` which incorrectly copied from `seq.open` delimiter parameter
+* Fixed `Sequence.zip_with_index` behavior. used to mimic `enumerate` by zipping on the left size
+while scala and spark do zip on the right side. This introduces different behavior and more flexible
+behavior in combination with `enumerate` A start parameter was also added like in `enumerate`
 
 ## Release 0.4.1
 Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34

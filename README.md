@@ -245,7 +245,7 @@ Function | Description | Type
 `inits()` | Returns consecutive inits of sequence | transformation
 `tails()` | Returns consecutive tails of sequence | transformation
 `zip(other)` | Zips the sequence with `other` | transformation
-`zip_with_index()` | Zips the sequence with the index starting at zero on the left side | transformation
+`zip_with_index(start=0)` | Zips the sequence with the index starting at `start` on the right side | transformation
 `enumerate(start=0)` | Zips the sequence with the index starting at `start` on the left side | transformation
 `inner_join(other)` | Returns inner join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
 `outer_join(other)` | Returns outer join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation

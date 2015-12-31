@@ -1035,16 +1035,16 @@ class Sequence(object):
         """
         return self._transform(transformations.zip_t(sequence))
 
-    def zip_with_index(self):
+    def zip_with_index(self, start=0):
         """
-        Zips the sequence to its index, with the index being the first element of each tuple.
+        Zips the sequence to its index, with the index being the second element of each tuple.
 
         >>> seq(['a', 'b', 'c']).zip_with_index()
-        [(0, 'a'), (1, 'b'), (2, 'c')]
+        [('a', 0), ('b', 1), ('c', 2)]
 
         :return: sequence zipped to its index
         """
-        return self._transform(transformations.zip_with_index_t())
+        return self._transform(transformations.zip_with_index_t(start))
 
     def enumerate(self, start=0):
         """
