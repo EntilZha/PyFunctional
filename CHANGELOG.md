@@ -3,6 +3,7 @@
 
 ### New Features
 * Added delimiter option on `to_file`
+* `Sequence.sliding` to create a sliding window from a list of elements
 
 ### Internal Changes
 * Changed all relative imports to absolute imports with `__future__.absolute_import`
