@@ -1,5 +1,5 @@
 """
-The pipeline module contains the primary data structure Sequence and entry point seq
+The pipeline module contains the primary data structure of ScalaFunctional, Sequence
 """
 
 from __future__ import division, absolute_import
