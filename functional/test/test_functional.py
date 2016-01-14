@@ -35,7 +35,7 @@ class TestPipeline(unittest.TestCase):
         self.assert_not_type(seq(l).sequence)
         self.assert_type(seq(seq(l)))
         self.assert_not_type(seq(seq(l)).sequence)
-        self.assert_not_type(seq(l)._unwrap_sequence())
+        self.assert_not_type(seq(l)._base_sequence)
 
     def test_eq(self):
         l = [1, 2, 3]

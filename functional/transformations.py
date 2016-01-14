@@ -1,4 +1,3 @@
-# pylint: disable=redefined-builtin,missing-docstring,no-member,invalid-name
 from __future__ import absolute_import
 
 from functools import reduce, partial
@@ -18,7 +17,6 @@ Transformation = collections.namedtuple(
 
 
 class ExecutionStrategies(object):
-    # pylint: disable=too-few-public-methods
     """
     Enum like object listing the types of execution strategies
     """

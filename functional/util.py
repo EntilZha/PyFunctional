@@ -98,7 +98,7 @@ class ReusableFile(object):
     is useful for allowing a file object to be iterated over multiple times while keep evaluation
     lazy.
     """
-    # pylint: disable=too-few-public-methods,too-many-instance-attributes
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, path, delimiter=None, mode='r', buffering=-1, encoding=None,
                  errors=None, newline=None):
         """
@@ -112,7 +112,6 @@ class ReusableFile(object):
         :param newline: passed to open
         :return: ReusableFile from the arguments
         """
-        # pylint: disable=too-many-arguments
         self.path = path
         self.delimiter = delimiter
         self.mode = mode

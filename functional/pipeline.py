@@ -1,5 +1,3 @@
-# pylint: disable=too-many-lines,too-many-public-methods,protected-access,redefined-builtin,
-# pylint: disable=no-member
 """
 The pipeline module contains the primary data structure Sequence and entry point seq
 """
@@ -27,6 +25,7 @@ class Sequence(object):
     functional transformations and reductions in a data pipelining style
     """
     def __init__(self, sequence, transform=None):
+        # pylint: disable=protected-access
         """
         Takes a sequence and wraps it around a Sequence object.
 
@@ -44,7 +43,7 @@ class Sequence(object):
         :return: sequence wrapped in a Sequence
         """
         if isinstance(sequence, Sequence):
-            self._base_sequence = sequence._unwrap_sequence()
+            self._base_sequence = sequence._base_sequence
             self._lineage = Lineage(prior_lineage=sequence._lineage)
         elif isinstance(sequence, list) or isinstance(sequence, tuple) or is_iterable(sequence):
             self._base_sequence = sequence
@@ -53,15 +52,6 @@ class Sequence(object):
             raise TypeError("Given sequence must be an iterable value")
         if transform is not None:
             self._lineage.apply(transform)
-
-    def _unwrap_sequence(self):
-        """
-        Retrieves the root sequence wrapped by one or more Sequence objects.
-        Will not evaluate lineage, used internally in fetching lineage and the base sequence to use.
-
-        :return: root sequence
-        """
-        return self._base_sequence
 
     def __iter__(self):
         """
@@ -176,13 +166,19 @@ class Sequence(object):
         """
         return self._lineage.evaluate(self._base_sequence)
 
-    def _transform(self, transform):
+    def _transform(self, *transforms):
         """
         Copies the given Sequence and appends new transformation
-        :param transform: transform to apply
+        :param transform: transform to apply or list of transforms to apply
         :return: transformed sequence
         """
-        return Sequence(self, transform=transform)
+        sequence = None
+        for transform in transforms:
+            if sequence:
+                sequence = Sequence(sequence, transform=transform)
+            else:
+                sequence = Sequence(self, transform=transform)
+        return sequence
 
     @property
     def sequence(self):
@@ -369,8 +365,7 @@ class Sequence(object):
         :param n: number of elements to drop
         :return: sequence with last n elements dropped
         """
-        cached_sequence = self._transform(transformations.CACHE_T)
-        return cached_sequence._transform(transformations.drop_right_t(n))
+        return self._transform(transformations.CACHE_T, transformations.drop_right_t(n))
 
     def drop_while(self, func):
         """
@@ -1386,7 +1381,6 @@ class Sequence(object):
         :param errors: passed to builtins.open
         :param newline: passed to builtins.open
         """
-        # pylint: disable=too-many-arguments
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as output:
             if delimiter:

@@ -1,4 +1,3 @@
-# pylint: disable=redefined-builtin,too-many-arguments
 from __future__ import absolute_import
 
 import re
