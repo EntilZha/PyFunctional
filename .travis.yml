@@ -1,7 +1,8 @@
 language: python
+before_install:
+  - pip install codecov
 install:
   - pip install -q coverage
-  - pip install python-coveralls
   - pip install future
   - pip install pylint
 notifications:
@@ -20,4 +21,4 @@ python:
   - "pypy3"
 script: nosetests --with-coverage --cover-package=functional && pylint functional
 after_success:
-  - coveralls
+  - codecov
