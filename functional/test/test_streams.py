@@ -1,8 +1,9 @@
 from __future__ import absolute_import
 
-import unittest
-import six
 import sqlite3
+import unittest
+
+import six
 
 from functional import seq
 

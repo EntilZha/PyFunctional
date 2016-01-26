@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import re
 import csv as csvapi
 import json as jsonapi
-
 import sqlite3 as sqlite3api
 
 import future.builtins as builtins
@@ -80,8 +79,8 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
         raise ValueError('mode argument must be only have r, b, and t')
     if delimiter is None:
         return seq(
-                ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                             newline=newline))
+            ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                         newline=newline))
     else:
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as data:
