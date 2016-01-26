@@ -2,6 +2,8 @@ from __future__ import absolute_import
 
 import unittest
 import six
+import sqlite3
+
 from functional import seq
 
 
@@ -60,6 +62,34 @@ class TestStreams(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             seq.json(1)
+
+    def test_sqlite3(self):
+        db_file = 'functional/test/data/test_sqlite3.db'
+
+        # test select from file path
+        query_0 = "SELECT id, name FROM user;"
+        result_0 = seq.sqlite3(db_file, query_0).to_list()
+        expected_0 = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        self.assertListEqual(expected_0, result_0)
+
+        # test select from connection
+        conn = sqlite3.connect(db_file)
+        result_0_1 = seq.sqlite3(conn, query_0).to_list()
+        self.assertListEqual(expected_0, result_0_1)
+
+        # test select from cursor
+        cursor = conn.cursor()
+        result_0_2 = seq.sqlite3(cursor, query_0).to_list()
+        self.assertListEqual(expected_0, result_0_2)
+
+        # test order by
+        query_1 = "SELECT id, name FROM user ORDER BY name;"
+        result_1 = seq.sqlite3(cursor, query_1).to_list()
+        expected = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+        self.assertListEqual(expected, result_1)
+
+        with self.assertRaises(ValueError):
+            seq.sqlite3(1, query_0).to_list()
 
     def test_to_file(self):
         tmp_path = 'functional/test/data/tmp/output.txt'

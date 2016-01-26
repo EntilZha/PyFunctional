@@ -4,6 +4,8 @@ import re
 import csv as csvapi
 import json as jsonapi
 
+import sqlite3 as sqlite3api
+
 import future.builtins as builtins
 import six
 
@@ -78,8 +80,8 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
         raise ValueError('mode argument must be only have r, b, and t')
     if delimiter is None:
         return seq(
-            ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                         newline=newline))
+                ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                             newline=newline))
     else:
         with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                            newline=newline) as data:
@@ -174,8 +176,28 @@ def json(json_file):
         return seq(six.viewitems(json_input))
 
 
+def sqlite3(conn, sql):
+    """
+    Additional entry point to Sequence which query data from sqlite db file.
+
+    :param conn: path or sqlite connection, cursor
+    :param sql: SQL query string
+    :return: Sequence wrapping SQL cursor
+    """
+
+    if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
+        input_conn = conn
+    elif isinstance(conn, str):
+        input_conn = sqlite3api.connect(conn)
+    else:
+        raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
+
+    return seq(input_conn.execute(sql))
+
+
 seq.open = open
 seq.range = range
 seq.csv = csv
 seq.jsonl = jsonl
 seq.json = json
+seq.sqlite3 = sqlite3
