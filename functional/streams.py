@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import re
 import csv as csvapi
 import json as jsonapi
+import sqlite3 as sqlite3api
 
 import future.builtins as builtins
 import six
@@ -174,8 +175,33 @@ def json(json_file):
         return seq(six.viewitems(json_input))
 
 
+def sqlite3(conn, sql, parameters=None, *args, **kwargs):
+    """
+    Additional entry point to Sequence which query data from sqlite db file.
+
+    >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
+    [(1, "Tom")]
+
+    :param conn: path or sqlite connection, cursor
+    :param sql: SQL query string
+    :return: Sequence wrapping SQL cursor
+    """
+
+    if parameters is None:
+        parameters = ()
+
+    if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
+        return seq(conn.execute(sql, parameters))
+    elif isinstance(conn, str):
+        with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
+            return seq(input_conn.execute(sql, parameters))
+    else:
+        raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
+
+
 seq.open = open
 seq.range = range
 seq.csv = csv
 seq.jsonl = jsonl
 seq.json = json
+seq.sqlite3 = sqlite3

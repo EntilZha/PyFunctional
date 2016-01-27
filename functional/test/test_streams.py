@@ -1,7 +1,10 @@
 from __future__ import absolute_import
 
+import sqlite3
 import unittest
+
 import six
+
 from functional import seq
 
 
@@ -60,6 +63,47 @@ class TestStreams(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             seq.json(1)
+
+    def test_sqlite3(self):
+        db_file = 'functional/test/data/test_sqlite3.db'
+
+        # test failure case
+        with self.assertRaises(ValueError):
+            seq.sqlite3(1, "SELECT * from user").to_list()
+
+        # test select from file path
+        query_0 = "SELECT id, name FROM user;"
+        result_0 = seq.sqlite3(db_file, query_0).to_list()
+        expected_0 = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        self.assertListEqual(expected_0, result_0)
+
+        # test select from connection
+        with sqlite3.connect(db_file) as conn:
+            result_0_1 = seq.sqlite3(conn, query_0).to_list()
+            self.assertListEqual(expected_0, result_0_1)
+
+        # test select from cursor
+        with sqlite3.connect(db_file) as conn:
+            cursor = conn.cursor()
+            result_0_2 = seq.sqlite3(cursor, query_0).to_list()
+            self.assertListEqual(expected_0, result_0_2)
+
+        # test connection with kwds
+        result_0_3 = seq.sqlite3(db_file, query_0, timeout=30).to_list()
+        self.assertListEqual(expected_0, result_0_3)
+
+        # test order by
+        result_1 = seq.sqlite3(db_file,
+                               "SELECT id, name FROM user ORDER BY name;").to_list()
+        expected_1 = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+        self.assertListEqual(expected_1, result_1)
+
+        # test query with params
+        result_2 = seq.sqlite3(db_file,
+                               "SELECT id, name FROM user WHERE id = ?;",
+                               parameters=(1, )).to_list()
+        expected_2 = [(1, "Tom")]
+        self.assertListEqual(expected_2, result_2)
 
     def test_to_file(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
