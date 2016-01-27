@@ -164,11 +164,10 @@ In addition to the aggregate functions shown above (`sum` and `max_by`) there ar
 Similarly, there are several more set like functions in addition to `difference`.
 
 ### Querying to SQLite3
-`Scalafunctional` can submit SQL query to an SQLite3 DB file.
-In `examples/users.db`, several user ids and names are stored as SQLite3 DB.
-Below is examples of using SQLite3 function.
+`Scalafunctional` can submit a SQL query SQLite3 database files. In `examples/users.db`, users are stored as rows with
+columns `id:Int` and `name:String`. Below are examples of querying them through `seq.sqlite3`.
 
-```
+```python
 db_path = 'examples/users.csv'
 users = seq.sqlite3(db_path, 'select * from users;').to_list()
 # [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]]
@@ -179,8 +178,8 @@ sorted_users = seq.sqlite3(db_path, 'select * from users order by name;').to_lis
 
 
 ### Writing to files
-Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, and text files, it can also write
-them. For complete API documentation see the collections API table or the official docs.
+Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, and text files, it can also write them. For complete API
+documentation see the collections API table or the official docs.
 
 
 
@@ -400,5 +399,6 @@ Scala is not an option or Spark is overkill.
 These people have generously contributed their time to improving `ScalaFunctional`
 
 * [adrian17](https://github.com/adrian17)
+* [lucidfrontier45](https://github.com/lucidfrontier45)
 * [Digenis](https://github.com/Digenis)
 * [ChuyuHsu](https://github.com/ChuyuHsu)
