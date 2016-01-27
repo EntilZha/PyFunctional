@@ -179,6 +179,9 @@ def sqlite3(conn, sql, parameters=None, *args, **kwargs):
     """
     Additional entry point to Sequence which query data from sqlite db file.
 
+    >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
+    [(1, "Tom")]
+
     :param conn: path or sqlite connection, cursor
     :param sql: SQL query string
     :return: Sequence wrapping SQL cursor

@@ -163,6 +163,21 @@ missing_gear = gear_list.difference(purchased_list)
 In addition to the aggregate functions shown above (`sum` and `max_by`) there are many more.
 Similarly, there are several more set like functions in addition to `difference`.
 
+### Querying to SQLite3
+`Scalafunctional` can submit SQL query to an SQLite3 DB file.
+In `examples/users.db`, several user ids and names are stored as SQLite3 DB.
+Below is examples of using SQLite3 function.
+
+```
+db_path = 'examples/users.csv'
+users = seq.sqlite3(db_path, 'select * from users;').to_list()
+# [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]]
+
+sorted_users = seq.sqlite3(db_path, 'select * from users order by name;').to_list()
+# [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+```
+
+
 ### Writing to files
 Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, and text files, it can also write
 them. For complete API documentation see the collections API table or the official docs.
@@ -209,6 +224,9 @@ seq.jsonl('filepath')
 
 # csv file
 seq.csv('filepath')
+
+# sqlite3 db and sql query
+seq.sqlite3('filepath', 'select * from data')
 ```
 
 For more information on the parameters that these functions can take, reference the
