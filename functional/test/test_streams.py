@@ -78,30 +78,30 @@ class TestStreams(unittest.TestCase):
         self.assertListEqual(expected_0, result_0)
 
         # test select from connection
-        conn = sqlite3.connect(db_file)
-        result_0_1 = seq.sqlite3(conn, query_0).to_list()
-        self.assertListEqual(expected_0, result_0_1)
+        with sqlite3.connect(db_file) as conn:
+            result_0_1 = seq.sqlite3(conn, query_0).to_list()
+            self.assertListEqual(expected_0, result_0_1)
 
         # test select from cursor
-        cursor = conn.cursor()
-        result_0_2 = seq.sqlite3(cursor, query_0).to_list()
-        self.assertListEqual(expected_0, result_0_2)
+        with sqlite3.connect(db_file) as conn:
+            cursor = conn.cursor()
+            result_0_2 = seq.sqlite3(cursor, query_0).to_list()
+            self.assertListEqual(expected_0, result_0_2)
 
         # test connection with kwds
-        kwds = {"timeout": 30}
-        result_0_3 = seq.sqlite3(db_file, query_0, **kwds).to_list()
+        result_0_3 = seq.sqlite3(db_file, query_0, timeout=30).to_list()
         self.assertListEqual(expected_0, result_0_3)
 
         # test order by
-        query_1 = "SELECT id, name FROM user ORDER BY name;"
-        result_1 = seq.sqlite3(cursor, query_1).to_list()
+        result_1 = seq.sqlite3(db_file,
+                               "SELECT id, name FROM user ORDER BY name;").to_list()
         expected_1 = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
         self.assertListEqual(expected_1, result_1)
 
         # test query with params
-        query_2 = "SELECT id, name FROM user WHERE id = ?;"
-        params = (1, )
-        result_2 = seq.sqlite3(cursor, query_2, parameters=params).to_list()
+        result_2 = seq.sqlite3(db_file,
+                               "SELECT id, name FROM user WHERE id = ?;",
+                               parameters=(1, )).to_list()
         expected_2 = [(1, "Tom")]
         self.assertListEqual(expected_2, result_2)
 
