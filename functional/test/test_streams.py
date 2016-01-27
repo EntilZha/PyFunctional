@@ -67,6 +67,10 @@ class TestStreams(unittest.TestCase):
     def test_sqlite3(self):
         db_file = 'functional/test/data/test_sqlite3.db'
 
+        # test failure case
+        with self.assertRaises(ValueError):
+            seq.sqlite3(1, "SELECT * from user").to_list()
+
         # test select from file path
         query_0 = "SELECT id, name FROM user;"
         result_0 = seq.sqlite3(db_file, query_0).to_list()
@@ -83,14 +87,23 @@ class TestStreams(unittest.TestCase):
         result_0_2 = seq.sqlite3(cursor, query_0).to_list()
         self.assertListEqual(expected_0, result_0_2)
 
+        # test connection with kwds
+        kwds = {"timeout": 30}
+        result_0_3 = seq.sqlite3(db_file, query_0, **kwds).to_list()
+        self.assertListEqual(expected_0, result_0_3)
+
         # test order by
         query_1 = "SELECT id, name FROM user ORDER BY name;"
         result_1 = seq.sqlite3(cursor, query_1).to_list()
-        expected = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
-        self.assertListEqual(expected, result_1)
+        expected_1 = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+        self.assertListEqual(expected_1, result_1)
 
-        with self.assertRaises(ValueError):
-            seq.sqlite3(1, query_0).to_list()
+        # test query with params
+        query_2 = "SELECT id, name FROM user WHERE id = ?;"
+        params = (1, )
+        result_2 = seq.sqlite3(cursor, query_2, parameters=params).to_list()
+        expected_2 = [(1, "Tom")]
+        self.assertListEqual(expected_2, result_2)
 
     def test_to_file(self):
         tmp_path = 'functional/test/data/tmp/output.txt'

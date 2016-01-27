@@ -175,7 +175,7 @@ def json(json_file):
         return seq(six.viewitems(json_input))
 
 
-def sqlite3(conn, sql):
+def sqlite3(conn, sql, parameters=None, *args, **kwargs):
     """
     Additional entry point to Sequence which query data from sqlite db file.
 
@@ -184,14 +184,16 @@ def sqlite3(conn, sql):
     :return: Sequence wrapping SQL cursor
     """
 
+    if parameters is None:
+        parameters = ()
+
     if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
-        input_conn = conn
+        return seq(conn.execute(sql, parameters))
     elif isinstance(conn, str):
-        input_conn = sqlite3api.connect(conn)
+        with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
+            return seq(input_conn.execute(sql, parameters))
     else:
         raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
-
-    return seq(input_conn.execute(sql))
 
 
 seq.open = open
