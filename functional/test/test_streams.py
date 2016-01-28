@@ -156,7 +156,8 @@ class TestStreams(unittest.TestCase):
 
     def test_to_sqlite3_file(self):
         tmp_path = 'functional/test/data/tmp/output.db'
-        os.remove(tmp_path)
+        if os.path.isfile(tmp_path):
+            os.remove(tmp_path)
 
         with sqlite3.connect(tmp_path) as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
@@ -172,7 +173,8 @@ class TestStreams(unittest.TestCase):
 
     def test_to_sqlite3_connection(self):
         tmp_path = 'functional/test/data/tmp/output.db'
-        os.remove(tmp_path)
+        if os.path.isfile(tmp_path):
+            os.remove(tmp_path)
 
         with sqlite3.connect(tmp_path) as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
