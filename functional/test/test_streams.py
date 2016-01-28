@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import os
 import sqlite3
+import time
 import unittest
 
 import six
@@ -102,7 +103,7 @@ class TestStreams(unittest.TestCase):
         # test query with params
         result_2 = seq.sqlite3(db_file,
                                "SELECT id, name FROM user WHERE id = ?;",
-                               parameters=(1, )).to_list()
+                               parameters=(1,)).to_list()
         expected_2 = [(1, "Tom")]
         self.assertListEqual(expected_2, result_2)
 
@@ -155,9 +156,7 @@ class TestStreams(unittest.TestCase):
             seq(elements).to_sqlite3(1, insert_sql)
 
     def test_to_sqlite3_file(self):
-        tmp_path = 'functional/test/data/tmp/output.db'
-        if os.path.isfile(tmp_path):
-            os.remove(tmp_path)
+        tmp_path = 'functional/test/data/tmp/{}.db'.format(time.time())
 
         with sqlite3.connect(tmp_path) as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
@@ -171,20 +170,17 @@ class TestStreams(unittest.TestCase):
         result = seq.sqlite3(tmp_path, "SELECT id, name FROM user;").to_list()
         self.assertListEqual(elements, result)
 
-    def test_to_sqlite3_connection(self):
-        tmp_path = 'functional/test/data/tmp/output.db'
-        if os.path.isfile(tmp_path):
-            os.remove(tmp_path)
+        os.remove(tmp_path)
 
-        with sqlite3.connect(tmp_path) as conn:
+    def test_to_sqlite3_connection(self):
+        with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
 
-        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+            insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
+            elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test insert into a connection
-        with sqlite3.connect(tmp_path) as conn:
+            # test insert into a connection
             seq(elements).to_sqlite3(conn, insert_sql)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
