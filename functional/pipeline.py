@@ -10,6 +10,7 @@ from functools import reduce
 
 import json
 import csv
+import sqlite3
 
 import six
 import future.builtins as builtins
@@ -1430,6 +1431,27 @@ class Sequence(object):
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
+
+    def to_sqlite3(self, conn, sql, *args, **kwargs):
+        """
+        Saves the sequence to sqlite3 database.
+        Each element should be an iterable which will be expanded
+        to the elements of each row. Target table must be created in advance.
+
+        :param conn: path or sqlite connection, cursor
+        :param sql: SQL query string
+        :param args: passed to sqlite3.connect
+        :param kwargs: passed to sqlite3.connect
+        """
+        if isinstance(conn, (sqlite3.Connection, sqlite3.Cursor)):
+            conn.executemany(sql, self)
+            conn.commit()
+        elif isinstance(conn, str):
+            with sqlite3.connect(conn, *args, **kwargs) as input_conn:
+                input_conn.executemany(sql, self)
+                input_conn.commit()
+        else:
+            raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
 
 
 def _wrap(value):

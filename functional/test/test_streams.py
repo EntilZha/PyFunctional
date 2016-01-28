@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import os
 import sqlite3
 import unittest
 
@@ -145,3 +146,43 @@ class TestStreams(unittest.TestCase):
         sequence.to_csv(tmp_path)
         result = seq.csv(tmp_path).to_list()
         self.assertEqual(expect, result)
+
+    def test_to_sqlite3_failure(self):
+        # test failure case
+        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        with self.assertRaises(ValueError):
+            seq(elements).to_sqlite3(1, insert_sql)
+
+    def test_to_sqlite3_file(self):
+        tmp_path = 'functional/test/data/tmp/output.db'
+        os.remove(tmp_path)
+
+        with sqlite3.connect(tmp_path) as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+
+        # test insert into a file
+        seq(elements).to_sqlite3(tmp_path, insert_sql)
+        result = seq.sqlite3(tmp_path, "SELECT id, name FROM user;").to_list()
+        self.assertListEqual(elements, result)
+
+    def test_to_sqlite3_connection(self):
+        tmp_path = 'functional/test/data/tmp/output.db'
+        os.remove(tmp_path)
+
+        with sqlite3.connect(tmp_path) as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+
+        # test insert into a connection
+        with sqlite3.connect(tmp_path) as conn:
+            seq(elements).to_sqlite3(tmp_path, insert_sql)
+            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            self.assertListEqual(elements, result)
