@@ -185,6 +185,6 @@ class TestStreams(unittest.TestCase):
 
         # test insert into a connection
         with sqlite3.connect(tmp_path) as conn:
-            seq(elements).to_sqlite3(tmp_path, insert_sql)
+            seq(elements).to_sqlite3(conn, insert_sql)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
