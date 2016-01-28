@@ -8,7 +8,10 @@
 ## Introduction
 `ScalaFunctional` is a Python package that makes working with data easy. It takes inspiration from
 several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. The combination of these ideas makes `ScalaFunctional` a great choice
+functional programming. It also offers native reading and writing of data formats such as text, csv, and json files.
+Support for SQLite3, other databases, and compressed files is planned.
+
+The combination of these ideas makes `ScalaFunctional` a great choice
 for declarative transformation and analysis of data.
 
 [Original blog post for ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
