@@ -173,14 +173,24 @@ class TestStreams(unittest.TestCase):
         os.remove(tmp_path)
 
     def test_to_sqlite3_connection(self):
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+
+        # test insert tuples into a connection
         with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
 
             insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
-            elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
-
-            # test insert into a connection
             seq(elements).to_sqlite3(conn, insert_sql)
+            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            self.assertListEqual(elements, result)
+
+        # test insert dicts into a connection
+        with sqlite3.connect(":memory:") as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+            table_name = "user"
+            seq(elements).map(lambda x: {"id": x[0], "name": x[1]}).to_sqlite3(conn, table_name)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)

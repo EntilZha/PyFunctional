@@ -11,6 +11,7 @@ from functools import reduce
 import json
 import csv
 import sqlite3
+import re
 
 import six
 import future.builtins as builtins
@@ -1432,7 +1433,7 @@ class Sequence(object):
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
 
-    def to_sqlite3(self, conn, sql, *args, **kwargs):
+    def _to_sqlite3_tuple(self, conn, sql):
         """
         Saves the sequence to sqlite3 database.
         Each element should be an iterable which will be expanded
@@ -1440,15 +1441,50 @@ class Sequence(object):
 
         :param conn: path or sqlite connection, cursor
         :param sql: SQL query string
+        """
+        conn.executemany(sql, self)
+
+    def _to_sqlite3_dict(self, conn, table_name):
+        """
+        Saves the sequence to sqlite3 database.
+        Each element should be a dictionary whose key exists in the target table as as a column.
+        Target table must be created in advance.
+
+        :param conn: path or sqlite connection, cursor
+        :param table_name: table name string
+        """
+        def _make_query(items):
+            cols = ', '.join(items.keys())
+            placeholders = ', '.join('?' * len(items))
+            sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
+            return sql
+
+        self.for_each(lambda d: conn.execute(_make_query(d), tuple(d.values())))
+
+    def to_sqlite3(self, conn, target, *args, **kwargs):
+        """
+        Saves the sequence to sqlite3 database.
+        Target table must be created in advance.
+
+        :param conn: path or sqlite connection, cursor
+        :param target: SQL query string or table name
         :param args: passed to sqlite3.connect
         :param kwargs: passed to sqlite3.connect
         """
+        insert_regex = re.compile('(insert|update) +into', flags=re.IGNORECASE)
+        if insert_regex.match(target) is not None:
+            # target is an insertion sql query
+            insert_f = self._to_sqlite3_tuple
+        else:
+            # target is table name
+            insert_f = self._to_sqlite3_dict
+
         if isinstance(conn, (sqlite3.Connection, sqlite3.Cursor)):
-            conn.executemany(sql, self)
+            insert_f(conn, target)
             conn.commit()
         elif isinstance(conn, str):
             with sqlite3.connect(conn, *args, **kwargs) as input_conn:
-                input_conn.executemany(sql, self)
+                insert_f(input_conn, target)
                 input_conn.commit()
         else:
             raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
