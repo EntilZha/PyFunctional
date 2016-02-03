@@ -1433,7 +1433,7 @@ class Sequence(object):
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
 
-    def _to_sqlite3_tuple(self, conn, sql):
+    def _to_sqlite3_by_query(self, conn, sql):
         """
         Saves the sequence to sqlite3 database.
         Each element should be an iterable which will be expanded
@@ -1444,7 +1444,7 @@ class Sequence(object):
         """
         conn.executemany(sql, self)
 
-    def _to_sqlite3_dict(self, conn, table_name):
+    def _to_sqlite3_by_table(self, conn, table_name):
         """
         Saves the sequence to sqlite3 database.
         Each element should be a dictionary whose key exists in the target table as as a column.
@@ -1453,13 +1453,28 @@ class Sequence(object):
         :param conn: path or sqlite connection, cursor
         :param table_name: table name string
         """
-        def _make_query(items):
-            cols = ', '.join(items.keys())
-            placeholders = ', '.join('?' * len(items))
-            sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
-            return sql
 
-        self.for_each(lambda d: conn.execute(_make_query(d), tuple(d.values())))
+
+        def _insert_item(item):
+            if isinstance(item, dict):
+                cols = ', '.join(item.keys())
+                placeholders = ', '.join('?' * len(item))
+                sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
+                conn.execute(sql, tuple(item.values()))
+            elif is_namedtuple(item):
+                cols = ", ".join(item._fields)
+                placeholders = ', '.join('?' * len(item))
+                sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
+                conn.execute(sql, item)
+            elif isinstance(item, (list, tuple)):
+                placeholders = ', '.join('?' * len(item))
+                sql = 'INSERT INTO {} VALUES ({})'.format(table_name, placeholders)
+                conn.execute(sql, item)
+            else:
+                raise TypeError("item must be either dict or namedtuple, got {}".format(type(item)))
+
+
+        self.for_each(_insert_item)
 
     def to_sqlite3(self, conn, target, *args, **kwargs):
         """
@@ -1471,13 +1486,13 @@ class Sequence(object):
         :param args: passed to sqlite3.connect
         :param kwargs: passed to sqlite3.connect
         """
-        insert_regex = re.compile('(insert|update) +into', flags=re.IGNORECASE)
-        if insert_regex.match(target) is not None:
+        insert_regex = re.compile(r'(insert|update)\s+into', flags=re.IGNORECASE)
+        if insert_regex.match(target):
             # target is an insertion sql query
-            insert_f = self._to_sqlite3_tuple
+            insert_f = self._to_sqlite3_by_query
         else:
             # target is table name
-            insert_f = self._to_sqlite3_dict
+            insert_f = self._to_sqlite3_by_table
 
         if isinstance(conn, (sqlite3.Connection, sqlite3.Cursor)):
             insert_f(conn, target)

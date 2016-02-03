@@ -4,6 +4,7 @@ import os
 import sqlite3
 import time
 import unittest
+import collections
 
 import six
 
@@ -172,10 +173,10 @@ class TestStreams(unittest.TestCase):
 
         os.remove(tmp_path)
 
-    def test_to_sqlite3_connection(self):
+    def test_to_sqlite3_query(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test insert tuples into a connection
+        # test insert tuples by query
         with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
@@ -184,6 +185,36 @@ class TestStreams(unittest.TestCase):
             seq(elements).to_sqlite3(conn, insert_sql)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
+
+    def test_to_sqlite3_tuple(self):
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+
+        # test isnert tuples by table name
+        with sqlite3.connect(":memory:") as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+            table_name = "user"
+            seq(elements).to_sqlite3(conn, table_name)
+            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            self.assertListEqual(elements, result)
+
+    def test_to_sqlite3_namedtuple(self):
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        user = collections.namedtuple("user", ["id", "name"])
+
+        # test isnert namedtuples by table name
+        with sqlite3.connect(":memory:") as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+            table_name = "user"
+            seq(elements).map(lambda u: user(*u)).to_sqlite3(conn, table_name)
+            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            self.assertListEqual(elements, result)
+
+    def test_to_sqlite3_dict(self):
+        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
         # test insert dicts into a connection
         with sqlite3.connect(":memory:") as conn:
@@ -194,3 +225,14 @@ class TestStreams(unittest.TestCase):
             seq(elements).map(lambda x: {"id": x[0], "name": x[1]}).to_sqlite3(conn, table_name)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
+
+    def test_to_sqlite3_typerror(self):
+        elements = [1, 2, 3]
+        with sqlite3.connect(":memory:") as conn:
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+            table_name = "user"
+            with self.assertRaises(TypeError):
+                seq(elements).to_sqlite3(conn, table_name)
+
