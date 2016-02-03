@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-import os
 import sqlite3
 import time
 import unittest
@@ -157,9 +156,10 @@ class TestStreams(unittest.TestCase):
             seq(elements).to_sqlite3(1, insert_sql)
 
     def test_to_sqlite3_file(self):
-        tmp_path = 'functional/test/data/tmp/{}.db'.format(time.time())
+        tmp_path = 'functional/test/data/tmp/test.db'
 
         with sqlite3.connect(tmp_path) as conn:
+            conn.execute("DROP TABLE IF EXISTS user;")
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
 
@@ -171,7 +171,6 @@ class TestStreams(unittest.TestCase):
         result = seq.sqlite3(tmp_path, "SELECT id, name FROM user;").to_list()
         self.assertListEqual(elements, result)
 
-        os.remove(tmp_path)
 
     def test_to_sqlite3_query(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
