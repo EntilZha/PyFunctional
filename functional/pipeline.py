@@ -1477,9 +1477,11 @@ class Sequence(object):
         """
         Saves the sequence to sqlite3 database.
         Target table must be created in advance.
-        The table schema is inferred from the elements in the sequence if only target table name is supplied.
+        The table schema is inferred from the elements in the sequence
+        if only target table name is supplied.
 
-        >>> seq([(1, 'Tom'), (2, 'Jack')]).to_sqlite3('users.db', 'INSERT INTO user (id, name) VALUES (?, ?)')
+        >>> seq([(1, 'Tom'), (2, 'Jack')])\
+                .to_sqlite3('users.db', 'INSERT INTO user (id, name) VALUES (?, ?)')
 
         >>> seq([{'id': 1, 'name': 'Tom'}, {'id': 2, 'name': 'Jack'}]).to_sqlite3(conn, 'user')
 
