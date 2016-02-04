@@ -1435,7 +1435,7 @@ class Sequence(object):
 
     def _to_sqlite3_by_query(self, conn, sql):
         """
-        Saves the sequence to sqlite3 database.
+        Saves the sequence to sqlite3 database by supplied query.
         Each element should be an iterable which will be expanded
         to the elements of each row. Target table must be created in advance.
 
@@ -1446,15 +1446,13 @@ class Sequence(object):
 
     def _to_sqlite3_by_table(self, conn, table_name):
         """
-        Saves the sequence to sqlite3 database.
-        Each element should be a dictionary whose key exists in the target table as as a column.
+        Saves the sequence to the specified table of sqlite3 database.
+        Each element can be a dictionary, namedtuple, tuple or list.
         Target table must be created in advance.
 
         :param conn: path or sqlite connection, cursor
         :param table_name: table name string
         """
-
-
         def _insert_item(item):
             if isinstance(item, dict):
                 cols = ', '.join(item.keys())
@@ -1473,7 +1471,6 @@ class Sequence(object):
             else:
                 raise TypeError("item must be either dict or namedtuple, got {}".format(type(item)))
 
-
         self.for_each(_insert_item)
 
     def to_sqlite3(self, conn, target, *args, **kwargs):
@@ -1488,10 +1485,8 @@ class Sequence(object):
         """
         insert_regex = re.compile(r'(insert|update)\s+into', flags=re.IGNORECASE)
         if insert_regex.match(target):
-            # target is an insertion sql query
             insert_f = self._to_sqlite3_by_query
         else:
-            # target is table name
             insert_f = self._to_sqlite3_by_table
 
         if isinstance(conn, (sqlite3.Connection, sqlite3.Cursor)):

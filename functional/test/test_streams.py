@@ -148,7 +148,6 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(expect, result)
 
     def test_to_sqlite3_failure(self):
-        # test failure case
         insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
         with self.assertRaises(ValueError):
@@ -165,16 +164,13 @@ class TestStreams(unittest.TestCase):
         insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test insert into a file
         seq(elements).to_sqlite3(tmp_path, insert_sql)
         result = seq.sqlite3(tmp_path, "SELECT id, name FROM user;").to_list()
         self.assertListEqual(elements, result)
 
-
     def test_to_sqlite3_query(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test insert tuples by query
         with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
@@ -187,7 +183,6 @@ class TestStreams(unittest.TestCase):
     def test_to_sqlite3_tuple(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test isnert tuples by table name
         with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
@@ -199,22 +194,34 @@ class TestStreams(unittest.TestCase):
 
     def test_to_sqlite3_namedtuple(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
-        user = collections.namedtuple("user", ["id", "name"])
 
-        # test isnert namedtuples by table name
+        # test namedtuple with the same order as column
         with sqlite3.connect(":memory:") as conn:
+            user = collections.namedtuple("user", ["id", "name"])
+
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
 
             table_name = "user"
-            seq(elements).map(lambda u: user(*u)).to_sqlite3(conn, table_name)
+            seq(elements).map(lambda u: user(u[0], u[1])).to_sqlite3(conn, table_name)
+            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            self.assertListEqual(elements, result)
+
+        # test namedtuple with different order
+        with sqlite3.connect(":memory:") as conn:
+            user = collections.namedtuple("user", ["name", "id"])
+
+            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.commit()
+
+            table_name = "user"
+            seq(elements).map(lambda u: user(u[1], u[0])).to_sqlite3(conn, table_name)
             result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
 
     def test_to_sqlite3_dict(self):
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
 
-        # test insert dicts into a connection
         with sqlite3.connect(":memory:") as conn:
             conn.execute("CREATE TABLE user (id INT, name TEXT);")
             conn.commit()
