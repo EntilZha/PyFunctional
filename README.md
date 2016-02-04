@@ -167,7 +167,7 @@ In addition to the aggregate functions shown above (`sum` and `max_by`) there ar
 Similarly, there are several more set like functions in addition to `difference`.
 
 ### Querying to SQLite3
-`Scalafunctional` can submit a SQL query SQLite3 database files. In `examples/users.db`, users are stored as rows with
+`Scalafunctional` can submit a SQL query to SQLite3 database files. In `examples/users.db`, users are stored as rows with
 columns `id:Int` and `name:String`. Below are examples of querying them through `seq.sqlite3`.
 
 ```python
@@ -181,7 +181,7 @@ sorted_users = seq.sqlite3(db_path, 'select * from users order by name;').to_lis
 
 
 ### Writing to files
-Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, and text files, it can also write them. For complete API
+Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can also write them. For complete API
 documentation see the collections API table or the official docs.
 
 
@@ -308,6 +308,7 @@ Function | Description | Type
 `to_csv(path)` | Saves the sequence to a csv file at path with each element representing a row | action
 `to_jsonl(path)` | Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line | action
 `to_json(path)` | Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary | action
+`to_sqlite3(conn, tablename_or_query, *args, **kwargs)` | Save the sequence to a SQLite3 db. The target table must be created in advance. | action
 `cache()` | Forces evaluation of sequence immediately and caches the result | action
 `for_each(func)` | Executes `func` on each element of the sequence | action
 
