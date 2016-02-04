@@ -1469,7 +1469,8 @@ class Sequence(object):
                 sql = 'INSERT INTO {} VALUES ({})'.format(table_name, placeholders)
                 conn.execute(sql, item)
             else:
-                raise TypeError('item must be either dict or namedtuple, got {}'.format(type(item)))
+                raise TypeError('item must be one of dict, namedtuple, tuple or list got {}'
+                                .format(type(item)))
 
         self.for_each(_insert_item)
 
