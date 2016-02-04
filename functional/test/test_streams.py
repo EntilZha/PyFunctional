@@ -70,12 +70,12 @@ class TestStreams(unittest.TestCase):
 
         # test failure case
         with self.assertRaises(ValueError):
-            seq.sqlite3(1, "SELECT * from user").to_list()
+            seq.sqlite3(1, 'SELECT * from user').to_list()
 
         # test select from file path
-        query_0 = "SELECT id, name FROM user;"
+        query_0 = 'SELECT id, name FROM user;'
         result_0 = seq.sqlite3(db_file, query_0).to_list()
-        expected_0 = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        expected_0 = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
         self.assertListEqual(expected_0, result_0)
 
         # test select from connection
@@ -95,15 +95,15 @@ class TestStreams(unittest.TestCase):
 
         # test order by
         result_1 = seq.sqlite3(db_file,
-                               "SELECT id, name FROM user ORDER BY name;").to_list()
-        expected_1 = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+                               'SELECT id, name FROM user ORDER BY name;').to_list()
+        expected_1 = [(2, 'Jack'), (3, 'Jane'), (4, 'Stephan'), (1, 'Tom')]
         self.assertListEqual(expected_1, result_1)
 
         # test query with params
         result_2 = seq.sqlite3(db_file,
-                               "SELECT id, name FROM user WHERE id = ?;",
+                               'SELECT id, name FROM user WHERE id = ?;',
                                parameters=(1,)).to_list()
-        expected_2 = [(1, "Tom")]
+        expected_2 = [(1, 'Tom')]
         self.assertListEqual(expected_2, result_2)
 
     def test_to_file(self):
@@ -113,7 +113,7 @@ class TestStreams(unittest.TestCase):
         with open(tmp_path, 'r') as output:
             self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
 
-        sequence.to_file(tmp_path, delimiter=":")
+        sequence.to_file(tmp_path, delimiter=':')
         with open(tmp_path, 'r') as output:
             self.assertEqual('1:2:3:4', output.readlines()[0])
 
@@ -148,8 +148,8 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(expect, result)
 
     def test_to_sqlite3_failure(self):
-        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        insert_sql = 'INSERT INTO user (id, name) VALUES (?, ?)'
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
         with self.assertRaises(ValueError):
             seq(elements).to_sqlite3(1, insert_sql)
 
@@ -157,87 +157,87 @@ class TestStreams(unittest.TestCase):
         tmp_path = 'functional/test/data/tmp/test.db'
 
         with sqlite3.connect(tmp_path) as conn:
-            conn.execute("DROP TABLE IF EXISTS user;")
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.execute('DROP TABLE IF EXISTS user;')
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-        insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        insert_sql = 'INSERT INTO user (id, name) VALUES (?, ?)'
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
         seq(elements).to_sqlite3(tmp_path, insert_sql)
-        result = seq.sqlite3(tmp_path, "SELECT id, name FROM user;").to_list()
+        result = seq.sqlite3(tmp_path, 'SELECT id, name FROM user;').to_list()
         self.assertListEqual(elements, result)
 
     def test_to_sqlite3_query(self):
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
-        with sqlite3.connect(":memory:") as conn:
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+        with sqlite3.connect(':memory:') as conn:
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
+            insert_sql = 'INSERT INTO user (id, name) VALUES (?, ?)'
             seq(elements).to_sqlite3(conn, insert_sql)
-            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            result = seq.sqlite3(conn, 'SELECT id, name FROM user;').to_list()
             self.assertListEqual(elements, result)
 
     def test_to_sqlite3_tuple(self):
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
-        with sqlite3.connect(":memory:") as conn:
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+        with sqlite3.connect(':memory:') as conn:
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            table_name = "user"
+            table_name = 'user'
             seq(elements).to_sqlite3(conn, table_name)
-            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            result = seq.sqlite3(conn, 'SELECT id, name FROM user;').to_list()
             self.assertListEqual(elements, result)
 
     def test_to_sqlite3_namedtuple(self):
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
         # test namedtuple with the same order as column
-        with sqlite3.connect(":memory:") as conn:
-            user = collections.namedtuple("user", ["id", "name"])
+        with sqlite3.connect(':memory:') as conn:
+            user = collections.namedtuple('user', ['id', 'name'])
 
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            table_name = "user"
+            table_name = 'user'
             seq(elements).map(lambda u: user(u[0], u[1])).to_sqlite3(conn, table_name)
-            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            result = seq.sqlite3(conn, 'SELECT id, name FROM user;').to_list()
             self.assertListEqual(elements, result)
 
         # test namedtuple with different order
-        with sqlite3.connect(":memory:") as conn:
-            user = collections.namedtuple("user", ["name", "id"])
+        with sqlite3.connect(':memory:') as conn:
+            user = collections.namedtuple('user', ['name', 'id'])
 
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            table_name = "user"
+            table_name = 'user'
             seq(elements).map(lambda u: user(u[1], u[0])).to_sqlite3(conn, table_name)
-            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            result = seq.sqlite3(conn, 'SELECT id, name FROM user;').to_list()
             self.assertListEqual(elements, result)
 
     def test_to_sqlite3_dict(self):
-        elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
+        elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
-        with sqlite3.connect(":memory:") as conn:
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+        with sqlite3.connect(':memory:') as conn:
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            table_name = "user"
-            seq(elements).map(lambda x: {"id": x[0], "name": x[1]}).to_sqlite3(conn, table_name)
-            result = seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
+            table_name = 'user'
+            seq(elements).map(lambda x: {'id': x[0], 'name': x[1]}).to_sqlite3(conn, table_name)
+            result = seq.sqlite3(conn, 'SELECT id, name FROM user;').to_list()
             self.assertListEqual(elements, result)
 
     def test_to_sqlite3_typerror(self):
         elements = [1, 2, 3]
-        with sqlite3.connect(":memory:") as conn:
-            conn.execute("CREATE TABLE user (id INT, name TEXT);")
+        with sqlite3.connect(':memory:') as conn:
+            conn.execute('CREATE TABLE user (id INT, name TEXT);')
             conn.commit()
 
-            table_name = "user"
+            table_name = 'user'
             with self.assertRaises(TypeError):
                 seq(elements).to_sqlite3(conn, table_name)
 

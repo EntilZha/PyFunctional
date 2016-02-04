@@ -1460,7 +1460,7 @@ class Sequence(object):
                 sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
                 conn.execute(sql, tuple(item.values()))
             elif is_namedtuple(item):
-                cols = ", ".join(item._fields)
+                cols = ', '.join(item._fields)
                 placeholders = ', '.join('?' * len(item))
                 sql = 'INSERT INTO {} ({}) VALUES ({})'.format(table_name, cols, placeholders)
                 conn.execute(sql, item)
@@ -1469,7 +1469,7 @@ class Sequence(object):
                 sql = 'INSERT INTO {} VALUES ({})'.format(table_name, placeholders)
                 conn.execute(sql, item)
             else:
-                raise TypeError("item must be either dict or namedtuple, got {}".format(type(item)))
+                raise TypeError('item must be either dict or namedtuple, got {}'.format(type(item)))
 
         self.for_each(_insert_item)
 
