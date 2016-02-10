@@ -1508,6 +1508,7 @@ class Sequence(object):
             raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
 
     def to_pandas(self, columns=None):
+        # pylint: disable=import-error
         """
         Converts sequence to a pandas DataFrame using pandas.DataFrame.from_records
 

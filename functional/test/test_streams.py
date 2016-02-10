@@ -242,7 +242,7 @@ class TestStreams(unittest.TestCase):
                 seq(elements).to_sqlite3(conn, table_name)
 
     def test_to_pandas(self):
-        # pylint: disable=superfluous-parens, import-error
+        # pylint: disable=superfluous-parens
         try:
             import pandas as pd
             elements = [(1, 'a'), (2, 'b'), (3, 'c')]
