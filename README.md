@@ -8,8 +8,9 @@
 ## Introduction
 `ScalaFunctional` is a Python package that makes working with data easy. It takes inspiration from
 several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. It also offers native reading and writing of data formats such as text, csv, and json files.
-Support for SQLite3, other databases, and compressed files is planned.
+functional programming. It also offers native reading and writing of data formats such as text, csv,
+and json files. Support for SQLite3, other databases, and compressed files is planned for the next
+release.
 
 The combination of these ideas makes `ScalaFunctional` a great choice
 for declarative transformation and analysis of data.
@@ -17,7 +18,8 @@ for declarative transformation and analysis of data.
 [Original blog post for ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
 
 ## Installation
-`ScalaFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be installed by running:
+`ScalaFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be
+installed by running:
 ```bash
 # Install from command line
 $ pip install scalafunctional
@@ -44,8 +46,10 @@ seq(1, 2, 3, 4)\
 `ScalaFunctional` has three types of functions:
 
 1. Streams: read data for use by the collections API.
-2. Transformations: transform data from streams with functions such as `map`, `flat_map`, and `filter`
-3. Actions: These cause a series of transformations to evaluate to a concrete value. `to_list`, `reduce`, and `to_dict` are examples of actions.
+2. Transformations: transform data from streams with functions such as `map`, `flat_map`, and
+`filter`
+3. Actions: These cause a series of transformations to evaluate to a concrete value. `to_list`,
+`reduce`, and `to_dict` are examples of actions.
 
 In the expression `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`, `seq` is the
 stream, `map` is the transformation, and `reduce` is the action.
@@ -146,8 +150,8 @@ data = users.inner_join(message_tuples)
 ```
 
 ### CSV, Aggregate Functions, and Set functions
-In `examples/camping_purchases.csv` there are a list of camping purchases. Lets do some cost analysis and
-compare it the required camping gear list stored in `examples/gear_list.txt`.
+In `examples/camping_purchases.csv` there are a list of camping purchases. Lets do some cost
+analysis and compare it the required camping gear list stored in `examples/gear_list.txt`.
 
 ```python
 purchases = seq.csv('examples/camping_purchases.csv')
@@ -166,23 +170,51 @@ missing_gear = gear_list.difference(purchased_list)
 In addition to the aggregate functions shown above (`sum` and `max_by`) there are many more.
 Similarly, there are several more set like functions in addition to `difference`.
 
-### Querying to SQLite3
-`Scalafunctional` can submit a SQL query to SQLite3 database files. In `examples/users.db`, users are stored as rows with
-columns `id:Int` and `name:String`. Below are examples of querying them through `seq.sqlite3`.
+### Reading/Writing SQLite3
+`Scalafunctional` can read and write to SQLite3 database files. In the example below, users are read
+ from `examples/users.db` which stores them as rows with columns `id:Int` and `name:String`.
 
 ```python
-db_path = 'examples/users.csv'
-users = seq.sqlite3(db_path, 'select * from users;').to_list()
+db_path = 'examples/users.db'
+users = seq.sqlite3(db_path, 'select * from user').to_list()
 # [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]]
 
-sorted_users = seq.sqlite3(db_path, 'select * from users order by name;').to_list()
+sorted_users = seq.sqlite3(db_path, 'select * from user order by name').to_list()
 # [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
 ```
 
+Writing to a SQLite3 database is similarly easy
+
+```python
+import sqlite3
+from collections import namedtuple
+
+with sqlite3.connect(':memory:') as conn:
+    conn.execute('CREATE TABLE user (id INT, name TEXT)')
+    conn.commit()
+    User = namedtuple('User', 'id name')
+    
+    # Write using a specific query
+    seq([(1, 'pedro'), (2, 'fritz')]).to_sqlite3(conn, 'INSERT INTO user (id, name) VALUES (?, ?)')
+    
+    # Write by inserting values positionally from a tuple/list into named table
+    seq([(3, 'sam'), (4, 'stan')]).to_sqlite3(conn, 'user')
+    
+    # Write by inferring schema from namedtuple
+    seq([User(name='tom', id=5), User(name='keiga', id=6)]).to_sqlite3(conn, 'user')
+    
+    # Write by inferring schema from dict
+    seq([dict(name='david', id=7), dict(name='jordan', id=8)]).to_sqlite3(conn, 'user')
+    
+    # Read everything back to make sure it wrote correctly
+    print(list(conn.execute('SELECT * FROM user')))
+    
+    # [(1, 'pedro'), (2, 'fritz'), (3, 'sam'), (4, 'stan'), (5, 'tom'), (6, 'keiga'), (7, 'david'), (8, 'jordan')]
+```
 
 ### Writing to files
-Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can also write them. For complete API
-documentation see the collections API table or the official docs.
+Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
+also write them. For complete API documentation see the collections API table or the official docs.
 
 
 

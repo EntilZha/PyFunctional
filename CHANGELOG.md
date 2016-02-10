@@ -1,5 +1,6 @@
 # Changelog
 ## Next Release
+* Added support for reading to and from SQLite databases
 
 ## Release 0.5.0
 ### New Features
