@@ -241,3 +241,21 @@ class TestStreams(unittest.TestCase):
             with self.assertRaises(TypeError):
                 seq(elements).to_sqlite3(conn, table_name)
 
+    def test_to_pandas(self):
+        try:
+            import pandas as pd
+            elements = [(1, 'a'), (2, 'b'), (3, 'c')]
+            df_expect = pd.DataFrame.from_records(elements)
+            df_seq = seq(elements).to_pandas()
+            self.assertTrue(df_seq.equals(df_expect))
+
+            df_expect = pd.DataFrame.from_records(elements, columns=['id', 'name'])
+            df_seq = seq(elements).to_pandas(columns=['id', 'name'])
+            self.assertTrue(df_seq.equals(df_expect))
+
+            elements = [dict(id=1, name='a'), dict(id=2, name='b'), dict(id=3, name='c')]
+            df_expect = pd.DataFrame.from_records(elements)
+            df_seq = seq(elements).to_pandas()
+            self.assertTrue(df_seq.equals(df_expect))
+        except ImportError:
+            print('pandas not installed, skipping unit test')

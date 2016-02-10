@@ -13,7 +13,7 @@ and json files. Support for SQLite3, other databases, and compressed files is pl
 release.
 
 The combination of these ideas makes `ScalaFunctional` a great choice
-for declarative transformation and analysis of data.
+for declarative transformation, creating pipelines, and data analysis.
 
 [Original blog post for ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
 
@@ -177,10 +177,10 @@ Similarly, there are several more set like functions in addition to `difference`
 ```python
 db_path = 'examples/users.db'
 users = seq.sqlite3(db_path, 'select * from user').to_list()
-# [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]]
+# [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]]
 
 sorted_users = seq.sqlite3(db_path, 'select * from user order by name').to_list()
-# [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
+# [(2, 'Jack'), (3, 'Jane'), (4, 'Stephan'), (1, 'Tom')]
 ```
 
 Writing to a SQLite3 database is similarly easy
@@ -341,6 +341,7 @@ Function | Description | Type
 `to_jsonl(path)` | Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line | action
 `to_json(path)` | Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary | action
 `to_sqlite3(conn, tablename_or_query, *args, **kwargs)` | Save the sequence to a SQLite3 db. The target table must be created in advance. | action
+`to_pandas(columns=None)` | Converts the sequence to a pandas DataFrame | action
 `cache()` | Forces evaluation of sequence immediately and caches the result | action
 `for_each(func)` | Executes `func` on each element of the sequence | action
 

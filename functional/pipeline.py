@@ -1507,6 +1507,16 @@ class Sequence(object):
         else:
             raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
 
+    def to_pandas(self, columns=None):
+        """
+        Converts sequence to a pandas DataFrame using pandas.DataFrame.from_records
+
+        :param columns: columns for pandas to use
+        :return: DataFrame of sequence
+        """
+        import pandas
+        return pandas.DataFrame.from_records(self.to_list(), columns=columns)
+
 
 def _wrap(value):
     """

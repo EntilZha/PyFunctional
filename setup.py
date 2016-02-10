@@ -20,6 +20,9 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version='0.5.0',
     install_requires=['future', 'six'],
+    extras_requires={
+        'all': ['pandas']
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
