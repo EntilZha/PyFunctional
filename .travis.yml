@@ -5,7 +5,8 @@ install:
   - pip install -q coverage
   - pip install future
   - pip install pylint
-  - pip install pandas
+  - pip install $PANDAS_INSTALL
+
 notifications:
   webhooks:
     urls:
@@ -13,6 +14,9 @@ notifications:
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: always     # options: [always|never|change] default: always
+env:
+  - PANDAS_INSTALL=pandas
+  - PANDAS_INSTALL=-V
 python:
   - "2.7"
   - "3.3"
@@ -20,6 +24,21 @@ python:
   - "3.5"
   - "pypy"
   - "pypy3"
+matrix:
+  exclude:
+    - python: "pypy"
+      env: PANDAS_INSTALL=pandas
+    - python: "pypy3"
+      env: PANDAS_INSTALL=pandas
+    - python: "2.7"
+      env: PANDAS_INSTALL=-V
+    - python: "3.3"
+      env: PANDAS_INSTALL=-V
+    - python: "3.4"
+      env: PANDAS_INSTALL=-V
+    - python: "3.5"
+      env: PANDAS_INSTALL=-V
+
 script: nosetests --with-coverage --cover-package=functional && pylint functional
 after_success:
   - codecov
