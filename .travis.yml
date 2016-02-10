@@ -31,13 +31,13 @@ matrix:
     - python: "pypy3"
       env: EXTRA_INSTALLS=pandas
     - python: "2.7"
-      env: EXTRA_INSTALLS=-V
+      env: EXTRA_INSTALLS=
     - python: "3.3"
-      env: EXTRA_INSTALLS=-V
+      env: EXTRA_INSTALLS=
     - python: "3.4"
-      env: EXTRA_INSTALLS=-V
+      env: EXTRA_INSTALLS=
     - python: "3.5"
-      env: EXTRA_INSTALLS=-V
+      env: EXTRA_INSTALLS=
 
 script: nosetests --with-coverage --cover-package=functional && pylint functional
 after_success:
