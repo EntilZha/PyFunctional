@@ -11,9 +11,9 @@ notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/1732ae62130d81fe54d8
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: always     # options: [always|never|change] default: always
+    on_success: always
+    on_failure: always
+    on_start: always
 env:
   - EXTRA_INSTALLS=pandas
   - EXTRA_INSTALLS=
@@ -42,3 +42,4 @@ matrix:
 script: nosetests --with-coverage --cover-package=functional && pylint functional
 after_success:
   - codecov
+cache: pip
