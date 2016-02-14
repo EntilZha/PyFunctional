@@ -25,6 +25,7 @@ for declarative transformation, creating pipelines, and data analysis.
 ## Installation
 `ScalaFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be
 installed by running:
+
 ```bash
 # Install from command line
 $ pip install scalafunctional

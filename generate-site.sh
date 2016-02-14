@@ -8,6 +8,7 @@ LAYOUT_PREFIX='---\nlayout: index\n---\n\n'
 echo $LAYOUT_PREFIX > jekyll-site/index.md
 cat README.md >> jekyll-site/index.md
 rm README.md
+git rm README.md
 
 cd jekyll-site
 
