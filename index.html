@@ -19,663 +19,746 @@
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="scalafunctional" class="anchor" href="#scalafunctional" aria-hidden="true"><span class="octicon octicon-link"></span></a>ScalaFunctional</h1>
+      <h1 id="scalafunctional">ScalaFunctional</h1>
+<p><a href="https://travis-ci.org/EntilZha/ScalaFunctional"><img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master" alt="TravisCI" /></a>
+<a href="https://codecov.io/github/EntilZha/ScalaFunctional?branch=master"><img src="https://codecov.io/github/EntilZha/ScalaFunctional/coverage.svg?branch=master" alt="Coverage by codecov.io" /></a>
+<a href="http://scalafunctional.readthedocs.org/en/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs" /></a>
+<a href="https://pypi.python.org/pypi/scalafunctional/"><img src="https://badge.fury.io/py/scalafunctional.svg" alt="Latest Version" /></a>
+<a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter" /></a></p>
 
-<p><a href="https://travis-ci.org/EntilZha/ScalaFunctional"><img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master"></a>
-<a href="https://coveralls.io/r/EntilZha/ScalaFunctional?branch=master"><img src="https://coveralls.io/repos/EntilZha/ScalaFunctional/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a>
-<a href="https://readthedocs.org/projects/scalafunctional/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs"></a>
-<a href="https://pypi.python.org/pypi/scalafunctional/"><img src="https://badge.fury.io/py/scalafunctional.svg" alt="Latest Version"></a>
-<a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
-
-<h2>
-<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
-
-<p><code>ScalaFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
+<h2 id="introduction">Introduction</h2>
+<p><code class="highlighter-rouge">ScalaFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
 several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. The combination of these ideas makes <code>ScalaFunctional</code> a great choice
-for declarative transformation and analysis of data.</p>
+functional programming. It also offers native reading and writing of data formats such as text, csv,
+and json files. Support for SQLite3, other databases, and compressed files is planned for the next
+release.</p>
+
+<p>The combination of these ideas makes <code class="highlighter-rouge">ScalaFunctional</code> a great choice
+for declarative transformation, creating pipelines, and data analysis.</p>
 
 <p><a href="http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/">Original blog post for ScalaFunctional</a></p>
 
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+<h2 id="installation">Installation</h2>
+<p><code class="highlighter-rouge">ScalaFunctional</code> is available on <a href="https://pypi.python.org/pypi/ScalaFunctional">pypi</a> and can be
+installed by running:
+<code class="highlighter-rouge">bash
+# Install from command line
+$ pip install scalafunctional
+</code></p>
 
-<p><code>ScalaFunctional</code> is available on <a href="https://pypi.python.org/pypi/ScalaFunctional">pypi</a> and can be installed by running:</p>
+<p>Then in python run: <code class="highlighter-rouge">from functional import seq</code></p>
 
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Install from command line</span>
-$ pip install scalafunctional</pre></div>
-
-<p>Then in python run: <code>from functional import seq</code></p>
-
-<h2>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
-
-<p><code>ScalaFunctional</code> is useful for many tasks, and can natively open several common file types. Here
+<h2 id="examples">Examples</h2>
+<p><code class="highlighter-rouge">ScalaFunctional</code> is useful for many tasks, and can natively open several common file types. Here
 are a few examples of what you can do.</p>
 
-<h3>
-<a id="simple-example" class="anchor" href="#simple-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Example</h3>
+<h3 id="simple-example">Simple Example</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functional</span> <span class="kn">import</span> <span class="n">seq</span>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
-
-seq(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>)\
-    .map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">*</span> <span class="pl-c1">2</span>)\
-    .filter(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x <span class="pl-k">&gt;</span> <span class="pl-c1">4</span>)\
-    .reduce(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">+</span> y)
-<span class="pl-c"># 14</span></pre></div>
-
-<h3>
-<a id="filtering-a-list-of-account-transactions" class="anchor" href="#filtering-a-list-of-account-transactions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Filtering a list of account transactions</h3>
-
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> functional <span class="pl-k">import</span> seq
-<span class="pl-k">from</span> collections <span class="pl-k">import</span> namedtuple
-
-Transaction <span class="pl-k">=</span> namedtuple(<span class="pl-s"><span class="pl-pds">'</span>Transaction<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>reason amount<span class="pl-pds">'</span></span>)
-transactions <span class="pl-k">=</span> [
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>github<span class="pl-pds">'</span></span>, <span class="pl-c1">7</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>coffee<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>digitalocean<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>riotgames<span class="pl-pds">'</span></span>, <span class="pl-c1">25</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>amazon<span class="pl-pds">'</span></span>, <span class="pl-c1">200</span>),
-    Transaction(<span class="pl-s"><span class="pl-pds">'</span>paycheck<span class="pl-pds">'</span></span>, <span class="pl-k">-</span><span class="pl-c1">1000</span>)
-]
-
-<span class="pl-c"># Using the Scala/Spark inspired APIs</span>
-food_cost <span class="pl-k">=</span> seq(transactions)\
-    .filter(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>)\
-    .map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.amount).sum()
-
-<span class="pl-c"># Using the LINQ inspired APIs</span>
-food_cost <span class="pl-k">=</span> seq(transactions)\
-    .where(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>)\
-    .select(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x.amount).sum()
-
-<span class="pl-c"># Using ScalaFunctional with fn</span>
-<span class="pl-k">from</span> fn <span class="pl-k">import</span> _
-food_cost <span class="pl-k">=</span> seq(transactions).filter(_.reason <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>food<span class="pl-pds">'</span></span>).map(_.amount).sum()</pre></div>
-
-<h3>
-<a id="word-count-and-joins" class="anchor" href="#word-count-and-joins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Word Count and Joins</h3>
-
-<p>Tse account transactions example could be done easily in pure python using list comprehensions. To
-show some of the things <code>ScalaFunctional</code> excels at, take a look at a couple of word count examples.</p>
-
-<div class="highlight highlight-source-python"><pre>words <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>I dont want to believe I want to know<span class="pl-pds">'</span></span>.split(<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span>)
-seq(words).map(<span class="pl-k">lambda</span> <span class="pl-smi">word</span>: (word, <span class="pl-c1">1</span>)).reduce_by_key(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>, <span class="pl-smi">y</span>: x <span class="pl-k">+</span> y)
-<span class="pl-c"># [('dont', 1), ('I', 2), ('to', 2), ('know', 1), ('want', 2), ('believe', 1)]</span></pre></div>
-
-<p>In the next example we have chat logs formatted in jsonl which contain messages and metadata. A
-typical json file will have one valid json on each line of a file. Below are a few lines out of
-<code>examples/chat_logs.jsonl</code>.</p>
-
-<pre lang="jsonl"><code>{"message":"hello anyone there?","date":"10/09","user":"bob"}
-{"message":"need some help with a program","date":"10/09","user":"bob"}
-{"message":"sure thing. What do you need help with?","date":"10/09","user":"dave"}
+<span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>\
+    <span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>\
+    <span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span>\
+    <span class="o">.</span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="c"># 14</span>
 </code></pre>
+</div>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> operator <span class="pl-k">import</span> add
-<span class="pl-k">import</span> re
-messages <span class="pl-k">=</span> seq.jsonl(<span class="pl-s"><span class="pl-pds">'</span>examples/chat_lots.jsonl<span class="pl-pds">'</span></span>)
+<h3 id="streams-transformations-and-actions">Streams, Transformations and Actions</h3>
+<p><code class="highlighter-rouge">ScalaFunctional</code> has three types of functions:</p>
 
-<span class="pl-c"># Split words on space and normalize before doing word count</span>
-<span class="pl-k">def</span> <span class="pl-en">extract_words</span>(<span class="pl-smi">message</span>):
-    <span class="pl-k">return</span> re.sub(<span class="pl-s"><span class="pl-pds">'</span>[^0-9a-z ]+<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>, message.lower()).split(<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span>)
+<ol>
+  <li>Streams: read data for use by the collections API.</li>
+  <li>Transformations: transform data from streams with functions such as <code class="highlighter-rouge">map</code>, <code class="highlighter-rouge">flat_map</code>, and
+<code class="highlighter-rouge">filter</code></li>
+  <li>Actions: These cause a series of transformations to evaluate to a concrete value. <code class="highlighter-rouge">to_list</code>,
+<code class="highlighter-rouge">reduce</code>, and <code class="highlighter-rouge">to_dict</code> are examples of actions.</li>
+</ol>
+
+<p>In the expression <code class="highlighter-rouge">seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)</code>, <code class="highlighter-rouge">seq</code> is the
+stream, <code class="highlighter-rouge">map</code> is the transformation, and <code class="highlighter-rouge">reduce</code> is the action.</p>
+
+<h3 id="filtering-a-list-of-account-transactions">Filtering a list of account transactions</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functional</span> <span class="kn">import</span> <span class="n">seq</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="n">Transaction</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Transaction'</span><span class="p">,</span> <span class="s">'reason amount'</span><span class="p">)</span>
+<span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'github'</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'food'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'coffee'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'digitalocean'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'food'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'riotgames'</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'food'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'amazon'</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+    <span class="n">Transaction</span><span class="p">(</span><span class="s">'paycheck'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c"># Using the Scala/Spark inspired APIs</span>
+<span class="n">food_cost</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span>\
+    <span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="s">'food'</span><span class="p">)</span>\
+    <span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span>
+
+<span class="c"># Using the LINQ inspired APIs</span>
+<span class="n">food_cost</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="s">'food'</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span>
+
+<span class="c"># Using ScalaFunctional with fn</span>
+<span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="n">food_cost</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">reason</span> <span class="o">==</span> <span class="s">'food'</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h3 id="word-count-and-joins">Word Count and Joins</h3>
+<p>The account transactions example could be done easily in pure python using list comprehensions. To
+show some of the things <code class="highlighter-rouge">ScalaFunctional</code> excels at, take a look at a couple of word count examples.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">words</span> <span class="o">=</span> <span class="s">'I dont want to believe I want to know'</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)</span>
+<span class="n">seq</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">word</span><span class="p">:</span> <span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reduce_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="c"># [('dont', 1), ('I', 2), ('to', 2), ('know', 1), ('want', 2), ('believe', 1)]</span>
+</code></pre>
+</div>
+
+<p>In the next example we have chat logs formatted in <a href="http://jsonlines.org/">json lines (jsonl)</a> which
+contain messages and metadata. A typical jsonl file will have one valid json on each line of a file.
+Below are a few lines out of <code class="highlighter-rouge">examples/chat_logs.jsonl</code>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"message"</span><span class="p">:</span><span class="s2">"hello anyone there?"</span><span class="p">,</span><span class="nt">"date"</span><span class="p">:</span><span class="s2">"10/09"</span><span class="p">,</span><span class="nt">"user"</span><span class="p">:</span><span class="s2">"bob"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="nt">"message"</span><span class="p">:</span><span class="s2">"need some help with a program"</span><span class="p">,</span><span class="nt">"date"</span><span class="p">:</span><span class="s2">"10/09"</span><span class="p">,</span><span class="nt">"user"</span><span class="p">:</span><span class="s2">"bob"</span><span class="p">}</span><span class="w">
+</span><span class="p">{</span><span class="nt">"message"</span><span class="p">:</span><span class="s2">"sure thing. What do you need help with?"</span><span class="p">,</span><span class="nt">"date"</span><span class="p">:</span><span class="s2">"10/09"</span><span class="p">,</span><span class="nt">"user"</span><span class="p">:</span><span class="s2">"dave"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">jsonl</span><span class="p">(</span><span class="s">'examples/chat_lots.jsonl'</span><span class="p">)</span>
+
+<span class="c"># Split words on space and normalize before doing word count</span>
+<span class="k">def</span> <span class="nf">extract_words</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[^0-9a-z ]+'</span><span class="p">,</span> <span class="s">''</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)</span>
 
 
-word_counts <span class="pl-k">=</span> messages\
-    .map(<span class="pl-k">lambda</span> <span class="pl-smi">log</span>: extract_words(log[<span class="pl-s"><span class="pl-pds">'</span>message<span class="pl-pds">'</span></span>]))\
-    .flatten().map(<span class="pl-k">lambda</span> <span class="pl-smi">word</span>: (word, <span class="pl-c1">1</span>))\
-    .reduce_by_key(add).order_by(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x[<span class="pl-c1">1</span>])
-</pre></div>
+<span class="n">word_counts</span> <span class="o">=</span> <span class="n">messages</span>\
+    <span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">log</span><span class="p">:</span> <span class="n">extract_words</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="s">'message'</span><span class="p">]))</span>\
+    <span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">word</span><span class="p">:</span> <span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>\
+    <span class="o">.</span><span class="n">reduce_by_key</span><span class="p">(</span><span class="n">add</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-<p>Next, lets continue that example but introduce a json database of users from <code>examples/users.json</code>.
-In the previous example we showed how <code>ScalaFunctional</code> can do word counts, in the next example lets
-show how <code>ScalaFunctional</code> can join different data sources.</p>
+</code></pre>
+</div>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># First read the json file</span>
-users <span class="pl-k">=</span> seq.json(<span class="pl-s"><span class="pl-pds">'</span>examples/users.json<span class="pl-pds">'</span></span>)
-<span class="pl-c">#[('sarah',{'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'}),...]</span>
+<p>Next, lets continue that example but introduce a json database of users from <code class="highlighter-rouge">examples/users.json</code>.
+In the previous example we showed how <code class="highlighter-rouge">ScalaFunctional</code> can do word counts, in the next example lets
+show how <code class="highlighter-rouge">ScalaFunctional</code> can join different data sources.</p>
 
-email_domains <span class="pl-k">=</span> users.map(<span class="pl-k">lambda</span> <span class="pl-smi">u</span>: u[<span class="pl-c1">1</span>][<span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span>].split(<span class="pl-s"><span class="pl-pds">'</span>@<span class="pl-pds">'</span></span>)[<span class="pl-c1">1</span>]).distinct()
-<span class="pl-c"># ['yahoo.com', 'python.org', 'gmail.com']</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># First read the json file</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s">'examples/users.json'</span><span class="p">)</span>
+<span class="c">#[('sarah',{'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'}),...]</span>
 
-<span class="pl-c"># Join users with their messages</span>
-message_tuples <span class="pl-k">=</span> messages.group_by(<span class="pl-k">lambda</span> <span class="pl-smi">m</span>: m[<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>])
-data <span class="pl-k">=</span> users.inner_join(message_tuples)
-<span class="pl-c"># [('sarah', </span>
-<span class="pl-c">#    (</span>
-<span class="pl-c">#      {'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'},</span>
-<span class="pl-c">#      [{'date':'10/10','message':'what is a...','user':'sarah'}...]</span>
-<span class="pl-c">#    )</span>
-<span class="pl-c">#  ),...]</span>
+<span class="n">email_domains</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s">'email'</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'@'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="c"># ['yahoo.com', 'python.org', 'gmail.com']</span>
 
-<span class="pl-c"># From here you can imagine doing more complex analysis</span></pre></div>
+<span class="c"># Join users with their messages</span>
+<span class="n">message_tuples</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="p">[</span><span class="s">'user'</span><span class="p">])</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">inner_join</span><span class="p">(</span><span class="n">message_tuples</span><span class="p">)</span>
+<span class="c"># [('sarah',</span>
+<span class="c">#    (</span>
+<span class="c">#      {'date_created':'08/08','news_email':True,'email':'sarah@gmail.com'},</span>
+<span class="c">#      [{'date':'10/10','message':'what is a...','user':'sarah'}...]</span>
+<span class="c">#    )</span>
+<span class="c">#  ),...]</span>
 
-<h3>
-<a id="csv-aggregate-functions-and-set-functions" class="anchor" href="#csv-aggregate-functions-and-set-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>CSV, Aggregate Functions, and Set functions</h3>
+<span class="c"># From here you can imagine doing more complex analysis</span>
+</code></pre>
+</div>
 
-<p>In <code>examples/camping_purchases.csv</code> there are a list of camping purchases. Lets do some cost analysis and
-compare it the required camping gear list stored in <code>examples/gear_list.txt</code>.</p>
+<h3 id="csv-aggregate-functions-and-set-functions">CSV, Aggregate Functions, and Set functions</h3>
+<p>In <code class="highlighter-rouge">examples/camping_purchases.csv</code> there are a list of camping purchases. Lets do some cost
+analysis and compare it the required camping gear list stored in <code class="highlighter-rouge">examples/gear_list.txt</code>.</p>
 
-<div class="highlight highlight-source-python"><pre>purchases <span class="pl-k">=</span> seq.csv(<span class="pl-s"><span class="pl-pds">'</span>examples/camping_purchases.csv<span class="pl-pds">'</span></span>)
-total_cost <span class="pl-k">=</span> purchases.select(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: <span class="pl-c1">int</span>(row[<span class="pl-c1">2</span>])).sum()
-<span class="pl-c"># 1275</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">purchases</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s">'examples/camping_purchases.csv'</span><span class="p">)</span>
+<span class="n">total_cost</span> <span class="o">=</span> <span class="n">purchases</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span>
+<span class="c"># 1275</span>
 
-most_expensive_item <span class="pl-k">=</span> purchases.max_by(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: <span class="pl-c1">int</span>(row[<span class="pl-c1">2</span>]))
-<span class="pl-c"># ['4', 'sleeping bag', ' 350']</span>
+<span class="n">most_expensive_item</span> <span class="o">=</span> <span class="n">purchases</span><span class="o">.</span><span class="n">max_by</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+<span class="c"># ['4', 'sleeping bag', ' 350']</span>
 
-purchased_list <span class="pl-k">=</span> purchases.select(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: row[<span class="pl-c1">1</span>])
-gear_list <span class="pl-k">=</span> seq.open(<span class="pl-s"><span class="pl-pds">'</span>examples/gear_list.txt<span class="pl-pds">'</span></span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">row</span>: row.strip())
-missing_gear <span class="pl-k">=</span> gear_list.difference(purchased_list)
-<span class="pl-c"># ['water bottle','gas','toilet paper','lighter','spoons','sleeping pad',...]</span></pre></div>
+<span class="n">purchased_list</span> <span class="o">=</span> <span class="n">purchases</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">gear_list</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'examples/gear_list.txt'</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+<span class="n">missing_gear</span> <span class="o">=</span> <span class="n">gear_list</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">purchased_list</span><span class="p">)</span>
+<span class="c"># ['water bottle','gas','toilet paper','lighter','spoons','sleeping pad',...]</span>
+</code></pre>
+</div>
 
-<p>In addition to the aggregate functions show above (<code>sum</code> and <code>max_by</code>) there are many more.
-Similarly, there are several more set like functions in addition to <code>difference</code>.</p>
+<p>In addition to the aggregate functions shown above (<code class="highlighter-rouge">sum</code> and <code class="highlighter-rouge">max_by</code>) there are many more.
+Similarly, there are several more set like functions in addition to <code class="highlighter-rouge">difference</code>.</p>
 
-<h3>
-<a id="writing-to-files" class="anchor" href="#writing-to-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Writing to files</h3>
+<h3 id="readingwriting-sqlite3">Reading/Writing SQLite3</h3>
+<p><code class="highlighter-rouge">Scalafunctional</code> can read and write to SQLite3 database files. In the example below, users are read
+ from <code class="highlighter-rouge">examples/users.db</code> which stores them as rows with columns <code class="highlighter-rouge">id:Int</code> and <code class="highlighter-rouge">name:String</code>.</p>
 
-<p>Just as <code>ScalaFunctional</code> can read from <code>csv</code>, <code>json</code>, <code>jsonl</code>, and text files, it can also write
-them. For complete API documentation see the collections API table or the official docs.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">db_path</span> <span class="o">=</span> <span class="s">'examples/users.db'</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">sqlite3</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="s">'select * from user'</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]]</span>
 
-<h2>
-<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+<span class="n">sorted_users</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">sqlite3</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="s">'select * from user order by name'</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># [(2, 'Jack'), (3, 'Jane'), (4, 'Stephan'), (1, 'Tom')]</span>
+</code></pre>
+</div>
 
+<p>Writing to a SQLite3 database is similarly easy</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">':memory:'</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'CREATE TABLE user (id INT, name TEXT)'</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">User</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'User'</span><span class="p">,</span> <span class="s">'id name'</span><span class="p">)</span>
+    
+    <span class="c"># Write using a specific query</span>
+    <span class="n">seq</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="s">'pedro'</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">'fritz'</span><span class="p">)])</span><span class="o">.</span><span class="n">to_sqlite3</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'INSERT INTO user (id, name) VALUES (?, ?)'</span><span class="p">)</span>
+    
+    <span class="c"># Write by inserting values positionally from a tuple/list into named table</span>
+    <span class="n">seq</span><span class="p">([(</span><span class="mi">3</span><span class="p">,</span> <span class="s">'sam'</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s">'stan'</span><span class="p">)])</span><span class="o">.</span><span class="n">to_sqlite3</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'user'</span><span class="p">)</span>
+    
+    <span class="c"># Write by inferring schema from namedtuple</span>
+    <span class="n">seq</span><span class="p">([</span><span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'tom'</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'keiga'</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">6</span><span class="p">)])</span><span class="o">.</span><span class="n">to_sqlite3</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'user'</span><span class="p">)</span>
+    
+    <span class="c"># Write by inferring schema from dict</span>
+    <span class="n">seq</span><span class="p">([</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'david'</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'jordan'</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">8</span><span class="p">)])</span><span class="o">.</span><span class="n">to_sqlite3</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s">'user'</span><span class="p">)</span>
+    
+    <span class="c"># Read everything back to make sure it wrote correctly</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'SELECT * FROM user'</span><span class="p">)))</span>
+    
+    <span class="c"># [(1, 'pedro'), (2, 'fritz'), (3, 'sam'), (4, 'stan'), (5, 'tom'), (6, 'keiga'), (7, 'david'), (8, 'jordan')]</span>
+</code></pre>
+</div>
+
+<h3 id="writing-to-files">Writing to files</h3>
+<p>Just as <code class="highlighter-rouge">ScalaFunctional</code> can read from <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite3</code>, and text files, it can
+also write them. For complete API documentation see the collections API table or the official docs.</p>
+
+<h2 id="documentation">Documentation</h2>
 <p>Summary documentation is below and full documentation is at
 <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html">scalafunctional.readthedocs.org</a>.</p>
 
-<h3>
-<a id="streams-transformations-and-actions" class="anchor" href="#streams-transformations-and-actions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streams, Transformations and Actions</h3>
-
-<p><code>ScalaFunctional</code> has three types of functions:</p>
-
-<ol>
-<li>Streams: read data for use by the collections API.</li>
-<li>Transformations: transform data from streams with functions such as <code>map</code>, <code>flat_map</code>, and <code>filter</code>
-</li>
-<li>Actions: These cause a series of transformations to evaluate to a concrete value. <code>to_list</code>, <code>reduce</code>, and <code>to_dict</code> are examples of actions.</li>
-</ol>
-
-<p>In the expression <code>seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)</code>, <code>seq</code> is the
-stream, <code>map</code> is the transformation, and <code>reduce</code> is the action.</p>
-
-<h3>
-<a id="streams-api" class="anchor" href="#streams-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streams API</h3>
-
-<p>All of <code>ScalaFunctional</code> streams can be accessed through the <code>seq</code> object. The primary way to create
-a stream is by calling <code>seq</code> with an iterable. The <code>seq</code> callable is smart and is able to accept
+<h3 id="streams-api">Streams API</h3>
+<p>All of <code class="highlighter-rouge">ScalaFunctional</code> streams can be accessed through the <code class="highlighter-rouge">seq</code> object. The primary way to create
+a stream is by calling <code class="highlighter-rouge">seq</code> with an iterable. The <code class="highlighter-rouge">seq</code> callable is smart and is able to accept
 multiple types of parameters as shown in the examples below.</p>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># Passing a list</span>
-seq([<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>]).to_set()
-<span class="pl-c"># [1, 2, 3]</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># Passing a list</span>
+<span class="n">seq</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">to_set</span><span class="p">()</span>
+<span class="c"># [1, 2, 3]</span>
 
-<span class="pl-c"># Passing direct arguments</span>
-seq(<span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: x).to_list()
-<span class="pl-c"># [1, 1, 2, 3]</span>
+<span class="c"># Passing direct arguments</span>
+<span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># [1, 1, 2, 3]</span>
 
-<span class="pl-c"># Passing a single value</span>
-seq(<span class="pl-c1">1</span>).map(<span class="pl-k">lambda</span> <span class="pl-smi">x</span>: <span class="pl-k">-</span>x).to_list()
-<span class="pl-c"># [-1]</span></pre></div>
+<span class="c"># Passing a single value</span>
+<span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># [-1]</span>
+</code></pre>
+</div>
 
-<p><code>seq</code> also provides entry to other streams as attribute functions as shown below.</p>
+<p><code class="highlighter-rouge">seq</code> also provides entry to other streams as attribute functions as shown below.</p>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># number range</span>
-seq.range(<span class="pl-c1">10</span>)
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># number range</span>
+<span class="n">seq</span><span class="o">.</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
-<span class="pl-c"># text file</span>
-seq.open(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+<span class="c"># text file</span>
+<span class="n">seq</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'filepath'</span><span class="p">)</span>
 
-<span class="pl-c"># json file</span>
-seq.json(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+<span class="c"># json file</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s">'filepath'</span><span class="p">)</span>
 
-<span class="pl-c"># jsonl file</span>
-seq.jsonl(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)
+<span class="c"># jsonl file</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">jsonl</span><span class="p">(</span><span class="s">'filepath'</span><span class="p">)</span>
 
-<span class="pl-c"># csv file</span>
-seq.csv(<span class="pl-s"><span class="pl-pds">'</span>filepath<span class="pl-pds">'</span></span>)</pre></div>
+<span class="c"># csv file</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s">'filepath'</span><span class="p">)</span>
+
+<span class="c"># sqlite3 db and sql query</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">sqlite3</span><span class="p">(</span><span class="s">'filepath'</span><span class="p">,</span> <span class="s">'select * from data'</span><span class="p">)</span>
+</code></pre>
+</div>
 
 <p>For more information on the parameters that these functions can take, reference the
 <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.streams">streams documentation</a></p>
 
-<h3>
-<a id="transformations-and-actions-apis" class="anchor" href="#transformations-and-actions-apis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transformations and Actions APIs</h3>
-
-<p>Below is the complete list of functions which can be called on a stream object from <code>seq</code>. For
-complete documentation reference 
+<h3 id="transformations-and-actions-apis">Transformations and Actions APIs</h3>
+<p>Below is the complete list of functions which can be called on a stream object from <code class="highlighter-rouge">seq</code>. For
+complete documentation reference
 <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline">transformation and actions API</a>.</p>
 
 <table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>map(func)/select(func)</code></td>
-<td>Maps <code>func</code> onto elements of sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>filter(func)/where(func)</code></td>
-<td>Filters elements of sequence to only those where <code>func(element)</code> is <code>True</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>filter_not(func)</code></td>
-<td>Filters elements of sequence to only those where <code>func(element)</code> is <code>False</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>flatten()</code></td>
-<td>Flattens sequence of lists to a single sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>flat_map(func)</code></td>
-<td>
-<code>func</code> must return an iterable. Maps <code>func</code> to each element, then merges the result to one flat sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>group_by(func)</code></td>
-<td>Groups sequence into <code>(key, value)</code> pairs where <code>key=func(element)</code> and <code>value</code> is from the original sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>group_by_key()</code></td>
-<td>Groups sequence of <code>(key, value)</code> pairs by <code>key</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>reduce_by_key(func)</code></td>
-<td>Reduces list of <code>(key, value)</code> pairs using <code>func</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>union(other)</code></td>
-<td>Union of unique elements in sequence and <code>other</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>intersection(other)</code></td>
-<td>Intersection of unique elements in sequence and <code>other</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>difference(other)</code></td>
-<td>New sequence with unique elements present in sequence but not in <code>other</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>symmetric_difference(other)</code></td>
-<td>New sequence with unique elements present in sequnce or <code>other</code>, but not both</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>distinct()</code></td>
-<td>Returns distinct elements of sequence. Elements must be hashable</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>distinct_by(func)</code></td>
-<td>Returns distinct elements of sequence using <code>func</code> as a key</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>drop(n)</code></td>
-<td>Drop the first <code>n</code> elements of the sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>drop_right(n)</code></td>
-<td>Drop the last <code>n</code> elements of the sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>drop_while(func)</code></td>
-<td>Drop elements while <code>func</code> evaluates to <code>True</code>, then returns the rest</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>take(n)</code></td>
-<td>Returns sequence of first <code>n</code> elements</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>take_while(func)</code></td>
-<td>Take elements while <code>func</code> evaluates to <code>True</code>, then drops the rest</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>init()</code></td>
-<td>Returns sequence without the last element</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>tail()</code></td>
-<td>Returns sequence without the first element</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>inits()</code></td>
-<td>Returns consecutive inits of sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>tails()</code></td>
-<td>Returns consecutive tails of sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>zip(other)</code></td>
-<td>Zips the sequence with <code>other</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>zip_with_index()</code></td>
-<td>Zips the sequence with the index starting at zero on the left side</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>enumerate(start=0)</code></td>
-<td>Zips the sequence with the index starting at <code>start</code> on the left side</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>inner_join(other)</code></td>
-<td>Returns inner join of sequence with other. Must be a sequence of <code>(key, value)</code> pairs</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>outer_join(other)</code></td>
-<td>Returns outer join of sequence with other. Must be a sequence of <code>(key, value)</code> pairs</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>left_join(other)</code></td>
-<td>Returns left join of sequence with other. Must be a sequence of <code>(key, value)</code> pairs</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>right_join(other)</code></td>
-<td>Returns right join of sequence with other. Must be a sequence of <code>(key, value)</code> pairs</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>join(other, join_type='inner')</code></td>
-<td>Returns join of sequence with other as specified by <code>join_type</code>. Must be a sequence of <code>(key, value)</code> pairs</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>partition(func)</code></td>
-<td>Partitions the sequence into elements which satisfy <code>func(element)</code> and those that don't</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>grouped(size)</code></td>
-<td>Partitions the elements into groups of size <code>size</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>sorted(key=None, reverse=False)/order_by(func)</code></td>
-<td>Returns elements sorted according to python <code>sorted</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>reverse()</code></td>
-<td>Returns the reversed sequence</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td><code>slice(start, until)</code></td>
-<td>Sequence starting at <code>start</code> and including elements up to <code>until</code>
-</td>
-<td>transformation</td>
-</tr>
-<tr>
-<td>
-<code>head()</code> / <code>first()</code>
-</td>
-<td>Returns first element in sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>head_option()</code></td>
-<td>Returns first element in sequence or <code>None</code> if its empty</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>last()</code></td>
-<td>Returns last element in sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>last_option()</code></td>
-<td>Returns last element in sequence or <code>None</code> if its empty</td>
-<td>action</td>
-</tr>
-<tr>
-<td>
-<code>len()</code> / <code>size()</code>
-</td>
-<td>Returns length of sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>count(func)</code></td>
-<td>Returns count of elements in sequence where <code>func(element)</code> is True</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>empty()</code></td>
-<td>Returns <code>True</code> if the sequence has zero length</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>non_empty()</code></td>
-<td>Returns <code>True</code> if sequence has non-zero length</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>all()</code></td>
-<td>Returns <code>True</code> if all elements in sequence are truthy</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>exists(func)</code></td>
-<td>Returns <code>True</code> if <code>func(element)</code> for any element in the sequence is <code>True</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>for_all(func)</code></td>
-<td>Returns <code>True</code> if <code>func(element)</code> is <code>True</code> for all elements in the sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>find(func)</code></td>
-<td>Returns the element that first evaluates <code>func(element)</code> to <code>True</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>any()</code></td>
-<td>Returns <code>True</code> if any element in sequence is truthy</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>max()</code></td>
-<td>Returns maximal element in sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>min()</code></td>
-<td>Returns minimal element in sequence</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>max_by(func)</code></td>
-<td>Returns element with maximal value <code>func(element)</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>min_by(func)</code></td>
-<td>Returns element with minimal value <code>func(element)</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>sum()</code></td>
-<td>Returns the sum of elements</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>product()</code></td>
-<td>Returns the product of elements</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>average()</code></td>
-<td>Returns the average of elements</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)</code></td>
-<td>Aggregate using <code>func</code> starting with <code>seed</code> or first element of list then apply <code>result_map</code> to the result</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>fold_left(zero_value, func)</code></td>
-<td>Reduces element from left to right using <code>func</code> and initial value <code>zero_value</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>fold_right(zero_value, func)</code></td>
-<td>Reduces element from right to left using <code>func</code> and initial value <code>zero_value</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>make_string(separator)</code></td>
-<td>Returns string with <code>separator</code> between each <code>str(element)</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td>
-<code>dict(default=None)</code> / <code>to_dict(default=None)</code>
-</td>
-<td>Converts a sequence of <code>(Key, Value)</code> pairs to a <code>dictionary</code>. If <code>default</code> is not None, it must be a value or zero argument callable which will be used to create a <code>collections.defaultdict</code>
-</td>
-<td>action</td>
-</tr>
-<tr>
-<td>
-<code>list()</code> / <code>to_list()</code>
-</td>
-<td>Converts sequence to a list</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>set() / to_set()</code></td>
-<td>Converts sequence to a set</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>to_file(path)</code></td>
-<td>Saves the sequence to a file at path with each element on a newline</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>to_csv(path)</code></td>
-<td>Saves the sequence to a csv file at path with each element representing a row</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>to_jsonl(path)</code></td>
-<td>Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>to_json(path)</code></td>
-<td>Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>cache()</code></td>
-<td>Forces evaluation of sequence immediately and caches the result</td>
-<td>action</td>
-</tr>
-<tr>
-<td><code>for_each(func)</code></td>
-<td>Executes <code>func</code> on each element of the sequence</td>
-<td>action</td>
-</tr>
-</tbody>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Description</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">map(func)/select(func)</code></td>
+      <td>Maps <code class="highlighter-rouge">func</code> onto elements of sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">filter(func)/where(func)</code></td>
+      <td>Filters elements of sequence to only those where <code class="highlighter-rouge">func(element)</code> is <code class="highlighter-rouge">True</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">filter_not(func)</code></td>
+      <td>Filters elements of sequence to only those where <code class="highlighter-rouge">func(element)</code> is <code class="highlighter-rouge">False</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">flatten()</code></td>
+      <td>Flattens sequence of lists to a single sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">flat_map(func)</code></td>
+      <td><code class="highlighter-rouge">func</code> must return an iterable. Maps <code class="highlighter-rouge">func</code> to each element, then merges the result to one flat sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">group_by(func)</code></td>
+      <td>Groups sequence into <code class="highlighter-rouge">(key, value)</code> pairs where <code class="highlighter-rouge">key=func(element)</code> and <code class="highlighter-rouge">value</code> is from the original sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">group_by_key()</code></td>
+      <td>Groups sequence of <code class="highlighter-rouge">(key, value)</code> pairs by <code class="highlighter-rouge">key</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">reduce_by_key(func)</code></td>
+      <td>Reduces list of <code class="highlighter-rouge">(key, value)</code> pairs using <code class="highlighter-rouge">func</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">union(other)</code></td>
+      <td>Union of unique elements in sequence and <code class="highlighter-rouge">other</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">intersection(other)</code></td>
+      <td>Intersection of unique elements in sequence and <code class="highlighter-rouge">other</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">difference(other)</code></td>
+      <td>New sequence with unique elements present in sequence but not in <code class="highlighter-rouge">other</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">symmetric_difference(other)</code></td>
+      <td>New sequence with unique elements present in sequnce or <code class="highlighter-rouge">other</code>, but not both</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">distinct()</code></td>
+      <td>Returns distinct elements of sequence. Elements must be hashable</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">distinct_by(func)</code></td>
+      <td>Returns distinct elements of sequence using <code class="highlighter-rouge">func</code> as a key</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">drop(n)</code></td>
+      <td>Drop the first <code class="highlighter-rouge">n</code> elements of the sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">drop_right(n)</code></td>
+      <td>Drop the last <code class="highlighter-rouge">n</code> elements of the sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">drop_while(func)</code></td>
+      <td>Drop elements while <code class="highlighter-rouge">func</code> evaluates to <code class="highlighter-rouge">True</code>, then returns the rest</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">take(n)</code></td>
+      <td>Returns sequence of first <code class="highlighter-rouge">n</code> elements</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">take_while(func)</code></td>
+      <td>Take elements while <code class="highlighter-rouge">func</code> evaluates to <code class="highlighter-rouge">True</code>, then drops the rest</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">init()</code></td>
+      <td>Returns sequence without the last element</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">tail()</code></td>
+      <td>Returns sequence without the first element</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">inits()</code></td>
+      <td>Returns consecutive inits of sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">tails()</code></td>
+      <td>Returns consecutive tails of sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">zip(other)</code></td>
+      <td>Zips the sequence with <code class="highlighter-rouge">other</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">zip_with_index(start=0)</code></td>
+      <td>Zips the sequence with the index starting at <code class="highlighter-rouge">start</code> on the right side</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">enumerate(start=0)</code></td>
+      <td>Zips the sequence with the index starting at <code class="highlighter-rouge">start</code> on the left side</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">inner_join(other)</code></td>
+      <td>Returns inner join of sequence with other. Must be a sequence of <code class="highlighter-rouge">(key, value)</code> pairs</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">outer_join(other)</code></td>
+      <td>Returns outer join of sequence with other. Must be a sequence of <code class="highlighter-rouge">(key, value)</code> pairs</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">left_join(other)</code></td>
+      <td>Returns left join of sequence with other. Must be a sequence of <code class="highlighter-rouge">(key, value)</code> pairs</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">right_join(other)</code></td>
+      <td>Returns right join of sequence with other. Must be a sequence of <code class="highlighter-rouge">(key, value)</code> pairs</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">join(other, join_type='inner')</code></td>
+      <td>Returns join of sequence with other as specified by <code class="highlighter-rouge">join_type</code>. Must be a sequence of <code class="highlighter-rouge">(key, value)</code> pairs</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">partition(func)</code></td>
+      <td>Partitions the sequence into elements which satisfy <code class="highlighter-rouge">func(element)</code> and those that don’t</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">grouped(size)</code></td>
+      <td>Partitions the elements into groups of size <code class="highlighter-rouge">size</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">sorted(key=None, reverse=False)/order_by(func)</code></td>
+      <td>Returns elements sorted according to python <code class="highlighter-rouge">sorted</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">reverse()</code></td>
+      <td>Returns the reversed sequence</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">slice(start, until)</code></td>
+      <td>Sequence starting at <code class="highlighter-rouge">start</code> and including elements up to <code class="highlighter-rouge">until</code></td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">head()</code> / <code class="highlighter-rouge">first()</code></td>
+      <td>Returns first element in sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">head_option()</code></td>
+      <td>Returns first element in sequence or <code class="highlighter-rouge">None</code> if its empty</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">last()</code></td>
+      <td>Returns last element in sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">last_option()</code></td>
+      <td>Returns last element in sequence or <code class="highlighter-rouge">None</code> if its empty</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">len()</code> / <code class="highlighter-rouge">size()</code></td>
+      <td>Returns length of sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">count(func)</code></td>
+      <td>Returns count of elements in sequence where <code class="highlighter-rouge">func(element)</code> is True</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">empty()</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if the sequence has zero length</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">non_empty()</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if sequence has non-zero length</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">all()</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if all elements in sequence are truthy</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">exists(func)</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if <code class="highlighter-rouge">func(element)</code> for any element in the sequence is <code class="highlighter-rouge">True</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">for_all(func)</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if <code class="highlighter-rouge">func(element)</code> is <code class="highlighter-rouge">True</code> for all elements in the sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">find(func)</code></td>
+      <td>Returns the element that first evaluates <code class="highlighter-rouge">func(element)</code> to <code class="highlighter-rouge">True</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">any()</code></td>
+      <td>Returns <code class="highlighter-rouge">True</code> if any element in sequence is truthy</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">max()</code></td>
+      <td>Returns maximal element in sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">min()</code></td>
+      <td>Returns minimal element in sequence</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">max_by(func)</code></td>
+      <td>Returns element with maximal value <code class="highlighter-rouge">func(element)</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">min_by(func)</code></td>
+      <td>Returns element with minimal value <code class="highlighter-rouge">func(element)</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">sum()/sum(projection)</code></td>
+      <td>Returns the sum of elements possibly using a projection</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">product()/product(projection)</code></td>
+      <td>Returns the product of elements possibly using a projection</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">average()/average(projection)</code></td>
+      <td>Returns the average of elements possibly using a projection</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)</code></td>
+      <td>Aggregate using <code class="highlighter-rouge">func</code> starting with <code class="highlighter-rouge">seed</code> or first element of list then apply <code class="highlighter-rouge">result_map</code> to the result</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fold_left(zero_value, func)</code></td>
+      <td>Reduces element from left to right using <code class="highlighter-rouge">func</code> and initial value <code class="highlighter-rouge">zero_value</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fold_right(zero_value, func)</code></td>
+      <td>Reduces element from right to left using <code class="highlighter-rouge">func</code> and initial value <code class="highlighter-rouge">zero_value</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">make_string(separator)</code></td>
+      <td>Returns string with <code class="highlighter-rouge">separator</code> between each <code class="highlighter-rouge">str(element)</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">dict(default=None)</code> / <code class="highlighter-rouge">to_dict(default=None)</code></td>
+      <td>Converts a sequence of <code class="highlighter-rouge">(Key, Value)</code> pairs to a <code class="highlighter-rouge">dictionary</code>. If <code class="highlighter-rouge">default</code> is not None, it must be a value or zero argument callable which will be used to create a <code class="highlighter-rouge">collections.defaultdict</code></td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">list()</code> / <code class="highlighter-rouge">to_list()</code></td>
+      <td>Converts sequence to a list</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">set() / to_set()</code></td>
+      <td>Converts sequence to a set</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_file(path)</code></td>
+      <td>Saves the sequence to a file at path with each element on a newline</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_csv(path)</code></td>
+      <td>Saves the sequence to a csv file at path with each element representing a row</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_jsonl(path)</code></td>
+      <td>Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_json(path)</code></td>
+      <td>Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_sqlite3(conn, tablename_or_query, *args, **kwargs)</code></td>
+      <td>Save the sequence to a SQLite3 db. The target table must be created in advance.</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">to_pandas(columns=None)</code></td>
+      <td>Converts the sequence to a pandas DataFrame</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">cache()</code></td>
+      <td>Forces evaluation of sequence immediately and caches the result</td>
+      <td>action</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">for_each(func)</code></td>
+      <td>Executes <code class="highlighter-rouge">func</code> on each element of the sequence</td>
+      <td>action</td>
+    </tr>
+  </tbody>
 </table>
 
-<h2>
-<a id="road-map" class="anchor" href="#road-map" aria-hidden="true"><span class="octicon octicon-link"></span></a>Road Map</h2>
+<h3 id="lazy-execution">Lazy Execution</h3>
+<p>Whenever possible, <code class="highlighter-rouge">ScalaFunctional</code> will compute lazily. This is accomplished by tracking the list
+of transformations that have been applied to the sequence and only evaluating them when an action is
+called. In <code class="highlighter-rouge">ScalaFunctional</code> this is called tracking lineage. This is also responsible for the
+ability for <code class="highlighter-rouge">ScalaFunctional</code> to cache results of computation to prevent expensive re-computation.
+This is predominantly done to preserve sensible behavior and used sparingly. For example, calling
+<code class="highlighter-rouge">size()</code> will cache the underlying sequence. If this was not done and the input was an iterator,
+then further calls would operate on an expired iterator since it was used to compute the length.
+Similarly, <code class="highlighter-rouge">repr</code> also caches since it is most often used during interactive sessions where its
+undesirable to keep recomputing the same value. Below are some examples of inspecting lineage.</p>
 
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">times_2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="n">times_2</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="n">elements</span><span class="o">.</span><span class="n">_lineage</span>
+<span class="c"># Lineage: sequence -&gt; map(times_2) -&gt; distinct</span>
+
+<span class="n">l_elements</span> <span class="o">=</span> <span class="n">elements</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># Prints: 1</span>
+<span class="c"># Prints: 1</span>
+<span class="c"># Prints: 2</span>
+<span class="c"># Prints: 3</span>
+<span class="c"># Prints: 4</span>
+
+<span class="n">elements</span><span class="o">.</span><span class="n">_lineage</span>
+<span class="c"># Lineage: sequence -&gt; map(times_2) -&gt; distinct -&gt; cache</span>
+
+<span class="n">l_elements</span> <span class="o">=</span> <span class="n">elements</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="c"># The cached result is returned so times_2 is not called and nothing is printed</span>
+</code></pre>
+</div>
+
+<p>Files are given special treatment if opened through the <code class="highlighter-rouge">seq.open</code> and related APIs.
+<code class="highlighter-rouge">functional.util.ReusableFile</code> implements a wrapper around the standard python file to support
+multiple iteration over a single file object while correctly handling iteration termination and
+file closing.</p>
+
+<h2 id="road-map">Road Map</h2>
 <ul>
-<li>Parallel execution engine for faster computation <code>0.5.0</code>
-</li>
-<li>SQL based query planner and interpreter (TBD on if/when/how this would be done)</li>
-<li>When is this ready for <code>1.0</code>?</li>
-<li>Perhaps think of a better name that better suits this package than <code>ScalaFunctional</code>
-</li>
+  <li>Parallel execution engine for faster computation <code class="highlighter-rouge">0.5.0</code></li>
+  <li>SQL based query planner and interpreter (TBD on if/when/how this would be done)</li>
+  <li>When is this ready for <code class="highlighter-rouge">1.0</code>?</li>
+  <li>Perhaps think of a better name that better suits this package than <code class="highlighter-rouge">ScalaFunctional</code></li>
 </ul>
 
-<h2>
-<a id="contributing-and-bug-fixes" class="anchor" href="#contributing-and-bug-fixes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing and Bug Fixes</h2>
-
+<h2 id="contributing-and-bug-fixes">Contributing and Bug Fixes</h2>
 <p>Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
 requests and contributors have offered valuable feedback and critique on code. It is great to hear
 from users of the package, especially what it is used for, what works well, and what could be
 improved.</p>
 
-<h2>
-<a id="contactemail-listchat" class="anchor" href="#contactemail-listchat" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact/Email list/Chat</h2>
+<p>To contribute, create a fork of <code class="highlighter-rouge">ScalaFunctional</code>, make your changes, then make sure that they pass
+when running on <a href="travis-ci.org">TravisCI</a> (you may need to sign up for an account and link Github).
+In order to be merged, all pull requests must:</p>
 
+<ul>
+  <li>Pass all the unit tests</li>
+  <li>Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so</li>
+  <li>Must include tests that cover all new code paths</li>
+  <li>Must not decrease code coverage (currently at 100% and tested by
+<a href="coveralls.io/github/EntilZha/ScalaFunctional">coveralls.io</a>)</li>
+  <li>Edit the <code class="highlighter-rouge">CHANGELOG.md</code> file in the <code class="highlighter-rouge">Next Release</code> heading with changes</li>
+</ul>
+
+<h2 id="contact">Contact</h2>
 <p><a href="https://groups.google.com/forum/#!forum/scalafunctional">Google Groups mailing list</a></p>
 
 <p><a href="https://gitter.im/EntilZha/ScalaFunctional">Gitter for chat</a></p>
 
-<h2>
-<a id="supported-python-versions" class="anchor" href="#supported-python-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Python Versions</h2>
+<h2 id="supported-python-versions">Supported Python Versions</h2>
+<p><code class="highlighter-rouge">ScalaFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
 
-<p><code>ScalaFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
+<h2 id="changelog">Changelog</h2>
+<p><a href="https://github.com/EntilZha/ScalaFunctional/blob/master/CHANGELOG.md">Changelog</a></p>
 
-<h2>
-<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+<h2 id="about-me">About me</h2>
+<p>To learn more about me (the author) visit my webpage at
+<a href="http://pedrorodriguez.io">pedrorodriguez.io</a>.</p>
 
-<p><a href="https://github.com/EntilZha/ScalaFunctional/CHANGELOG.md">Changelog</a></p>
+<p>I am a PhD student in Computer Science at the University of Colorado at Boulder. My research
+interests include large-scale machine learning, distributed computing, and adjacent fields. I
+completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
+research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
+and developed several corporate and personal websites.</p>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/EntilZha/ScalaFunctional">ScalaFunctional</a> is maintained by <a href="https://github.com/EntilZha">EntilZha</a>.</span>
+<p>I created <code class="highlighter-rouge">ScalaFunctional</code> while using Python extensively at Trulia, and finding that I missed the
+ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
+best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
+Scala is not an option or Spark is overkill.</p>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+<h2 id="contributors">Contributors</h2>
+<p>These people have generously contributed their time to improving <code class="highlighter-rouge">ScalaFunctional</code></p>
+
+<ul>
+  <li><a href="https://github.com/adrian17">adrian17</a></li>
+  <li><a href="https://github.com/lucidfrontier45">lucidfrontier45</a></li>
+  <li><a href="https://github.com/Digenis">Digenis</a></li>
+  <li><a href="https://github.com/ChuyuHsu">ChuyuHsu</a></li>
+</ul>
 
     </section>
 
