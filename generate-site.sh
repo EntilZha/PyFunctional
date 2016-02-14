@@ -4,7 +4,7 @@ rm -r javascripts
 rm -r stylesheets
 
 git checkout master -- README.md
-LAYOUT_PREFIX='---\r\nlayout: index\r\n---\r\n\r\n'
+LAYOUT_PREFIX='---\nlayout: index\n---\n\n'
 echo $LAYOUT_PREFIX > jekyll-site/index.md
 cat README.md >> jekyll-site/index.md
 rm README.md
