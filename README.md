@@ -97,9 +97,9 @@ seq(words).map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 # [('dont', 1), ('I', 2), ('to', 2), ('know', 1), ('want', 2), ('believe', 1)]
 ```
 
-In the next example we have chat logs formatted in jsonl which contain messages and metadata. A
-typical json file will have one valid json on each line of a file. Below are a few lines out of
-`examples/chat_logs.jsonl`.
+In the next example we have chat logs formatted in [json lines (jsonl)](http://jsonlines.org/) which
+contain messages and metadata. A typical jsonl file will have one valid json on each line of a file.
+Below are a few lines out of `examples/chat_logs.jsonl`.
 
 ```json
 {"message":"hello anyone there?","date":"10/09","user":"bob"}
