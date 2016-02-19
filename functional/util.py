@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import gzip
+import io
 import collections
 import six
 import future.builtins as builtins
@@ -134,3 +136,70 @@ class ReusableFile(object):
                            newline=self.newline) as file_content:
             for line in file_content:
                 yield line
+
+
+class CompressedFile(ReusableFile):
+    magic = None
+    file_type = None
+    mime_type = None
+    proper_extension = None
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rb', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None):
+        super(CompressedFile, self).__init__(path,
+                                             delimiter,
+                                             mode,
+                                             buffering,
+                                             encoding,
+                                             errors,
+                                             newline)
+        self.compresslevel = compresslevel
+
+    @classmethod
+    def is_magic(self, data):
+        return data.startswith(self.magic)
+
+
+class GZFile(CompressedFile):
+    """
+    py3 gzip.open(filename, mode='rb', compresslevel=9, encoding=None, errors=None, newline=None)
+    For text mode, a GzipFile object is created, and wrapped in an io.TextIOWrapper isinstance
+    py2 gzip.open(filename[, mode[, compresslevel]])
+    """
+    magic = b'\x1f\x8b\x08'
+    file_type = 'gz'
+    mime_type = 'compressed/gz'
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rb', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None):
+        super(GZFile, self).__init__(path, delimiter, mode, buffering, compresslevel, encoding, errors, newline)
+
+    def __iter__(self):
+        if 't' in self.mode:
+            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz:
+                gz.read1 = gz.read
+                with io.TextIOWrapper(gz,
+                                      encoding=self.encoding,
+                                      errors=self.errors,
+                                      newline=self.newline) as file_content:
+                    for line in file_content:
+                        yield line
+        else:
+            with gzip.open(self.path,
+                           mode=self.mode,
+                           compresslevel=self.compresslevel) as file_content:
+                for line in file_content:
+                    yield line
+
+
+def get_compressed_cls(filename):
+    with open(filename, 'rb') as f:
+        start_of_file = f.read(1024)
+        f.seek(0)
+        for cls in (GZFile,):
+            if cls.is_magic(start_of_file):
+                return cls
+
+        return None

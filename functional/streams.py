@@ -9,7 +9,7 @@ import future.builtins as builtins
 import six
 
 from functional.pipeline import Sequence
-from functional.util import is_primitive, ReusableFile
+from functional.util import is_primitive, ReusableFile, get_compressed_cls
 
 
 def seq(*args):
@@ -77,6 +77,13 @@ def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
     """
     if not re.match('^[rbt]{1,3}$', mode):
         raise ValueError('mode argument must be only have r, b, and t')
+
+    compress_cls = get_compressed_cls(path)
+
+    if compress_cls is not None:
+        return seq(compress_cls(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                         newline=newline))
+
     if delimiter is None:
         return seq(
             ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
