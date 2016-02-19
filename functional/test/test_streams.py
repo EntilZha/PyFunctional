@@ -21,6 +21,11 @@ class TestStreams(unittest.TestCase):
         with self.assertRaises(ValueError):
             seq.open('LICENSE.txt', mode='w').to_list()
 
+    def test_open_gzip(self):
+        with open("functional/test/data/test.csv", "rb") as f:
+            data = f.readlines()
+        self.assertListEqual(data, seq.open('functional/test/data/test.csv.gz').to_list())
+
     def test_range(self):
         self.assertListEqual([0, 1, 2, 3], seq.range(4).to_list())
 
