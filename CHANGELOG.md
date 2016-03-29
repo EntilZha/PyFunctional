@@ -1,6 +1,16 @@
 # Changelog
 ## Next Release
+* TODO
+
+## Release 0.6.0
+### New Features
 * Added support for reading to and from SQLite databases
+* Change project name to `PyFunctional` from `ScalaFunctional`
+* Added `to_pandas` call integration
+
+### Internal Changes
+* Changed code quality check service
+
 
 ## Release 0.5.0
 ### New Features

@@ -18,7 +18,7 @@ setup(
     license='MIT',
     keywords='functional LINQ pipeline data collection rdd scala',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
-    version='0.5.0',
+    version='0.6.0',
     install_requires=['future', 'six'],
     extras_requires={
         'all': ['pandas']

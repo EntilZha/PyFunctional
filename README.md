@@ -1,35 +1,37 @@
-# ScalaFunctional
+# PyFunctional
 [![TravisCI](https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/ScalaFunctional)
 [![Coverage by codecov.io](https://codecov.io/github/EntilZha/ScalaFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/ScalaFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://scalafunctional.readthedocs.org/en/)
 [![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+**Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/ScalaFunctional/issues/62) for details**
+
 ## Introduction
-`ScalaFunctional` is a Python package that makes working with data easy. It takes inspiration from
+`PyFunctional` is a Python package that makes working with data easy. It takes inspiration from
 several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
 functional programming. It also offers native reading and writing of data formats such as text, csv,
 and json files. Support for SQLite3, other databases, and compressed files is planned for the next
 release.
 
-The combination of these ideas makes `ScalaFunctional` a great choice
+The combination of these ideas makes `PyFunctional` a great choice
 for declarative transformation, creating pipelines, and data analysis.
 
 [Original blog post for ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
 
 ## Installation
-`ScalaFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be
+`PyFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be
 installed by running:
 
 ```bash
 # Install from command line
-$ pip install scalafunctional
+$ pip install pyfunctional
 ```
 
 Then in python run: `from functional import seq`
 
 ## Examples
-`ScalaFunctional` is useful for many tasks, and can natively open several common file types. Here
+`PyFunctional` is useful for many tasks, and can natively open several common file types. Here
 are a few examples of what you can do.
 
 ### Simple Example
@@ -44,7 +46,7 @@ seq(1, 2, 3, 4)\
 ```
 
 ### Streams, Transformations and Actions
-`ScalaFunctional` has three types of functions:
+`PyFunctional` has three types of functions:
 
 1. Streams: read data for use by the collections API.
 2. Transformations: transform data from streams with functions such as `map`, `flat_map`, and
@@ -90,7 +92,7 @@ food_cost = seq(transactions).filter(_.reason == 'food').map(_.amount).sum()
 
 ### Word Count and Joins
 The account transactions example could be done easily in pure python using list comprehensions. To
-show some of the things `ScalaFunctional` excels at, take a look at a couple of word count examples.
+show some of the things `PyFunctional` excels at, take a look at a couple of word count examples.
 
 ```python
 words = 'I dont want to believe I want to know'.split(' ')
@@ -126,8 +128,8 @@ word_counts = messages\
 ```
 
 Next, lets continue that example but introduce a json database of users from `examples/users.json`.
-In the previous example we showed how `ScalaFunctional` can do word counts, in the next example lets
-show how `ScalaFunctional` can join different data sources.
+In the previous example we showed how `PyFunctional` can do word counts, in the next example lets
+show how `PyFunctional` can join different data sources.
 
 ```python
 # First read the json file
@@ -172,7 +174,7 @@ In addition to the aggregate functions shown above (`sum` and `max_by`) there ar
 Similarly, there are several more set like functions in addition to `difference`.
 
 ### Reading/Writing SQLite3
-`Scalafunctional` can read and write to SQLite3 database files. In the example below, users are read
+`PyFunctional` can read and write to SQLite3 database files. In the example below, users are read
  from `examples/users.db` which stores them as rows with columns `id:Int` and `name:String`.
 
 ```python
@@ -214,7 +216,7 @@ with sqlite3.connect(':memory:') as conn:
 ```
 
 ### Writing to files
-Just as `ScalaFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
+Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
 
@@ -224,7 +226,7 @@ Summary documentation is below and full documentation is at
 [scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html).
 
 ### Streams API
-All of `ScalaFunctional` streams can be accessed through the `seq` object. The primary way to create
+All of `PyFunctional` streams can be accessed through the `seq` object. The primary way to create
 a stream is by calling `seq` with an iterable. The `seq` callable is smart and is able to accept
 multiple types of parameters as shown in the examples below.
 
@@ -347,10 +349,10 @@ Function | Description | Type
 `for_each(func)` | Executes `func` on each element of the sequence | action
 
 ### Lazy Execution
-Whenever possible, `ScalaFunctional` will compute lazily. This is accomplished by tracking the list
+Whenever possible, `PyFunctional` will compute lazily. This is accomplished by tracking the list
 of transformations that have been applied to the sequence and only evaluating them when an action is
-called. In `ScalaFunctional` this is called tracking lineage. This is also responsible for the
-ability for `ScalaFunctional` to cache results of computation to prevent expensive re-computation.
+called. In `PyFunctional` this is called tracking lineage. This is also responsible for the
+ability for `PyFunctional` to cache results of computation to prevent expensive re-computation.
 This is predominantly done to preserve sensible behavior and used sparingly. For example, calling
 `size()` will cache the underlying sequence. If this was not done and the input was an iterator,
 then further calls would operate on an expired iterator since it was used to compute the length.
@@ -388,7 +390,7 @@ file closing.
 * Parallel execution engine for faster computation `0.5.0`
 * SQL based query planner and interpreter (TBD on if/when/how this would be done)
 * When is this ready for `1.0`?
-* Perhaps think of a better name that better suits this package than `ScalaFunctional`
+* Perhaps think of a better name that better suits this package than `PyFunctional`
 
 ## Contributing and Bug Fixes
 Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
@@ -396,7 +398,7 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
-To contribute, create a fork of `ScalaFunctional`, make your changes, then make sure that they pass
+To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass
 when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
 In order to be merged, all pull requests must:
 
@@ -413,7 +415,7 @@ In order to be merged, all pull requests must:
 [Gitter for chat](https://gitter.im/EntilZha/ScalaFunctional)
 
 ## Supported Python Versions
-`ScalaFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
+`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/ScalaFunctional/blob/master/CHANGELOG.md)
@@ -428,13 +430,13 @@ completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I 
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
 and developed several corporate and personal websites.
 
-I created `ScalaFunctional` while using Python extensively at Trulia, and finding that I missed the
+I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
 Scala is not an option or Spark is overkill.
 
 ## Contributors
-These people have generously contributed their time to improving `ScalaFunctional`
+These people have generously contributed their time to improving `PyFunctional`
 
 * [adrian17](https://github.com/adrian17)
 * [lucidfrontier45](https://github.com/lucidfrontier45)
