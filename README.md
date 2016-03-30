@@ -1,5 +1,5 @@
 # PyFunctional
-[![TravisCI](https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/ScalaFunctional)
+[![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
 [![Coverage by codecov.io](https://codecov.io/github/EntilZha/ScalaFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/ScalaFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://scalafunctional.readthedocs.org/en/)
 [![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
