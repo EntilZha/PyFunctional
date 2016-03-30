@@ -2,15 +2,15 @@ from setuptools import setup, find_packages
 
 try:
     import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
+    long_description = pypandoc.convert('README.md', 'rst', extra_args=['--columns=300'])
 except (IOError, ImportError):
     long_description = open('README.md').read()
 
 setup(
-    name='ScalaFunctional',
+    name='PyFunctional',
     description='Package for creating data pipelines, LINQ, and chain functional programming',
     long_description=long_description,
-    url='https://github.com/EntilZha/ScalaFunctional',
+    url='https://github.com/EntilZha/PyFunctional',
     author='Pedro Rodriguez',
     author_email='ski.rodriguez@gmail.com',
     maintainer='Pedro Rodriguez',

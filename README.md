@@ -275,7 +275,7 @@ complete documentation reference
 [transformation and actions API](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline).
 
 Function | Description | Type
- ------- | -----------  | ----
+ ------- | ----------- | ----
 `map(func)/select(func)` | Maps `func` onto elements of sequence | transformation
 `filter(func)/where(func)` | Filters elements of sequence to only those where `func(element)` is `True` | transformation
 `filter_not(func)` | Filters elements of sequence to only those where `func(element)` is `False` | transformation
