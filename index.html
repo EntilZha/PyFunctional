@@ -19,38 +19,38 @@
     </section>
 
     <section class="main-content">
-      <h1 id="scalafunctional">ScalaFunctional</h1>
-<p><a href="https://travis-ci.org/EntilZha/ScalaFunctional"><img src="https://travis-ci.org/EntilZha/ScalaFunctional.svg?branch=master" alt="TravisCI" /></a>
-<a href="https://codecov.io/github/EntilZha/ScalaFunctional?branch=master"><img src="https://codecov.io/github/EntilZha/ScalaFunctional/coverage.svg?branch=master" alt="Coverage by codecov.io" /></a>
+      <h1 id="pyfunctional">PyFunctional</h1>
+<p><a href="https://travis-ci.org/EntilZha/PyFunctional"><img src="https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master" alt="TravisCI" /></a>
+<a href="https://codecov.io/github/EntilZha/PyFunctional?branch=master"><img src="https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master" alt="Coverage by codecov.io" /></a>
 <a href="http://scalafunctional.readthedocs.org/en/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs" /></a>
-<a href="https://pypi.python.org/pypi/scalafunctional/"><img src="https://badge.fury.io/py/scalafunctional.svg" alt="Latest Version" /></a>
+<a href="https://pypi.python.org/pypi/pyfunctional/"><img src="https://badge.fury.io/py/pyfunctional.svg" alt="Latest Version" /></a>
 <a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter" /></a></p>
 
+<p><strong>Note: <code class="highlighter-rouge">ScalaFunctional</code> is now <code class="highlighter-rouge">PyFunctional</code>, see <a href="https://github.com/EntilZha/PyFunctional/issues/62">RFC</a> for details</strong></p>
+
 <h2 id="introduction">Introduction</h2>
-<p><code class="highlighter-rouge">ScalaFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
+<p><code class="highlighter-rouge">PyFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
 several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
 functional programming. It also offers native reading and writing of data formats such as text, csv,
 and json files. Support for SQLite3, other databases, and compressed files is planned for the next
 release.</p>
 
-<p>The combination of these ideas makes <code class="highlighter-rouge">ScalaFunctional</code> a great choice
+<p>The combination of these ideas makes <code class="highlighter-rouge">PyFunctional</code> a great choice
 for declarative transformation, creating pipelines, and data analysis.</p>
 
-<p><a href="http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/">Original blog post for ScalaFunctional</a></p>
-
 <h2 id="installation">Installation</h2>
-<p><code class="highlighter-rouge">ScalaFunctional</code> is available on <a href="https://pypi.python.org/pypi/ScalaFunctional">pypi</a> and can be
+<p><code class="highlighter-rouge">PyFunctional</code> is available on <a href="https://pypi.python.org/pypi/PyFunctional">pypi</a> and can be
 installed by running:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># Install from command line</span>
-<span class="gp">$ </span>pip install scalafunctional
+<span class="gp">$ </span>pip install pyfunctional
 </code></pre>
 </div>
 
 <p>Then in python run: <code class="highlighter-rouge">from functional import seq</code></p>
 
 <h2 id="examples">Examples</h2>
-<p><code class="highlighter-rouge">ScalaFunctional</code> is useful for many tasks, and can natively open several common file types. Here
+<p><code class="highlighter-rouge">PyFunctional</code> is useful for many tasks, and can natively open several common file types. Here
 are a few examples of what you can do.</p>
 
 <h3 id="simple-example">Simple Example</h3>
@@ -65,7 +65,7 @@ are a few examples of what you can do.</p>
 </div>
 
 <h3 id="streams-transformations-and-actions">Streams, Transformations and Actions</h3>
-<p><code class="highlighter-rouge">ScalaFunctional</code> has three types of functions:</p>
+<p><code class="highlighter-rouge">PyFunctional</code> has three types of functions:</p>
 
 <ol>
   <li>Streams: read data for use by the collections API.</li>
@@ -113,7 +113,7 @@ stream, <code class="highlighter-rouge">map</code> is the transformation, and <c
 
 <h3 id="word-count-and-joins">Word Count and Joins</h3>
 <p>The account transactions example could be done easily in pure python using list comprehensions. To
-show some of the things <code class="highlighter-rouge">ScalaFunctional</code> excels at, take a look at a couple of word count examples.</p>
+show some of the things <code class="highlighter-rouge">PyFunctional</code> excels at, take a look at a couple of word count examples.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">words</span> <span class="o">=</span> <span class="s">'I dont want to believe I want to know'</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)</span>
 <span class="n">seq</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">word</span><span class="p">:</span> <span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reduce_by_key</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
@@ -149,8 +149,8 @@ Below are a few lines out of <code class="highlighter-rouge">examples/chat_logs.
 </div>
 
 <p>Next, lets continue that example but introduce a json database of users from <code class="highlighter-rouge">examples/users.json</code>.
-In the previous example we showed how <code class="highlighter-rouge">ScalaFunctional</code> can do word counts, in the next example lets
-show how <code class="highlighter-rouge">ScalaFunctional</code> can join different data sources.</p>
+In the previous example we showed how <code class="highlighter-rouge">PyFunctional</code> can do word counts, in the next example lets
+show how <code class="highlighter-rouge">PyFunctional</code> can join different data sources.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># First read the json file</span>
 <span class="n">users</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s">'examples/users.json'</span><span class="p">)</span>
@@ -195,7 +195,7 @@ analysis and compare it the required camping gear list stored in <code class="hi
 Similarly, there are several more set like functions in addition to <code class="highlighter-rouge">difference</code>.</p>
 
 <h3 id="readingwriting-sqlite3">Reading/Writing SQLite3</h3>
-<p><code class="highlighter-rouge">Scalafunctional</code> can read and write to SQLite3 database files. In the example below, users are read
+<p><code class="highlighter-rouge">PyFunctional</code> can read and write to SQLite3 database files. In the example below, users are read
  from <code class="highlighter-rouge">examples/users.db</code> which stores them as rows with columns <code class="highlighter-rouge">id:Int</code> and <code class="highlighter-rouge">name:String</code>.</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">db_path</span> <span class="o">=</span> <span class="s">'examples/users.db'</span>
@@ -237,7 +237,7 @@ Similarly, there are several more set like functions in addition to <code class=
 </div>
 
 <h3 id="writing-to-files">Writing to files</h3>
-<p>Just as <code class="highlighter-rouge">ScalaFunctional</code> can read from <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite3</code>, and text files, it can
+<p>Just as <code class="highlighter-rouge">PyFunctional</code> can read from <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite3</code>, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.</p>
 
 <h2 id="documentation">Documentation</h2>
@@ -245,7 +245,7 @@ also write them. For complete API documentation see the collections API table or
 <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html">scalafunctional.readthedocs.org</a>.</p>
 
 <h3 id="streams-api">Streams API</h3>
-<p>All of <code class="highlighter-rouge">ScalaFunctional</code> streams can be accessed through the <code class="highlighter-rouge">seq</code> object. The primary way to create
+<p>All of <code class="highlighter-rouge">PyFunctional</code> streams can be accessed through the <code class="highlighter-rouge">seq</code> object. The primary way to create
 a stream is by calling <code class="highlighter-rouge">seq</code> with an iterable. The <code class="highlighter-rouge">seq</code> callable is smart and is able to accept
 multiple types of parameters as shown in the examples below.</p>
 
@@ -661,10 +661,10 @@ complete documentation reference
 </table>
 
 <h3 id="lazy-execution">Lazy Execution</h3>
-<p>Whenever possible, <code class="highlighter-rouge">ScalaFunctional</code> will compute lazily. This is accomplished by tracking the list
+<p>Whenever possible, <code class="highlighter-rouge">PyFunctional</code> will compute lazily. This is accomplished by tracking the list
 of transformations that have been applied to the sequence and only evaluating them when an action is
-called. In <code class="highlighter-rouge">ScalaFunctional</code> this is called tracking lineage. This is also responsible for the
-ability for <code class="highlighter-rouge">ScalaFunctional</code> to cache results of computation to prevent expensive re-computation.
+called. In <code class="highlighter-rouge">PyFunctional</code> this is called tracking lineage. This is also responsible for the
+ability for <code class="highlighter-rouge">PyFunctional</code> to cache results of computation to prevent expensive re-computation.
 This is predominantly done to preserve sensible behavior and used sparingly. For example, calling
 <code class="highlighter-rouge">size()</code> will cache the underlying sequence. If this was not done and the input was an iterator,
 then further calls would operate on an expired iterator since it was used to compute the length.
@@ -703,7 +703,7 @@ file closing.</p>
   <li>Parallel execution engine for faster computation <code class="highlighter-rouge">0.5.0</code></li>
   <li>SQL based query planner and interpreter (TBD on if/when/how this would be done)</li>
   <li>When is this ready for <code class="highlighter-rouge">1.0</code>?</li>
-  <li>Perhaps think of a better name that better suits this package than <code class="highlighter-rouge">ScalaFunctional</code></li>
+  <li>Perhaps think of a better name that better suits this package than <code class="highlighter-rouge">PyFunctional</code></li>
 </ul>
 
 <h2 id="contributing-and-bug-fixes">Contributing and Bug Fixes</h2>
@@ -712,7 +712,7 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.</p>
 
-<p>To contribute, create a fork of <code class="highlighter-rouge">ScalaFunctional</code>, make your changes, then make sure that they pass
+<p>To contribute, create a fork of <code class="highlighter-rouge">PyFunctional</code>, make your changes, then make sure that they pass
 when running on <a href="travis-ci.org">TravisCI</a> (you may need to sign up for an account and link Github).
 In order to be merged, all pull requests must:</p>
 
@@ -726,15 +726,13 @@ In order to be merged, all pull requests must:</p>
 </ul>
 
 <h2 id="contact">Contact</h2>
-<p><a href="https://groups.google.com/forum/#!forum/scalafunctional">Google Groups mailing list</a></p>
-
-<p><a href="https://gitter.im/EntilZha/ScalaFunctional">Gitter for chat</a></p>
+<p><a href="https://gitter.im/EntilZha/PyFunctional">Gitter for chat</a></p>
 
 <h2 id="supported-python-versions">Supported Python Versions</h2>
-<p><code class="highlighter-rouge">ScalaFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
+<p><code class="highlighter-rouge">PyFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
 
 <h2 id="changelog">Changelog</h2>
-<p><a href="https://github.com/EntilZha/ScalaFunctional/blob/master/CHANGELOG.md">Changelog</a></p>
+<p><a href="https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md">Changelog</a></p>
 
 <h2 id="about-me">About me</h2>
 <p>To learn more about me (the author) visit my webpage at
@@ -746,13 +744,13 @@ completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I 
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
 and developed several corporate and personal websites.</p>
 
-<p>I created <code class="highlighter-rouge">ScalaFunctional</code> while using Python extensively at Trulia, and finding that I missed the
+<p>I created <code class="highlighter-rouge">PyFunctional</code> while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
 Scala is not an option or Spark is overkill.</p>
 
 <h2 id="contributors">Contributors</h2>
-<p>These people have generously contributed their time to improving <code class="highlighter-rouge">ScalaFunctional</code></p>
+<p>These people have generously contributed their time to improving <code class="highlighter-rouge">PyFunctional</code></p>
 
 <ul>
   <li><a href="https://github.com/adrian17">adrian17</a></li>

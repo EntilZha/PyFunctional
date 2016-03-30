@@ -1,2 +1,8 @@
 jekyll-site/_site
 README.md
+PyFunctional.egg-info/
+build/
+dist/
+*.pyc
+__pycache__/
+functional/test/data/tmp
