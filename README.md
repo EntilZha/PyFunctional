@@ -1,11 +1,11 @@
 # PyFunctional
 [![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
-[![Coverage by codecov.io](https://codecov.io/github/EntilZha/ScalaFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/ScalaFunctional?branch=master)
+[![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://scalafunctional.readthedocs.org/en/)
-[![Latest Version](https://badge.fury.io/py/scalafunctional.svg)](https://pypi.python.org/pypi/scalafunctional/)
+[![Latest Version](https://badge.fury.io/py/pyfunctional.svg)](https://pypi.python.org/pypi/pyfunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-**Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/ScalaFunctional/issues/62) for details**
+**Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/PyFunctional/issues/62) for details**
 
 ## Introduction
 `PyFunctional` is a Python package that makes working with data easy. It takes inspiration from
@@ -17,10 +17,8 @@ release.
 The combination of these ideas makes `PyFunctional` a great choice
 for declarative transformation, creating pipelines, and data analysis.
 
-[Original blog post for ScalaFunctional](http://entilzha.github.io/blog/2015/03/14/functional-programming-collections-python/)
-
 ## Installation
-`PyFunctional` is available on [pypi](https://pypi.python.org/pypi/ScalaFunctional) and can be
+`PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
 installed by running:
 
 ```bash
@@ -410,15 +408,13 @@ In order to be merged, all pull requests must:
 * Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
-[Google Groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
-
-[Gitter for chat](https://gitter.im/EntilZha/ScalaFunctional)
+[Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
 `PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
 
 ## Changelog
-[Changelog](https://github.com/EntilZha/ScalaFunctional/blob/master/CHANGELOG.md)
+[Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
 
 ## About me
 To learn more about me (the author) visit my webpage at
