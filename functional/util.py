@@ -1,13 +1,20 @@
 from __future__ import absolute_import
+from itertools import chain, count, islice, takewhile
+from multiprocessing import Pool, cpu_count
 
 import collections
-import six
+import pickle
 import future.builtins as builtins
+import six
+
 
 if six.PY2:
     CSV_WRITE_MODE = 'wb'
+    PROTOCOL = 2
 else:
     CSV_WRITE_MODE = 'w'
+    PROTOCOL = 4
+CPU_COUNT = cpu_count()
 
 
 def is_primitive(val):
@@ -89,6 +96,47 @@ def is_iterable(val):
     if isinstance(val, list):
         return False
     return isinstance(val, collections.Iterable)
+
+
+def split_every(parts, iterable):
+    """
+    Split an iterable in n parts
+
+    >>> l = [1, 2, 3, 4]
+    >>> split_every(l, 2)
+    [[1, 2], [3, 4]]
+
+    :param iterable: iterable to split
+    :param parts: number of chunks
+    :return: return the iterable it split in n chunks
+    """
+    return takewhile(bool, (list(islice(iterable, parts)) for _ in count(0)))
+
+
+def unpack(packed):
+    func, args = pickle.loads(packed)
+    return func(*args)
+
+
+def pack(func, args):
+    return pickle.dumps((func, args), PROTOCOL)
+
+
+def is_serializable(func):
+    try:
+        pickle.dumps(func, PROTOCOL)
+        return True
+    except (AttributeError, pickle.PicklingError):
+        return False
+
+
+def parallelize(func, result):
+    if not is_serializable(func):
+        return func(result)
+    pool = Pool(processes=CPU_COUNT)
+    chunks = split_every(CPU_COUNT, iter(result))
+    packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
+    return chain.from_iterable(pool.map(unpack, packed_chunks))
 
 
 class ReusableFile(object):

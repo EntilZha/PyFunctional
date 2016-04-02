@@ -21,6 +21,7 @@ class ExecutionStrategies(object):
     Enum like object listing the types of execution strategies
     """
     PRE_COMPUTE = 0
+    PARALLEL = 1
 
 
 #: Cache transformation
@@ -45,7 +46,9 @@ def map_t(func):
     :param func: map function
     :return: transformation
     """
-    return Transformation('map({0})'.format(name(func)), partial(map, func), None)
+    return Transformation('map({0})'.format(name(func)),
+                          partial(map, func),
+                          {ExecutionStrategies.PARALLEL})
 
 
 def select_t(func):
@@ -54,7 +57,9 @@ def select_t(func):
     :param func: select function
     :return: transformation
     """
-    return Transformation('select({0})'.format(name(func)), partial(map, func), None)
+    return Transformation('select({0})'.format(name(func)),
+                          partial(map, func),
+                          {ExecutionStrategies.PARALLEL})
 
 
 def filter_t(func):
@@ -63,7 +68,9 @@ def filter_t(func):
     :param func: filter function
     :return: transformation
     """
-    return Transformation('filter({0})'.format(name(func)), partial(filter, func), None)
+    return Transformation('filter({0})'.format(name(func)),
+                          partial(filter, func),
+                          {ExecutionStrategies.PARALLEL})
 
 
 def where_t(func):
@@ -72,7 +79,9 @@ def where_t(func):
     :param func: where function
     :return: transformation
     """
-    return Transformation('where({0})'.format(name(func)), partial(filter, func), None)
+    return Transformation('where({0})'.format(name(func)),
+                          partial(filter, func),
+                          {ExecutionStrategies.PARALLEL})
 
 
 def filter_not_t(func):
@@ -82,7 +91,8 @@ def filter_not_t(func):
     :return: transformation
     """
     return Transformation('filter_not({0})'.format(name(func)),
-                          partial(six.moves.filterfalse, func), None)
+                          partial(six.moves.filterfalse, func),
+                          {ExecutionStrategies.PARALLEL})
 
 
 def reversed_t():

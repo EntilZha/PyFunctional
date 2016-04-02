@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from functional.transformations import CACHE_T
 from functional.transformations import ExecutionStrategies
+from functional.util import parallelize
 
 
 class Lineage(object):
@@ -46,9 +47,14 @@ class Lineage(object):
         result = sequence
         last_cache_index = self.cache_scan()
         for transform in self.transformations[last_cache_index:]:
-            if transform.execution_strategies is not None \
-                    and ExecutionStrategies.PRE_COMPUTE in transform.execution_strategies:
-                result = transform.function(list(result))
+            strategies = transform.execution_strategies
+            if strategies is not None:
+                if ExecutionStrategies.PRE_COMPUTE in strategies:
+                    result = list(result)
+                if ExecutionStrategies.PARALLEL in strategies:
+                    result = parallelize(transform.function, result)
+                else:
+                    result = transform.function(result)
             else:
                 result = transform.function(result)
         return iter(result)
