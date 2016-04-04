@@ -3,8 +3,11 @@ from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
 
 import collections
-import pickle
 import future.builtins as builtins
+try:
+    import dill as serializer
+except ImportError:
+    import pickle as serializer
 import six
 
 
@@ -108,25 +111,27 @@ def split_every(parts, iterable):
 
     :param iterable: iterable to split
     :param parts: number of chunks
-    :return: return the iterable it split in n chunks
+    :return: return the iterable split in parts
     """
     return takewhile(bool, (list(islice(iterable, parts)) for _ in count(0)))
 
 
 def unpack(packed):
-    func, args = pickle.loads(packed)
-    return func(*args)
+    func, args = serializer.loads(packed)
+    result = func(*args)
+    if isinstance(result, collections.Iterable):
+        return list(result)
 
 
 def pack(func, args):
-    return pickle.dumps((func, args), PROTOCOL)
+    return serializer.dumps((func, args), PROTOCOL)
 
 
 def is_serializable(func):
     try:
-        pickle.dumps(func, PROTOCOL)
+        serializer.dumps(func, PROTOCOL)
         return True
-    except (AttributeError, pickle.PicklingError):
+    except (AttributeError, serializer.PicklingError):
         return False
 
 
