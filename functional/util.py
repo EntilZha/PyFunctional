@@ -138,10 +138,11 @@ def is_serializable(func):
 def parallelize(func, result):
     if not is_serializable(func):
         return func(result)
-    pool = Pool(processes=CPU_COUNT)
-    chunks = split_every(CPU_COUNT, iter(result))
-    packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
-    return chain.from_iterable(pool.map(unpack, packed_chunks))
+    with Pool(processes=CPU_COUNT) as pool:
+        chunks = split_every(CPU_COUNT, iter(result))
+        packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
+        results = pool.map(unpack, packed_chunks)
+    return chain.from_iterable(results)
 
 
 class ReusableFile(object):
