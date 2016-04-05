@@ -8,21 +8,13 @@ import types
 from future.builtins import map, filter, zip, range
 
 import six
+from functional.execution import ExecutionStrategies
 
 
 #: Defines a Transformation from a name, function, and execution_strategies
 Transformation = collections.namedtuple(
     'Transformation', ['name', 'function', 'execution_strategies']
 )
-
-
-class ExecutionStrategies(object):
-    """
-    Enum like object listing the types of execution strategies
-    """
-    PRE_COMPUTE = 0
-    PARALLEL = 1
-
 
 #: Cache transformation
 CACHE_T = Transformation('cache', None, None)

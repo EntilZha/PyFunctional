@@ -4,7 +4,7 @@ the primary entrypoint at streams.seq
 """
 from __future__ import absolute_import
 
-from functional.streams import seq
+from functional.streams import seq, pseq
 
 __author__ = "Pedro Rodriguez"
 __copyright__ = "Copyright 2015, Pedro Rodriguez"

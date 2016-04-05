@@ -8,6 +8,7 @@ import sqlite3 as sqlite3api
 import future.builtins as builtins
 import six
 
+from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
 from functional.util import is_primitive, ReusableFile
 
@@ -44,14 +45,28 @@ def seq(*args):
     :return: wrapped sequence
 
     """
+    return _seq(ExecutionEngine(), *args)
+
+
+def pseq(*args):
+    """
+    Same as functional.seq but with parallel support for maps/where and
+    filter/select. Returns a functional.pipeline.Sequence wrapping
+    the original sequence and passing
+    functional.execution.ParallelExecutionEngine as the execution engine.
+    """
+    return _seq(ParallelExecutionEngine(), *args)
+
+
+def _seq(engine, *args):
     if len(args) == 0:
         raise TypeError("seq() takes at least 1 argument ({0} given)".format(len(args)))
     elif len(args) > 1:
-        return Sequence(list(args))
+        return Sequence(list(args), engine=engine)
     elif is_primitive(args[0]):
-        return Sequence([args[0]])
+        return Sequence([args[0]], engine=engine)
     else:
-        return Sequence(args[0])
+        return Sequence(args[0], engine=engine)
 
 
 def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,

@@ -1,15 +1,14 @@
 from __future__ import absolute_import
 
+from functional.execution import ExecutionEngine
 from functional.transformations import CACHE_T
-from functional.transformations import ExecutionStrategies
-from functional.util import compose, parallelize
 
 
 class Lineage(object):
     """
     Class for tracking the lineage of transformations, and applying them to a given sequence.
     """
-    def __init__(self, prior_lineage=None):
+    def __init__(self, prior_lineage=None, engine=None):
         """
         Construct an empty lineage if prior_lineage is None or if its not use it as the list of
         current transformations
@@ -18,6 +17,8 @@ class Lineage(object):
         :return: new Lineage object
         """
         self.transformations = [] if prior_lineage is None else list(prior_lineage.transformations)
+        self.engine = ((engine or ExecutionEngine()) if prior_lineage is None
+                       else prior_lineage.engine)
 
     def __repr__(self):
         """
@@ -44,23 +45,9 @@ class Lineage(object):
         self.transformations.append(transform)
 
     def evaluate(self, sequence):
-        result = sequence
         last_cache_index = self.cache_scan()
-        staged = []
-        for transform in self.transformations[last_cache_index:]:
-            strategies = transform.execution_strategies
-            if strategies and ExecutionStrategies.PRE_COMPUTE in strategies:
-                result = list(result)
-            if strategies and ExecutionStrategies.PARALLEL in strategies:
-                staged.append(transform.function)
-            else:
-                if staged:
-                    result = parallelize(compose(*staged), result)
-                    staged = []
-                result = transform.function(result)
-        if staged:
-            result = parallelize(compose(*staged), result)
-        return iter(result)
+        transformations = self.transformations[last_cache_index:]
+        return self.engine.evaluate(sequence, transformations)
 
     def cache_scan(self):
         try:

@@ -16,6 +16,7 @@ import re
 import six
 import future.builtins as builtins
 
+from functional.execution import ExecutionEngine
 from functional.lineage import Lineage
 from functional.util import is_iterable, is_primitive, is_namedtuple, identity, CSV_WRITE_MODE
 from functional import transformations
@@ -26,7 +27,7 @@ class Sequence(object):
     Sequence is a wrapper around any type of sequence which provides access to common
     functional transformations and reductions in a data pipelining style
     """
-    def __init__(self, sequence, transform=None):
+    def __init__(self, sequence, transform=None, engine=None):
         # pylint: disable=protected-access
         """
         Takes a sequence and wraps it around a Sequence object.
@@ -44,12 +45,14 @@ class Sequence(object):
         :param sequence: sequence of items to wrap in a Sequence
         :return: sequence wrapped in a Sequence
         """
+        self.engine = engine or ExecutionEngine()
         if isinstance(sequence, Sequence):
             self._base_sequence = sequence._base_sequence
-            self._lineage = Lineage(prior_lineage=sequence._lineage)
+            self._lineage = Lineage(prior_lineage=sequence._lineage,
+                                    engine=engine)
         elif isinstance(sequence, list) or isinstance(sequence, tuple) or is_iterable(sequence):
             self._base_sequence = sequence
-            self._lineage = Lineage()
+            self._lineage = Lineage(engine=engine)
         else:
             raise TypeError("Given sequence must be an iterable value")
         if transform is not None:
@@ -209,7 +212,7 @@ class Sequence(object):
             self._base_sequence = list(self._evaluate())
             self._lineage.apply(transformations.CACHE_T)
         if delete_lineage:
-            self._lineage = Lineage()
+            self._lineage = Lineage(engine=self.engine)
         return self
 
     def head(self):
