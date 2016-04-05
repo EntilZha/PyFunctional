@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from itertools import chain, count, islice, takewhile
+from functools import reduce
 from multiprocessing import Pool, cpu_count
 
 import collections
@@ -143,6 +144,10 @@ def parallelize(func, result):
         packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
         results = pool.map(unpack, packed_chunks)
     return chain.from_iterable(results)
+
+
+def compose(*functions):
+    return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
 class ReusableFile(object):
