@@ -13,7 +13,7 @@ from functional.pipeline import Sequence
 from functional.util import is_primitive, ReusableFile
 
 
-def seq(*args):
+def seq(*args, **kwargs):
     """
     Primary entrypoint for the functional package. Returns a functional.pipeline.Sequence wrapping
     the original sequence.
@@ -45,17 +45,22 @@ def seq(*args):
     :return: wrapped sequence
 
     """
-    return _seq(ExecutionEngine(), *args)
+    processes = kwargs.get("processes")
+    if processes:
+        return _seq(ParallelExecutionEngine(processes=processes), *args)
+    else:
+        return _seq(ExecutionEngine(), *args)
 
 
-def pseq(*args):
+def pseq(*args, **kwargs):
     """
     Same as functional.seq but with parallel support for maps/where and
     filter/select. Returns a functional.pipeline.Sequence wrapping
     the original sequence and passing
     functional.execution.ParallelExecutionEngine as the execution engine.
     """
-    return _seq(ParallelExecutionEngine(), *args)
+    processes = kwargs.get("processes")
+    return _seq(ParallelExecutionEngine(processes=processes), *args)
 
 
 def _seq(engine, *args):

@@ -25,7 +25,12 @@ class ExecutionEngine(object):
 
 class ParallelExecutionEngine(ExecutionEngine):
 
+    def __init__(self, processes=None, *args, **kwargs):
+        super(ParallelExecutionEngine, self).__init__(*args, **kwargs)
+        self._processes = processes
+
     def evaluate(self, sequence, transformations):
+        processes = self._processes
         result = sequence
         staged = []
         for transform in transformations:
@@ -36,9 +41,9 @@ class ParallelExecutionEngine(ExecutionEngine):
                 staged.insert(0, transform.function)
             else:
                 if staged:
-                    result = parallelize(compose(*staged), result)
+                    result = parallelize(compose(*staged), result, processes)
                     staged = []
                 result = transform.function(result)
         if staged:
-            result = parallelize(compose(*staged), result)
+            result = parallelize(compose(*staged), result, processes)
         return iter(result)

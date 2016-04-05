@@ -136,17 +136,22 @@ def is_serializable(func):
         return False
 
 
-def parallelize(func, result):
+def parallelize(func, result, processes=None):
     if not is_serializable(func):
         return func(result)
-    with Pool(processes=CPU_COUNT) as pool:
-        chunks = split_every(CPU_COUNT, iter(result))
+    if processes is None or processes < 1:
+        processes = CPU_COUNT
+    else:
+        processes = min(processes, CPU_COUNT)
+    with Pool(processes=processes) as pool:
+        chunks = split_every(processes, iter(result))
         packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
         results = pool.map(unpack, packed_chunks)
     return chain.from_iterable(results)
 
 
 def compose(*functions):
+    # pylint: disable=undefined-variable
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
