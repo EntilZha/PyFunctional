@@ -1,3 +1,4 @@
+from functools import partial
 from functional.util import compose, parallelize
 
 
@@ -12,6 +13,7 @@ class ExecutionStrategies(object):
 class ExecutionEngine(object):
 
     def evaluate(self, sequence, transformations):
+        # pylint: disable=no-self-use
         result = sequence
         for transform in transformations:
             strategies = transform.execution_strategies
@@ -25,13 +27,16 @@ class ExecutionEngine(object):
 
 class ParallelExecutionEngine(ExecutionEngine):
 
-    def __init__(self, processes=None, *args, **kwargs):
+    def __init__(self, processes=None, raise_errors=True,
+                 *args, **kwargs):
         super(ParallelExecutionEngine, self).__init__(*args, **kwargs)
-        self._processes = processes
+        self.processes = processes
+        self.raise_errors = raise_errors
 
     def evaluate(self, sequence, transformations):
-        processes = self._processes
         result = sequence
+        parallel = partial(parallelize, processes=self.processes,
+                           raise_errors=self.raise_errors)
         staged = []
         for transform in transformations:
             strategies = transform.execution_strategies
@@ -41,9 +46,9 @@ class ParallelExecutionEngine(ExecutionEngine):
                 staged.insert(0, transform.function)
             else:
                 if staged:
-                    result = parallelize(compose(*staged), result, processes)
+                    result = parallel(compose(*staged), result)
                     staged = []
                 result = transform.function(result)
         if staged:
-            result = parallelize(compose(*staged), result, processes)
+            result = parallel(compose(*staged), result)
         return iter(result)

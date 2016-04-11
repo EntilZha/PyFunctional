@@ -4,12 +4,13 @@ from functools import reduce
 from multiprocessing import Pool, cpu_count
 
 import collections
-import future.builtins as builtins
 try:
     import dill as serializer
 except ImportError:
     import pickle as serializer
+import future.builtins as builtins
 import six
+
 
 
 if six.PY2:
@@ -128,18 +129,27 @@ def pack(func, args):
     return serializer.dumps((func, args), PROTOCOL)
 
 
-def is_serializable(func):
+def is_serializable(func, raise_errors=True):
+    if raise_errors is None:
+        raise_errors = True
     try:
         serializer.dumps(func, PROTOCOL)
         return True
     except (AttributeError, serializer.PicklingError):
+        if raise_errors:
+            raise serializer.PicklingError(
+                "Function {} is not serializable. "
+                "Try installing dill or passing raise_errors to False "
+                "for non-parallel execution when serialization fails."
+                .format(str(func)))
         return False
 
 
-def parallelize(func, result, processes=None):
-    if not is_serializable(func):
+def parallelize(func, result, processes=None, raise_errors=True):
+    if not is_serializable(func, raise_errors=raise_errors):
         return func(result)
-    return chain.from_iterable(lazy_parallelize(func, result, processes))
+    parallel_iter = lazy_parallelize(func, result, processes=processes)
+    return chain.from_iterable(parallel_iter)
 
 
 def lazy_parallelize(func, result, processes=None):

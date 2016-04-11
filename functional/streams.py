@@ -13,215 +13,200 @@ from functional.pipeline import Sequence
 from functional.util import is_primitive, ReusableFile
 
 
-def seq(*args, **kwargs):
-    """
-    Primary entrypoint for the functional package. Returns a functional.pipeline.Sequence wrapping
-    the original sequence.
+class Stream(object):
 
-    Additionally it parses various types of input to a Sequence as best it can.
+    def __call__(self, *args):
+        return self.sequence(*args)
 
-    >>> seq([1, 2, 3])
-    [1, 2, 3]
+    def sequence(self, *args):
+        # pylint: disable=no-self-use
+        engine = ExecutionEngine()
+        if len(args) == 0:
+            raise TypeError("seq() takes at least 1 argument ({0} given)"
+                            .format(len(args)))
+        elif len(args) > 1:
+            return Sequence(list(args), engine=engine)
+        elif is_primitive(args[0]):
+            return Sequence([args[0]], engine=engine)
+        else:
+            return Sequence(args[0], engine=engine)
 
-    >>> seq(1, 2, 3)
-    [1, 2, 3]
+    def open(self, path, delimiter=None, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Additional entry point to Sequence which parses input files as defined
+        by options. Path specifies what file to parse. If delimiter is not
+        None, then the file is read in bulk then split on it. If it is None
+        (the default), then the file is parsed as sequence of lines. The rest
+        of the options are passed directly to builtins.open with the exception
+        that write/append file modes is not allowed.
 
-    >>> seq(1)
-    [1]
+        >>> seq.open('examples/gear_list.txt').take(1)
+        [u'tent\n']
 
-    >>> seq(range(4))
-    [0, 1, 2, 3]
+        :param path: path to file
+        :param delimiter: delimiter to split joined text on. if None, defaults to file.readlines()
+        :param mode: file open mode
+        :param buffering: passed to builtins.open
+        :param encoding: passed to builtins.open
+        :param errors: passed to builtins.open
+        :param newline: passed to builtins.open
+        :return: output of file depending on options wrapped in a Sequence via seq
+        """
+        if not re.match('^[rbt]{1,3}$', mode):
+            raise ValueError('mode argument must be only have r, b, and t')
+        if delimiter is None:
+            return self.sequence(
+                ReusableFile(path, mode=mode, buffering=buffering,
+                             encoding=encoding, errors=errors,
+                             newline=newline))
+        else:
+            with builtins.open(path, mode=mode, buffering=buffering,
+                               encoding=encoding, errors=errors,
+                               newline=newline) as data:
+                return self.sequence(''.join(data.readlines()).split(delimiter))
 
-    >>> type(seq([1, 2]))
-    functional.pipeline.Sequence
+    def range(self, *args):
+        """
+        Additional entry point to Sequence which wraps the builtin range generator.
+        seq.range(args) is equivalent to seq(range(args)).
 
-    >>> type(Sequence([1, 2]))
-    functional.pipeline.Sequence
+        >>> seq.range(1, 8, 2)
+        [1, 3, 5, 7]
 
-    :param args: Three types of arguments are valid.
-        1) Iterable which is then directly wrapped as a Sequence
-        2) A list of arguments is converted to a Sequence
-        3) A single non-iterable is converted to a single element Sequence
-    :return: wrapped sequence
+        :param args: args to range function
+        :return: range(args) wrapped by a sequence
+        """
+        rng = builtins.range(*args)
+        return self.sequence(rng)
 
-    """
-    processes = kwargs.get("processes")
-    if processes:
-        return _seq(ParallelExecutionEngine(processes=processes), *args)
-    else:
-        return _seq(ExecutionEngine(), *args)
+    def csv(self, csv_file, dialect='excel', **fmt_params):
+        """
+        Additional entry point to Sequence which parses the input of a csv stream or file according
+        to the defined options. csv_file can be a filepath or an object that implements the iterator
+        interface (defines next() or __next__() depending on python version).
 
+        >>> seq.csv('examples/camping_purchases.csv').take(2)
+        [['1', 'tent', '300'], ['2', 'food', '100']]
 
-def pseq(*args, **kwargs):
-    """
-    Same as functional.seq but with parallel support for maps/where and
-    filter/select. Returns a functional.pipeline.Sequence wrapping
-    the original sequence and passing
-    functional.execution.ParallelExecutionEngine as the execution engine.
-    """
-    processes = kwargs.get("processes")
-    return _seq(ParallelExecutionEngine(processes=processes), *args)
+        :param csv_file: path to file or iterator object
+        :param dialect: dialect of csv, passed to csv.reader
+        :param fmt_params: options passed to csv.reader
+        :return: Sequence wrapping csv file
+        """
+        if isinstance(csv_file, str):
+            input_file = ReusableFile(csv_file, mode='r')
+        elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
+            input_file = csv_file
+        else:
+            raise ValueError('csv_file must be a file path or implement the iterator interface')
 
+        csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
+        return self.sequence(csv_input).cache(delete_lineage=True)
 
-def _seq(engine, *args):
-    if len(args) == 0:
-        raise TypeError("seq() takes at least 1 argument ({0} given)".format(len(args)))
-    elif len(args) > 1:
-        return Sequence(list(args), engine=engine)
-    elif is_primitive(args[0]):
-        return Sequence([args[0]], engine=engine)
-    else:
-        return Sequence(args[0], engine=engine)
+    def jsonl(self, jsonl_file):
+        """
+        Additional entry point to Sequence which parses the input of a jsonl
+        file stream or file from the given path. Jsonl formatted files have a
+        single valid json value on each line which is parsed by the python
+        json module.
 
+        >>> seq.jsonl('examples/chat_logs.jsonl').first()
+        {u'date': u'10/09', u'message': u'hello anyone there?', u'user': u'bob'}
 
-def open(path, delimiter=None, mode='r', buffering=-1, encoding=None,
-         errors=None, newline=None):
-    """
-    Additional entry point to Sequence which parses input files as defined by options. Path
-    specifies what file to parse. If delimiter is not None, then the file is read in bulk then
-    split on it. If it is None (the default), then the file is parsed as sequence of lines. The
-    rest of the options are passed directly to builtins.open with the exception that write/append
-    file modes is not allowed.
+        :param jsonl_file: path or file containing jsonl content
+        :return: Sequence wrapping jsonl file
+        """
+        if isinstance(jsonl_file, str):
+            input_file = ReusableFile(jsonl_file)
+        else:
+            input_file = jsonl_file
+        return self.sequence(input_file).map(jsonapi.loads).cache(delete_lineage=True)
 
-    >>> seq.open('examples/gear_list.txt').take(1)
-    [u'tent\n']
+    def json(self, json_file):
+        """
+        Additional entry point to Sequence which parses the input of a json
+        file handler or file from the given path. Json files are parsed in the
+        following ways depending on if the root is a dictionary or array.
+        1) If the json's root is a dictionary, these are parsed into a
+           sequence of (Key, Value) pairs
+        2) If the json's root is an array, these are parsed into a sequence
+           of entries
 
-    :param path: path to file
-    :param delimiter: delimiter to split joined text on. if None, defaults to file.readlines()
-    :param mode: file open mode
-    :param buffering: passed to builtins.open
-    :param encoding: passed to builtins.open
-    :param errors: passed to builtins.open
-    :param newline: passed to builtins.open
-    :return: output of file depending on options wrapped in a Sequence via seq
-    """
-    if not re.match('^[rbt]{1,3}$', mode):
-        raise ValueError('mode argument must be only have r, b, and t')
-    if delimiter is None:
-        return seq(
-            ReusableFile(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                         newline=newline))
-    else:
-        with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                           newline=newline) as data:
-            return seq(''.join(data.readlines()).split(delimiter))
+        >>> seq.json('examples/users.json').first()
+        [u'sarah', {u'date_created': u'08/08', u'news_email': True, u'email': u'sarah@gmail.com'}]
 
+        :param json_file: path or file containing json content
+        :return: Sequence wrapping jsonl file
+        """
+        if isinstance(json_file, str):
+            input_file = builtins.open(json_file, mode='r')
+            json_input = jsonapi.load(input_file)
+            input_file.close()
+        elif hasattr(json_file, 'read'):
+            json_input = jsonapi.load(json_file)
+        else:
+            raise ValueError('json_file must be a file path or implement the iterator interface')
 
-def range(*args):
-    """
-    Additional entry point to Sequence which wraps the builtin range generator.
-    seq.range(args) is equivalent to seq(range(args)).
+        if isinstance(json_input, list):
+            return self.sequence(json_input)
+        else:
+            return self.sequence(six.viewitems(json_input))
 
-    >>> seq.range(1, 8, 2)
-    [1, 3, 5, 7]
+    def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
+        """
+        Additional entry point to Sequence which query data from sqlite db file.
 
-    :param args: args to range function
-    :return: range(args) wrapped by a sequence
-    """
-    rng = builtins.range(*args)
-    return seq(rng)
+        >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
+        [(1, 'Tom')]
 
+        :param conn: path or sqlite connection, cursor
+        :param sql: SQL query string
+        :return: Sequence wrapping SQL cursor
+        """
 
-def csv(csv_file, dialect='excel', **fmt_params):
-    """
-    Additional entry point to Sequence which parses the input of a csv stream or file according
-    to the defined options. csv_file can be a filepath or an object that implements the iterator
-    interface (defines next() or __next__() depending on python version).
+        if parameters is None:
+            parameters = ()
 
-    >>> seq.csv('examples/camping_purchases.csv').take(2)
-    [['1', 'tent', '300'], ['2', 'food', '100']]
-
-    :param csv_file: path to file or iterator object
-    :param dialect: dialect of csv, passed to csv.reader
-    :param fmt_params: options passed to csv.reader
-    :return: Sequence wrapping csv file
-    """
-    if isinstance(csv_file, str):
-        input_file = ReusableFile(csv_file, mode='r')
-    elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
-        input_file = csv_file
-    else:
-        raise ValueError('csv_file must be a file path or implement the iterator interface')
-
-    csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
-    return seq(csv_input).cache(delete_lineage=True)
-
-
-def jsonl(jsonl_file):
-    """
-    Additional entry point to Sequence which parses the input of a jsonl file stream or file from
-    the given path. Jsonl formatted files have a single valid json value on each line which is
-    parsed by the python json module.
-
-    >>> seq.jsonl('examples/chat_logs.jsonl').first()
-    {u'date': u'10/09', u'message': u'hello anyone there?', u'user': u'bob'}
-
-    :param jsonl_file: path or file containing jsonl content
-    :return: Sequence wrapping jsonl file
-    """
-    if isinstance(jsonl_file, str):
-        input_file = ReusableFile(jsonl_file)
-    else:
-        input_file = jsonl_file
-    return seq(input_file).map(jsonapi.loads).cache(delete_lineage=True)
-
-
-def json(json_file):
-    """
-    Additional entry point to Sequence which parses the input of a json file handler or file from
-    the given path. Json files are parsed in the following ways depending on if the root is a
-    dictionary or array.
-    1) If the json's root is a dictionary, these are parsed into a sequence of (Key, Value) pairs
-    2) If the json's root is an array, these are parsed into a sequence of entries
-
-    >>> seq.json('examples/users.json').first()
-    [u'sarah', {u'date_created': u'08/08', u'news_email': True, u'email': u'sarah@gmail.com'}]
-
-    :param json_file: path or file containing json content
-    :return: Sequence wrapping jsonl file
-    """
-    if isinstance(json_file, str):
-        input_file = builtins.open(json_file, mode='r')
-        json_input = jsonapi.load(input_file)
-        input_file.close()
-    elif hasattr(json_file, 'read'):
-        json_input = jsonapi.load(json_file)
-    else:
-        raise ValueError('json_file must be a file path or implement the iterator interface')
-
-    if isinstance(json_input, list):
-        return seq(json_input)
-    else:
-        return seq(six.viewitems(json_input))
+        if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
+            return self.sequence(conn.execute(sql, parameters))
+        elif isinstance(conn, str):
+            with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
+                return self.sequence(input_conn.execute(sql, parameters))
+        else:
+            raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
 
 
-def sqlite3(conn, sql, parameters=None, *args, **kwargs):
-    """
-    Additional entry point to Sequence which query data from sqlite db file.
+class ParallelStream(Stream):
 
-    >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
-    [(1, 'Tom')]
+    def __init__(self, processes=None, raise_errors=True):
+        self.processes = processes
+        self.raise_errors = raise_errors
 
-    :param conn: path or sqlite connection, cursor
-    :param sql: SQL query string
-    :return: Sequence wrapping SQL cursor
-    """
+    def __call__(self, *args, **kwargs):
+        self.processes = kwargs.get("processes")
+        self.raise_errors = kwargs.get("raise_errors")
+        if not args and kwargs:
+            return self
+        else:
+            return self.sequence(*args, **kwargs)
 
-    if parameters is None:
-        parameters = ()
+    def sequence(self, *args, **kwargs):
+        processes = kwargs.get("processes") or self.processes
+        raise_errors = kwargs.get("raise_errors") or self.raise_errors
+        engine = ParallelExecutionEngine(
+            processes=processes, raise_errors=raise_errors
+        )
+        if len(args) == 0:
+            raise TypeError("pseq() takes at least 1 argument ({0} given)"
+                            .format(len(args)))
+        elif len(args) > 1:
+            return Sequence(list(args), engine=engine)
+        elif is_primitive(args[0]):
+            return Sequence([args[0]], engine=engine)
+        else:
+            return Sequence(args[0], engine=engine)
 
-    if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
-        return seq(conn.execute(sql, parameters))
-    elif isinstance(conn, str):
-        with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
-            return seq(input_conn.execute(sql, parameters))
-    else:
-        raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
-
-
-seq.open = open
-seq.range = range
-seq.csv = csv
-seq.jsonl = jsonl
-seq.json = json
-seq.sqlite3 = sqlite3
+# pylint: disable=invalid-name
+seq = Stream()
+pseq = ParallelStream()
