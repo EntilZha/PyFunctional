@@ -158,7 +158,7 @@ def lazy_parallelize(func, result, processes=None):
     else:
         processes = min(processes, CPU_COUNT)
     try:
-        chunk_size = len(result) // processes
+        chunk_size = (len(result) // processes) or processes
     except TypeError:
         chunk_size = processes
     with Pool(processes=processes) as pool:
