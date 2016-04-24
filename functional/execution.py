@@ -39,15 +39,15 @@ class ParallelExecutionEngine(ExecutionEngine):
                            raise_errors=self.raise_errors)
         staged = []
         for transform in transformations:
-            strategies = transform.execution_strategies
-            if strategies and ExecutionStrategies.PRE_COMPUTE in strategies:
-                result = list(result)
-            if strategies and ExecutionStrategies.PARALLEL in strategies:
+            strategies = transform.execution_strategies or {}
+            if ExecutionStrategies.PARALLEL in strategies:
                 staged.insert(0, transform.function)
             else:
                 if staged:
                     result = parallel(compose(*staged), result)
                     staged = []
+                if ExecutionStrategies.PRE_COMPUTE in strategies:
+                    result = list(result)
                 result = transform.function(result)
         if staged:
             result = parallel(compose(*staged), result)
