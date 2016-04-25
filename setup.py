@@ -19,7 +19,7 @@ setup(
     keywords='functional LINQ pipeline data collection rdd scala',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version='0.6.0',
-    install_requires=['future', 'six'],
+    install_requires=['future', 'six', 'dill'],
     extras_requires={
         'all': ['pandas']
     },
