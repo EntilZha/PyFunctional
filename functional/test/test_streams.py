@@ -199,7 +199,7 @@ class TestStreams(unittest.TestCase):
 
     def test_to_sqlite3_namedtuple(self):
         if self.seq is pseq:
-            raise unittest.SkipTest("pseq can't serialize all functions")
+            raise self.skipTest("pseq can't serialize all functions")
         elements = [(1, 'Tom'), (2, 'Jack'), (3, 'Jane'), (4, 'Stephan')]
 
         # test namedtuple with the same order as column

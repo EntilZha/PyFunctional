@@ -751,8 +751,7 @@ class TestPipeline(unittest.TestCase):
 
     def test_single_call(self):
         if self.seq is pseq:
-            raise unittest.SkipTest("pseq doesn't support functions with "
-                                    "side-effects")
+            raise self.skipTest("pseq doesn't support functions with side-effects")
         counter = []
 
         def counter_func(x):
@@ -776,8 +775,7 @@ class TestPipeline(unittest.TestCase):
 
     def test_cache(self):
         if self.seq is pseq:
-            raise unittest.SkipTest("pseq doesn't support functions with "
-                                    "side-effects")
+            raise self.skipTest("pseq doesn't support functions with side-effects")
         calls = []
         func = lambda x: calls.append(x)
         result = self.seq(1, 2, 3).map(func).cache().map(lambda x: x).to_list()
