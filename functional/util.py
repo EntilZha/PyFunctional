@@ -18,7 +18,7 @@ if six.PY2:
     PROTOCOL = 2
 else:
     CSV_WRITE_MODE = 'w'
-    PROTOCOL = 4
+    PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
 
 
@@ -161,11 +161,12 @@ def lazy_parallelize(func, result, processes=None):
         chunk_size = (len(result) // processes) or processes
     except TypeError:
         chunk_size = processes
-    with Pool(processes=processes) as pool:
-        chunks = split_every(chunk_size, iter(result))
-        packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
-        for pool_result in pool.imap(unpack, packed_chunks):
-            yield pool_result
+    pool = Pool(processes=processes)
+    chunks = split_every(chunk_size, iter(result))
+    packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
+    for pool_result in pool.imap(unpack, packed_chunks):
+        yield pool_result
+    pool.terminate()
 
 
 def compose(*functions):
