@@ -41,6 +41,14 @@ seq(1, 2, 3, 4)\
     .filter(lambda x: x > 4)\
     .reduce(lambda x, y: x + y)
 # 14
+
+# or if you don't like backslash continuation
+(seq(1, 2, 3, 4)
+    .map(lambda x: x * 2)
+    .filter(lambda x: x > 4)
+    .reduce(lambda x, y: x + y)
+)
+# 14
 ```
 
 ### Streams, Transformations and Actions
@@ -221,15 +229,16 @@ also write them. For complete API documentation see the collections API table or
 To enable parallel execution first run `from functional import pseq`, then use it like you would
 normally use `seq`. A growing number of transformations in `PyFunctional` are being enabled for
 parallel execution. At the moment they are limited to:
-* `map`
-* `filter`
+* `map`/`select`
+* `filter`/`filter_not`/`where`
+* `flat_map`
 
 Parallelization uses python `multiprocessing` and squashes chains of embarrassingly parallel
 operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
 all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
-Summary documentation is below and full documentation is at
+Shortform documentation is below and full documentation is at
 [scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html).
 
 ### Streams API
