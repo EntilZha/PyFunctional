@@ -2,8 +2,11 @@ from __future__ import absolute_import
 
 import unittest
 from collections import namedtuple
+from functools import reduce
+from operator import add
 
-from functional.util import ReusableFile, is_namedtuple
+
+from functional.util import ReusableFile, is_namedtuple, lazy_parallelize, split_every
 
 Data = namedtuple('Tuple', 'x y')
 
@@ -22,3 +25,16 @@ class TestUtil(unittest.TestCase):
         self.assertFalse(is_namedtuple((1, 2, 3)))
         self.assertFalse(is_namedtuple([1, 2, 3]))
         self.assertFalse(is_namedtuple(1))
+
+    def test_lazy_parallelize(self):
+        self.assertListEqual(list(range(10)), reduce(add, lazy_parallelize(lambda x: x, range(10))))
+        self.assertListEqual(list(range(10)), list(
+            reduce(add, lazy_parallelize(lambda x: x, range(10), processes=10000))))
+
+        def f():
+            yield 0
+        self.assertListEqual([[0]], list(lazy_parallelize(lambda x: x, f())))
+
+    def test_split_every(self):
+        result = iter([1, 2, 3, 4])
+        self.assertListEqual(list(split_every(2, result)), [[1, 2], [3, 4]])

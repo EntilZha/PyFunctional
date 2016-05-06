@@ -14,11 +14,23 @@ from functional.util import is_primitive, ReusableFile
 
 
 class Stream(object):
-
+    """
+    Represents and implements a stream. The responsibility of this class is to provide the APi
+    entry point and separate the responsibilities of Sequence and ExecutionEngine.
+    """
     def __call__(self, *args):
-        return self.sequence(*args)
+        """
+        Create a Sequence using a sequential ExecutionEngine.
 
-    def sequence(self, *args):
+        If args has more than one argument then the argument list becomes the sequence.
+
+        If args[0] is primitive, a sequence wrapping it is created.
+
+        If args[0] is a list, tuple, iterable, or Sequence it is wrapped as a Sequence.
+
+        :param args: Sequence to wrap
+        :return: Wrapped sequence
+        """
         # pylint: disable=no-self-use
         engine = ExecutionEngine()
         if len(args) == 0:
@@ -56,7 +68,7 @@ class Stream(object):
         if not re.match('^[rbt]{1,3}$', mode):
             raise ValueError('mode argument must be only have r, b, and t')
         if delimiter is None:
-            return self.sequence(
+            return self(
                 ReusableFile(path, mode=mode, buffering=buffering,
                              encoding=encoding, errors=errors,
                              newline=newline))
@@ -64,7 +76,7 @@ class Stream(object):
             with builtins.open(path, mode=mode, buffering=buffering,
                                encoding=encoding, errors=errors,
                                newline=newline) as data:
-                return self.sequence(''.join(data.readlines()).split(delimiter))
+                return self(''.join(data.readlines()).split(delimiter))
 
     def range(self, *args):
         """
@@ -77,8 +89,7 @@ class Stream(object):
         :param args: args to range function
         :return: range(args) wrapped by a sequence
         """
-        rng = builtins.range(*args)
-        return self.sequence(rng)
+        return self(builtins.range(*args))
 
     def csv(self, csv_file, dialect='excel', **fmt_params):
         """
@@ -102,7 +113,7 @@ class Stream(object):
             raise ValueError('csv_file must be a file path or implement the iterator interface')
 
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
-        return self.sequence(csv_input).cache(delete_lineage=True)
+        return self(csv_input).cache(delete_lineage=True)
 
     def jsonl(self, jsonl_file):
         """
@@ -121,7 +132,7 @@ class Stream(object):
             input_file = ReusableFile(jsonl_file)
         else:
             input_file = jsonl_file
-        return self.sequence(input_file).map(jsonapi.loads).cache(delete_lineage=True)
+        return self(input_file).map(jsonapi.loads).cache(delete_lineage=True)
 
     def json(self, json_file):
         """
@@ -149,9 +160,9 @@ class Stream(object):
             raise ValueError('json_file must be a file path or implement the iterator interface')
 
         if isinstance(json_input, list):
-            return self.sequence(json_input)
+            return self(json_input)
         else:
-            return self.sequence(six.viewitems(json_input))
+            return self(six.viewitems(json_input))
 
     def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
         """
@@ -162,6 +173,7 @@ class Stream(object):
 
         :param conn: path or sqlite connection, cursor
         :param sql: SQL query string
+        :param parameters: Parameters for sql query
         :return: Sequence wrapping SQL cursor
         """
 
@@ -169,37 +181,42 @@ class Stream(object):
             parameters = ()
 
         if isinstance(conn, (sqlite3api.Connection, sqlite3api.Cursor)):
-            return self.sequence(conn.execute(sql, parameters))
+            return self(conn.execute(sql, parameters))
         elif isinstance(conn, str):
             with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
-                return self.sequence(input_conn.execute(sql, parameters))
+                return self(input_conn.execute(sql, parameters))
         else:
             raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
 
 
 class ParallelStream(Stream):
-
-    def __init__(self, processes=None, raise_errors=True):
+    """
+    Mirror of Stream which uses ParallelExecutionEngine
+    """
+    def __init__(self, processes=None):
+        """
+        Initialize number of processes for ParallelExecutionEngine
+        :param processes: Number of parallel processes
+        """
         self.processes = processes
-        self.raise_errors = raise_errors
 
     def __call__(self, *args, **kwargs):
-        self.processes = kwargs.get("processes")
-        self.raise_errors = kwargs.get("raise_errors")
-        if not args and kwargs:
-            return self
-        else:
-            return self.sequence(*args, **kwargs)
+        """
+        Create a Sequence using a parallel ExecutionEngine.
 
-    def sequence(self, *args, **kwargs):
+        If args has more than one argument then the argument list becomes the sequence.
+
+        If args[0] is primitive, a sequence wrapping it is created.
+
+        If args[0] is a list, tuple, iterable, or Sequence it is wrapped as a Sequence.
+
+        :param args: Sequence to wrap
+        :return: Wrapped sequence
+        """
         processes = kwargs.get("processes") or self.processes
-        raise_errors = kwargs.get("raise_errors") or self.raise_errors
-        engine = ParallelExecutionEngine(
-            processes=processes, raise_errors=raise_errors
-        )
+        engine = ParallelExecutionEngine(processes=processes)
         if len(args) == 0:
-            raise TypeError("pseq() takes at least 1 argument ({0} given)"
-                            .format(len(args)))
+            raise TypeError("pseq() takes at least 1 argument ({0} given)".format(len(args)))
         elif len(args) > 1:
             return Sequence(list(args), engine=engine)
         elif is_primitive(args[0]):

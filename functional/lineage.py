@@ -39,17 +39,36 @@ class Lineage(object):
         return len(self.transformations)
 
     def __getitem__(self, item):
+        """
+        Return specific transformation in lineage.
+        :param item: Transformation to retrieve
+        :return: Requested transformation
+        """
         return self.transformations[item]
 
     def apply(self, transform):
+        """
+        Add the transformation to the lineage
+        :param transform: Transformation to apply
+        """
         self.transformations.append(transform)
 
     def evaluate(self, sequence):
+        """
+        Compute the lineage on the sequence.
+
+        :param sequence: Sequence to compute
+        :return: Evaluated sequence
+        """
         last_cache_index = self.cache_scan()
         transformations = self.transformations[last_cache_index:]
         return self.engine.evaluate(sequence, transformations)
 
     def cache_scan(self):
+        """
+        Scan the lineage for the index of the most recent cache.
+        :return: Index of most recent cache
+        """
         try:
             return len(self.transformations) - self.transformations[::-1].index(CACHE_T)
         except ValueError:

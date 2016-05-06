@@ -11,7 +11,6 @@ Data = namedtuple('Data', 'x y')
 
 
 class TestPipeline(unittest.TestCase):
-
     def setUp(self):
         self.seq = seq
 
@@ -788,6 +787,5 @@ class TestPipeline(unittest.TestCase):
 
 
 class TestParallelPipeline(TestPipeline):
-
     def setUp(self):
         self.seq = pseq

@@ -1,16 +1,15 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 from itertools import chain, count, islice, takewhile
 from functools import reduce
 from multiprocessing import Pool, cpu_count
-
 import collections
+
 try:
     import dill as serializer
 except ImportError:
     import pickle as serializer
 import future.builtins as builtins
 import six
-
 
 
 if six.PY2:
@@ -105,20 +104,25 @@ def is_iterable(val):
 
 def split_every(parts, iterable):
     """
-    Split an iterable in n parts
+    Split an iterable into parts of length parts
 
-    >>> l = [1, 2, 3, 4]
-    >>> split_every(l, 2)
+    >>> l = iter([1, 2, 3, 4])
+    >>> split_every(2, l)
     [[1, 2], [3, 4]]
 
     :param iterable: iterable to split
     :param parts: number of chunks
     :return: return the iterable split in parts
     """
-    return takewhile(bool, (list(islice(iterable, parts)) for _ in count(0)))
+    return takewhile(bool, (list(islice(iterable, parts)) for _ in count()))
 
 
 def unpack(packed):
+    """
+    Unpack the function and args then apply the function to the arguments and return result
+    :param packed: input packed tuple of (func, args)
+    :return: result of applying packed function on packed args
+    """
     func, args = serializer.loads(packed)
     result = func(*args)
     if isinstance(result, collections.Iterable):
@@ -126,33 +130,35 @@ def unpack(packed):
 
 
 def pack(func, args):
+    """
+    Pack a function and the args it should be applied to
+    :param func: Function to apply
+    :param args: Args to evaluate with
+    :return: Packed (func, args) tuple
+    """
     return serializer.dumps((func, args), PROTOCOL)
 
 
-def is_serializable(func, raise_errors=True):
-    if raise_errors is None:
-        raise_errors = True
-    try:
-        serializer.dumps(func, PROTOCOL)
-        return True
-    except (AttributeError, serializer.PicklingError):
-        if raise_errors:
-            raise serializer.PicklingError(
-                "Function {} is not serializable. "
-                "Try installing dill or passing raise_errors to False "
-                "for non-parallel execution when serialization fails."
-                .format(str(func)))
-        return False
-
-
-def parallelize(func, result, processes=None, raise_errors=True):
-    if not is_serializable(func, raise_errors=raise_errors):
-        return func(result)
+def parallelize(func, result, processes=None):
+    """
+    Creates an iterable which is lazily computed in parallel from applying func on result
+    :param func: Function to apply
+    :param result: Data to apply to
+    :param processes: Number of processes to use in parallel
+    :return: Iterable of applying func on result
+    """
     parallel_iter = lazy_parallelize(func, result, processes=processes)
     return chain.from_iterable(parallel_iter)
 
 
 def lazy_parallelize(func, result, processes=None):
+    """
+    Lazily computes an iterable in parallel, and returns them in pool chunks
+    :param func: Function to apply
+    :param result: Data to apply to
+    :param processes: Number of processes to use in parallel
+    :return: Iterable of chunks where each chunk as func applied to it
+    """
     if processes is None or processes < 1:
         processes = CPU_COUNT
     else:
@@ -170,6 +176,11 @@ def lazy_parallelize(func, result, processes=None):
 
 
 def compose(*functions):
+    """
+    Compose all the function arguments together
+    :param functions: Functions to compose
+    :return: Single composed function
+    """
     # pylint: disable=undefined-variable
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 

@@ -1,5 +1,5 @@
 """
-The pipeline module contains the primary data structure of ScalaFunctional, Sequence
+The pipeline module contains the transformations and actions API of PyFunctional, Sequence
 """
 
 from __future__ import division, absolute_import
@@ -25,22 +25,14 @@ from functional import transformations
 class Sequence(object):
     """
     Sequence is a wrapper around any type of sequence which provides access to common
-    functional transformations and reductions in a data pipelining style
+    functional transformations and reductions in a data pipeline style
     """
     def __init__(self, sequence, transform=None, engine=None):
         # pylint: disable=protected-access
         """
-        Takes a sequence and wraps it around a Sequence object.
-
-        If the sequence
-        is already an instance of Sequence, __init__ will insure that it is
-        at most wrapped exactly once.
-
-        If the sequence is a list or tuple, it is set as the sequence.
-
-        If it is an iterable, then it is expanded into a list then set to the sequence
-
-        If the object does not fit any of these classes, a TypeError is thrown
+        Takes a Sequence, list, tuple. or iterable sequence and wraps it around a Sequence object.
+        If the sequence is already an instance of Sequence, it will in total be wrapped exactly
+        once. A TypeError is raised if sequence is none of these.
 
         :param sequence: sequence of items to wrap in a Sequence
         :return: sequence wrapped in a Sequence
