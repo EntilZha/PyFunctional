@@ -3,8 +3,8 @@ before_install:
   - pip install codecov
 install:
   - pip install -q coverage
-  - pip install future
   - pip install pylint
+  - pip install -r requirements.txt
   - pip install $EXTRA_INSTALLS
 
 notifications:
