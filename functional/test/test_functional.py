@@ -1,6 +1,7 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 
+import sys
 import unittest
 from collections import namedtuple
 from functional.pipeline import Sequence, is_iterable, _wrap
@@ -786,6 +787,8 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(repr(result._lineage), 'Lineage: sequence')
 
 
+# Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
+@unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
 class TestParallelPipeline(TestPipeline):
     def setUp(self):
         self.seq = pseq
