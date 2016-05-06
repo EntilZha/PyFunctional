@@ -252,7 +252,7 @@ def flat_map_t(func):
     return Transformation(
         'flat_map({0})'.format(name(func)),
         partial(flat_map_impl, func),
-        None
+        {ExecutionStrategies.PARALLEL}
     )
 
 
@@ -264,7 +264,7 @@ def flatten_t():
     return Transformation(
         'flatten',
         partial(flat_map_impl, lambda x: x),
-        None
+        {ExecutionStrategies.PARALLEL}
     )
 
 

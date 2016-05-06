@@ -8,14 +8,14 @@
 **Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/PyFunctional/issues/62) for details**
 
 ## Introduction
-`PyFunctional` is a Python package that makes working with data easy. It takes inspiration from
-several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. It also offers native reading and writing of data formats such as text, csv,
-and json files. Support for SQLite3, other databases, and compressed files is planned for the next
-release.
+`PyFunctional` is a Python package that makes creating data pipelines easy. It works by wrapping the
+original input sequence to provide access to powerful chain functional transformations and actions.
+`PyFunctional` seamlessly reads and writes from text, csv, json, and sqlite3 sources to make
+processing raw data easy. Lastly, `PyFunctional` provides an easy way to auto-parallelize
+pipelines.
 
-The combination of these ideas makes `PyFunctional` a great choice
-for declarative transformation, creating pipelines, and data analysis.
+The `PyFunctional` API takes inspiration from Scala collections, Apache Spark RDDs, Microsoft LINQ
+and more generally chain functional programming.
 
 ## Installation
 `PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
@@ -217,7 +217,16 @@ with sqlite3.connect(':memory:') as conn:
 Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
+### Parallel Execution
+To enable parallel execution first run `from functional import pseq`, then use it like you would
+normally use `seq`. A growing number of transformations in `PyFunctional` are being enabled for
+parallel execution. At the moment they are limited to:
+* `map`
+* `filter`
 
+Parallelization uses python `multiprocessing` and squashes chains of embarrassingly parallel
+operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
+all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
 Summary documentation is below and full documentation is at
@@ -424,7 +433,7 @@ I am a PhD student in Computer Science at the University of Colorado at Boulder.
 interests include large-scale machine learning, distributed computing, and adjacent fields. I
 completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and developed several corporate and personal websites.
+and will be working as a data scientist at Oracle Data Cloud this summer.
 
 I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
@@ -434,6 +443,7 @@ Scala is not an option or Spark is overkill.
 ## Contributors
 These people have generously contributed their time to improving `PyFunctional`
 
+* [versae](https://github.com/versae)
 * [adrian17](https://github.com/adrian17)
 * [lucidfrontier45](https://github.com/lucidfrontier45)
 * [Digenis](https://github.com/Digenis)

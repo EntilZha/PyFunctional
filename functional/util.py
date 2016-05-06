@@ -4,10 +4,7 @@ from functools import reduce
 from multiprocessing import Pool, cpu_count
 import collections
 
-try:
-    import dill as serializer
-except ImportError:
-    import pickle as serializer
+import dill as serializer
 import future.builtins as builtins
 import six
 

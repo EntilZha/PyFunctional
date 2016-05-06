@@ -1,6 +1,10 @@
 # Changelog
 ## Next Release
-* TODO
+### New Features
+* Re-architected code to allow for `pseq` to exist
+* Implemented `pseq` by implementing `ParallelStream` and `ParallelExecutionEngine`
+* `map`, `select`, `filter`, `filter_not`, `where`, `flatten`, and `flat_map` parallelized
+* Many Thanks to `versae` for implementing the `pseq` feature!
 
 ## Release 0.6.0
 ### New Features

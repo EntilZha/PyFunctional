@@ -6,7 +6,7 @@ from functools import reduce
 from operator import add
 
 
-from functional.util import ReusableFile, is_namedtuple, lazy_parallelize, split_every
+from functional.util import ReusableFile, is_namedtuple, lazy_parallelize, split_every, pack, unpack
 
 Data = namedtuple('Tuple', 'x y')
 
@@ -38,3 +38,7 @@ class TestUtil(unittest.TestCase):
     def test_split_every(self):
         result = iter([1, 2, 3, 4])
         self.assertListEqual(list(split_every(2, result)), [[1, 2], [3, 4]])
+
+    def test_pack_unpack(self):
+        packed = pack(map, [lambda x: x * 2, range(4)])
+        self.assertListEqual(unpack(packed), [0, 2, 4, 6])
