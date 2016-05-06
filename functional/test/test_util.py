@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import unittest
+import sys
 from collections import namedtuple
 from functools import reduce
 from operator import add
@@ -26,6 +27,8 @@ class TestUtil(unittest.TestCase):
         self.assertFalse(is_namedtuple([1, 2, 3]))
         self.assertFalse(is_namedtuple(1))
 
+    # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
+    @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
     def test_lazy_parallelize(self):
         self.assertListEqual(list(range(10)), reduce(add, lazy_parallelize(lambda x: x, range(10))))
         self.assertListEqual(list(range(10)), list(
@@ -39,6 +42,8 @@ class TestUtil(unittest.TestCase):
         result = iter([1, 2, 3, 4])
         self.assertListEqual(list(split_every(2, result)), [[1, 2], [3, 4]])
 
+    # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
+    @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
     def test_pack_unpack(self):
         packed = pack(map, [lambda x: x * 2, range(4)])
         self.assertListEqual(unpack(packed), [0, 2, 4, 6])
