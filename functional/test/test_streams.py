@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import sqlite3
 import unittest
 import collections
+import sys
 
 import six
 
@@ -10,8 +11,6 @@ from functional import seq, pseq
 
 
 class TestStreams(unittest.TestCase):
-
-
     def setUp(self):
         self.seq = seq
 
@@ -270,7 +269,8 @@ class TestStreams(unittest.TestCase):
             print('pandas not installed, skipping unit test')
 
 
+# Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
+@unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
 class TestParallelStreams(TestStreams):
-
     def setUp(self):
         self.seq = pseq
