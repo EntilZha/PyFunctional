@@ -1385,19 +1385,18 @@ class Sequence(object):
             else:
                 output.write(six.u(str(self)))
 
-    def to_jsonl(self, path, mode='wb', encoding='utf-8'):
+    def to_jsonl(self, path, mode='wb'):
         """
         Saves the sequence to a jsonl file. Each element is mapped using json.dumps then written
         with a newline separating each element.
 
         :param path: path to write file
         :param mode: mode to write in, defaults to 'w' to overwrite contents
-        :param encoding: specify encoding to use for jsonl file, set to json default utf-8
         """
         with builtins.open(path, mode=mode) as output:
-            output.write((self.map(json.dumps).make_string('\n') + '\n').encode(encoding))
+            output.write((self.map(json.dumps).make_string('\n') + '\n').encode('utf-8'))
 
-    def to_json(self, path, root_array=True, mode=WRITE_MODE, encoding=None):
+    def to_json(self, path, root_array=True, mode=WRITE_MODE):
         """
         Saves the sequence to a json file. If root_array is True, then the sequence will be written
         to json with an array at the root. If it is False, then the sequence will be converted from
@@ -1406,9 +1405,8 @@ class Sequence(object):
         :param path: path to write file
         :param root_array: write json root as an array or dictionary
         :param mode: file open mode
-        :param encoding: encoding to use, set to python json default of utf-8
         """
-        with builtins.open(path, mode=mode, encoding=encoding) as output:
+        with builtins.open(path, mode=mode) as output:
             if root_array:
                 json.dump(self.to_list(), output)
             else:
