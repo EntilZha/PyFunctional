@@ -10,10 +10,10 @@ import six
 
 
 if six.PY2:
-    CSV_WRITE_MODE = 'wb'
+    WRITE_MODE = 'wb'
     PROTOCOL = 2
 else:
-    CSV_WRITE_MODE = 'w'
+    WRITE_MODE = 'w'
     PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
 
