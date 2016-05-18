@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-ScalaFunctional Documentation
+PyFunctional Documentation
 =============================
 
-`ScalaFunctional` is a library for creating data pipelines and analysis in an easy and accessible
+`PyFunctional` is a library for creating data pipelines and analysis in an easy and accessible
 way. It is primarily inspired by the APIs from
 `Apache Spark RDDs <http://spark.apache.org/docs/latest/programming-guide.html#transformations>`_,
 `Scala Collections <http://www.scala-lang.org/api/current/index.html#scala.collection.AbstractSeq>`_,
@@ -22,8 +22,8 @@ Table of Contents
 
 Documentation
 -------------
-The best place to see examples of `ScalaFunctional` usage is on the project's github readme page
-at `github.com/EntilZha/ScalaFunctional <https://github.com/EntilZha/ScalaFunctional>`_. The
+The best place to see examples of `PyFunctional` usage is on the project's github readme page
+at `github.com/EntilZha/PyFunctional <https://github.com/EntilZha/PyFunctional>`_. The
 docs on this site are primarily meant to give comprehensive documentation of every public
-function and API in `ScalaFunctional`. Its secondary purpose is to document internal methods to make
+function and API in `PyFunctional`. Its secondary purpose is to document internal methods to make
 development easier for maintainers and contributors.
