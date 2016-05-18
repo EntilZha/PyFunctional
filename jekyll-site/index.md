@@ -6,21 +6,21 @@ layout: index
 # PyFunctional
 [![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
 [![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
-[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://scalafunctional.readthedocs.org/en/)
+[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
 [![Latest Version](https://badge.fury.io/py/pyfunctional.svg)](https://pypi.python.org/pypi/pyfunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 **Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/PyFunctional/issues/62) for details**
 
 ## Introduction
-`PyFunctional` is a Python package that makes working with data easy. It takes inspiration from
-several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. It also offers native reading and writing of data formats such as text, csv,
-and json files. Support for SQLite3, other databases, and compressed files is planned for the next
-release.
+`PyFunctional` is a Python package that makes creating data pipelines easy. It works by wrapping the
+original input sequence to provide access to powerful chain functional transformations and actions.
+`PyFunctional` seamlessly reads and writes from text, csv, json, and sqlite3 sources to make
+processing raw data easy. Lastly, `PyFunctional` provides an easy way to auto-parallelize
+pipelines.
 
-The combination of these ideas makes `PyFunctional` a great choice
-for declarative transformation, creating pipelines, and data analysis.
+The `PyFunctional` API takes inspiration from Scala collections, Apache Spark RDDs, Microsoft LINQ
+and more generally chain functional programming.
 
 ## Installation
 `PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
@@ -45,6 +45,14 @@ seq(1, 2, 3, 4)\
     .map(lambda x: x * 2)\
     .filter(lambda x: x > 4)\
     .reduce(lambda x, y: x + y)
+# 14
+
+# or if you don't like backslash continuation
+(seq(1, 2, 3, 4)
+    .map(lambda x: x * 2)
+    .filter(lambda x: x > 4)
+    .reduce(lambda x, y: x + y)
+)
 # 14
 ```
 
@@ -222,10 +230,20 @@ with sqlite3.connect(':memory:') as conn:
 Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
+### Parallel Execution
+To enable parallel execution first run `from functional import pseq`, then use it like you would
+normally use `seq`. A growing number of transformations in `PyFunctional` are being enabled for
+parallel execution. At the moment they are limited to:
+* `map`/`select`
+* `filter`/`filter_not`/`where`
+* `flat_map`
 
+Parallelization uses python `multiprocessing` and squashes chains of embarrassingly parallel
+operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
+all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
-Summary documentation is below and full documentation is at
+Shortform documentation is below and full documentation is at
 [scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html).
 
 ### Streams API
@@ -416,7 +434,7 @@ In order to be merged, all pull requests must:
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3
+`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, PyPy, and PyPy3
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
@@ -429,7 +447,7 @@ I am a PhD student in Computer Science at the University of Colorado at Boulder.
 interests include large-scale machine learning, distributed computing, and adjacent fields. I
 completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and developed several corporate and personal websites.
+and will be working as a data scientist at Oracle Data Cloud this summer.
 
 I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
@@ -439,6 +457,7 @@ Scala is not an option or Spark is overkill.
 ## Contributors
 These people have generously contributed their time to improving `PyFunctional`
 
+* [versae](https://github.com/versae)
 * [adrian17](https://github.com/adrian17)
 * [lucidfrontier45](https://github.com/lucidfrontier45)
 * [Digenis](https://github.com/Digenis)

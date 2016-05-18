@@ -22,21 +22,21 @@
       <h1 id="pyfunctional">PyFunctional</h1>
 <p><a href="https://travis-ci.org/EntilZha/PyFunctional"><img src="https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master" alt="TravisCI" /></a>
 <a href="https://codecov.io/github/EntilZha/PyFunctional?branch=master"><img src="https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master" alt="Coverage by codecov.io" /></a>
-<a href="http://scalafunctional.readthedocs.org/en/"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs" /></a>
+<a href="http://docs.pyfunctional.org"><img src="https://readthedocs.org/projects/scalafunctional/badge/?version=latest" alt="ReadTheDocs" /></a>
 <a href="https://pypi.python.org/pypi/pyfunctional/"><img src="https://badge.fury.io/py/pyfunctional.svg" alt="Latest Version" /></a>
 <a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter" /></a></p>
 
 <p><strong>Note: <code class="highlighter-rouge">ScalaFunctional</code> is now <code class="highlighter-rouge">PyFunctional</code>, see <a href="https://github.com/EntilZha/PyFunctional/issues/62">RFC</a> for details</strong></p>
 
 <h2 id="introduction">Introduction</h2>
-<p><code class="highlighter-rouge">PyFunctional</code> is a Python package that makes working with data easy. It takes inspiration from
-several sources that include Scala collections, Apache Spark RDDs, Microsoft LINQ and more generally
-functional programming. It also offers native reading and writing of data formats such as text, csv,
-and json files. Support for SQLite3, other databases, and compressed files is planned for the next
-release.</p>
+<p><code class="highlighter-rouge">PyFunctional</code> is a Python package that makes creating data pipelines easy. It works by wrapping the
+original input sequence to provide access to powerful chain functional transformations and actions.
+<code class="highlighter-rouge">PyFunctional</code> seamlessly reads and writes from text, csv, json, and sqlite3 sources to make
+processing raw data easy. Lastly, <code class="highlighter-rouge">PyFunctional</code> provides an easy way to auto-parallelize
+pipelines.</p>
 
-<p>The combination of these ideas makes <code class="highlighter-rouge">PyFunctional</code> a great choice
-for declarative transformation, creating pipelines, and data analysis.</p>
+<p>The <code class="highlighter-rouge">PyFunctional</code> API takes inspiration from Scala collections, Apache Spark RDDs, Microsoft LINQ
+and more generally chain functional programming.</p>
 
 <h2 id="installation">Installation</h2>
 <p><code class="highlighter-rouge">PyFunctional</code> is available on <a href="https://pypi.python.org/pypi/PyFunctional">pypi</a> and can be
@@ -60,6 +60,14 @@ are a few examples of what you can do.</p>
     <span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>\
     <span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span>\
     <span class="o">.</span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="c"># 14</span>
+
+<span class="c"># or if you don't like backslash continuation</span>
+<span class="p">(</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="o">.</span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="c"># 14</span>
 </code></pre>
 </div>
@@ -240,8 +248,20 @@ Similarly, there are several more set like functions in addition to <code class=
 <p>Just as <code class="highlighter-rouge">PyFunctional</code> can read from <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite3</code>, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.</p>
 
+<h3 id="parallel-execution">Parallel Execution</h3>
+<p>To enable parallel execution first run <code class="highlighter-rouge">from functional import pseq</code>, then use it like you would
+normally use <code class="highlighter-rouge">seq</code>. A growing number of transformations in <code class="highlighter-rouge">PyFunctional</code> are being enabled for
+parallel execution. At the moment they are limited to:
+* <code class="highlighter-rouge">map</code>/<code class="highlighter-rouge">select</code>
+* <code class="highlighter-rouge">filter</code>/<code class="highlighter-rouge">filter_not</code>/<code class="highlighter-rouge">where</code>
+* <code class="highlighter-rouge">flat_map</code></p>
+
+<p>Parallelization uses python <code class="highlighter-rouge">multiprocessing</code> and squashes chains of embarrassingly parallel
+operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
+all at once rather than in multiple loops using <code class="highlighter-rouge">multiprocessing</code></p>
+
 <h2 id="documentation">Documentation</h2>
-<p>Summary documentation is below and full documentation is at
+<p>Shortform documentation is below and full documentation is at
 <a href="http://scalafunctional.readthedocs.org/en/latest/functional.html">scalafunctional.readthedocs.org</a>.</p>
 
 <h3 id="streams-api">Streams API</h3>
@@ -729,7 +749,7 @@ In order to be merged, all pull requests must:</p>
 <p><a href="https://gitter.im/EntilZha/PyFunctional">Gitter for chat</a></p>
 
 <h2 id="supported-python-versions">Supported Python Versions</h2>
-<p><code class="highlighter-rouge">PyFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4, 3.5, PyPy, and PyPy3</p>
+<p><code class="highlighter-rouge">PyFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, PyPy, and PyPy3</p>
 
 <h2 id="changelog">Changelog</h2>
 <p><a href="https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md">Changelog</a></p>
@@ -742,7 +762,7 @@ In order to be merged, all pull requests must:</p>
 interests include large-scale machine learning, distributed computing, and adjacent fields. I
 completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and developed several corporate and personal websites.</p>
+and will be working as a data scientist at Oracle Data Cloud this summer.</p>
 
 <p>I created <code class="highlighter-rouge">PyFunctional</code> while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
@@ -753,6 +773,7 @@ Scala is not an option or Spark is overkill.</p>
 <p>These people have generously contributed their time to improving <code class="highlighter-rouge">PyFunctional</code></p>
 
 <ul>
+  <li><a href="https://github.com/versae">versae</a></li>
   <li><a href="https://github.com/adrian17">adrian17</a></li>
   <li><a href="https://github.com/lucidfrontier45">lucidfrontier45</a></li>
   <li><a href="https://github.com/Digenis">Digenis</a></li>
