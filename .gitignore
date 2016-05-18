@@ -6,3 +6,4 @@ dist/
 *.pyc
 __pycache__/
 functional/test/data/tmp
+.coverage
