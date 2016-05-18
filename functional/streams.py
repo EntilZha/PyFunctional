@@ -10,7 +10,7 @@ import six
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
-from functional.util import is_primitive, ReusableFile
+from functional.util import is_primitive, ReusableFile, get_compressed_cls
 
 
 class Stream(object):
@@ -67,6 +67,13 @@ class Stream(object):
         """
         if not re.match('^[rbt]{1,3}$', mode):
             raise ValueError('mode argument must be only have r, b, and t')
+
+        compress_cls = get_compressed_cls(path)
+
+        if compress_cls is not None:
+            return self(compress_cls(path, mode=mode, buffering=buffering, encoding=encoding,
+                                     errors=errors, newline=newline))
+
         if delimiter is None:
             return self(
                 ReusableFile(path, mode=mode, buffering=buffering,
