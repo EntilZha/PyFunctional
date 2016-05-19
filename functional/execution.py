@@ -36,13 +36,14 @@ class ParallelExecutionEngine(ExecutionEngine):
     """
     Class to perform parallel execution of a Sequence evaluation.
     """
-    def __init__(self, processes=None):
+    def __init__(self, processes=None, partition_size=None):
         """
         Set the number of processes for parallel execution.
         :param processes: Number of parallel Processes
         """
         super(ParallelExecutionEngine, self).__init__()
         self.processes = processes
+        self.partition_size = partition_size
 
     def evaluate(self, sequence, transformations):
         """
@@ -52,7 +53,8 @@ class ParallelExecutionEngine(ExecutionEngine):
         :return: Resulting sequence or value
         """
         result = sequence
-        parallel = partial(parallelize, processes=self.processes)
+        parallel = partial(
+            parallelize, processes=self.processes, partition_size=self.partition_size)
         staged = []
         for transform in transformations:
             strategies = transform.execution_strategies or {}

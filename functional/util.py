@@ -3,6 +3,7 @@ from itertools import chain, count, islice, takewhile
 from functools import reduce
 from multiprocessing import Pool, cpu_count
 import collections
+import math
 
 import dill as serializer
 import future.builtins as builtins
@@ -136,40 +137,55 @@ def pack(func, args):
     return serializer.dumps((func, args), PROTOCOL)
 
 
-def parallelize(func, result, processes=None):
+def parallelize(func, result, processes=None, partition_size=None):
     """
     Creates an iterable which is lazily computed in parallel from applying func on result
     :param func: Function to apply
     :param result: Data to apply to
     :param processes: Number of processes to use in parallel
+    :param partition_size: Size of partitions for each parallel process
     :return: Iterable of applying func on result
     """
-    parallel_iter = lazy_parallelize(func, result, processes=processes)
+    parallel_iter = lazy_parallelize(
+        func, result, processes=processes, partition_size=partition_size)
     return chain.from_iterable(parallel_iter)
 
 
-def lazy_parallelize(func, result, processes=None):
+def lazy_parallelize(func, result, processes=None, partition_size=None):
     """
     Lazily computes an iterable in parallel, and returns them in pool chunks
     :param func: Function to apply
     :param result: Data to apply to
     :param processes: Number of processes to use in parallel
+    :param partition_size: Size of partitions for each parallel process
     :return: Iterable of chunks where each chunk as func applied to it
     """
     if processes is None or processes < 1:
         processes = CPU_COUNT
     else:
         processes = min(processes, CPU_COUNT)
-    try:
-        chunk_size = (len(result) // processes) or processes
-    except TypeError:
-        chunk_size = processes
+    partition_size = partition_size or compute_partition_size(result, processes)
     pool = Pool(processes=processes)
-    chunks = split_every(chunk_size, iter(result))
-    packed_chunks = (pack(func, (chunk, )) for chunk in chunks)
-    for pool_result in pool.imap(unpack, packed_chunks):
+    partitions = split_every(partition_size, iter(result))
+    packed_partitions = (pack(func, (partition, )) for partition in partitions)
+    for pool_result in pool.imap(unpack, packed_partitions):
         yield pool_result
     pool.terminate()
+
+
+def compute_partition_size(result, processes):
+    """
+    Attempts to compute the partition size to evenly distribute work across processes. Defaults to
+    1 if the length of result cannot be determined.
+
+    :param result: Result to compute on
+    :param processes: Number of processes to use
+    :return: Best partition size
+    """
+    try:
+        return max(math.ceil(len(result) / processes), 1)
+    except TypeError:
+        return 1
 
 
 def compose(*functions):

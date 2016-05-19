@@ -193,12 +193,13 @@ class ParallelStream(Stream):
     """
     Mirror of Stream which uses ParallelExecutionEngine
     """
-    def __init__(self, processes=None):
+    def __init__(self, processes=None, partition_size=None):
         """
         Initialize number of processes for ParallelExecutionEngine
         :param processes: Number of parallel processes
         """
         self.processes = processes
+        self.partition_size = partition_size
 
     def __call__(self, *args, **kwargs):
         """
@@ -213,10 +214,11 @@ class ParallelStream(Stream):
         :param args: Sequence to wrap
         :return: Wrapped sequence
         """
-        processes = kwargs.get("processes") or self.processes
-        engine = ParallelExecutionEngine(processes=processes)
+        processes = kwargs.get('processes') or self.processes
+        partition_size = kwargs.get('partition_size') or self.partition_size
+        engine = ParallelExecutionEngine(processes=processes, partition_size=partition_size)
         if len(args) == 0:
-            raise TypeError("pseq() takes at least 1 argument ({0} given)".format(len(args)))
+            raise TypeError('pseq() takes at least 1 argument ({0} given)'.format(len(args)))
         elif len(args) > 1:
             return Sequence(list(args), engine=engine)
         elif is_primitive(args[0]):
