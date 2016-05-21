@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
 import unittest
@@ -6,9 +7,9 @@ from collections import namedtuple
 from functools import reduce
 from operator import add
 
-
 from functional.util import (ReusableFile, is_namedtuple, lazy_parallelize, split_every, pack,
-                             unpack, compute_partition_size)
+                             unpack, compute_partition_size, GZFile)
+
 
 Data = namedtuple('Tuple', 'x y')
 
@@ -58,3 +59,19 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(result, 2)
         result = compute_partition_size(iter([0, 1, 2, 3]), 2)
         self.assertEqual(result, 1)
+
+    def test_gzip_file(self):
+        file_name = 'functional/test/data/test.txt.gz'
+        expect = [
+            'line0\n',
+            'line1\n',
+            'line2',
+        ]
+        self.assertListEqual(expect, list(GZFile(file_name, mode='rt', encoding="utf-8")))
+
+        expect = [
+            b'line0\n',
+            b'line1\n',
+            b'line2',
+        ]
+        self.assertListEqual(expect, list(GZFile(file_name, mode='rb')))

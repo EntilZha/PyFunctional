@@ -2,11 +2,13 @@ from __future__ import absolute_import, division
 from itertools import chain, count, islice, takewhile
 from functools import reduce
 from multiprocessing import Pool, cpu_count
+import gzip
+import io
 import collections
 import math
 
-import dill as serializer
 import future.builtins as builtins
+import dill as serializer
 import six
 
 
@@ -241,3 +243,81 @@ class ReusableFile(object):
                            newline=self.newline) as file_content:
             for line in file_content:
                 yield line
+
+    def read(self):
+        with builtins.open(self.path,
+                           mode=self.mode,
+                           buffering=self.buffering,
+                           encoding=self.encoding,
+                           errors=self.errors,
+                           newline=self.newline) as file_content:
+            return file_content.read()
+
+
+class CompressedFile(ReusableFile):
+    magic_bytes = None
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None):
+        super(CompressedFile, self).__init__(path, delimiter=delimiter, mode=mode,
+                                             buffering=buffering, encoding=encoding, errors=errors,
+                                             newline=newline)
+        self.compresslevel = compresslevel
+
+    @classmethod
+    def is_compressed(cls, data):
+        return data.startswith(cls.magic_bytes)
+
+
+class GZFile(CompressedFile):
+    magic_bytes = b'\x1f\x8b\x08'
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None):
+        super(GZFile, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
+                                     compresslevel=compresslevel, encoding=encoding, errors=errors,
+                                     newline=newline)
+
+    def __iter__(self):
+        if 't' in self.mode:
+            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
+                gz_file.read1 = gz_file.read
+                with io.TextIOWrapper(gz_file,
+                                      encoding=self.encoding,
+                                      errors=self.errors,
+                                      newline=self.newline) as file_content:
+                    for line in file_content:
+                        yield line
+        else:
+            with gzip.open(self.path,
+                           mode=self.mode,
+                           compresslevel=self.compresslevel) as file_content:
+                for line in file_content:
+                    yield line
+
+    def read(self):
+        with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
+            gz_file.read1 = gz_file.read
+            with io.TextIOWrapper(gz_file,
+                                  encoding=self.encoding,
+                                  errors=self.errors,
+                                  newline=self.newline) as file_content:
+                return file_content.read()
+
+COMPRESSION_CLASSES = [GZFile]
+N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
+
+
+def get_open_function(filename, disable_compression):
+    if disable_compression:
+        return ReusableFile
+    else:
+        with open(filename, 'rb') as f:
+            start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
+            for cls in COMPRESSION_CLASSES:
+                if cls.is_compressed(start_bytes):
+                    return cls
+
+            return ReusableFile
