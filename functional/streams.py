@@ -10,7 +10,7 @@ import six
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
-from functional.util import is_primitive, ReusableFile, get_open_function
+from functional.util import is_primitive, get_open_function
 
 
 class Stream(object):
@@ -112,7 +112,7 @@ class Stream(object):
         """
         if isinstance(csv_file, str):
             file_open = get_open_function(csv_file, self.disable_compression)
-            input_file = file_open(csv_file, mode='r')
+            input_file = file_open(csv_file)
         elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
             input_file = csv_file
         else:
@@ -159,7 +159,7 @@ class Stream(object):
         """
         if isinstance(json_file, str):
             file_open = get_open_function(json_file, self.disable_compression)
-            input_file = file_open(json_file, mode='r')
+            input_file = file_open(json_file)
             json_input = jsonapi.load(input_file)
         elif hasattr(json_file, 'read'):
             json_input = jsonapi.load(json_file)

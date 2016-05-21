@@ -8,11 +8,13 @@ import sys
 import six
 
 from functional import seq, pseq
+from functional.streams import Stream, ParallelStream
 
 
 class TestStreams(unittest.TestCase):
     def setUp(self):
         self.seq = seq
+        self.seq_c_disabled = Stream(disable_compression=True)
 
     def test_open(self):
         with open('LICENSE.txt') as f:
@@ -26,9 +28,17 @@ class TestStreams(unittest.TestCase):
             self.seq.open('LICENSE.txt', mode='w').to_list()
 
     def test_open_gzip(self):
-        with open("functional/test/data/test.csv", "rb") as f:
-            data = f.readlines()
-        self.assertListEqual(data, seq.open('functional/test/data/test.csv.gz').to_list())
+        expect = ['line0\n', 'line1\n', 'line2']
+        self.assertListEqual(
+            expect, self.seq.open('functional/test/data/test.txt.gz', mode='rt').to_list())
+
+    def test_disable_compression(self):
+        file_name = 'functional/test/data/test.txt.gz'
+        with open(file_name, 'rb') as f:
+            expect = f.readlines()
+        self.assertListEqual(
+            expect,
+            self.seq_c_disabled.open(file_name, mode='rb').to_list())
 
     def test_range(self):
         self.assertListEqual([0, 1, 2, 3], self.seq.range(4).to_list())
@@ -45,6 +55,13 @@ class TestStreams(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
+    def test_gzip_csv(self):
+        result = self.seq.csv('functional/test/data/test.csv.gz').to_list()
+        expect = [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
+        self.assertEqual(expect, result)
+        with self.assertRaises(ValueError):
+            self.seq.csv(1)
+
     def test_jsonl(self):
         result_0 = self.seq.jsonl('functional/test/data/test.jsonl').to_list()
         expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
@@ -52,6 +69,11 @@ class TestStreams(unittest.TestCase):
         result_1 = self.seq.jsonl(['[1, 2, 3]', '[4, 5, 6]'])
         expect_1 = [[1, 2, 3], [4, 5, 6]]
         self.assertEqual(expect_1, result_1)
+
+    def test_gzip_jsonl(self):
+        result_0 = self.seq.jsonl('functional/test/data/test.jsonl.gz').to_list()
+        expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
+        self.assertEqual(expect_0, result_0)
 
     def test_json(self):
         list_test_path = 'functional/test/data/test_list.json'
@@ -70,6 +92,20 @@ class TestStreams(unittest.TestCase):
         with open(dict_test_path) as file_handle:
             result = self.seq.json(file_handle).to_list()
             self.assertEqual(dict_expect, result)
+
+        with self.assertRaises(ValueError):
+            self.seq.json(1)
+
+    def test_gzip_json(self):
+        list_test_path = 'functional/test/data/test_list.json.gz'
+        dict_test_path = 'functional/test/data/test_dict.json.gz'
+        list_expect = [1, 2, 3, 4, 5]
+        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+
+        result = self.seq.json(list_test_path).to_list()
+        self.assertEqual(list_expect, result)
+        result = self.seq.json(dict_test_path).to_list()
+        self.assertEqual(dict_expect, result)
 
         with self.assertRaises(ValueError):
             self.seq.json(1)
@@ -279,3 +315,4 @@ class TestStreams(unittest.TestCase):
 class TestParallelStreams(TestStreams):
     def setUp(self):
         self.seq = pseq
+        self.seq_c_disabled = ParallelStream(disable_compression=True)

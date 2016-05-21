@@ -242,15 +242,11 @@ class CompressedFile(ReusableFile):
     magic_bytes = None
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rb', buffering=-1, compresslevel=9,
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
                  encoding=None, errors=None, newline=None):
-        super(CompressedFile, self).__init__(path,
-                                             delimiter,
-                                             mode,
-                                             buffering,
-                                             encoding,
-                                             errors,
-                                             newline)
+        super(CompressedFile, self).__init__(path, delimiter=delimiter, mode=mode,
+                                             buffering=buffering, encoding=encoding, errors=errors,
+                                             newline=newline)
         self.compresslevel = compresslevel
 
     @classmethod
@@ -262,15 +258,17 @@ class GZFile(CompressedFile):
     magic_bytes = b'\x1f\x8b\x08'
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rb', buffering=-1, compresslevel=9,
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
                  encoding=None, errors=None, newline=None):
-        super(GZFile, self).__init__(path, delimiter, mode, buffering, compresslevel, encoding, errors, newline)
+        super(GZFile, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
+                                     compresslevel=compresslevel, encoding=encoding, errors=errors,
+                                     newline=newline)
 
     def __iter__(self):
         if 't' in self.mode:
-            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz:
-                gz.read1 = gz.read
-                with io.TextIOWrapper(gz,
+            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
+                gz_file.read1 = gz_file.read
+                with io.TextIOWrapper(gz_file,
                                       encoding=self.encoding,
                                       errors=self.errors,
                                       newline=self.newline) as file_content:
@@ -284,18 +282,12 @@ class GZFile(CompressedFile):
                     yield line
 
     def read(self):
-        if 't' in self.mode:
-            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz:
-                gz.read1 = gz.read
-                with io.TextIOWrapper(gz,
-                                      encoding=self.encoding,
-                                      errors=self.errors,
-                                      newline=self.newline) as file_content:
-                    return file_content.read()
-        else:
-            with gzip.open(self.path,
-                           mode=self.mode,
-                           compresslevel=self.compresslevel) as file_content:
+        with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
+            gz_file.read1 = gz_file.read
+            with io.TextIOWrapper(gz_file,
+                                  encoding=self.encoding,
+                                  errors=self.errors,
+                                  newline=self.newline) as file_content:
                 return file_content.read()
 
 COMPRESSION_CLASSES = [GZFile]
