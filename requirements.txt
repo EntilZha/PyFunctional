@@ -1,3 +1,4 @@
 future
 six
 dill
+bz2file
