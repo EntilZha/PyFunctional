@@ -5,6 +5,7 @@ from multiprocessing import Pool, cpu_count
 import gzip
 import io
 import collections
+import sys
 import math
 
 import future.builtins as builtins
@@ -12,12 +13,16 @@ import dill as serializer
 import six
 
 
-if six.PY2:
+if six.PY2 or '__pypy__' in sys.builtin_module_names:
     import bz2file as bz2
+else:
+    import bz2
+
+
+if six.PY2:
     WRITE_MODE = 'wb'
     PROTOCOL = 2
 else:
-    import bz2
     WRITE_MODE = 'w'
     PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
