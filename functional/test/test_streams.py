@@ -32,6 +32,11 @@ class TestStreams(unittest.TestCase):
         self.assertListEqual(
             expect, self.seq.open('functional/test/data/test.txt.gz', mode='rt').to_list())
 
+    def test_open_bz2(self):
+        expect = ['line0\n', 'line1\n', 'line2']
+        self.assertListEqual(
+            expect, self.seq.open('functional/test/data/test.txt.bz2', mode='rt').to_list())
+
     def test_disable_compression(self):
         file_name = 'functional/test/data/test.txt.gz'
         with open(file_name, 'rb') as f:
@@ -62,6 +67,13 @@ class TestStreams(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
+    def test_bz2_csv(self):
+        result = self.seq.csv('functional/test/data/test.csv.bz2').to_list()
+        expect = [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
+        self.assertEqual(expect, result)
+        with self.assertRaises(ValueError):
+            self.seq.csv(1)
+
     def test_jsonl(self):
         result_0 = self.seq.jsonl('functional/test/data/test.jsonl').to_list()
         expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
@@ -72,6 +84,11 @@ class TestStreams(unittest.TestCase):
 
     def test_gzip_jsonl(self):
         result_0 = self.seq.jsonl('functional/test/data/test.jsonl.gz').to_list()
+        expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
+        self.assertEqual(expect_0, result_0)
+
+    def test_bz2_jsonl(self):
+        result_0 = self.seq.jsonl('functional/test/data/test.jsonl.bz2').to_list()
         expect_0 = [[1, 2, 3], {'a': 1, 'b': 2, 'c': 3}]
         self.assertEqual(expect_0, result_0)
 
@@ -99,6 +116,20 @@ class TestStreams(unittest.TestCase):
     def test_gzip_json(self):
         list_test_path = 'functional/test/data/test_list.json.gz'
         dict_test_path = 'functional/test/data/test_dict.json.gz'
+        list_expect = [1, 2, 3, 4, 5]
+        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+
+        result = self.seq.json(list_test_path).to_list()
+        self.assertEqual(list_expect, result)
+        result = self.seq.json(dict_test_path).to_list()
+        self.assertEqual(dict_expect, result)
+
+        with self.assertRaises(ValueError):
+            self.seq.json(1)
+
+    def test_bz2_json(self):
+        list_test_path = 'functional/test/data/test_list.json.bz2'
+        dict_test_path = 'functional/test/data/test_dict.json.bz2'
         list_expect = [1, 2, 3, 4, 5]
         dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
 

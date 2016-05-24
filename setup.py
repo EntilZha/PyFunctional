@@ -1,3 +1,4 @@
+import sys
 from setuptools import setup, find_packages
 
 try:
@@ -5,6 +6,11 @@ try:
     long_description = pypandoc.convert('README.md', 'rst', extra_args=['--columns=300'])
 except (IOError, ImportError):
     long_description = open('README.md').read()
+
+if sys.version_info.major == 2:
+    install_requires = ['future', 'six', 'dill', 'bz2file']
+else:
+    install_requires = ['future', 'six', 'dill']
 
 setup(
     name='PyFunctional',
@@ -19,7 +25,7 @@ setup(
     keywords='functional LINQ pipeline data collection rdd scala',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version='0.6.0',
-    install_requires=['future', 'six', 'dill'],
+    install_requires=install_requires,
     extras_requires={
         'all': ['pandas']
     },

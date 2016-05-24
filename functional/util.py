@@ -13,9 +13,11 @@ import six
 
 
 if six.PY2:
+    import bz2file as bz2
     WRITE_MODE = 'wb'
     PROTOCOL = 2
 else:
+    import bz2
     WRITE_MODE = 'w'
     PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
@@ -306,7 +308,31 @@ class GZFile(CompressedFile):
                                   newline=self.newline) as file_content:
                 return file_content.read()
 
-COMPRESSION_CLASSES = [GZFile]
+
+class BZ2File(CompressedFile):
+    magic_bytes = b'\x42\x5a\x68'
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None):
+        super(BZ2File, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
+                                      compresslevel=compresslevel, encoding=encoding, errors=errors,
+                                      newline=newline)
+
+    def __iter__(self):
+        with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
+                      encoding=self.encoding, errors=self.errors,
+                      newline=self.newline) as file_content:
+            for line in file_content:
+                yield line
+
+    def read(self):
+        with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
+                      encoding=self.encoding, errors=self.errors,
+                      newline=self.newline) as file_content:
+            return file_content.read()
+
+COMPRESSION_CLASSES = [GZFile, BZ2File]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
 
 
