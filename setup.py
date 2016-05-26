@@ -8,7 +8,7 @@ except (IOError, ImportError):
     long_description = open('README.md').read()
 
 if sys.version_info.major == 2 or '__pypy__' in sys.builtin_module_names:
-    install_requires = ['future', 'six', 'dill', 'bz2file']
+    install_requires = ['future', 'six', 'dill', 'bz2file', 'backports.lzma']
 else:
     install_requires = ['future', 'six', 'dill']
 

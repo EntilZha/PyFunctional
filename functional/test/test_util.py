@@ -8,7 +8,7 @@ from functools import reduce
 from operator import add
 
 from functional.util import (ReusableFile, is_namedtuple, lazy_parallelize, split_every, pack,
-                             unpack, compute_partition_size, GZFile, BZ2File)
+                             unpack, compute_partition_size, GZFile, BZ2File, XZFile)
 
 
 Data = namedtuple('Tuple', 'x y')
@@ -91,3 +91,19 @@ class TestUtil(unittest.TestCase):
             b'line2',
         ]
         self.assertListEqual(expect, list(BZ2File(file_name, mode='rb')))
+
+    def test_xz_file(self):
+        file_name = 'functional/test/data/test.txt.xz'
+        expect = [
+            'line0\n',
+            'line1\n',
+            'line2',
+        ]
+        self.assertListEqual(expect, list(XZFile(file_name, mode='rt', encoding="utf-8")))
+
+        expect = [
+            b'line0\n',
+            b'line1\n',
+            b'line2',
+        ]
+        self.assertListEqual(expect, list(XZFile(file_name, mode='rb')))

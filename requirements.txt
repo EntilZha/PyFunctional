@@ -2,3 +2,4 @@ future
 six
 dill
 bz2file
+backports.lzma

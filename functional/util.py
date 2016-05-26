@@ -7,6 +7,10 @@ import io
 import collections
 import sys
 import math
+try:
+    import lzma
+except ImportError:
+    from backports import lzma
 
 import future.builtins as builtins
 import dill as serializer
@@ -337,7 +341,36 @@ class BZ2File(CompressedFile):
                       newline=self.newline) as file_content:
             return file_content.read()
 
-COMPRESSION_CLASSES = [GZFile, BZ2File]
+
+class XZFile(CompressedFile):
+    magic_bytes = b'\xfd\x37\x7a\x58\x5a\x00'
+
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
+                 encoding=None, errors=None, newline=None, check=-1, preset=None, filters=None,
+                 format=None):
+        super(XZFile, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
+                                     compresslevel=compresslevel, encoding=encoding, errors=errors,
+                                     newline=newline)
+        self.check = check
+        self.preset = preset
+        self.format = format
+        self.filters = filters
+
+    def __iter__(self):
+        with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
+                       preset=self.preset, filters=self.filters, encoding=self.encoding,
+                       errors=self.errors, newline=self.newline) as file_content:
+            for line in file_content:
+                yield line
+
+    def read(self):
+        with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
+                       preset=self.preset, filters=self.filters, encoding=self.encoding,
+                       errors=self.errors, newline=self.newline) as file_content:
+            return file_content.read()
+
+COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
 
 
