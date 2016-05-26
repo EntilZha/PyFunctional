@@ -23,12 +23,9 @@ python:
   - "3.4.4"
   - "3.5"
   - "pypy"
-  - "pypy3"
 matrix:
   exclude:
     - python: "pypy"
-      env: EXTRA_INSTALLS=pandas
-    - python: "pypy3"
       env: EXTRA_INSTALLS=pandas
     - python: "2.7"
       env: EXTRA_INSTALLS=
