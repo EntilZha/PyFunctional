@@ -429,7 +429,7 @@ In order to be merged, all pull requests must:
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, PyPy, and PyPy3
+`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, and PyPy
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
