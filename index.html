@@ -26,17 +26,21 @@
 <a href="https://pypi.python.org/pypi/pyfunctional/"><img src="https://badge.fury.io/py/pyfunctional.svg" alt="Latest Version" /></a>
 <a href="https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter" /></a></p>
 
-<p><strong>Note: <code class="highlighter-rouge">ScalaFunctional</code> is now <code class="highlighter-rouge">PyFunctional</code>, see <a href="https://github.com/EntilZha/PyFunctional/issues/62">RFC</a> for details</strong></p>
+<h2 id="features">Features</h2>
+<p><code class="highlighter-rouge">PyFunctional</code> makes creating data pipelines easy by using chained functional operators. Here are a
+few examples of what <code class="highlighter-rouge">PyFunctional</code> and its builtin tools can do:</p>
 
-<h2 id="introduction">Introduction</h2>
-<p><code class="highlighter-rouge">PyFunctional</code> is a Python package that makes creating data pipelines easy. It works by wrapping the
-original input sequence to provide access to powerful chain functional transformations and actions.
-<code class="highlighter-rouge">PyFunctional</code> seamlessly reads and writes from text, csv, json, and sqlite3 sources to make
-processing raw data easy. Lastly, <code class="highlighter-rouge">PyFunctional</code> provides an easy way to auto-parallelize
-pipelines.</p>
+<ul>
+  <li>Chained operators: <code class="highlighter-rouge">seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)</code></li>
+  <li>Expressive and feature complete API</li>
+  <li>Read and write <code class="highlighter-rouge">text</code>, <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite</code>, <code class="highlighter-rouge">gzip</code>, <code class="highlighter-rouge">bz2</code>, and <code class="highlighter-rouge">lzma/xz</code> files</li>
+  <li>Parallelize “embarrassingly parallel” operations like <code class="highlighter-rouge">map</code> easily</li>
+  <li>Complete documentation, rigorous unit test suite, 100% test coverage, and CI which provide
+robustness</li>
+</ul>
 
-<p>The <code class="highlighter-rouge">PyFunctional</code> API takes inspiration from Scala collections, Apache Spark RDDs, Microsoft LINQ
-and more generally chain functional programming.</p>
+<p><code class="highlighter-rouge">PyFunctional</code>’s API takes inspiration from Scala collections, Apache Spark RDDs, and Microsoft
+LINQ.</p>
 
 <h2 id="installation">Installation</h2>
 <p><code class="highlighter-rouge">PyFunctional</code> is available on <a href="https://pypi.python.org/pypi/PyFunctional">pypi</a> and can be
@@ -248,13 +252,25 @@ Similarly, there are several more set like functions in addition to <code class=
 <p>Just as <code class="highlighter-rouge">PyFunctional</code> can read from <code class="highlighter-rouge">csv</code>, <code class="highlighter-rouge">json</code>, <code class="highlighter-rouge">jsonl</code>, <code class="highlighter-rouge">sqlite3</code>, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.</p>
 
+<h3 id="compressed-files">Compressed Files</h3>
+<p><code class="highlighter-rouge">PyFunctional</code> will auto-detect files compressed with <code class="highlighter-rouge">gzip</code>, <code class="highlighter-rouge">lzma/xz</code>, and <code class="highlighter-rouge">bz2</code>. This is done
+by examining the first several bytes of the file to determine if it is compressed so therefore
+requires no code changes to work.</p>
+
+<p>To write compressed files, every <code class="highlighter-rouge">to_</code> function has a parameter <code class="highlighter-rouge">compression</code> which can be set to
+the default <code class="highlighter-rouge">None</code> for no compression, <code class="highlighter-rouge">gzip</code> or <code class="highlighter-rouge">gz</code> for gzip compression, <code class="highlighter-rouge">lzma</code> or <code class="highlighter-rouge">xz</code> for lzma
+compression, and <code class="highlighter-rouge">bz2</code> for bz2 compression.</p>
+
 <h3 id="parallel-execution">Parallel Execution</h3>
-<p>To enable parallel execution first run <code class="highlighter-rouge">from functional import pseq</code>, then use it like you would
-normally use <code class="highlighter-rouge">seq</code>. A growing number of transformations in <code class="highlighter-rouge">PyFunctional</code> are being enabled for
-parallel execution. At the moment they are limited to:
-* <code class="highlighter-rouge">map</code>/<code class="highlighter-rouge">select</code>
-* <code class="highlighter-rouge">filter</code>/<code class="highlighter-rouge">filter_not</code>/<code class="highlighter-rouge">where</code>
-* <code class="highlighter-rouge">flat_map</code></p>
+<p>The only change required to enable parallelism is to import <code class="highlighter-rouge">from functional import pseq</code> instead of
+<code class="highlighter-rouge">from functional import seq</code> and use <code class="highlighter-rouge">pseq</code> where you would use <code class="highlighter-rouge">seq</code>. The following
+operations are run in parallel with more to be implemented in a future release:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">map</code>/<code class="highlighter-rouge">select</code></li>
+  <li><code class="highlighter-rouge">filter</code>/<code class="highlighter-rouge">filter_not</code>/<code class="highlighter-rouge">where</code></li>
+  <li><code class="highlighter-rouge">flat_map</code></li>
+</ul>
 
 <p>Parallelization uses python <code class="highlighter-rouge">multiprocessing</code> and squashes chains of embarrassingly parallel
 operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
@@ -262,7 +278,7 @@ all at once rather than in multiple loops using <code class="highlighter-rouge">
 
 <h2 id="documentation">Documentation</h2>
 <p>Shortform documentation is below and full documentation is at
-<a href="http://scalafunctional.readthedocs.org/en/latest/functional.html">scalafunctional.readthedocs.org</a>.</p>
+<a href="docs.pyfunctional.org/en/latest/functional.html">docs.pyfunctional.org</a>.</p>
 
 <h3 id="streams-api">Streams API</h3>
 <p>All of <code class="highlighter-rouge">PyFunctional</code> streams can be accessed through the <code class="highlighter-rouge">seq</code> object. The primary way to create
@@ -450,6 +466,11 @@ complete documentation reference
     <tr>
       <td><code class="highlighter-rouge">enumerate(start=0)</code></td>
       <td>Zips the sequence with the index starting at <code class="highlighter-rouge">start</code> on the left side</td>
+      <td>transformation</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">cartesian(*iterables, repeat=1)</code></td>
+      <td>Returns cartesian product from itertools.product</td>
       <td>transformation</td>
     </tr>
     <tr>
@@ -718,12 +739,11 @@ undesirable to keep recomputing the same value. Below are some examples of inspe
 multiple iteration over a single file object while correctly handling iteration termination and
 file closing.</p>
 
-<h2 id="road-map">Road Map</h2>
+<h2 id="road-map-idea">Road Map Idea</h2>
 <ul>
-  <li>Parallel execution engine for faster computation <code class="highlighter-rouge">0.5.0</code></li>
-  <li>SQL based query planner and interpreter (TBD on if/when/how this would be done)</li>
-  <li>When is this ready for <code class="highlighter-rouge">1.0</code>?</li>
-  <li>Perhaps think of a better name that better suits this package than <code class="highlighter-rouge">PyFunctional</code></li>
+  <li>SQL based query planner and interpreter</li>
+  <li><code class="highlighter-rouge">_</code> lambda operator</li>
+  <li>Prepare for <code class="highlighter-rouge">1.0</code> next release</li>
 </ul>
 
 <h2 id="contributing-and-bug-fixes">Contributing and Bug Fixes</h2>
@@ -739,9 +759,7 @@ In order to be merged, all pull requests must:</p>
 <ul>
   <li>Pass all the unit tests</li>
   <li>Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so</li>
-  <li>Must include tests that cover all new code paths</li>
-  <li>Must not decrease code coverage (currently at 100% and tested by
-<a href="coveralls.io/github/EntilZha/ScalaFunctional">coveralls.io</a>)</li>
+  <li>Achieve 100% test coverage on <a href="coveralls.io/github/EntilZha/PyFunctional">coveralls.io</a>)</li>
   <li>Edit the <code class="highlighter-rouge">CHANGELOG.md</code> file in the <code class="highlighter-rouge">Next Release</code> heading with changes</li>
 </ul>
 
@@ -749,7 +767,7 @@ In order to be merged, all pull requests must:</p>
 <p><a href="https://gitter.im/EntilZha/PyFunctional">Gitter for chat</a></p>
 
 <h2 id="supported-python-versions">Supported Python Versions</h2>
-<p><code class="highlighter-rouge">PyFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, PyPy, and PyPy3</p>
+<p><code class="highlighter-rouge">PyFunctional</code> supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, and PyPy</p>
 
 <h2 id="changelog">Changelog</h2>
 <p><a href="https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md">Changelog</a></p>
@@ -767,7 +785,7 @@ and will be working as a data scientist at Oracle Data Cloud this summer.</p>
 <p>I created <code class="highlighter-rouge">PyFunctional</code> while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
-Scala is not an option or Spark is overkill.</p>
+Scala is not an option or PySpark is overkill.</p>
 
 <h2 id="contributors">Contributors</h2>
 <p>These people have generously contributed their time to improving <code class="highlighter-rouge">PyFunctional</code></p>
