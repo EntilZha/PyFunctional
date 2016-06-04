@@ -199,7 +199,8 @@ def get_read_function(filename, disable_compression):
 
 
 def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, newline=None,
-                         compresslevel=9, compression=None):
+                         compresslevel=9, format=None, check=-1, preset=None, filters=None,
+                         compression=None):
     # pylint: disable=unexpected-keyword-arg
     if compression is None:
         return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
@@ -210,5 +211,9 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
         else:
             return gzip.open(path, mode=mode, compresslevel=compresslevel,
                              errors=errors, newline=newline, encoding=encoding)
+    elif compression == 'lzma' or compression == 'xz':
+        return lzma.open(path, mode=mode, format=format, check=check, preset=preset,
+                         filters=filters, encoding=encoding, errors=errors, newline=newline)
     else:
-        raise ValueError('compression must be None, gz, or gzip and was {0}'.format(compression))
+        raise ValueError(
+            'compression must be None, gz, gzip, lzma, or xz and was {0}'.format(compression))

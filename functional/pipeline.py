@@ -1365,7 +1365,8 @@ class Sequence(object):
         return self.to_dict(default=default)
 
     def to_file(self, path, delimiter=None, mode='wt', buffering=-1, encoding=None, errors=None,
-                newline=None, compresslevel=9, compression=None):
+                newline=None, compresslevel=9, format=None, check=-1, preset=None, filters=None,
+                compression=None):
         """
         Saves the sequence to a file by executing str(self) which becomes str(self.to_list()). If
         delimiter is defined will instead execute self.make_string(delimiter)
@@ -1378,11 +1379,16 @@ class Sequence(object):
         :param errors: passed to builtins.open
         :param newline: passed to builtins.open
         :param compression: compression format
-        :param compresslevel: default compression level for compressed writing
+        :param compresslevel: passed to gzip.open
+        :param format: passed to lzma.open
+        :param check: passed to lzma.open
+        :param preset: passed to lzma.open
+        :param filters: passed to lzma.open
         """
         with universal_write_open(path, mode=mode, buffering=buffering, encoding=encoding,
                                   errors=errors, newline=newline, compression=compression,
-                                  compresslevel=compresslevel) as output:
+                                  compresslevel=compresslevel, format=format, check=check,
+                                  preset=preset, filters=filters) as output:
             if delimiter:
                 output.write(six.u(self.make_string(delimiter)))
             else:

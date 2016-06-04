@@ -10,6 +10,7 @@ import six
 
 from functional import seq, pseq
 from functional.streams import Stream, ParallelStream
+from functional.io import lzma
 
 
 class TestStreams(unittest.TestCase):
@@ -232,10 +233,15 @@ class TestStreams(unittest.TestCase):
         with gzip.open(tmp_path, 'rt') as output:
             self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
 
+        sequence.to_file(tmp_path, compression='lzma')
+        with lzma.open(tmp_path, 'rt') as output:
+            self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
+
     def test_to_jsonl(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [{'a': 1, 'b': 2}, {'c': 3}, {'d': 4}]
         sequence = self.seq(elements)
+
         sequence.to_jsonl(tmp_path)
         result = self.seq.jsonl(tmp_path).to_list()
         self.assertEqual(elements, result)
@@ -244,7 +250,12 @@ class TestStreams(unittest.TestCase):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [{'a': 1, 'b': 2}, {'c': 3}, {'d': 4}]
         sequence = self.seq(elements)
+
         sequence.to_jsonl(tmp_path, compression='gzip')
+        result = self.seq.jsonl(tmp_path).to_list()
+        self.assertEqual(elements, result)
+
+        sequence.to_jsonl(tmp_path, compression='lzma')
         result = self.seq.jsonl(tmp_path).to_list()
         self.assertEqual(elements, result)
 
@@ -252,6 +263,7 @@ class TestStreams(unittest.TestCase):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [[u'a', 1], [u'b', 2], [u'c', 3]]
         sequence = self.seq(elements)
+
         sequence.to_json(tmp_path)
         result = self.seq.json(tmp_path).to_list()
         self.assertEqual(elements, result)
@@ -265,12 +277,22 @@ class TestStreams(unittest.TestCase):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [[u'a', 1], [u'b', 2], [u'c', 3]]
         sequence = self.seq(elements)
+
         sequence.to_json(tmp_path, compression='gzip')
         result = self.seq.json(tmp_path).to_list()
         self.assertEqual(elements, result)
 
         dict_expect = {u'a': 1, u'b': 2, u'c': 3}
         sequence.to_json(tmp_path, root_array=False, compression='gzip')
+        result = self.seq.json(tmp_path).to_dict()
+        self.assertEqual(dict_expect, result)
+
+        sequence.to_json(tmp_path, compression='lzma')
+        result = self.seq.json(tmp_path).to_list()
+        self.assertEqual(elements, result)
+
+        dict_expect = {u'a': 1, u'b': 2, u'c': 3}
+        sequence.to_json(tmp_path, root_array=False, compression='lzma')
         result = self.seq.json(tmp_path).to_dict()
         self.assertEqual(dict_expect, result)
 
@@ -288,7 +310,12 @@ class TestStreams(unittest.TestCase):
         elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]
         expect = [['1', '2', '3'], ['4', '5', '6'], ['a', 'b', 'c']]
         sequence = self.seq(elements)
+
         sequence.to_csv(tmp_path, compression='gzip')
+        result = self.seq.csv(tmp_path).to_list()
+        self.assertEqual(expect, result)
+
+        sequence.to_csv(tmp_path, compression='lzma')
         result = self.seq.csv(tmp_path).to_list()
         self.assertEqual(expect, result)
 
