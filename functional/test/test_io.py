@@ -1,6 +1,6 @@
 import unittest
 
-from functional.io import ReusableFile, GZFile, BZ2File, XZFile
+from functional.io import ReusableFile, GZFile, BZ2File, XZFile, universal_write_open
 
 
 class TestUtil(unittest.TestCase):
@@ -59,3 +59,7 @@ class TestUtil(unittest.TestCase):
             b'line2',
         ]
         self.assertListEqual(expect, list(XZFile(file_name, mode='rb')))
+
+    def test_universal_write_open(self):
+        with self.assertRaises(ValueError):
+            universal_write_open('', '', compression=1)
