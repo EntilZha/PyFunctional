@@ -1,5 +1,5 @@
 """
-The pipeline module contains the transformations and actions API of PyFunctional, Sequence
+The pipeline module contains the transformations and actions API of PyFunctional
 """
 
 from __future__ import division, absolute_import

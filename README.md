@@ -5,17 +5,19 @@
 [![Latest Version](https://badge.fury.io/py/pyfunctional.svg)](https://pypi.python.org/pypi/pyfunctional/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-**Note: `ScalaFunctional` is now `PyFunctional`, see [RFC](https://github.com/EntilZha/PyFunctional/issues/62) for details**
+## Features
+`PyFunctional` makes creating data pipelines easy by using chained functional operators. Here are a
+few examples of what `PyFunctional` and its builtin tools can do:
 
-## Introduction
-`PyFunctional` is a Python package that makes creating data pipelines easy. It works by wrapping the
-original input sequence to provide access to powerful chain functional transformations and actions.
-`PyFunctional` seamlessly reads and writes from text, csv, json, and sqlite3 sources to make
-processing raw data easy. Lastly, `PyFunctional` provides an easy way to auto-parallelize
-pipelines.
+* Chained operators: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`
+* Expressive and feature complete API
+* Read and write `text`, `csv`, `json`, `jsonl`, `sqlite`, `gzip`, `bz2`, and `lzma/xz` files
+* Parallelize "embarrassingly parallel" operations like `map` easily
+* Complete documentation, rigorous unit test suite, 100% test coverage, and CI which provide
+robustness
 
-The `PyFunctional` API takes inspiration from Scala collections, Apache Spark RDDs, Microsoft LINQ
-and more generally chain functional programming.
+`PyFunctional`'s API takes inspiration from Scala collections, Apache Spark RDDs, and Microsoft
+LINQ.
 
 ## Installation
 `PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
@@ -225,10 +227,20 @@ with sqlite3.connect(':memory:') as conn:
 Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
+### Compressed Files
+`PyFunctional` will auto-detect files compressed with `gzip`, `lzma/xz`, and `bz2`. This is done
+by examining the first several bytes of the file to determine if it is compressed so therefore
+requires no code changes to work.
+
+To write compressed files, every `to_` function has a parameter `compression` which can be set to
+the default `None` for no compression, `gzip` or `gz` for gzip compression, `lzma` or `xz` for lzma
+compression, and `bz2` for bz2 compression.
+
 ### Parallel Execution
-To enable parallel execution first run `from functional import pseq`, then use it like you would
-normally use `seq`. A growing number of transformations in `PyFunctional` are being enabled for
-parallel execution. At the moment they are limited to:
+The only change required to enable parallelism is to import `from functional import pseq` instead of
+`from functional import seq` and use `pseq` where you would use `seq`. The following
+operations are run in parallel with more to be implemented in a future release:
+
 * `map`/`select`
 * `filter`/`filter_not`/`where`
 * `flat_map`
@@ -239,7 +251,7 @@ all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
 Shortform documentation is below and full documentation is at
-[scalafunctional.readthedocs.org](http://scalafunctional.readthedocs.org/en/latest/functional.html).
+[docs.pyfunctional.org](docs.pyfunctional.org/en/latest/functional.html).
 
 ### Streams API
 All of `PyFunctional` streams can be accessed through the `seq` object. The primary way to create
@@ -402,11 +414,10 @@ Files are given special treatment if opened through the `seq.open` and related A
 multiple iteration over a single file object while correctly handling iteration termination and
 file closing.
 
-## Road Map
-* Parallel execution engine for faster computation `0.5.0`
-* SQL based query planner and interpreter (TBD on if/when/how this would be done)
-* When is this ready for `1.0`?
-* Perhaps think of a better name that better suits this package than `PyFunctional`
+## Road Map Idea
+* SQL based query planner and interpreter
+* `_` lambda operator
+* Prepare for `1.0` next release
 
 ## Contributing and Bug Fixes
 Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
@@ -420,9 +431,7 @@ In order to be merged, all pull requests must:
 
 * Pass all the unit tests
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
-* Must include tests that cover all new code paths
-* Must not decrease code coverage (currently at 100% and tested by
-[coveralls.io](coveralls.io/github/EntilZha/ScalaFunctional))
+* Achieve 100% test coverage on [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
 * Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
@@ -447,7 +456,7 @@ and will be working as a data scientist at Oracle Data Cloud this summer.
 I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
-Scala is not an option or Spark is overkill.
+Scala is not an option or PySpark is overkill.
 
 ## Contributors
 These people have generously contributed their time to improving `PyFunctional`

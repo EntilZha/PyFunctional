@@ -16,8 +16,10 @@ from functional.io import get_read_function
 
 class Stream(object):
     """
-    Represents and implements a stream. The responsibility of this class is to provide the APi
-    entry point and separate the responsibilities of Sequence and ExecutionEngine.
+    Represents and implements a stream which separates the responsibilities of Sequence and
+    ExecutionEngine.
+
+    An instance of Stream is normally accessed as `seq`
     """
     def __init__(self, disable_compression=False):
         """
@@ -54,12 +56,12 @@ class Stream(object):
     def open(self, path, delimiter=None, mode='r', buffering=-1, encoding=None, errors=None,
              newline=None):
         """
-        Additional entry point to Sequence which parses input files as defined
-        by options. Path specifies what file to parse. If delimiter is not
-        None, then the file is read in bulk then split on it. If it is None
-        (the default), then the file is parsed as sequence of lines. The rest
-        of the options are passed directly to builtins.open with the exception
-        that write/append file modes is not allowed.
+        Reads and parses input files as defined.
+
+        If delimiter is not None, then the file is read in bulk then split on it. If it is None
+        (the default), then the file is parsed as sequence of lines. The rest of the options are
+        passed directly to builtins.open with the exception that write/append file modes is not
+        allowed.
 
         >>> seq.open('examples/gear_list.txt').take(1)
         [u'tent\n']
@@ -86,8 +88,7 @@ class Stream(object):
 
     def range(self, *args):
         """
-        Additional entry point to Sequence which wraps the builtin range generator.
-        seq.range(args) is equivalent to seq(range(args)).
+        Alias to range function where seq.range(args) is equivalent to seq(range(args)).
 
         >>> seq.range(1, 8, 2)
         [1, 3, 5, 7]
@@ -99,9 +100,10 @@ class Stream(object):
 
     def csv(self, csv_file, dialect='excel', **fmt_params):
         """
-        Additional entry point to Sequence which parses the input of a csv stream or file according
-        to the defined options. csv_file can be a filepath or an object that implements the iterator
-        interface (defines next() or __next__() depending on python version).
+        Reads and parses the input of a csv stream or file.
+
+        csv_file can be a filepath or an object that implements the iterator interface
+        (defines next() or __next__() depending on python version).
 
         >>> seq.csv('examples/camping_purchases.csv').take(2)
         [['1', 'tent', '300'], ['2', 'food', '100']]
@@ -124,10 +126,10 @@ class Stream(object):
 
     def jsonl(self, jsonl_file):
         """
-        Additional entry point to Sequence which parses the input of a jsonl
-        file stream or file from the given path. Jsonl formatted files have a
-        single valid json value on each line which is parsed by the python
-        json module.
+        Reads and parses the input of a jsonl file stream or file.
+
+        Jsonl formatted files must have a single valid json value on each line which is parsed by
+        the python json module.
 
         >>> seq.jsonl('examples/chat_logs.jsonl').first()
         {u'date': u'10/09', u'message': u'hello anyone there?', u'user': u'bob'}
@@ -144,13 +146,15 @@ class Stream(object):
 
     def json(self, json_file):
         """
-        Additional entry point to Sequence which parses the input of a json
-        file handler or file from the given path. Json files are parsed in the
-        following ways depending on if the root is a dictionary or array.
-        1) If the json's root is a dictionary, these are parsed into a
-           sequence of (Key, Value) pairs
+        Reads and parses the input of a json file handler or file.
+
+        Json files are parsed differently depending on if the root is a dictionary or an array.
+
+        1) If the json's root is a dictionary, these are parsed into a sequence of (Key, Value)
+        pairs
+
         2) If the json's root is an array, these are parsed into a sequence
-           of entries
+        of entries
 
         >>> seq.json('examples/users.json').first()
         [u'sarah', {u'date_created': u'08/08', u'news_email': True, u'email': u'sarah@gmail.com'}]
@@ -174,7 +178,7 @@ class Stream(object):
 
     def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
         """
-        Additional entry point to Sequence which query data from sqlite db file.
+        Reads input by querying from a sqlite database.
 
         >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
         [(1, 'Tom')]
@@ -199,11 +203,11 @@ class Stream(object):
 
 class ParallelStream(Stream):
     """
-    Mirror of Stream which uses ParallelExecutionEngine
+    Parallelized version of functional.streams.Stream normally accessible as `pseq`
     """
     def __init__(self, processes=None, partition_size=None, disable_compression=False):
         """
-        Initialize number of processes for ParallelExecutionEngine
+        Configure Stream for parallel processing and file compression detection
         :param processes: Number of parallel processes
         :param disable_compression: Disable file compression detection
         """

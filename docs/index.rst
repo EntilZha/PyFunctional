@@ -6,11 +6,12 @@
 PyFunctional Documentation
 =============================
 
-`PyFunctional` is a library for creating data pipelines and analysis in an easy and accessible
-way. It is primarily inspired by the APIs from
-`Apache Spark RDDs <http://spark.apache.org/docs/latest/programming-guide.html#transformations>`_,
-`Scala Collections <http://www.scala-lang.org/api/current/index.html#scala.collection.AbstractSeq>`_,
-and `Microsoft LINQ <https://code.msdn.microsoft.com/101-LINQ-Samples-3fb9811b>`_.
+Welcome to the `PyFunctional` documentation. For a tutorial of how to use this package you should
+visit `pyfunctional.org <http://www.pyfunctional.org/>`_.
+
+The documentation on this site should primarily be used as an API reference. The Streams
+documentation covers ways to read data into `PyFunctional` while the Transformations and Actions
+documentations covers the available operators.
 
 Table of Contents
 -----------------
@@ -19,11 +20,3 @@ Table of Contents
 
     functional
     developer
-
-Documentation
--------------
-The best place to see examples of `PyFunctional` usage is on the project's github readme page
-at `github.com/EntilZha/PyFunctional <https://github.com/EntilZha/PyFunctional>`_. The
-docs on this site are primarily meant to give comprehensive documentation of every public
-function and API in `PyFunctional`. Its secondary purpose is to document internal methods to make
-development easier for maintainers and contributors.
