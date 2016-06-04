@@ -214,6 +214,9 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
     elif compression == 'lzma' or compression == 'xz':
         return lzma.open(path, mode=mode, format=format, check=check, preset=preset,
                          filters=filters, encoding=encoding, errors=errors, newline=newline)
+    elif compression == 'bz2':
+        return bz2.open(path, mode=mode, compresslevel=compresslevel, encoding=encoding,
+                        errors=errors, newline=newline)
     else:
         raise ValueError(
             'compression must be None, gz, gzip, lzma, or xz and was {0}'.format(compression))
