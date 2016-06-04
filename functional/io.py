@@ -18,7 +18,7 @@ else:
 if six.PY2:
     WRITE_MODE = 'wb'
 else:
-    WRITE_MODE = 'w'
+    WRITE_MODE = 'wt'
 
 
 class ReusableFile(object):
@@ -185,7 +185,7 @@ COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
 
 
-def get_open_function(filename, disable_compression):
+def get_read_function(filename, disable_compression):
     if disable_compression:
         return ReusableFile
     else:
@@ -196,3 +196,18 @@ def get_open_function(filename, disable_compression):
                     return cls
 
             return ReusableFile
+
+
+def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, newline=None,
+                         compresslevel=9, compression=None):
+    if compression is None:
+        return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
+                             newline=newline)
+    elif compression == 'gz' or compression == 'gzip':
+        if six.PY2:
+            return gzip.open(path, mode=mode, compresslevel=compresslevel)
+        else:
+            return gzip.open(path, mode=mode, compresslevel=compresslevel,
+                             errors=errors, newline=newline, encoding=encoding)
+    else:
+        raise ValueError('compression must be None, gz, or gzip and was {0}'.format(compression))

@@ -11,7 +11,7 @@ import six
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
 from functional.util import is_primitive
-from functional.io import get_open_function
+from functional.io import get_read_function
 
 
 class Stream(object):
@@ -76,7 +76,7 @@ class Stream(object):
         if not re.match('^[rbt]{1,3}$', mode):
             raise ValueError('mode argument must be only have r, b, and t')
 
-        file_open = get_open_function(path, self.disable_compression)
+        file_open = get_read_function(path, self.disable_compression)
         file = file_open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                          newline=newline)
         if delimiter is None:
@@ -112,7 +112,7 @@ class Stream(object):
         :return: Sequence wrapping csv file
         """
         if isinstance(csv_file, str):
-            file_open = get_open_function(csv_file, self.disable_compression)
+            file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
         elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
             input_file = csv_file
@@ -136,7 +136,7 @@ class Stream(object):
         :return: Sequence wrapping jsonl file
         """
         if isinstance(jsonl_file, str):
-            file_open = get_open_function(jsonl_file, self.disable_compression)
+            file_open = get_read_function(jsonl_file, self.disable_compression)
             input_file = file_open(jsonl_file)
         else:
             input_file = jsonl_file
@@ -159,7 +159,7 @@ class Stream(object):
         :return: Sequence wrapping jsonl file
         """
         if isinstance(json_file, str):
-            file_open = get_open_function(json_file, self.disable_compression)
+            file_open = get_read_function(json_file, self.disable_compression)
             input_file = file_open(json_file)
             json_input = jsonapi.load(input_file)
         elif hasattr(json_file, 'read'):

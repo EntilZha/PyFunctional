@@ -14,12 +14,11 @@ import sqlite3
 import re
 
 import six
-import future.builtins as builtins
 
 from functional.execution import ExecutionEngine
 from functional.lineage import Lineage
 from functional.util import is_iterable, is_primitive, is_namedtuple, identity
-from functional.io import WRITE_MODE
+from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
 
 
@@ -1365,8 +1364,8 @@ class Sequence(object):
         """
         return self.to_dict(default=default)
 
-    def to_file(self, path, delimiter=None,
-                mode='w', buffering=-1, encoding=None, errors=None, newline=None):
+    def to_file(self, path, delimiter=None, mode='wt', buffering=-1, encoding=None, errors=None,
+                newline=None, compresslevel=9, compression=None):
         """
         Saves the sequence to a file by executing str(self) which becomes str(self.to_list()). If
         delimiter is defined will instead execute self.make_string(delimiter)
@@ -1378,26 +1377,30 @@ class Sequence(object):
         :param encoding: passed to builtins.open
         :param errors: passed to builtins.open
         :param newline: passed to builtins.open
+        :param compression: compression format
+        :param compresslevel: default compression level for compressed writing
         """
-        with builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                           newline=newline) as output:
+        with universal_write_open(path, mode=mode, buffering=buffering, encoding=encoding,
+                                  errors=errors, newline=newline, compression=compression,
+                                  compresslevel=compresslevel) as output:
             if delimiter:
                 output.write(six.u(self.make_string(delimiter)))
             else:
                 output.write(six.u(str(self)))
 
-    def to_jsonl(self, path, mode='wb'):
+    def to_jsonl(self, path, mode='wb', compression=None):
         """
         Saves the sequence to a jsonl file. Each element is mapped using json.dumps then written
         with a newline separating each element.
 
         :param path: path to write file
         :param mode: mode to write in, defaults to 'w' to overwrite contents
+        :param compression: compression format
         """
-        with builtins.open(path, mode=mode) as output:
+        with universal_write_open(path, mode=mode, compression=compression) as output:
             output.write((self.map(json.dumps).make_string('\n') + '\n').encode('utf-8'))
 
-    def to_json(self, path, root_array=True, mode=WRITE_MODE):
+    def to_json(self, path, root_array=True, mode=WRITE_MODE, compression=None):
         """
         Saves the sequence to a json file. If root_array is True, then the sequence will be written
         to json with an array at the root. If it is False, then the sequence will be converted from
@@ -1407,13 +1410,13 @@ class Sequence(object):
         :param root_array: write json root as an array or dictionary
         :param mode: file open mode
         """
-        with builtins.open(path, mode=mode) as output:
+        with universal_write_open(path, mode=mode, compression=compression) as output:
             if root_array:
                 json.dump(self.to_list(), output)
             else:
                 json.dump(self.to_dict(), output)
 
-    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', **fmtparams):
+    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', compression=None, **fmtparams):
         """
         Saves the sequence to a csv file. Each element should be an iterable which will be expanded
         to the elements of each row.
@@ -1423,7 +1426,7 @@ class Sequence(object):
         :param dialect: passed to csv.writer
         :param fmtparams: passed to csv.writer
         """
-        with builtins.open(path, mode=mode) as output:
+        with universal_write_open(path, mode=mode, compression=compression) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])

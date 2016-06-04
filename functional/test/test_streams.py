@@ -4,6 +4,7 @@ import sqlite3
 import unittest
 import collections
 import sys
+import gzip
 
 import six
 
@@ -224,11 +225,26 @@ class TestStreams(unittest.TestCase):
         with open(tmp_path, 'r') as output:
             self.assertEqual('1:2:3:4', output.readlines()[0])
 
+    def test_to_file_compressed(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        sequence = self.seq(1, 2, 3, 4)
+        sequence.to_file(tmp_path, compression='gzip')
+        with gzip.open(tmp_path, 'rt') as output:
+            self.assertEqual('[1, 2, 3, 4]', output.readlines()[0])
+
     def test_to_jsonl(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [{'a': 1, 'b': 2}, {'c': 3}, {'d': 4}]
         sequence = self.seq(elements)
         sequence.to_jsonl(tmp_path)
+        result = self.seq.jsonl(tmp_path).to_list()
+        self.assertEqual(elements, result)
+
+    def test_to_jsonl_compressed(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [{'a': 1, 'b': 2}, {'c': 3}, {'d': 4}]
+        sequence = self.seq(elements)
+        sequence.to_jsonl(tmp_path, compression='gzip')
         result = self.seq.jsonl(tmp_path).to_list()
         self.assertEqual(elements, result)
 
@@ -245,12 +261,34 @@ class TestStreams(unittest.TestCase):
         result = self.seq.json(tmp_path).to_dict()
         self.assertEqual(dict_expect, result)
 
+    def test_to_json_compressed(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [[u'a', 1], [u'b', 2], [u'c', 3]]
+        sequence = self.seq(elements)
+        sequence.to_json(tmp_path, compression='gzip')
+        result = self.seq.json(tmp_path).to_list()
+        self.assertEqual(elements, result)
+
+        dict_expect = {u'a': 1, u'b': 2, u'c': 3}
+        sequence.to_json(tmp_path, root_array=False, compression='gzip')
+        result = self.seq.json(tmp_path).to_dict()
+        self.assertEqual(dict_expect, result)
+
     def test_to_csv(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]
         expect = [['1', '2', '3'], ['4', '5', '6'], ['a', 'b', 'c']]
         sequence = self.seq(elements)
         sequence.to_csv(tmp_path)
+        result = self.seq.csv(tmp_path).to_list()
+        self.assertEqual(expect, result)
+
+    def test_to_csv_compressed(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]
+        expect = [['1', '2', '3'], ['4', '5', '6'], ['a', 'b', 'c']]
+        sequence = self.seq(elements)
+        sequence.to_csv(tmp_path, compression='gzip')
         result = self.seq.csv(tmp_path).to_list()
         self.assertEqual(expect, result)
 
