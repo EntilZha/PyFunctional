@@ -200,6 +200,7 @@ def get_read_function(filename, disable_compression):
 
 def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, newline=None,
                          compresslevel=9, compression=None):
+    # pylint: disable=unexpected-keyword-arg
     if compression is None:
         return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                              newline=newline)
