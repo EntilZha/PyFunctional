@@ -4,6 +4,8 @@ from __future__ import absolute_import
 import sys
 import unittest
 from collections import namedtuple
+from itertools import product
+
 from functional.pipeline import Sequence, is_iterable, _wrap
 from functional.transformations import name
 from functional import seq, pseq
@@ -603,6 +605,16 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(e2, list(p2))
         self.assert_type(p1)
         self.assert_type(p2)
+
+    def test_cartesian(self):
+        result = seq.range(3).cartesian(range(3)).list()
+        self.assertListEqual(result, list(product(range(3), range(3))))
+
+        result = seq.range(3).cartesian(range(3), range(2)).list()
+        self.assertListEqual(result, list(product(range(3), range(3), range(2))))
+
+        result = seq.range(3).cartesian(range(3), range(2), repeat=2).list()
+        self.assertListEqual(result, list(product(range(3), range(3), range(2), repeat=2)))
 
     def test_product(self):
         l = [2, 2, 3]

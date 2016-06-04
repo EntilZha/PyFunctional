@@ -330,6 +330,7 @@ Function | Description | Type
 `zip(other)` | Zips the sequence with `other` | transformation
 `zip_with_index(start=0)` | Zips the sequence with the index starting at `start` on the right side | transformation
 `enumerate(start=0)` | Zips the sequence with the index starting at `start` on the left side | transformation
+`cartesian(*iterables, repeat=1)` | Returns cartesian product from itertools.product | transformation
 `inner_join(other)` | Returns inner join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
 `outer_join(other)` | Returns outer join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation
 `left_join(other)` | Returns left join of sequence with other. Must be a sequence of `(key, value)` pairs | transformation

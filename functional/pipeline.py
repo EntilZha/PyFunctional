@@ -337,6 +337,18 @@ class Sequence(object):
         """
         return self._transform(transformations.tails_t(_wrap))
 
+    def cartesian(self, *iterables, **kwargs):
+        """
+        Returns the cartesian product of the passed iterables with the specified number of
+        repetitions.
+
+        The keyword argument `repeat` is read from kwargs to pass to itertools.cartesian.
+
+        :param iterables: elements for cartesian product
+        :return: cartesian product
+        """
+        return self._transform(transformations.cartesian_t(iterables, kwargs.get('repeat', 1)))
+
     def drop(self, n):
         """
         Drop the first n elements of the sequence.

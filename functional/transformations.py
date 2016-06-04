@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from functools import reduce, partial
-from itertools import dropwhile, takewhile, islice, count
+from itertools import dropwhile, takewhile, islice, count, product
 import collections
 import types
 
@@ -302,6 +302,20 @@ def enumerate_t(start):
     return Transformation(
         'enumerate',
         lambda sequence: enumerate(sequence, start=start),
+        None
+    )
+
+
+def cartesian_t(iterables, repeat):
+    """
+    Transformation for Sequence.cartesian
+    :param iterables: elements for cartesian product
+    :param repeat: how many times to repeat iterables
+    :return: transformation
+    """
+    return Transformation(
+        'cartesian',
+        lambda sequence: product(sequence, *iterables, repeat=repeat),
         None
     )
 
