@@ -10,7 +10,8 @@ import six
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
-from functional.util import is_primitive, get_open_function
+from functional.util import is_primitive
+from functional.io import get_open_function
 
 
 class Stream(object):

@@ -18,7 +18,8 @@ import future.builtins as builtins
 
 from functional.execution import ExecutionEngine
 from functional.lineage import Lineage
-from functional.util import is_iterable, is_primitive, is_namedtuple, identity, WRITE_MODE
+from functional.util import is_iterable, is_primitive, is_namedtuple, identity
+from functional.io import WRITE_MODE
 from functional import transformations
 
 
@@ -1422,7 +1423,7 @@ class Sequence(object):
         :param dialect: passed to csv.writer
         :param fmtparams: passed to csv.writer
         """
-        with builtins.open(path, mode) as output:
+        with builtins.open(path, mode=mode) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
