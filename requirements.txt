@@ -1,5 +1,5 @@
-future
-six
-dill
-bz2file
+future==0.15.2
+six==1.10.0
+dill==0.2.5
+bz2file==0.98
 backports.lzma==0.0.3
