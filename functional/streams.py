@@ -64,7 +64,7 @@ class Stream(object):
         allowed.
 
         >>> seq.open('examples/gear_list.txt').take(1)
-        [u'tent\n']
+        [u'tent\\n']
 
         :param path: path to file
         :param delimiter: delimiter to split joined text on. if None, defaults to per line split

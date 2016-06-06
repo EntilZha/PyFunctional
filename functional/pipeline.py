@@ -344,7 +344,11 @@ class Sequence(object):
 
         The keyword argument `repeat` is read from kwargs to pass to itertools.cartesian.
 
+        >>> seq.range(2).cartesian(range(2))
+        [(0, 0), (0, 1), (1, 0), (1, 1)]
+
         :param iterables: elements for cartesian product
+        :param kwargs: the variable `repeat` is read from kwargs
         :return: cartesian product
         """
         return self._transform(transformations.cartesian_t(iterables, kwargs.get('repeat', 1)))

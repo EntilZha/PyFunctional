@@ -7,7 +7,7 @@
 
 ## Features
 `PyFunctional` makes creating data pipelines easy by using chained functional operators. Here are a
-few examples of what `PyFunctional` and its builtin tools can do:
+few examples of what it can do:
 
 * Chained operators: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`
 * Expressive and feature complete API
