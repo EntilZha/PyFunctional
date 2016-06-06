@@ -3,7 +3,7 @@
 [![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
 [![Latest Version](https://badge.fury.io/py/pyfunctional.svg)](https://pypi.python.org/pypi/pyfunctional/)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/PyFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Features
 `PyFunctional` makes creating data pipelines easy by using chained functional operators. Here are a
