@@ -2,4 +2,4 @@ future
 six
 dill
 bz2file
-backports.lzma
+backports.lzma==0.0.3
