@@ -1,11 +1,23 @@
 # Changelog
 ## Next Release
+
+## Release 0.7.0
 ### New Features
-* Re-architected code to allow for `pseq` to exist
-* Implemented `pseq` by implementing `ParallelStream` and `ParallelExecutionEngine`
-* `map`, `select`, `filter`, `filter_not`, `where`, `flatten`, and `flat_map` parallelized
-* Many Thanks to `versae` for implementing the `pseq` feature!
-* Cartesian product from `itertools.product` implemented as `cartesian`
+* Auto parallelization by using `pseq` instead of `seq`. Details at https://github.com/EntilZha/PyFunctional/issues/47
+* Parallel functions: `map`, `select`, `filter`, `filter_not`, `where`, `flatten`, and `flat_map`
+* Compressed file IO support for `gzip`/`lzma`/`bz2` as detailed at https://github.com/EntilZha/PyFunctional/issues/54
+* Cartesian product from `itertools.product` implemented as `Pipeline.cartesian`
+* Website at [pyfunctional.org](http://www.pyfunctional.org) and docs at [docs.pyfunctional.org](http://docs.pyfunctional.org)
+
+### Bug Fixes
+* No option for encoding in `to_json` https://github.com/EntilZha/PyFunctional/issues/70
+
+### Internal Changes
+* Pinned versions of all dependencies
+
+### Contributors
+* Thanks to [versae](https://github.com/versae) for implementing most of the `pseq` feature!
+* Thanks to [ChuyuHsu](https://github.com/ChuyuHsu) for implemented large parts of the compression feature!
 
 ## Release 0.6.0
 ### New Features

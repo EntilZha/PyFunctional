@@ -93,7 +93,7 @@ food_cost = seq(transactions)\
     .where(lambda x: x.reason == 'food')\
     .select(lambda x: x.amount).sum()
 
-# Using ScalaFunctional with fn
+# Using PyFunctional with fn
 from fn import _
 food_cost = seq(transactions).filter(_.reason == 'food').map(_.amount).sum()
 ```
@@ -295,12 +295,12 @@ seq.sqlite3('filepath', 'select * from data')
 ```
 
 For more information on the parameters that these functions can take, reference the
-[streams documentation](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.streams)
+[streams documentation](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.streams)
 
 ### Transformations and Actions APIs
 Below is the complete list of functions which can be called on a stream object from `seq`. For
 complete documentation reference
-[transformation and actions API](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline).
+[transformation and actions API](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.pipeline).
 
 Function | Description | Type
  ------- | ----------- | ----

@@ -15,7 +15,7 @@ else:
 
 setup(
     name='PyFunctional',
-    description='Package for creating data pipelines, LINQ, and chain functional programming',
+    description='Package for creating data pipelines with chain functional programming',
     long_description=long_description,
     url='https://github.com/EntilZha/PyFunctional',
     author='Pedro Rodriguez',
@@ -23,7 +23,7 @@ setup(
     maintainer='Pedro Rodriguez',
     maintainer_email='ski.rodriguez@gmail.com',
     license='MIT',
-    keywords='functional LINQ pipeline data collection rdd scala',
+    keywords='functional pipeline data collection chain rdd linq parallel',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
     version='0.6.0',
     install_requires=install_requires,
