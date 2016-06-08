@@ -25,7 +25,7 @@ setup(
     license='MIT',
     keywords='functional pipeline data collection chain rdd linq parallel',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'test']),
-    version='0.7.0',
+    version='0.7.1',
     install_requires=install_requires,
     extras_requires={
         'all': ['pandas']
