@@ -7,11 +7,11 @@ try:
 except (IOError, ImportError):
     long_description = open('README.md').read()
 
+common_install_requires = ['future==0.15.2', 'six==1.10.0', 'dill==0.2.5', 'tabulate==0.7.5']
 if sys.version_info.major == 2 or '__pypy__' in sys.builtin_module_names:
-    install_requires = ['future==0.15.2', 'six==1.10.0', 'dill==0.2.5', 'bz2file==0.98',
-                        'backports.lzma==0.0.3']
+    install_requires = common_install_requires + ['bz2file==0.98', 'backports.lzma==0.0.3']
 else:
-    install_requires = ['future==0.15.2', 'six==1.10.0', 'dill==0.2.5']
+    install_requires = common_install_requires
 
 setup(
     name='PyFunctional',

@@ -798,6 +798,12 @@ class TestPipeline(unittest.TestCase):
         result = self.seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
         self.assertEqual(repr(result._lineage), 'Lineage: sequence')
 
+    def test_show(self):
+        sequence = seq([[1, 2, 3], [4, 5, 6]])
+        self.assertEqual(sequence.show(), None)
+        result = sequence.show(output=False)
+        self.assertEqual(result, '-  -  -\n1  2  3\n4  5  6\n-  -  -')
+
 
 # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
 @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')

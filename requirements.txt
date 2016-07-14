@@ -3,3 +3,4 @@ six==1.10.0
 dill==0.2.5
 bz2file==0.98
 backports.lzma==0.0.3
+tabulate==0.7.5

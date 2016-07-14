@@ -14,6 +14,7 @@ import sqlite3
 import re
 
 import six
+from tabulate import tabulate
 
 from functional.execution import ExecutionEngine
 from functional.lineage import Lineage
@@ -1537,6 +1538,30 @@ class Sequence(object):
         """
         import pandas
         return pandas.DataFrame.from_records(self.to_list(), columns=columns)
+
+    def show(self, n=10, output=True, headers=(), tablefmt="simple", floatfmt="g",
+             numalign="decimal", stralign="left", missingval=""):
+        """
+        Pretty print first n rows of sequence as a table. See
+        https://bitbucket.org/astanin/python-tabulate for details on tabulate parameters
+
+        :param n: Number of rows to show
+        :param output: If true, print to stdout, otherwise return the string, defaults to True
+        :param headers: Passed to tabulate
+        :param tablefmt: Passed to tabulate
+        :param floatfmt: Passed to tabulate
+        :param numalign: Passed to tabulate
+        :param stralign: Passed to tabulate
+        :param missingval: Passed to tabulate
+        :return: None or formatted sequence
+        """
+        formatted_seq = tabulate(self.take(n), headers=headers, tablefmt=tablefmt,
+                                 floatfmt=floatfmt, numalign=numalign, stralign=stralign,
+                                 missingval=missingval)
+        if output:
+            print(formatted_seq)
+        else:
+            return formatted_seq
 
 
 def _wrap(value):
