@@ -798,10 +798,11 @@ class TestPipeline(unittest.TestCase):
         result = self.seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
         self.assertEqual(repr(result._lineage), 'Lineage: sequence')
 
-    def test_show(self):
+    def test_tabulate(self):
         sequence = seq([[1, 2, 3], [4, 5, 6]])
         self.assertEqual(sequence.show(), None)
-        result = sequence.show(output=False)
+        self.assertNotEqual(sequence._repr_html_(), None)
+        result = sequence.tabulate()
         self.assertEqual(result, '-  -  -\n1  2  3\n4  5  6\n-  -  -')
 
 

@@ -1539,29 +1539,52 @@ class Sequence(object):
         import pandas
         return pandas.DataFrame.from_records(self.to_list(), columns=columns)
 
-    def show(self, n=10, output=True, headers=(), tablefmt="simple", floatfmt="g",
-             numalign="decimal", stralign="left", missingval=""):
+    def show(self, n=10, headers=(), tablefmt="simple", floatfmt="g", numalign="decimal",
+             stralign="left", missingval=""):
         """
         Pretty print first n rows of sequence as a table. See
         https://bitbucket.org/astanin/python-tabulate for details on tabulate parameters
 
         :param n: Number of rows to show
-        :param output: If true, print to stdout, otherwise return the string, defaults to True
         :param headers: Passed to tabulate
         :param tablefmt: Passed to tabulate
         :param floatfmt: Passed to tabulate
         :param numalign: Passed to tabulate
         :param stralign: Passed to tabulate
         :param missingval: Passed to tabulate
-        :return: None or formatted sequence
         """
-        formatted_seq = tabulate(self.take(n), headers=headers, tablefmt=tablefmt,
+        formatted_seq = tabulate(self.take(n).list(), headers=headers, tablefmt=tablefmt,
                                  floatfmt=floatfmt, numalign=numalign, stralign=stralign,
                                  missingval=missingval)
-        if output:
-            print(formatted_seq)
+        print(formatted_seq)
+
+    def _repr_html_(self):
+        """
+        Allows  IPython render HTML tables
+        :return: First 10 rows of data as an HTML table
+        """
+        return self.tabulate(10, tablefmt='html')
+
+    def tabulate(self, n=None, headers=(), tablefmt="simple", floatfmt="g", numalign="decimal",
+                 stralign="left", missingval=""):
+        """
+        Return pretty string table of first n rows of sequence or everything if n is None. See
+        https://bitbucket.org/astanin/python-tabulate for details on tabulate parameters
+
+        :param n: Number of rows to show, if set to None return all rows
+        :param headers: Passed to tabulate
+        :param tablefmt: Passed to tabulate
+        :param floatfmt: Passed to tabulate
+        :param numalign: Passed to tabulate
+        :param stralign: Passed to tabulate
+        :param missingval: Passed to tabulate
+        """
+        if n is None:
+            rows = self.list()
         else:
-            return formatted_seq
+            rows = self.take(n).list()
+        return tabulate(rows, headers=headers, tablefmt=tablefmt, floatfmt=floatfmt,
+                        numalign=numalign, stralign=stralign, missingval=missingval)
 
 
 def _wrap(value):
