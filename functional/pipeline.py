@@ -1267,7 +1267,7 @@ class Sequence(object):
         """
         return self._transform(transformations.slice_t(start, until))
 
-    def to_list(self):
+    def to_list(self, n=None):
         """
         Converts sequence to list of elements.
 
@@ -1280,12 +1280,16 @@ class Sequence(object):
         >>> seq([1, 2, 3]).to_list()
         [1, 2, 3]
 
+        :param n: Take n elements of sequenc eif not None
         :return: list of elements in sequence
         """
-        self.cache()
-        return self._base_sequence
+        if n is None:
+            self.cache()
+            return self._base_sequence
+        else:
+            return self.cache().take(n).list()
 
-    def list(self):
+    def list(self, n=None):
         """
         Converts sequence to list of elements.
 
@@ -1298,9 +1302,10 @@ class Sequence(object):
         >>> seq([1, 2, 3]).list()
         [1, 2, 3]
 
+        :param n: Take n elements of sequenc eif not None
         :return: list of elements in sequence
         """
-        return self.to_list()
+        return self.to_list(n=n)
 
     def to_set(self):
         """

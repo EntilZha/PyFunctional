@@ -668,6 +668,8 @@ class TestPipeline(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         result = self.seq(iter([0, 1, 2])).to_list()
         self.assertIsInstance(result, list)
+        result = self.seq(l).list(n=2)
+        self.assertEqual(result, [1, 2])
 
     def test_list(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
@@ -676,6 +678,8 @@ class TestPipeline(unittest.TestCase):
         self.assertTrue(isinstance(result, list))
         result = self.seq(iter([0, 1, 2])).to_list()
         self.assertIsInstance(result, list)
+        result = self.seq(l).list(n=2)
+        self.assertEqual(result, [1, 2])
 
     def test_for_each(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
