@@ -809,6 +809,15 @@ class TestPipeline(unittest.TestCase):
         result = sequence.tabulate()
         self.assertEqual(result, '-  -  -\n1  2  3\n4  5  6\n-  -  -')
 
+        sequence = seq(1, 2, 3)
+        self.assertEqual(sequence.tabulate(), None)
+
+        class NotTabulatable(object):
+            pass
+
+        sequence = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())
+        self.assertEqual(sequence.tabulate(), None)
+
 
 # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
 @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')

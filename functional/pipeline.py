@@ -18,7 +18,7 @@ from tabulate import tabulate
 
 from functional.execution import ExecutionEngine
 from functional.lineage import Lineage
-from functional.util import is_iterable, is_primitive, is_namedtuple, identity
+from functional.util import is_iterable, is_primitive, is_namedtuple, is_tabulatable, identity
 from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
 
@@ -1584,6 +1584,10 @@ class Sequence(object):
         :param stralign: Passed to tabulate
         :param missingval: Passed to tabulate
         """
+        self.cache()
+        if self.len() == 0 or not is_tabulatable(self[0]):
+            return None
+
         if n is None:
             rows = self.list()
         else:

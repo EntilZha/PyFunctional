@@ -56,3 +56,4 @@ docs/_build/
 target/
 
 functional/test/data/tmp
+.ipynb_checkpoints/

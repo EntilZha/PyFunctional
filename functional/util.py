@@ -98,6 +98,14 @@ def is_iterable(val):
     return isinstance(val, collections.Iterable)
 
 
+def is_tabulatable(val):
+    if is_primitive(val):
+        return False
+    if is_iterable(val) or is_namedtuple(val) or isinstance(val, list):
+        return True
+    return False
+
+
 def split_every(parts, iterable):
     """
     Split an iterable into parts of length parts
