@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from functools import reduce, partial
-from itertools import dropwhile, takewhile, islice, count, product
+from itertools import dropwhile, takewhile, islice, count, product, chain
 import collections
 import types
 
@@ -501,8 +501,10 @@ def grouped_impl(wrap, size, sequence):
     :param sequence: sequence to group
     :return: grouped sequence
     """
-    for i in range(0, len(sequence), size):
-        yield wrap(sequence[i:i + size])
+    iterator = iter(sequence)
+    while True:
+        batch = islice(iterator, size)
+        yield chain((wrap(next(batch)),), batch)
 
 
 def grouped_t(wrap, size):
@@ -515,7 +517,7 @@ def grouped_t(wrap, size):
     return Transformation(
         'grouped({0})'.format(size),
         partial(grouped_impl, wrap, size),
-        {ExecutionStrategies.PRE_COMPUTE}
+        None
     )
 
 

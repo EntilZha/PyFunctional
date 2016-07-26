@@ -559,9 +559,9 @@ class TestPipeline(unittest.TestCase):
     def test_grouped(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7, 8])
         expect = [[1, 2], [3, 4], [5, 6], [7, 8]]
-        self.assertIteratorEqual(l.grouped(2), expect)
+        self.assertIteratorEqual(map(list, l.grouped(2)), expect)
         expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
-        self.assertIteratorEqual(l.grouped(3), expect)
+        self.assertIteratorEqual(map(list, l.grouped(3)), expect)
 
     def test_sliding(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7])
