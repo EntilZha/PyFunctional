@@ -2,18 +2,10 @@ from __future__ import absolute_import
 import gzip
 import io
 import sys
-try:
-    import lzma
-except ImportError:
-    from backports import lzma
 
 from future import builtins as builtins
 import six
 
-if six.PY2 or '__pypy__' in sys.builtin_module_names:
-    import bz2file as bz2
-else:
-    import bz2
 
 if six.PY2:
     WRITE_MODE = 'wb'
@@ -139,6 +131,11 @@ class BZ2File(CompressedFile):
                                       newline=newline)
 
     def __iter__(self):
+        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+            import bz2file as bz2  # pylint: disable=import-error
+        else:
+            import bz2
+
         with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
                       encoding=self.encoding, errors=self.errors,
                       newline=self.newline) as file_content:
@@ -146,6 +143,11 @@ class BZ2File(CompressedFile):
                 yield line
 
     def read(self):
+        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+            import bz2file as bz2  # pylint: disable=import-error
+        else:
+            import bz2
+
         with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
                       encoding=self.encoding, errors=self.errors,
                       newline=self.newline) as file_content:
@@ -168,6 +170,11 @@ class XZFile(CompressedFile):
         self.filters = filters
 
     def __iter__(self):
+        try:
+            import lzma
+        except ImportError:
+            from backports import lzma
+
         with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
                        preset=self.preset, filters=self.filters, encoding=self.encoding,
                        errors=self.errors, newline=self.newline) as file_content:
@@ -175,6 +182,11 @@ class XZFile(CompressedFile):
                 yield line
 
     def read(self):
+        try:
+            import lzma
+        except ImportError:
+            from backports import lzma
+
         with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
                        preset=self.preset, filters=self.filters, encoding=self.encoding,
                        errors=self.errors, newline=self.newline) as file_content:
@@ -212,9 +224,18 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
             return gzip.open(path, mode=mode, compresslevel=compresslevel,
                              errors=errors, newline=newline, encoding=encoding)
     elif compression == 'lzma' or compression == 'xz':
+        try:
+            import lzma
+        except ImportError:
+            from backports import lzma
         return lzma.open(path, mode=mode, format=format, check=check, preset=preset,
                          filters=filters, encoding=encoding, errors=errors, newline=newline)
     elif compression == 'bz2':
+        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+            import bz2file as bz2  # pylint: disable=import-error
+        else:
+            import bz2
+
         return bz2.open(path, mode=mode, compresslevel=compresslevel, encoding=encoding,
                         errors=errors, newline=newline)
     else:

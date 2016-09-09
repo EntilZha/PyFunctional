@@ -9,8 +9,10 @@ except (IOError, ImportError):
 
 common_install_requires = ['future==0.15.2', 'six==1.10.0', 'dill==0.2.5', 'tabulate==0.7.5']
 if sys.version_info.major == 2 or '__pypy__' in sys.builtin_module_names:
-    install_requires = common_install_requires + ['bz2file==0.98', 'backports.lzma==0.0.3']
+    compression_requires = ['bz2file==0.98', 'backports.lzma==0.0.3']
+    install_requires = common_install_requires
 else:
+    compression_requires = []
     install_requires = common_install_requires
 
 setup(
@@ -28,7 +30,8 @@ setup(
     version='0.7.1',
     install_requires=install_requires,
     extras_requires={
-        'all': ['pandas']
+        'all': ['pandas'] + compression_requires,
+        'compression': compression_requires
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',

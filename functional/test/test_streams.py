@@ -10,7 +10,16 @@ import six
 
 from functional import seq, pseq
 from functional.streams import Stream, ParallelStream
-from functional.io import lzma, bz2
+
+try:
+    import lzma
+except ImportError:
+    from backports import lzma
+
+if six.PY2 or '__pypy__' in sys.builtin_module_names:
+    import bz2file as bz2  # pylint: disable=import-error
+else:
+    import bz2
 
 
 class TestStreams(unittest.TestCase):
