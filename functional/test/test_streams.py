@@ -224,6 +224,18 @@ class TestStreams(unittest.TestCase):
         expected_2 = [(1, 'Tom')]
         self.assertListEqual(expected_2, result_2)
 
+    def test_pandas(self):
+        try:
+            import pandas
+            data = pandas.DataFrame([[1, 3], [4, 5]])
+            result = seq(data).list()
+            self.assertEqual(result[0][0], 1)
+            self.assertEqual(result[0][1], 3)
+            self.assertEqual(result[1][0], 4)
+            self.assertEqual(result[1][1], 5)
+        except ImportError:
+            pass
+
     def test_to_file(self):
         tmp_path = 'functional/test/data/tmp/output.txt'
         sequence = self.seq(1, 2, 3, 4)

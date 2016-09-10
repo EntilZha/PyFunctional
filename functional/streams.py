@@ -43,10 +43,21 @@ class Stream(object):
         """
         # pylint: disable=no-self-use
         engine = ExecutionEngine()
+        return self._parse_args(args, engine, "seq() takes at least 1 argument ({0} given)")
+
+    @staticmethod
+    def _parse_args(args, engine, error_message):
         if len(args) == 0:
-            raise TypeError("seq() takes at least 1 argument ({0} given)"
-                            .format(len(args)))
-        elif len(args) > 1:
+            raise TypeError(error_message.format(len(args)))
+        if len(args) == 1:
+            try:
+                import pandas
+                if isinstance(args[0], pandas.DataFrame):
+                    return Sequence(args[0].values, engine=engine)
+            except ImportError:
+                pass
+
+        if len(args) > 1:
             return Sequence(list(args), engine=engine)
         elif is_primitive(args[0]):
             return Sequence([args[0]], engine=engine)
@@ -232,14 +243,7 @@ class ParallelStream(Stream):
         processes = kwargs.get('processes') or self.processes
         partition_size = kwargs.get('partition_size') or self.partition_size
         engine = ParallelExecutionEngine(processes=processes, partition_size=partition_size)
-        if len(args) == 0:
-            raise TypeError('pseq() takes at least 1 argument ({0} given)'.format(len(args)))
-        elif len(args) > 1:
-            return Sequence(list(args), engine=engine)
-        elif is_primitive(args[0]):
-            return Sequence([args[0]], engine=engine)
-        else:
-            return Sequence(args[0], engine=engine)
+        return self._parse_args(args, engine, 'pseq() takes at least 1 argument ({0} given)')
 
 # pylint: disable=invalid-name
 seq = Stream()

@@ -1280,7 +1280,7 @@ class Sequence(object):
         >>> seq([1, 2, 3]).to_list()
         [1, 2, 3]
 
-        :param n: Take n elements of sequenc eif not None
+        :param n: Take n elements of sequence if not None
         :return: list of elements in sequence
         """
         if n is None:
