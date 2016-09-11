@@ -28,7 +28,7 @@ class Sequence(object):
     Sequence is a wrapper around any type of sequence which provides access to common
     functional transformations and reductions in a data pipeline style
     """
-    def __init__(self, sequence, transform=None, engine=None):
+    def __init__(self, sequence, transform=None, engine=None, max_repr_items=None):
         # pylint: disable=protected-access
         """
         Takes a Sequence, list, tuple. or iterable sequence and wraps it around a Sequence object.
@@ -36,14 +36,19 @@ class Sequence(object):
         once. A TypeError is raised if sequence is none of these.
 
         :param sequence: sequence of items to wrap in a Sequence
+        :param transform: transformation to apply
+        :param engine: execution engine
+        :param max_repr_items: maximum number of items to print with repr
         :return: sequence wrapped in a Sequence
         """
         self.engine = engine or ExecutionEngine()
         if isinstance(sequence, Sequence):
+            self._max_repr_items = max_repr_items or sequence._max_repr_items
             self._base_sequence = sequence._base_sequence
             self._lineage = Lineage(prior_lineage=sequence._lineage,
                                     engine=engine)
         elif isinstance(sequence, list) or isinstance(sequence, tuple) or is_iterable(sequence):
+            self._max_repr_items = max_repr_items
             self._base_sequence = sequence
             self._lineage = Lineage(engine=engine)
         else:
@@ -91,7 +96,11 @@ class Sequence(object):
 
         :return: sequence's repr
         """
-        return repr(self.to_list())
+        items = self.to_list()
+        if self._max_repr_items is None or len(items) <= self._max_repr_items:
+            return repr(items)
+        else:
+            return repr(items[:self._max_repr_items])[:-1] + ', ...]'
 
     def __str__(self):
         """

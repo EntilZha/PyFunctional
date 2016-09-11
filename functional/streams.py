@@ -21,12 +21,13 @@ class Stream(object):
 
     An instance of Stream is normally accessed as `seq`
     """
-    def __init__(self, disable_compression=False):
+    def __init__(self, disable_compression=False, max_repr_items=100):
         """
         Default stream constructor.
         :param disable_compression: Disable file compression detection
         """
         self.disable_compression = disable_compression
+        self.max_repr_items = max_repr_items
 
     def __call__(self, *args):
         """
@@ -45,24 +46,24 @@ class Stream(object):
         engine = ExecutionEngine()
         return self._parse_args(args, engine, "seq() takes at least 1 argument ({0} given)")
 
-    @staticmethod
-    def _parse_args(args, engine, error_message):
+    def _parse_args(self, args, engine, error_message):
         if len(args) == 0:
             raise TypeError(error_message.format(len(args)))
         if len(args) == 1:
             try:
                 import pandas
                 if isinstance(args[0], pandas.DataFrame):
-                    return Sequence(args[0].values, engine=engine)
+                    return Sequence(
+                        args[0].values, engine=engine, max_repr_items=self.max_repr_items)
             except ImportError:
                 pass
 
         if len(args) > 1:
-            return Sequence(list(args), engine=engine)
+            return Sequence(list(args), engine=engine, max_repr_items=self.max_repr_items)
         elif is_primitive(args[0]):
-            return Sequence([args[0]], engine=engine)
+            return Sequence([args[0]], engine=engine, max_repr_items=self.max_repr_items)
         else:
-            return Sequence(args[0], engine=engine)
+            return Sequence(args[0], engine=engine, max_repr_items=self.max_repr_items)
 
     def open(self, path, delimiter=None, mode='r', buffering=-1, encoding=None, errors=None,
              newline=None):
