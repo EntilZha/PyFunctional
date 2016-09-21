@@ -1,6 +1,19 @@
 # Changelog
 ## Next Release
 
+## Release 0.8.0
+### New Features
+
+* Implemented pretty html repr for Jupyter
+* Implemented proper parsing of pandas DataFrames
+* Detect when its possible to pretty print a table and do so
+* `list`/`to_list` have a parameter `n` to limit number of results
+
+### Bug Fixes
+
+* Fixed bug where `grouped` unnecesarily forces precomputation of sequence
+* Remove package installations from default requirements that sometimes break installation on barebones systems in python 2.7
+
 ## Release 0.7.0
 ### New Features
 * Auto parallelization by using `pseq` instead of `seq`. Details at https://github.com/EntilZha/PyFunctional/issues/47
