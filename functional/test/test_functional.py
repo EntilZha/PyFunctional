@@ -311,6 +311,14 @@ class TestPipeline(unittest.TestCase):
         s = self.seq(l)
         self.assertEqual(expect, s.reduce(f))
 
+        with self.assertRaises(TypeError):
+            seq([]).reduce(f)
+        with self.assertRaises(ValueError):
+            seq([]).reduce(f, 0, 0)
+
+        self.assertEqual(seq([]).reduce(f, 1), 1)
+        self.assertEqual(seq([0, 2]).reduce(f, 1), 3)
+
     def test_aggregate(self):
         f = lambda current, next_element: current + next_element
         l = self.seq([1, 2, 3, 4])

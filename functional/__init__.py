@@ -7,9 +7,9 @@ from __future__ import absolute_import
 from functional.streams import seq, pseq
 
 __author__ = "Pedro Rodriguez"
-__copyright__ = "Copyright 2015, Pedro Rodriguez"
+__copyright__ = "Copyright 2016, Pedro Rodriguez"
 __license__ = "MIT"
-__version__ = "0.5.0"
+__version__ = "0.8.0"
 __maintainer__ = "Pedro Rodriguez"
 __email__ = "ski.rodriguez@gmail.com"
-__status__ = "Development"
+__status__ = "Production"

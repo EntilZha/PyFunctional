@@ -874,17 +874,23 @@ class Sequence(object):
         """
         return self._transform(transformations.reduce_by_key_t(func))
 
-    def reduce(self, func):
+    def reduce(self, func, *initial):
         """
-        Reduce sequence of elements using func.
+        Reduce sequence of elements using func. API mirrors functools.reduce
 
         >>> seq([1, 2, 3]).reduce(lambda x, y: x + y)
         6
 
         :param func: two parameter, associative reduce function
+        :param initial: single optional argument acting as initial value
         :return: reduced value using func
         """
-        return _wrap(reduce(func, self))
+        if len(initial) == 0:
+            return _wrap(reduce(func, self))
+        elif len(initial) == 1:
+            return _wrap(reduce(func, self, initial[0]))
+        else:
+            raise ValueError('reduce takes exactly one optional parameter for initial value')
 
     def make_string(self, separator):
         """
