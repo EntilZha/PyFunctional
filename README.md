@@ -26,6 +26,7 @@ LINQ.
     1. [Simple Example](#simple-example)
     2. [Aggregates and Joins](#aggregates-and-joins)
     3. [Reading and Writing SQLite3](#readingwriting-sqlite3)
+    4. [Data Interchange with Pandas](https://github.com/EntilZha/PyFunctional/blob/master/examples/PyFunctional-pandas-tutorial.ipynb)
 3. [Writing to Files](#writing-to-files)
 4. [Parallel Execution](#parallel-execution)
 5. [Github Shortform Documentation](#documentation)
