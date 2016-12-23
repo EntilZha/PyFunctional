@@ -19,6 +19,23 @@ robustness
 `PyFunctional`'s API takes inspiration from Scala collections, Apache Spark RDDs, and Microsoft
 LINQ.
 
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Examples](#examples)
+    1. [Simple Example](#simple-example)
+    2. [Aggregates and Joins](#aggregates-and-joins)
+    3. [Reading and Writing SQLite3](#readingwriting-sqlite3)
+3. [Writing to Files](#writing-to-files)
+4. [Parallel Execution](#parallel-execution)
+5. [Github Shortform Documentation](#documentation)
+    1. [Streams, Transformations, and Actions](#streams-transformations-and-actions)
+    2. [Streams API](#streams-api)
+    3. [Transformations and Actions APIs](#transformations-and-actions-api)
+    4. [Lazy Execution](#lazy-execution)
+6. [Contributing and Bug Fixes](#contributing-and-bug-fixes)
+7. [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
+
 ## Installation
 `PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
 installed by running:
@@ -98,7 +115,7 @@ from fn import _
 food_cost = seq(transactions).filter(_.reason == 'food').map(_.amount).sum()
 ```
 
-### Word Count and Joins
+### Aggregates and Joins
 The account transactions example could be done easily in pure python using list comprehensions. To
 show some of the things `PyFunctional` excels at, take a look at a couple of word count examples.
 
@@ -121,7 +138,7 @@ Below are a few lines out of `examples/chat_logs.jsonl`.
 ```python
 from operator import add
 import re
-messages = seq.jsonl('examples/chat_lots.jsonl')
+messages = seq.jsonl('examples/chat_logs.jsonl')
 
 # Split words on space and normalize before doing word count
 def extract_words(message):
@@ -223,7 +240,7 @@ with sqlite3.connect(':memory:') as conn:
     # [(1, 'pedro'), (2, 'fritz'), (3, 'sam'), (4, 'stan'), (5, 'tom'), (6, 'keiga'), (7, 'david'), (8, 'jordan')]
 ```
 
-### Writing to files
+## Writing to files
 Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
