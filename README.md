@@ -32,7 +32,7 @@ LINQ.
 5. [Github Shortform Documentation](#documentation)
     1. [Streams, Transformations, and Actions](#streams-transformations-and-actions)
     2. [Streams API](#streams-api)
-    3. [Transformations and Actions APIs](#transformations-and-actions-api)
+    3. [Transformations and Actions APIs](#transformations-and-actions-apis)
     4. [Lazy Execution](#lazy-execution)
 6. [Contributing and Bug Fixes](#contributing-and-bug-fixes)
 7. [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)

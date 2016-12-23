@@ -1,6 +1,10 @@
 # Changelog
 ## Next Release
 
+* Added optional initial value for `reduce`
+* Added table of contents to readme
+* Added data interchange tutorial with pandas
+
 ## Release 0.8.0
 ### New Features
 
