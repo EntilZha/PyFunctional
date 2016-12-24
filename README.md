@@ -323,6 +323,7 @@ complete documentation reference
 Function | Description | Type
  ------- | ----------- | ----
 `map(func)/select(func)` | Maps `func` onto elements of sequence | transformation
+`starmap(func)/smap(func)` | Apply `func` to sequence with `itertools.starmap` | transformation
 `filter(func)/where(func)` | Filters elements of sequence to only those where `func(element)` is `True` | transformation
 `filter_not(func)` | Filters elements of sequence to only those where `func(element)` is `False` | transformation
 `flatten()` | Flattens sequence of lists to a single sequence | transformation
