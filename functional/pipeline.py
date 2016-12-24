@@ -501,6 +501,32 @@ class Sequence(object):
         """
         return self._transform(transformations.select_t(func))
 
+    def starmap(self, func):
+        """
+        starmaps f onto the sequence as itertools.starmap does.
+
+        >>> seq([(2, 3), (-2, 1), (0, 10)]).starmap(lambda x, y: x + y)
+        [5, -1, 10]
+
+        :param func: function to starmap with
+        :return: sequence with func starmapped onto it
+        """
+        return self._transform(transformations.starmap_t(func))
+
+    def smap(self, func):
+        """
+        Alias to Sequence.starmap
+
+        starmaps f onto the sequence as itertools.starmap does.
+
+        >>> seq([(2, 3), (-2, 1), (0, 10)]).smap(lambda x, y: x + y)
+        [5, -1, 10]
+
+        :param func: function to starmap with
+        :return: sequence with func starmapped onto it
+        """
+        return self._transform(transformations.starmap_t(func))
+
     def for_each(self, func):
         """
         Executes func on each element of the sequence.

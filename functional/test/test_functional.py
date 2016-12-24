@@ -268,6 +268,17 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
+    def test_starmap(self):
+        f = lambda x, y: x * y
+        l = [(1, 1), (0, 3), (-3, 3), (4, 2)]
+        expect = [1, 0, -9, 8]
+        result = self.seq(l).starmap(f)
+        self.assertIteratorEqual(expect, result)
+        self.assert_type(result)
+        result = self.seq(l).smap(f)
+        self.assertIteratorEqual(expect, result)
+        self.assert_type(result)
+
     def test_filter(self):
         f = lambda x: x > 0
         l = [0, -1, 5, 10]

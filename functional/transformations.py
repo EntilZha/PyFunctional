@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from functools import reduce, partial
-from itertools import dropwhile, takewhile, islice, count, product, chain
+from itertools import dropwhile, takewhile, islice, count, product, chain, starmap
 import collections
 import types
 
@@ -51,6 +51,17 @@ def select_t(func):
     """
     return Transformation('select({0})'.format(name(func)),
                           partial(map, func),
+                          {ExecutionStrategies.PARALLEL})
+
+
+def starmap_t(func):
+    """
+    Transformation for Sequence.starmap and Sequence.smap
+    :param func: starmap function
+    :return: transformation
+    """
+    return Transformation('starmap({})'.format(name(func)),
+                          partial(starmap, func),
                           {ExecutionStrategies.PARALLEL})
 
 
