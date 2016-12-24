@@ -4,6 +4,7 @@
 * Added optional initial value for `reduce`
 * Added table of contents to readme
 * Added data interchange tutorial with pandas
+* Implemented `itertools.starmap` as `Sequence.starmap` and `Sequence.smap`
 
 ## Release 0.8.0
 ### New Features
