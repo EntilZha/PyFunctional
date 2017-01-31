@@ -1,7 +1,7 @@
 # PyFunctional
 [![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
 [![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
-[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
+[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org/en/v0.8.0)
 [![PyPI version](https://badge.fury.io/py/PyFunctional.svg)](https://badge.fury.io/py/PyFunctional)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/PyFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
