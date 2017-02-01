@@ -22,6 +22,7 @@ python:
   - "3.3"
   - "3.4.4"
   - "3.5"
+  - "3.6"
   - "pypy"
 matrix:
   exclude:
@@ -34,6 +35,8 @@ matrix:
     - python: "3.4.4"
       env: EXTRA_INSTALLS=
     - python: "3.5"
+      env: EXTRA_INSTALLS=
+    - python: "3.6"
       env: EXTRA_INSTALLS=
 
 script: nosetests --with-coverage --cover-package=functional && pylint functional
