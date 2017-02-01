@@ -16,8 +16,8 @@ notifications:
     on_failure: always
     on_start: always
 env:
-  - EXTRA_INSTALLS=pandas
-  - EXTRA_INSTALLS=
+  - EXTRA_INSTALLS=pandas LINT=1
+  - EXTRA_INSTALLS= LINT=0
 python:
   - "2.7"
   - "3.3"
@@ -28,19 +28,19 @@ python:
 matrix:
   exclude:
     - python: "pypy"
-      env: EXTRA_INSTALLS=pandas
+      env: EXTRA_INSTALLS=pandas LINT=1
     - python: "2.7"
-      env: EXTRA_INSTALLS=
+      env: EXTRA_INSTALLS= LINT=0
     - python: "3.3"
-      env: EXTRA_INSTALLS=
+      env: EXTRA_INSTALLS= LINT=0
     - python: "3.4.4"
-      env: EXTRA_INSTALLS=
+      env: EXTRA_INSTALLS= LINT=0
     - python: "3.5"
-      env: EXTRA_INSTALLS=
+      env: EXTRA_INSTALLS= LINT=0
     - python: "3.6"
-      env: EXTRA_INSTALLS=
+      env: EXTRA_INSTALLS= LINT=0
 
-script: nosetests --with-coverage --cover-package=functional && pylint functional
+script: ./travis.sh
 after_success:
   - codecov
 cache: pip
