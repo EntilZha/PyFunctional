@@ -41,13 +41,9 @@ def is_primitive(val):
     :param val: value to check
     :return: True if value is a primitive, else False
     """
-    return isinstance(val, str) \
-        or isinstance(val, bool) \
-        or isinstance(val, six.string_types + (six.text_type,)) \
-        or isinstance(val, six.integer_types) \
-        or isinstance(val, float) \
-        or isinstance(val, complex) \
-        or isinstance(val, bytes)
+    return isinstance(val,
+                      (str, bool, float, complex, bytes, six.text_type)
+                      + six.string_types + six.integer_types)
 
 
 def is_namedtuple(val):

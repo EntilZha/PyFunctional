@@ -48,6 +48,7 @@ class ReusableFile(object):
         to __iter__ returns a new iterator independent of all others
         :return: iterator over file
         """
+        # pylint: disable=no-member
         with builtins.open(self.path,
                            mode=self.mode,
                            buffering=self.buffering,
@@ -58,6 +59,7 @@ class ReusableFile(object):
                 yield line
 
     def read(self):
+        # pylint: disable=no-member
         with builtins.open(self.path,
                            mode=self.mode,
                            buffering=self.buffering,
@@ -213,7 +215,7 @@ def get_read_function(filename, disable_compression):
 def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, newline=None,
                          compresslevel=9, format=None, check=-1, preset=None, filters=None,
                          compression=None):
-    # pylint: disable=unexpected-keyword-arg
+    # pylint: disable=unexpected-keyword-arg,no-member
     if compression is None:
         return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                              newline=newline)

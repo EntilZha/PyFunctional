@@ -29,7 +29,7 @@ class Stream(object):
         self.disable_compression = disable_compression
         self.max_repr_items = max_repr_items
 
-    def __call__(self, *args):
+    def __call__(self, *args, **kwargs):
         """
         Create a Sequence using a sequential ExecutionEngine.
 

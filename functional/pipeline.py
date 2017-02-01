@@ -47,7 +47,7 @@ class Sequence(object):
             self._base_sequence = sequence._base_sequence
             self._lineage = Lineage(prior_lineage=sequence._lineage,
                                     engine=engine)
-        elif isinstance(sequence, list) or isinstance(sequence, tuple) or is_iterable(sequence):
+        elif isinstance(sequence, (list, tuple)) or is_iterable(sequence):
             self._max_repr_items = max_repr_items
             self._base_sequence = sequence
             self._lineage = Lineage(engine=engine)
@@ -1558,6 +1558,7 @@ class Sequence(object):
         :param args: passed to sqlite3.connect
         :param kwargs: passed to sqlite3.connect
         """
+        # pylint: disable=no-member
         insert_regex = re.compile(r'(insert|update)\s+into', flags=re.IGNORECASE)
         if insert_regex.match(target):
             insert_f = self._to_sqlite3_by_query
@@ -1656,7 +1657,7 @@ def _wrap(value):
     """
     if is_primitive(value):
         return value
-    if isinstance(value, dict) or isinstance(value, set) or is_namedtuple(value):
+    if isinstance(value, (dict, set)) or is_namedtuple(value):
         return value
     elif isinstance(value, collections.Iterable):
         return Sequence(value)
