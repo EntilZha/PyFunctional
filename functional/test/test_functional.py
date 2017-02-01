@@ -837,6 +837,10 @@ class TestPipeline(unittest.TestCase):
         sequence = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())
         self.assertEqual(sequence.tabulate(), None)
 
+    def test_tabulate_namedtuple(self):
+        sequence_tabulated = seq([Data(1, 2), Data(6, 7)]).tabulate()
+        self.assertEqual(sequence_tabulated, '  x    y\n---  ---\n  1    2\n  6    7')
+
     def test_repr_max_lines(self):
         sequence = seq.range(200)
         self.assertEqual(len(repr(sequence)), 395)

@@ -1634,6 +1634,8 @@ class Sequence(object):
             rows = self.list()
         else:
             rows = self.take(n).list()
+        if len(headers) == 0 and is_namedtuple(rows[0]):
+            headers = rows[0]._fields
         return tabulate(rows, headers=headers, tablefmt=tablefmt, floatfmt=floatfmt,
                         numalign=numalign, stralign=stralign, missingval=missingval)
 
