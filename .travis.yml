@@ -50,7 +50,7 @@ matrix:
     - python: "3.6"
       env: PY_36=0 PYPY=0
 
-script: ./travis-lint.sh
+script: ./travis.sh
 after_success:
   - codecov
 cache: pip
