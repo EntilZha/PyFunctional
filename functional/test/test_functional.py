@@ -837,6 +837,11 @@ class TestPipeline(unittest.TestCase):
         sequence = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())
         self.assertEqual(sequence.tabulate(), None)
 
+        long_data = seq([(i, i + 1) for i in range(30)])
+        self.assertTrue('Showing 10 of 30 rows' in long_data.tabulate(n=10))
+        self.assertTrue('Showing 10 of 30 rows' in long_data._repr_html_())
+        self.assertTrue('Showing 10 of 30 rows' not in long_data.tabulate(n=10, tablefmt='plain'))
+
     def test_tabulate_namedtuple(self):
         sequence_tabulated = seq([Data(1, 2), Data(6, 7)]).tabulate()
         self.assertEqual(sequence_tabulated, '  x    y\n---  ---\n  1    2\n  6    7')

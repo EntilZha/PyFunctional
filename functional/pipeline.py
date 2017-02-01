@@ -1600,9 +1600,9 @@ class Sequence(object):
         :param stralign: Passed to tabulate
         :param missingval: Passed to tabulate
         """
-        formatted_seq = tabulate(self.take(n).list(), headers=headers, tablefmt=tablefmt,
-                                 floatfmt=floatfmt, numalign=numalign, stralign=stralign,
-                                 missingval=missingval)
+        formatted_seq = self.tabulate(n=n, headers=headers, tablefmt=tablefmt,
+                                      floatfmt=floatfmt, numalign=numalign, stralign=stralign,
+                                      missingval=missingval)
         print(formatted_seq)
 
     def _repr_html_(self):
@@ -1627,17 +1627,25 @@ class Sequence(object):
         :param missingval: Passed to tabulate
         """
         self.cache()
-        if self.len() == 0 or not is_tabulatable(self[0]):
+        length = self.len()
+        if length == 0 or not is_tabulatable(self[0]):
             return None
 
-        if n is None:
+        if n is None or n >= length:
             rows = self.list()
+            message = ''
         else:
             rows = self.take(n).list()
+            if tablefmt == 'simple':
+                message = '\nShowing {} of {} rows'.format(n, length)
+            elif tablefmt == 'html':
+                message = '<p>Showing {} of {} rows'.format(n, length)
+            else:
+                message = ''
         if len(headers) == 0 and is_namedtuple(rows[0]):
             headers = rows[0]._fields
         return tabulate(rows, headers=headers, tablefmt=tablefmt, floatfmt=floatfmt,
-                        numalign=numalign, stralign=stralign, missingval=missingval)
+                        numalign=numalign, stralign=stralign, missingval=missingval) + message
 
 
 def _wrap(value):
