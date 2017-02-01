@@ -3,10 +3,7 @@ before_install:
   - pip install codecov
 install:
   - pip install -q coverage
-  - pip install git+https://github.com/PyCQA/pylint.git@7daed7b8982480c868b0f642a5251f00ffb253c6
-  - pip install git+https://github.com/PyCQA/astroid.git@d0b5acdfebcdda5c949584c32a8cbc0f31d5cf25
   - pip install -r requirements.txt
-  - pip install $EXTRA_INSTALLS
 
 notifications:
   webhooks:
@@ -16,8 +13,9 @@ notifications:
     on_failure: always
     on_start: always
 env:
-  - EXTRA_INSTALLS=pandas LINT=1
-  - EXTRA_INSTALLS= LINT=0
+  - PY_36=1 PYPY=0
+  - PY_36=0 PYPY=1
+  - PY_36=0 PYPY=0
 python:
   - "2.7"
   - "3.3"
@@ -28,19 +26,31 @@ python:
 matrix:
   exclude:
     - python: "pypy"
-      env: EXTRA_INSTALLS=pandas LINT=1
+      env: PY_36=1 PYPY=0
+    - python: "pypy"
+      env: PY_36=0 PYPY=0
     - python: "2.7"
-      env: EXTRA_INSTALLS= LINT=0
+      env: PY_36=1 PYPY=0
+    - python: "2.7"
+      env: PY_36=0 PYPY=1
     - python: "3.3"
-      env: EXTRA_INSTALLS= LINT=0
+      env: PY_36=1 PYPY=0
+    - python: "3.3"
+      env: PY_36=0 PYPY=1
     - python: "3.4.4"
-      env: EXTRA_INSTALLS= LINT=0
+      env: PY_36=1 PYPY=0
+    - python: "3.4.4"
+      env: PY_36=0 PYPY=1
     - python: "3.5"
-      env: EXTRA_INSTALLS= LINT=0
+      env: PY_36=1 PYPY=0
+    - python: "3.5"
+      env: PY_36=0 PYPY=1
     - python: "3.6"
-      env: EXTRA_INSTALLS= LINT=0
+      env: PY_36=0 PYPY=1
+    - python: "3.6"
+      env: PY_36=0 PYPY=0
 
-script: ./travis.sh
+script: ./travis-lint.sh
 after_success:
   - codecov
 cache: pip
