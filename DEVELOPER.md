@@ -40,7 +40,8 @@ means uploading to live pypi and tagging the commit as a release.
 2. Repeat install tests from Test PyPI testing
 3. Tag the release on git with `git tag -a vX.X.X`. Then run `git push` and `git push --tags`
 4. On Github, create/edit the release page to match the changelog and add discussion
-5. Celebrate!
+5. On readthedocs bump the documentation version number
+6. Celebrate!
 
 
 ### `.pypirc` file
