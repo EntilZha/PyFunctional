@@ -1,10 +1,25 @@
 # Changelog
 ## Next Release
 
-* Added optional initial value for `reduce`
-* Added table of contents to readme
-* Added data interchange tutorial with pandas
-* Implemented `itertools.starmap` as `Sequence.starmap` and `Sequence.smap`
+
+## Release 1.0.0
+
+Reaching `1.0` primarily means that API stability has been reached so I don't expect to run into many new breaking changes.
+
+### New Features
+
+* Added optional initial value for `reduce` (https://github.com/EntilZha/PyFunctional/issues/86)
+* Added table of contents to readme (https://github.com/EntilZha/PyFunctional/issues/88)
+* Added data interchange tutorial with pandas (https://github.com/EntilZha/PyFunctional/blob/master/examples/PyFunctional-pandas-tutorial.ipynb)
+* Implemented `itertools.starmap` as `Sequence.starmap` and `Sequence.smap` (https://github.com/EntilZha/PyFunctional/issues/90)
+* Added interface to `csv.DictReader` via `seq.csv_dict_reader` (https://github.com/EntilZha/PyFunctional/issues/92)
+* Improved `_html_repr_`, `show` and `tabulate` by auto detecting named tuples as column names (https://github.com/EntilZha/PyFunctional/issues/91)
+* Improved `_html_repr_` and `show` to tell the user 10 of N rows are being shown if there are more than 10 rows (https://github.com/EntilZha/PyFunctional/issues/94)
+
+### Dependencies and Supported Python Versions
+* Bumped version dependencies (https://github.com/EntilZha/PyFunctional/issues/89)
+* Added Python 3.6 via Travis CI testing
+
 
 ## Release 0.8.0
 ### New Features

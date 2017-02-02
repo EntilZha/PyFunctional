@@ -307,6 +307,7 @@ seq.jsonl('filepath')
 
 # csv file
 seq.csv('filepath')
+seq.csv_dict_reader('filepath')
 
 # sqlite3 db and sql query
 seq.sqlite3('filepath', 'select * from data')
@@ -458,7 +459,7 @@ In order to be merged, all pull requests must:
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, and PyPy
+`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, 3.6, and PyPy
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
@@ -471,7 +472,7 @@ I am a PhD student in Computer Science at the University of Colorado at Boulder.
 interests include large-scale machine learning, distributed computing, and adjacent fields. I
 completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
 research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and will be working as a data scientist at Oracle Data Cloud this summer.
+and worked as a data scientist at Oracle Data Cloud this past summer.
 
 I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
