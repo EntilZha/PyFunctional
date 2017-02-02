@@ -136,6 +136,20 @@ class Stream(object):
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
         return self(csv_input).cache(delete_lineage=True)
 
+    def csv_dict_reader(self, csv_file, fieldnames=None, restkey=None, restval=None,
+                        dialect='excel', **kwds):
+        if isinstance(csv_file, str):
+            file_open = get_read_function(csv_file, self.disable_compression)
+            input_file = file_open(csv_file)
+        elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
+            input_file = csv_file
+        else:
+            raise ValueError('csv_file must be a file path or implement the iterator interface')
+
+        csv_input = csvapi.DictReader(input_file, fieldnames=fieldnames, restkey=restkey,
+                                      restval=restval, dialect=dialect, **kwds)
+        return self(csv_input).cache(delete_lineage=True)
+
     def jsonl(self, jsonl_file):
         """
         Reads and parses the input of a jsonl file stream or file.

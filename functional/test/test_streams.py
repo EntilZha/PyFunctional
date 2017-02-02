@@ -76,6 +76,27 @@ class TestStreams(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
+    def test_csv_dict_reader(self):
+        result = self.seq.csv_dict_reader('functional/test/data/test_header.csv').to_list()
+        self.assertEqual(result[0]['a'], '1')
+        self.assertEqual(result[0]['b'], '2')
+        self.assertEqual(result[0]['c'], '3')
+        self.assertEqual(result[1]['a'], '4')
+        self.assertEqual(result[1]['b'], '5')
+        self.assertEqual(result[1]['c'], '6')
+
+        with open('functional/test/data/test_header.csv', 'r') as f:
+            result = self.seq.csv_dict_reader(f).to_list()
+        self.assertEqual(result[0]['a'], '1')
+        self.assertEqual(result[0]['b'], '2')
+        self.assertEqual(result[0]['c'], '3')
+        self.assertEqual(result[1]['a'], '4')
+        self.assertEqual(result[1]['b'], '5')
+        self.assertEqual(result[1]['c'], '6')
+
+        with self.assertRaises(ValueError):
+            self.seq.csv_dict_reader(1)
+
     def test_gzip_csv(self):
         result = self.seq.csv('functional/test/data/test.csv.gz').to_list()
         expect = [['1', '2', '3', '4'], ['a', 'b', 'c', 'd']]
