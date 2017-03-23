@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from functools import reduce, partial
+from functools import partial
 from itertools import dropwhile, takewhile, islice, count, product, chain, starmap
 import collections
 import types
@@ -460,6 +460,22 @@ def group_by_key_t():
     )
 
 
+def reduce_by_key_impl(func, sequence):
+    """
+    Implementation for reduce_by_key_t
+    :param func: reduce function
+    :param sequence: sequence to reduce
+    :return: reduced sequence
+    """
+    result = {}
+    for key, value in sequence:
+        if key in result:
+            result[key] = func(result[key], value)
+        else:
+            result[key] = value
+    return six.viewitems(result)
+
+
 def reduce_by_key_t(func):
     """
     Transformation for Sequence.reduce_by_key
@@ -468,9 +484,7 @@ def reduce_by_key_t(func):
     """
     return Transformation(
         'reduce_by_key({0})'.format(name(func)),
-        lambda sequence: map(
-            lambda kv: (kv[0], reduce(func, kv[1])), group_by_key_impl(sequence)
-        ),
+        partial(reduce_by_key_impl, func),
         None
     )
 
