@@ -900,6 +900,26 @@ class Sequence(object):
         """
         return self._transform(transformations.reduce_by_key_t(func))
 
+    def count_by_key(self):
+        """
+        Reduces a sequence of (Key, Value) by counting each key
+
+        >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]).count_by_key()
+        [('a', 1), ('b', 3), ('c', 2)]
+        :return: Sequence of tuples where value is the count of each key
+        """
+        return self._transform(transformations.count_by_key_t())
+
+    def count_by_value(self):
+        """
+        Reduces a sequence of items by counting each unique item
+
+        >>> seq(['a', 'a', 'a', 'b', 'b', 'c', 'd']).count_by_value()
+        [('a', 3), ('b', 2), ('c', 1), ('d', 1)]
+        :return: Sequence of tuples where value is the count of each key
+        """
+        return self._transform(transformations.count_by_value_t())
+
     def reduce(self, func, *initial):
         """
         Reduce sequence of elements using func. API mirrors functools.reduce

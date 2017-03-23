@@ -332,6 +332,8 @@ Function | Description | Type
 `group_by(func)` | Groups sequence into `(key, value)` pairs where `key=func(element)` and `value` is from the original sequence | transformation
 `group_by_key()` | Groups sequence of `(key, value)` pairs by `key` | transformation
 `reduce_by_key(func)` | Reduces list of `(key, value)` pairs using `func` | transformation
+`count_by_key()` | Counts occurrences of each `key` in list of `(key, value)` pairs | transformation
+`count_by_value()` | Counts occurrence of each value in a list | transformation
 `union(other)` | Union of unique elements in sequence and `other` | transformation
 `intersection(other)` | Intersection of unique elements in sequence and `other` | transformation
 `difference(other)` | New sequence with unique elements present in sequence but not in `other` | transformation

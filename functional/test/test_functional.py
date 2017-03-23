@@ -758,6 +758,24 @@ class TestPipeline(unittest.TestCase):
             self.assertEqual(e0, e1)
         self.assert_type(result)
 
+    def test_count_by_key(self):
+        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5), ('d', 1)]
+        e = {"a": 3, "b": 2, "c": 2, "d": 1}.items()
+        result = self.seq(l).count_by_key()
+        self.assertEqual(result.len(), len(e))
+        for e0, e1 in zip(result, e):
+            self.assertEqual(e0, e1)
+        self.assert_type(result)
+
+    def test_count_by_value(self):
+        l = ['a', 'a', 'a', 'b', 'b', 'c', 'd']
+        e = {'a': 3, 'b': 2, 'c': 1, 'd': 1}.items()
+        result = self.seq(l).count_by_value()
+        self.assertEqual(result.len(), len(e))
+        for e0, e1 in zip(result, e):
+            self.assertEqual(e0, e1)
+        self.assert_type(result)
+
     def test_wrap(self):
         self.assert_type(_wrap([1, 2]))
         self.assert_type(_wrap((1, 2)))

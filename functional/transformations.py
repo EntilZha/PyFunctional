@@ -489,6 +489,54 @@ def reduce_by_key_t(func):
     )
 
 
+def count_by_key_impl(sequence):
+    """
+    Implementation for count_by_key_t
+    :param sequence: sequence of (key, value) pairs
+    :return: counts by key
+    """
+    counter = collections.Counter()
+    for key, _ in sequence:
+        counter[key] += 1
+    return six.viewitems(counter)
+
+
+def count_by_key_t():
+    """
+    Transformation for Sequence.count_by_key
+    :return: transformation
+    """
+    return Transformation(
+        'count_by_key',
+        count_by_key_impl,
+        None
+    )
+
+
+def count_by_value_impl(sequence):
+    """
+    Implementaiton for count_by_value_t
+    :param sequence: sequence of values
+    :return: counts by value
+    """
+    counter = collections.Counter()
+    for e in sequence:
+        counter[e] += 1
+    return six.viewitems(counter)
+
+
+def count_by_value_t():
+    """
+    Transformation for Sequence.count_by_value
+    :return: transformation
+    """
+    return Transformation(
+        'count_by_value',
+        count_by_value_impl,
+        None
+    )
+
+
 def group_by_impl(func, sequence):
     """
     Implementation for group_by_t
