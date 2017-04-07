@@ -233,7 +233,7 @@ class Sequence(object):
 
         :return: first element of sequence
         """
-        return _wrap(self.sequence[0])
+        return _wrap(self.take(1)[0])
 
     def first(self):
         """
