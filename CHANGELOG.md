@@ -4,6 +4,7 @@
 * Implemented optimized version of `reduce_by_key`
 * Implemented `count_by_key`
 * Implemented `count_by_value`
+* Implemented `accumulate`
 
 ## Release 1.0.0
 
