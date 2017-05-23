@@ -1668,6 +1668,33 @@ class Sequence(object):
                         numalign=numalign, stralign=stralign, missingval=missingval) + message
 
 
+methods2star = (
+    Sequence.for_each,
+    Sequence.min_by,
+    Sequence.max_by,
+    Sequence.find,
+    Sequence.for_all,
+    Sequence.exists,
+    Sequence.count,
+    Sequence.order_by,
+    Sequence.partition,
+    Sequence.take_while,
+    Sequence.drop_while,
+    Sequence.distinct_by,
+    Sequence.reduce_by_key,
+    Sequence.group_by,
+    Sequence.flat_map,
+    Sequence.filter_not,
+    Sequence.filter,
+    Sequence.where,
+    Sequence.select
+)
+for method in methods2star:
+    starfunc = lambda self, func: method(self, lambda args: func(*args))
+    setattr(Sequence, 's' + method.__name__, starfunc)
+    setattr(Sequence, 'star' + method.__name__, starfunc)
+
+
 def _wrap(value):
     """
     Wraps the passed value in a Sequence if it is not a primitive. If it is a string
