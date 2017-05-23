@@ -488,6 +488,41 @@ def reduce_by_key_t(func):
         None
     )
 
+def _accumulate(sequence, func):
+    """
+    Python2 accumulate implementation
+    """
+    it = iter(sequence)
+    try:
+        total = next(it)
+    except StopIteration:
+        return
+    yield total
+    for element in it:
+        total = func(total, element)
+        yield total
+
+def accumulate_impl(func, sequence):
+    """
+    Implementation for accumulate
+    :param sequence: sequence to accumulate
+    :param func: accumulate function
+    """
+    if six.PY3:
+        from itertools import accumulate
+        return accumulate(sequence, func)
+    else:
+        return _accumulate(sequence, func)
+
+def accumulate_t(func):
+    """
+    Transformation for Sequence.accumulate
+    """
+    return Transformation(
+        'accumulate({0})'.format(name(func)),
+        partial(accumulate_impl, func),
+        None
+    )
 
 def count_by_key_impl(sequence):
     """
@@ -515,7 +550,7 @@ def count_by_key_t():
 
 def count_by_value_impl(sequence):
     """
-    Implementaiton for count_by_value_t
+    Implementation for count_by_value_t
     :param sequence: sequence of values
     :return: counts by value
     """

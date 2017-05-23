@@ -7,7 +7,6 @@ from __future__ import division, absolute_import
 from operator import mul, add
 import collections
 from functools import reduce
-from itertools import accumulate
 
 import json
 import csv
@@ -952,7 +951,8 @@ class Sequence(object):
         :param func: two parameter, associative accumulate function
         :return: accumulated values using func in sequence
         """
-        return _wrap(accumulate(self, func))
+        return self._transform(transformations.accumulate_t(func))
+
 
     def make_string(self, separator):
         """
