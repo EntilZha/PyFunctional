@@ -266,9 +266,10 @@ class Sequence(object):
 
         :return: first element of sequence or None if sequence is empty
         """
-        if not self.sequence:
+        try:
+            return self.head()
+        except IndexError:
             return None
-        return self.head()
 
     def last(self):
         """
