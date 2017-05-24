@@ -42,17 +42,21 @@ class Sequence(object):
         :return: sequence wrapped in a Sequence
         """
         self.engine = engine or ExecutionEngine()
+
         if isinstance(sequence, Sequence):
             self._max_repr_items = max_repr_items or sequence._max_repr_items
             self._base_sequence = sequence._base_sequence
             self._lineage = Lineage(prior_lineage=sequence._lineage,
                                     engine=engine)
+
         elif isinstance(sequence, (list, tuple)) or is_iterable(sequence):
             self._max_repr_items = max_repr_items
             self._base_sequence = sequence
             self._lineage = Lineage(engine=engine)
+
         else:
             raise TypeError("Given sequence must be an iterable value")
+
         if transform is not None:
             self._lineage.apply(transform)
 
@@ -552,6 +556,16 @@ class Sequence(object):
         :return: filtered sequence
         """
         return self._transform(transformations.filter_t(func))
+
+    def sfilter(self, func):
+        """
+        Filters sequence to include only elements where func is True.
+
+        :param func: function to filter on
+        :return: filtered sequence
+        """
+        return self._transform(transformations.filter_t(lambda args: func(*args)))
+
 
     def filter_not(self, func):
         """
@@ -1105,17 +1119,6 @@ class Sequence(object):
         """
         return self._transform(transformations.zip_t(sequence))
 
-    def zip_with_index(self, start=0):
-        """
-        Zips the sequence to its index, with the index being the second element of each tuple.
-
-        >>> seq(['a', 'b', 'c']).zip_with_index()
-        [('a', 0), ('b', 1), ('c', 2)]
-
-        :return: sequence zipped to its index
-        """
-        return self._transform(transformations.zip_with_index_t(start))
-
     def enumerate(self, start=0):
         """
         Uses python enumerate to to zip the sequence with indexes starting at start.
@@ -1668,31 +1671,33 @@ class Sequence(object):
                         numalign=numalign, stralign=stralign, missingval=missingval) + message
 
 
-methods2star = (
-    Sequence.for_each,
-    Sequence.min_by,
-    Sequence.max_by,
-    Sequence.find,
-    Sequence.for_all,
-    Sequence.exists,
-    Sequence.count,
-    Sequence.order_by,
-    Sequence.partition,
-    Sequence.take_while,
-    Sequence.drop_while,
-    Sequence.distinct_by,
-    Sequence.reduce_by_key,
-    Sequence.group_by,
-    Sequence.flat_map,
-    Sequence.filter_not,
-    Sequence.filter,
-    Sequence.where,
-    Sequence.select
-)
-for method in methods2star:
-    starfunc = lambda self, func: method(self, lambda args: func(*args))
-    setattr(Sequence, 's' + method.__name__, starfunc)
-    setattr(Sequence, 'star' + method.__name__, starfunc)
+# methods2star = (
+#     Sequence.for_each,
+#     Sequence.min_by,
+#     Sequence.max_by,
+#     Sequence.find,
+#     Sequence.for_all,
+#     Sequence.exists,
+#     Sequence.count,
+#     Sequence.order_by,
+#     Sequence.partition,
+#     Sequence.take_while,
+#     Sequence.drop_while,
+#     Sequence.distinct_by,
+#     Sequence.reduce_by_key,
+#     Sequence.group_by,
+#     Sequence.flat_map,
+#     Sequence.filter_not,
+#     Sequence.filter,
+#     Sequence.where,
+#     Sequence.select
+# )
+# def splat_func(cls, func):
+#     return lambda
+# for method in methods2star:
+#     starfunc = lambda self, func: method(self, lambda args: func(*args))
+#     setattr(Sequence, 's' + method.__name__, starfunc)
+#     setattr(Sequence, 'star' + method.__name__, starfunc)
 
 
 def _wrap(value):
