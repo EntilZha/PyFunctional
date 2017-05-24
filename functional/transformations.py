@@ -490,15 +490,16 @@ def reduce_by_key_t(func):
 
 def _accumulate(sequence, func):
     """
-    Python2 accumulate implementation
+    Python2 accumulate implementation taken from
+    https://docs.python.org/3/library/itertools.html#itertools.accumulate
     """
-    it = iter(sequence)
+    iterator = iter(sequence)
     try:
-        total = next(it)
+        total = next(iterator)
     except StopIteration:
         return
     yield total
-    for element in it:
+    for element in iterator:
         total = func(total, element)
         yield total
 

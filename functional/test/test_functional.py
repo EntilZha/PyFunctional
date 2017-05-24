@@ -663,7 +663,7 @@ class TestPipeline(unittest.TestCase):
     def test_average(self):
         l = [1, 2]
         self.assertEqual(1.5, self.seq(l).average())
-        self.assertEquals(4.5, self.seq(l).average(lambda x: x * 3))
+        self.assertEqual(4.5, self.seq(l).average(lambda x: x * 3))
 
     def test_set(self):
         l = [1, 1, 2, 2, 3]
