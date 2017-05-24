@@ -1195,7 +1195,7 @@ class Sequence(object):
         W values will always bepresent, V values may be present or None.
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
-        [('a', (1, 3)), ('b', (2, None)]
+        [('a', (1, 3)), ('c', (None, 4)]
 
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
