@@ -301,9 +301,10 @@ class Sequence(object):
 
         :return: last element of sequence or None if sequence is empty
         """
-        if not self.sequence:
+        try:
+            return self.last()
+        except IndexError:
             return None
-        return self.last()
 
     def init(self):
         """
