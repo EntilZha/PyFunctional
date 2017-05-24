@@ -504,6 +504,7 @@ def _accumulate(sequence, func):
         yield total
 
 def accumulate_impl(func, sequence):
+    # pylint: disable=no-name-in-module
     """
     Implementation for accumulate
     :param sequence: sequence to accumulate
