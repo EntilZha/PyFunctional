@@ -494,10 +494,7 @@ def _accumulate(sequence, func):
     https://docs.python.org/3/library/itertools.html#itertools.accumulate
     """
     iterator = iter(sequence)
-    try:
-        total = next(iterator)
-    except StopIteration:
-        return
+    total = next(iterator)
     yield total
     for element in iterator:
         total = func(total, element)
