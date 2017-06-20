@@ -330,6 +330,15 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(seq([]).reduce(f, 1), 1)
         self.assertEqual(seq([0, 2]).reduce(f, 1), 3)
 
+    def test_accumulate(self):
+        f = lambda x, y: x + y
+        l_char = ["a", "b", "c"]
+        expect_char = ["a", "ab", "abc"]
+        l_num = [1, 2, 3]
+        expect_num = [1, 3, 6]
+        self.assertEqual(seq(l_char).accumulate(), expect_char)
+        self.assertEqual(seq(l_num).accumulate(), expect_num)
+
     def test_aggregate(self):
         f = lambda current, next_element: current + next_element
         l = self.seq([1, 2, 3, 4])
@@ -654,7 +663,7 @@ class TestPipeline(unittest.TestCase):
     def test_average(self):
         l = [1, 2]
         self.assertEqual(1.5, self.seq(l).average())
-        self.assertEquals(4.5, self.seq(l).average(lambda x: x * 3))
+        self.assertEqual(4.5, self.seq(l).average(lambda x: x * 3))
 
     def test_set(self):
         l = [1, 1, 2, 2, 3]

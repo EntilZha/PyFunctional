@@ -4,7 +4,7 @@ The pipeline module contains the transformations and actions API of PyFunctional
 
 from __future__ import division, absolute_import
 
-from operator import mul
+from operator import mul, add
 import collections
 from functools import reduce
 
@@ -937,6 +937,22 @@ class Sequence(object):
             return _wrap(reduce(func, self, initial[0]))
         else:
             raise ValueError('reduce takes exactly one optional parameter for initial value')
+
+    def accumulate(self, func=add):
+        """
+        Accumulate sequence of elements using func. API mirrors itertools.accumulate
+
+        >>> seq([1, 2, 3]).accumulate(lambda x, y: x + y)
+        [1, 3, 6]
+
+        >>> seq(['a', 'b', 'c']).accumulate()
+        ['a', 'ab', 'abc']
+
+        :param func: two parameter, associative accumulate function
+        :return: accumulated values using func in sequence
+        """
+        return self._transform(transformations.accumulate_t(func))
+
 
     def make_string(self, separator):
         """
