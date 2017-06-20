@@ -51,10 +51,11 @@ class Stream(object):
             raise TypeError(error_message.format(len(args)))
         if len(args) == 1:
             try:
-                import pandas
-                if isinstance(args[0], pandas.DataFrame):
-                    return Sequence(
-                        args[0].values, engine=engine, max_repr_items=self.max_repr_items)
+                if type(args[0]).__name__ == 'DataFrame':
+                    import pandas
+                    if isinstance(args[0], pandas.DataFrame):
+                        return Sequence(
+                            args[0].values, engine=engine, max_repr_items=self.max_repr_items)
             except ImportError:
                 pass
 
