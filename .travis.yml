@@ -29,9 +29,9 @@ matrix:
       env: PY_36=1 PYPY=0
     - python: "pypy"
       env: PY_36=0 PYPY=0
-    - python: "2.7"
+    - python: "2.7.13"
       env: PY_36=1 PYPY=0
-    - python: "2.7"
+    - python: "2.7.13"
       env: PY_36=0 PYPY=1
     - python: "3.3"
       env: PY_36=1 PYPY=0
