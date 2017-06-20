@@ -42,17 +42,21 @@ class Sequence(object):
         :return: sequence wrapped in a Sequence
         """
         self.engine = engine or ExecutionEngine()
+
         if isinstance(sequence, Sequence):
             self._max_repr_items = max_repr_items or sequence._max_repr_items
             self._base_sequence = sequence._base_sequence
             self._lineage = Lineage(prior_lineage=sequence._lineage,
                                     engine=engine)
+
         elif isinstance(sequence, (list, tuple)) or is_iterable(sequence):
             self._max_repr_items = max_repr_items
             self._base_sequence = sequence
             self._lineage = Lineage(engine=engine)
+
         else:
             raise TypeError("Given sequence must be an iterable value")
+
         if transform is not None:
             self._lineage.apply(transform)
 
@@ -179,13 +183,10 @@ class Sequence(object):
         :param transform: transform to apply or list of transforms to apply
         :return: transformed sequence
         """
-        sequence = None
-        for transform in transforms:
-            if sequence:
-                sequence = Sequence(sequence, transform=transform)
-            else:
-                sequence = Sequence(self, transform=transform)
-        return sequence
+        return reduce(
+            lambda seq, trans: Sequence(seq, transform=trans),
+            transforms,
+            self)
 
     @property
     def sequence(self):
@@ -265,9 +266,10 @@ class Sequence(object):
 
         :return: first element of sequence or None if sequence is empty
         """
-        if not self.sequence:
+        try:
+            return self.head()
+        except IndexError:
             return None
-        return self.head()
 
     def last(self):
         """
@@ -299,9 +301,10 @@ class Sequence(object):
 
         :return: last element of sequence or None if sequence is empty
         """
-        if not self.sequence:
+        try:
+            return self.last()
+        except IndexError:
             return None
-        return self.last()
 
     def init(self):
         """
@@ -734,7 +737,7 @@ class Sequence(object):
 
         :return: Maximal value of sequence
         """
-        return _wrap(max(self))
+        return max(self)
 
     def min(self):
         """
@@ -765,7 +768,7 @@ class Sequence(object):
 
         :return: Minimal value of sequence
         """
-        return _wrap(min(self))
+        return min(self)
 
     def max_by(self, func):
         """
@@ -790,7 +793,7 @@ class Sequence(object):
         :param func: function to compute max by
         :return: Maximal element by func(element)
         """
-        return _wrap(max(self, key=func))
+        return max(self, key=func)
 
     def min_by(self, func):
         """
@@ -815,7 +818,7 @@ class Sequence(object):
         :param func: function to compute min by
         :return: Maximal element by func(element)
         """
-        return _wrap(min(self, key=func))
+        return min(self, key=func)
 
     def find(self, func):
         """
@@ -932,9 +935,9 @@ class Sequence(object):
         :return: reduced value using func
         """
         if len(initial) == 0:
-            return _wrap(reduce(func, self))
+            return reduce(func, self)
         elif len(initial) == 1:
-            return _wrap(reduce(func, self, initial[0]))
+            return reduce(func, self, initial[0])
         else:
             raise ValueError('reduce takes exactly one optional parameter for initial value')
 
@@ -1210,7 +1213,7 @@ class Sequence(object):
         W values will always bepresent, V values may be present or None.
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
-        [('a', (1, 3)), ('b', (2, None)]
+        [('a', (1, 3)), ('c', (None, 4)]
 
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
@@ -1703,9 +1706,12 @@ def _wrap(value):
     """
     if is_primitive(value):
         return value
+
     if isinstance(value, (dict, set)) or is_namedtuple(value):
         return value
+
     elif isinstance(value, collections.Iterable):
         return Sequence(value)
+
     else:
         return value
