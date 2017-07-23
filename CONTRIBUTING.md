@@ -4,7 +4,7 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
-To contribute, create a fork of `ScalaFunctional`, make your changes, then make sure that they pass
+To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass
 when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
 In order to be merged, all pull requests must:
 
