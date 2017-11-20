@@ -1,5 +1,5 @@
 future==0.16.0
-six==1.10.0
+six>=1.10.0,<=1.11.0
 dill==0.2.5
 bz2file==0.98
 backports.lzma==0.0.3
