@@ -1,7 +1,6 @@
 # pylint: skip-file
 from __future__ import absolute_import
 
-import sys
 import unittest
 from collections import namedtuple
 from itertools import product
@@ -880,8 +879,6 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(len(repr(sequence)), 890)
 
 
-# Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
-@unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
 class TestParallelPipeline(TestPipeline):
     def setUp(self):
         self.seq = pseq
