@@ -35,7 +35,7 @@ Reaching `1.0` primarily means that API stability has been reached so I don't ex
 
 ### Bug Fixes
 
-* Fixed bug where `grouped` unnecesarily forces precomputation of sequence
+* Fixed bug where `grouped` unnecessarily forces precomputation of sequence
 * Remove package installations from default requirements that sometimes break installation on barebones systems in python 2.7
 
 ## Release 0.7.0

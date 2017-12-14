@@ -337,7 +337,7 @@ Function | Description | Type
 `union(other)` | Union of unique elements in sequence and `other` | transformation
 `intersection(other)` | Intersection of unique elements in sequence and `other` | transformation
 `difference(other)` | New sequence with unique elements present in sequence but not in `other` | transformation
-`symmetric_difference(other)` | New sequence with unique elements present in sequnce or `other`, but not both | transformation
+`symmetric_difference(other)` | New sequence with unique elements present in sequence or `other`, but not both | transformation
 `distinct()` | Returns distinct elements of sequence. Elements must be hashable | transformation
 `distinct_by(func)` | Returns distinct elements of sequence using `func` as a key | transformation
 `drop(n)` | Drop the first `n` elements of the sequence | transformation
