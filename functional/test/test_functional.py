@@ -800,6 +800,21 @@ class TestPipeline(unittest.TestCase):
         self.assertIsInstance(_wrap(A()), A)
         self.assert_type(self.seq(l))
 
+    def test_wrap_pandas(self):
+        # pylint: disable=superfluous-parens
+        try:
+            import pandas as pd
+            df1 = pd.DataFrame({'name': ['name1', 'name2'], 'value': [1, 2]})
+            df2 = pd.DataFrame({'name': ['name1', 'name2'], 'value': [3, 4]})
+            result = seq([df1, df2]).reduce(lambda x, y: x.append(y))
+            self.assertEqual(result.len(), 4)
+            self.assertEqual(result[0].to_list(), ['name1', 1])
+            self.assertEqual(result[1].to_list(), ['name2', 2])
+            self.assertEqual(result[2].to_list(), ['name1', 3])
+            self.assertEqual(result[3].to_list(), ['name2', 4])
+        except ImportError:
+            print('pandas not installed, skipping unit test')
+
     def test_iterator_consumption(self):
         sequence = self.seq([1, 2, 3])
         first_transform = sequence.map(lambda x: x)
