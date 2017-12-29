@@ -1712,7 +1712,7 @@ def _wrap(value):
                 import pandas
                 if isinstance(value, pandas.DataFrame):
                     return Sequence(value.values)
-        except ImportError:
+        except ImportError: # pragma: no cover
             pass
 
         return Sequence(value)
