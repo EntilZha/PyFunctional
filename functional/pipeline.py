@@ -1706,6 +1706,14 @@ def _wrap(value):
     if isinstance(value, (dict, set)) or is_namedtuple(value):
         return value
     elif isinstance(value, collections.Iterable):
+        try:
+            if type(value).__name__ == 'DataFrame':
+                import pandas
+                if isinstance(value, pandas.DataFrame):
+                    return Sequence(value.values)
+        except ImportError:
+            pass
+
         return Sequence(value)
     else:
         return value
