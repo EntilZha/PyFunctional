@@ -203,6 +203,7 @@ class Stream(object):
         else:
             return self(six.viewitems(json_input))
 
+    # pylint: disable=keyword-arg-before-vararg
     def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
         """
         Reads input by querying from a sqlite database.

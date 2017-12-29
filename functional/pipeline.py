@@ -1463,6 +1463,7 @@ class Sequence(object):
         """
         return self.to_dict(default=default)
 
+    # pylint: disable=too-many-locals
     def to_file(self, path, delimiter=None, mode='wt', buffering=-1, encoding=None, errors=None,
                 newline=None, compresslevel=9, format=None, check=-1, preset=None, filters=None,
                 compression=None):
