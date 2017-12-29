@@ -56,7 +56,7 @@ class Stream(object):
                     if isinstance(args[0], pandas.DataFrame):
                         return Sequence(
                             args[0].values, engine=engine, max_repr_items=self.max_repr_items)
-            except ImportError:
+            except ImportError: # pragma: no cover
                 pass
 
         if len(args) > 1:
