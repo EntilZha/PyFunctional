@@ -1521,7 +1521,7 @@ class Sequence(object):
             else:
                 json.dump(self.to_dict(), output)
 
-    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', compression=None, newline='\n', **fmtparams):
+    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', compression=None, newline='', **fmtparams):
         """
         Saves the sequence to a csv file. Each element should be an iterable which will be expanded
         to the elements of each row.
