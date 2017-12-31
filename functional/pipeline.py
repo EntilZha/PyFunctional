@@ -1463,6 +1463,7 @@ class Sequence(object):
         """
         return self.to_dict(default=default)
 
+    # pylint: disable=too-many-locals
     def to_file(self, path, delimiter=None, mode='wt', buffering=-1, encoding=None, errors=None,
                 newline=None, compresslevel=9, format=None, check=-1, preset=None, filters=None,
                 compression=None):
@@ -1710,6 +1711,14 @@ def _wrap(value):
     if isinstance(value, (dict, set)) or is_namedtuple(value):
         return value
     elif isinstance(value, collections.Iterable):
+        try:
+            if type(value).__name__ == 'DataFrame':
+                import pandas
+                if isinstance(value, pandas.DataFrame):
+                    return Sequence(value.values)
+        except ImportError: # pragma: no cover
+            pass
+
         return Sequence(value)
     else:
         return value

@@ -127,6 +127,7 @@ def unpack(packed):
     result = func(*args)
     if isinstance(result, collections.Iterable):
         return list(result)
+    return None
 
 
 def pack(func, args):
