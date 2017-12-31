@@ -5,6 +5,7 @@ import unittest
 import collections
 import sys
 import gzip
+from platform import system
 
 import six
 
@@ -361,6 +362,16 @@ class TestStreams(unittest.TestCase):
         sequence.to_csv(tmp_path)
         result = self.seq.csv(tmp_path).to_list()
         self.assertEqual(expect, result)
+
+    @unittest.skipUnless(system().startswith('Win'), 'Skip CSV test if not on Windows')
+    def test_to_csv_win(self):
+        tmp_path = 'functional/test/data/tmp/output.txt'
+        elements = [[1, 2, 3], [4, 5, 6], ['a', 'b', 'c']]
+        expect = [['1', '2', '3'], [], ['4', '5', '6'], [], ['a', 'b', 'c'], []]
+        sequence = self.seq(elements)
+        sequence.to_csv(tmp_path)
+        result = self.seq.csv(tmp_path).to_list()
+        self.assertNotEqual(expect, result)
 
     def test_to_csv_compressed(self):
         tmp_path = 'functional/test/data/tmp/output.txt'

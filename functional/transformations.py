@@ -611,7 +611,7 @@ def grouped_impl(wrap, size, sequence):
     iterator = iter(sequence)
     while True:
         batch = islice(iterator, size)
-        yield chain((wrap(next(batch)),), batch)
+        yield list(chain((wrap(next(batch)),), batch))
 
 
 def grouped_t(wrap, size):
