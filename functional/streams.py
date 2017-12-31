@@ -56,7 +56,7 @@ class Stream(object):
                     if isinstance(args[0], pandas.DataFrame):
                         return Sequence(
                             args[0].values, engine=engine, max_repr_items=self.max_repr_items)
-            except ImportError:
+            except ImportError: # pragma: no cover
                 pass
 
         if len(args) > 1:
@@ -203,6 +203,7 @@ class Stream(object):
         else:
             return self(six.viewitems(json_input))
 
+    # pylint: disable=keyword-arg-before-vararg
     def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
         """
         Reads input by querying from a sqlite database.
