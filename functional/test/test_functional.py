@@ -590,6 +590,11 @@ class TestPipeline(unittest.TestCase):
         expect = [[1, 2, 3], [4, 5, 6], [7, 8]]
         self.assertIteratorEqual(map(list, l.grouped(3)), expect)
 
+    def test_grouped_returns_list(self):
+        l = self.seq([1, 2, 3, 4, 5, 6, 7, 8])
+        self.assertTrue(is_iterable(l.grouped(2)))
+        self.assertTrue(is_iterable(l.grouped(3)))
+
     def test_sliding(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7])
         expect = [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]]

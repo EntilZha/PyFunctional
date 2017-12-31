@@ -1531,6 +1531,10 @@ class Sequence(object):
         :param dialect: passed to csv.writer
         :param fmtparams: passed to csv.writer
         """
+
+        if 'b' in mode:
+            newline = None
+
         with universal_write_open(path, mode=mode, compression=compression, newline=newline) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
