@@ -1522,7 +1522,8 @@ class Sequence(object):
             else:
                 json.dump(self.to_dict(), output)
 
-    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', compression=None, newline='', **fmtparams):
+    def to_csv(self, path, mode=WRITE_MODE, dialect='excel', compression=None,
+               newline='', **fmtparams):
         """
         Saves the sequence to a csv file. Each element should be an iterable which will be expanded
         to the elements of each row.
@@ -1536,7 +1537,8 @@ class Sequence(object):
         if 'b' in mode:
             newline = None
 
-        with universal_write_open(path, mode=mode, compression=compression, newline=newline) as output:
+        with universal_write_open(path, mode=mode, compression=compression,
+                                  newline=newline) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
                 csv_writer.writerow([six.u(str(element)) for element in row])
