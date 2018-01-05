@@ -2,7 +2,7 @@
 
 set -e
 
-apt-get install -y pandoc
+sudo apt-get install -y pandoc
 pip install pylint
 
 if ! [[ $PYPY -eq 1 ]]; then
