@@ -4,6 +4,9 @@ before_install:
 install:
 - pip install -q coverage
 - pip install -r requirements.txt
+addons:
+  apt_packages:
+    - pandoc
 notifications:
   webhooks:
     urls:
