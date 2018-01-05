@@ -1,6 +1,6 @@
 language: python
 before_install:
-- pip install codecov
+- pip install codecov pypandoc
 install:
 - pip install -q coverage
 - pip install -r requirements.txt
