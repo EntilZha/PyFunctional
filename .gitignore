@@ -57,3 +57,4 @@ target/
 
 functional/test/data/tmp
 .ipynb_checkpoints/
+.mypy_cache/

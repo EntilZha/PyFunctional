@@ -1,10 +1,21 @@
 # Changelog
 ## Next Release
 
+## Release 1.1.0
+
 * Implemented optimized version of `reduce_by_key`
 * Implemented `count_by_key`
 * Implemented `count_by_value`
-* Implemented `accumulate`
+* Implemented `accumulate` https://github.com/EntilZha/PyFunctional/pull/104
+* Fix bug in `grouped` https://github.com/EntilZha/PyFunctional/pull/123
+* Fix bug in `to_csv` https://github.com/EntilZha/PyFunctional/pull/123
+* Fix bug with incorrect wrapping of pandas dataframes https://github.com/EntilZha/PyFunctional/pull/122
+* Allow variance on versions of certain packages: https://github.com/EntilZha/PyFunctional/pull/117 and https://github.com/EntilZha/PyFunctional/pull/116
+* Various typo fixes
+* Various CI fixes
+* Fix issue with `first/head` evaluating entire sequence https://github.com/EntilZha/PyFunctional/commit/fb8f3686cf94f072f4e6ed23a361952de1447dc8
+* Drop CI testing and official support for Python 3.3
+* Make import much faster by loading pandas more lazily https://github.com/EntilZha/PyFunctional/issues/99
 
 ## Release 1.0.0
 
