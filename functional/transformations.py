@@ -659,6 +659,18 @@ def sliding_t(wrap, size, step):
     )
 
 
+def partition_impl(wrap, predicate, sequence):
+    truthy_partition = []
+    falsy_partition = []
+    for e in sequence:
+        if predicate(e):
+            truthy_partition.append(e)
+        else:
+            falsy_partition.append(e)
+
+    return wrap((wrap(truthy_partition), wrap(falsy_partition)))
+
+
 def partition_t(wrap, func):
     """
     Transformation for Sequence.partition
@@ -668,9 +680,7 @@ def partition_t(wrap, func):
     """
     return Transformation(
         'partition({0})'.format(name(func)),
-        lambda sequence: wrap(
-            (wrap(filter(func, sequence)), wrap(filter(lambda val: not func(val), sequence)))
-        ),
+        partial(partition_impl, wrap, func),
         None
     )
 
