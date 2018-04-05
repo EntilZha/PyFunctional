@@ -1,6 +1,9 @@
 # Changelog
 ## Next Release
 
+## Release 1.1.3
+* Fix bug in `partition` https://github.com/EntilZha/PyFunctional/issues/124
+
 ## Release 1.1.0
 
 * Implemented optimized version of `reduce_by_key`
