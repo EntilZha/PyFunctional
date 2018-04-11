@@ -269,7 +269,7 @@ all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
 Shortform documentation is below and full documentation is at
-[docs.pyfunctional.org](docs.pyfunctional.org/en/latest/functional.html).
+[docs.pyfunctional.org](http://docs.pyfunctional.org/en/latest/functional.html).
 
 ### Streams API
 All of `PyFunctional` streams can be accessed through the `seq` object. The primary way to create
