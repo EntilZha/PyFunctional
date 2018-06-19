@@ -1,6 +1,6 @@
-future==0.16.0
-six>=1.10.0,<=1.11.0
+future<=1.0.0
+six<=2.0.0
 dill>=0.2.6,<=0.2.7.1
 bz2file==0.98
 backports.lzma>=0.0.3,<=0.0.8
-tabulate>=0.7.5,<=0.8.1
+tabulate<=1.0.0
