@@ -109,7 +109,7 @@ class Stream(object):
         :param args: args to range function
         :return: range(args) wrapped by a sequence
         """
-        return self(builtins.range(*args))
+        return self(builtins.range(*args)) # pylint: disable=no-member
 
     def csv(self, csv_file, dialect='excel', **fmt_params):
         """
