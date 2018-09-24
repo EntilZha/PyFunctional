@@ -5,7 +5,7 @@ import csv as csvapi
 import json as jsonapi
 import sqlite3 as sqlite3api
 
-import future.builtins as builtins
+from future import builtins
 import six
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine

@@ -3,7 +3,7 @@ import gzip
 import io
 import sys
 
-from future import builtins as builtins
+from future import builtins
 import six
 
 
@@ -219,13 +219,13 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
     if compression is None:
         return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                              newline=newline)
-    elif compression == 'gz' or compression == 'gzip':
+    elif compression in ('gz', 'gzip'):
         if six.PY2:
             return gzip.open(path, mode=mode, compresslevel=compresslevel)
         else:
             return gzip.open(path, mode=mode, compresslevel=compresslevel,
                              errors=errors, newline=newline, encoding=encoding)
-    elif compression == 'lzma' or compression == 'xz':
+    elif compression in ('lzma', 'xz'):
         try:
             import lzma
         except ImportError:
