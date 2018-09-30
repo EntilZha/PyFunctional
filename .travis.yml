@@ -1,6 +1,6 @@
 language: python
 before_install:
-- pip install codecov pypandoc
+- pip install pypandoc
 install:
 - pip install tox-travis
 addons:
