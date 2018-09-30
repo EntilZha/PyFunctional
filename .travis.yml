@@ -2,8 +2,7 @@ language: python
 before_install:
 - pip install codecov pypandoc
 install:
-- pip install -q coverage
-- pip install -r requirements.txt
+- pip install tox-travis
 addons:
   apt_packages:
     - pandoc
@@ -14,39 +13,15 @@ notifications:
     on_success: always
     on_failure: always
     on_start: always
-env:
-- PY_36=1 PYPY=0
-- PY_36=0 PYPY=1
-- PY_36=0 PYPY=0
 python:
-- 2.7.13
-- 3.4.4
+- '2.7'
+- '3.4'
 - '3.5'
 - '3.6'
-- pypy
-matrix:
-  exclude:
-  - python: pypy
-    env: PY_36=1 PYPY=0
-  - python: pypy
-    env: PY_36=0 PYPY=0
-  - python: 2.7.13
-    env: PY_36=1 PYPY=0
-  - python: 2.7.13
-    env: PY_36=0 PYPY=1
-  - python: 3.4.4
-    env: PY_36=1 PYPY=0
-  - python: 3.4.4
-    env: PY_36=0 PYPY=1
-  - python: '3.5'
-    env: PY_36=1 PYPY=0
-  - python: '3.5'
-    env: PY_36=0 PYPY=1
-  - python: '3.6'
-    env: PY_36=0 PYPY=1
-  - python: '3.6'
-    env: PY_36=0 PYPY=0
-script: "./travis.sh"
+- '3.7'
+- 'pypy'
+- 'pypy3.5'
+script: "tox"
 after_success:
 - codecov
 cache: pip
