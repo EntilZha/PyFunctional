@@ -15,12 +15,11 @@ notifications:
     on_start: always
 python:
 - '2.7'
-- '3.4'
+- '3.4.4'
 - '3.5'
 - '3.6'
-- '3.7'
+- '3.7-dev'
 - 'pypy'
-- 'pypy3.5'
 script: "tox"
 after_success:
 - codecov
