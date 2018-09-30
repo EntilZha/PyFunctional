@@ -609,9 +609,12 @@ def grouped_impl(wrap, size, sequence):
     :return: grouped sequence
     """
     iterator = iter(sequence)
-    while True:
-        batch = islice(iterator, size)
-        yield list(chain((wrap(next(batch)),), batch))
+    try:
+        while True:
+            batch = islice(iterator, size)
+            yield list(chain((wrap(next(batch)),), batch))
+    except StopIteration:
+        return
 
 
 def grouped_t(wrap, size):
