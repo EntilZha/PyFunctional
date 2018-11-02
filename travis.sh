@@ -4,7 +4,7 @@ set -e
 
 pip install pylint
 
-if ! [[ $PYPY -eq 1 ]]; then
+if ! [[ $PANDAS -eq 1 ]]; then
     pip install pandas
 fi
 
