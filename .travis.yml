@@ -15,37 +15,32 @@ notifications:
     on_failure: always
     on_start: always
 env:
-- PY_36=1 PANDAS=0
-- PY_36=0 PANDAS=1
-- PY_36=0 PANDAS=0
+- PY_36=1 NOPANDAS=0
+- PY_36=0 NOPANDAS=1
+- PY_36=0 NOPANDAS=0
 python:
 - 2.7.13
-- 3.4.4
 - '3.5'
 - '3.6'
 - pypy
 matrix:
   exclude:
   - python: pypy
-    env: PY_36=1 PANDAS=0
+    env: PY_36=1 NOPANDAS=0
   - python: pypy
-    env: PY_36=0 PANDAS=0
+    env: PY_36=0 NOPANDAS=0
   - python: 2.7.13
-    env: PY_36=1 PANDAS=0
+    env: PY_36=1 NOPANDAS=0
   - python: 2.7.13
-    env: PY_36=0 PANDAS=1
-  - python: 3.4.4
-    env: PY_36=1 PANDAS=0
-  - python: 3.4.4
-    env: PY_36=0 PANDAS=1
+    env: PY_36=0 NOPANDAS=1
   - python: '3.5'
-    env: PY_36=1 PANDAS=0
+    env: PY_36=1 NOPANDAS=0
   - python: '3.5'
-    env: PY_36=0 PANDAS=1
+    env: PY_36=0 NOPANDAS=1
   - python: '3.6'
-    env: PY_36=0 PANDAS=1
+    env: PY_36=0 NOPANDAS=1
   - python: '3.6'
-    env: PY_36=0 PANDAS=0
+    env: PY_36=0 NOPANDAS=0
 script: "./travis.sh"
 after_success:
 - codecov

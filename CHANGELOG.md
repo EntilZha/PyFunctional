@@ -1,6 +1,13 @@
 # Changelog
 ## Next Release
 
+## Release 1.2.0
+* Fix Broken link in readme
+* Loosen version requirements #129
+* Fix lint errors
+* Fix StopIteration errors for Python 3.7 #132
+* Drop support for python 3.4
+
 ## Release 1.1.3
 * Fix bug in `partition` https://github.com/EntilZha/PyFunctional/issues/124
 
