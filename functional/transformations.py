@@ -103,7 +103,7 @@ def reversed_t():
     Transformation for Sequence.reverse
     :return: transformation
     """
-    return Transformation('reversed', reversed, None)
+    return Transformation('reversed', reversed, [ExecutionStrategies.PRE_COMPUTE])
 
 
 def slice_t(start, until):
