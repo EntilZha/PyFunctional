@@ -401,8 +401,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_reverse(self):
         l = [1, 2, 3]
-        expect = [3, 2, 1]
-        s = self.seq(l)
+        expect = [4, 3, 2]
+        s = self.seq(l).map(lambda x: x + 1)
         result = s.reverse()
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
