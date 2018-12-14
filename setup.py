@@ -7,7 +7,7 @@ try:
 except (IOError, ImportError):
     long_description = open('README.md').read()
 
-common_install_requires = ['future<=1.0.0', 'six<=2.0.0', 'dill==0.2.5', 'tabulate<=1.0.0']
+common_install_requires = ['future<=1.0.0', 'six<=2.0.0', 'dill>=0.2.6,<=0.2.7.1', 'tabulate<=1.0.0']
 if sys.version_info.major == 2 or '__pypy__' in sys.builtin_module_names:
     compression_requires = ['bz2file==0.98', 'backports.lzma==0.0.6']
     install_requires = common_install_requires
