@@ -318,7 +318,7 @@ class Sequence(object):
         """
         Returns the sequence, without its first element.
 
-        >>> seq([1, 2, 3]).init()
+        >>> seq([1, 2, 3]).tail()
         [2, 3]
 
         :return: sequence without first element
