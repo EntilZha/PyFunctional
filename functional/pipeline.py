@@ -187,6 +187,14 @@ class Sequence(object):
                 sequence = Sequence(self, transform=transform)
         return sequence
 
+    def transform(self, *transforms):
+        """
+        Copies the given Sequence and appends new transformation
+        :param transform: transform to apply or list of transforms to apply
+        :return: transformed sequence
+        """
+        return self._transform(*transforms)
+
     @property
     def sequence(self):
         """
@@ -1725,7 +1733,7 @@ def _wrap(value):
     else:
         return value
 
-def extend(func=None, *, aslist=False, final=False):
+def extend(func=None, aslist=False, final=False):
     """
     Function decorator for adding new methods to the Sequence class.
 
@@ -1764,7 +1772,7 @@ def extend(func=None, *, aslist=False, final=False):
     if func is None:
         return partial(extend, aslist=aslist, final=final)
 
-    @wraps(func) 
+    @wraps(func)
     def wrapper(self, *args, **kwargs):
         # do not create a new Sequence - just apply a function
         if final:
@@ -1780,7 +1788,7 @@ def extend(func=None, *, aslist=False, final=False):
             func_,
             None
         )
-        return self._transform(transform)
+        return self.transform(transform)
 
     # dynamically add a new method
     setattr(Sequence, func.__name__, wrapper)
