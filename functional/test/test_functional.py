@@ -2,10 +2,11 @@
 from __future__ import absolute_import
 
 import unittest
+import array
 from collections import namedtuple
 from itertools import product
 
-from functional.pipeline import Sequence, is_iterable, _wrap
+from functional.pipeline import Sequence, is_iterable, _wrap, extend
 from functional.transformations import name
 from functional import seq, pseq
 
@@ -906,6 +907,55 @@ class TestPipeline(unittest.TestCase):
         sequence._max_repr_items = None
         self.assertEqual(len(repr(sequence)), 890)
 
+class TestExtend(unittest.TestCase):
+    def test_custom_functions(self):
+
+        @extend(aslist=True)
+        def my_zip(it):
+            return zip(it,it)
+
+        result = seq.range(3).my_zip().list()
+        expected = list(zip(range(3),range(3)))
+        self.assertEqual(result, expected)
+
+        result = seq.range(3).my_zip().my_zip().list()
+        expected = list(zip(expected, expected))
+        self.assertEqual(result, expected)
+
+        @extend
+        def square(it):
+            return [i**2 for i in it]
+
+        result = seq.range(3).square().list()
+        expected = [i**2 for i in range(3)]
+        self.assertEqual(result, expected)
+
+        @extend
+        def my_filter(it, n=10):
+            return (i for i in it if i > n)
+
+        # test keyword args
+        result = seq.range(20).my_filter(n=10).list()
+        expected = list(filter(lambda x: x > 10, range(20)))
+        self.assertEqual(result, expected)
+
+        # test args
+        result = seq.range(20).my_filter(10).list()
+        self.assertEqual(result, expected)
+
+    def test_final(self):
+
+        @extend(final=True)
+        def toarray(it):
+            return array.array('f', it)
+
+        result = seq.range(10).toarray()
+        expected = array.array('f', range(10))
+        self.assertEqual(result, expected)
+
+        result = seq.range(10).map(lambda x: x**2).toarray()
+        expected = array.array('f', [i ** 2 for i in range(10)])
+        self.assertEqual(result, expected)
 
 class TestParallelPipeline(TestPipeline):
     def setUp(self):
