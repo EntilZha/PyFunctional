@@ -187,20 +187,6 @@ class Sequence(object):
                 sequence = Sequence(self, transform=transform)
         return sequence
 
-    def transform(self, *transforms):
-        """
-        Copies the given Sequence and appends new transformation
-        :param transform: transform to apply or list of transforms to apply
-        :return: transformed sequence
-        """
-        sequence = None
-        for transform in transforms:
-            if sequence:
-                sequence = Sequence(sequence, transform=transform)
-            else:
-                sequence = Sequence(self, transform=transform)
-        return sequence
-
     @property
     def sequence(self):
         """
@@ -1782,6 +1768,8 @@ def extend(func=None, aslist=False, final=False, name=None, parallel=False):
 
     @wraps(func)
     def wrapper(self, *args, **kwargs):
+        # pylint: disable=protected-access
+
         # do not create a new Sequence - just apply a function
         if final:
             return func(self.sequence, *args, **kwargs)
@@ -1796,7 +1784,7 @@ def extend(func=None, aslist=False, final=False, name=None, parallel=False):
             func_,
             {ExecutionStrategies.PARALLEL} if parallel else None
         )
-        return self.transform(transform)
+        return self._transform(transform)
 
     # dynamically add a new method
     setattr(Sequence, func.__name__, wrapper)
