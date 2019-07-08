@@ -926,9 +926,18 @@ class TestExtend(unittest.TestCase):
         def square(it):
             return [i**2 for i in it]
 
-        result = seq.range(3).square().list()
-        expected = [i**2 for i in range(3)]
+        result = seq.range(100).square().list()
+        expected = [i**2 for i in range(100)]
         self.assertEqual(result, expected)
+
+        name = 'PARALLEL_SQUARE'
+        @extend(parallel=True, name=name)
+        def square_parallel(it):
+            return [i**2 for i in it]
+
+        result = seq.range(100).square_parallel()
+        self.assertEqual(result.sum(), sum(expected))
+        self.assertEqual(repr(result._lineage), 'Lineage: sequence -> extended[%s]' % name)
 
         @extend
         def my_filter(it, n=10):
@@ -943,8 +952,7 @@ class TestExtend(unittest.TestCase):
         result = seq.range(20).my_filter(10).list()
         self.assertEqual(result, expected)
 
-    def test_final(self):
-
+        # test final
         @extend(final=True)
         def toarray(it):
             return array.array('f', it)
@@ -955,6 +963,19 @@ class TestExtend(unittest.TestCase):
 
         result = seq.range(10).map(lambda x: x**2).toarray()
         expected = array.array('f', [i ** 2 for i in range(10)])
+        self.assertEqual(result, expected)
+
+        # a more complex example combining all above
+        @extend()
+        def sum_pair(it):
+            return (i[0] + i[1] for i in it)
+
+        result = seq.range(100).my_filter(85).my_zip().sum_pair().square_parallel().toarray()
+
+        expected = array.array('f', list(
+            map(lambda x: (x[0] + x[1])**2,
+                map(lambda x: (x,x), filter(lambda x: x > 85, range(100))))
+        ))
         self.assertEqual(result, expected)
 
 class TestParallelPipeline(TestPipeline):
