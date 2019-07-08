@@ -21,7 +21,7 @@ from functional.lineage import Lineage
 from functional.util import is_iterable, is_primitive, is_namedtuple, is_tabulatable, identity
 from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
-
+from functional.execution import ExecutionStrategies
 
 class Sequence(object):
     """
@@ -193,7 +193,13 @@ class Sequence(object):
         :param transform: transform to apply or list of transforms to apply
         :return: transformed sequence
         """
-        return self._transform(*transforms)
+        sequence = None
+        for transform in transforms:
+            if sequence:
+                sequence = Sequence(sequence, transform=transform)
+            else:
+                sequence = Sequence(self, transform=transform)
+        return sequence
 
     @property
     def sequence(self):
@@ -1733,7 +1739,7 @@ def _wrap(value):
     else:
         return value
 
-def extend(func=None, aslist=False, final=False):
+def extend(func=None, aslist=False, final=False, name=None, parallel=False):
     """
     Function decorator for adding new methods to the Sequence class.
 
@@ -1768,9 +1774,11 @@ def extend(func=None, aslist=False, final=False):
     :param aslist: if True convert input sequence to list (default False)
     :param final: If True decorated function does not return a sequence. Useful
         for creating functions such as to_list.
+    :param name: name of the function (default function definition name)
+    :param parallel: if true the function is executed in parallel execution strategy (default False)
     """
     if func is None:
-        return partial(extend, aslist=aslist, final=final)
+        return partial(extend, aslist=aslist, final=final, name=name, parallel=parallel)
 
     @wraps(func)
     def wrapper(self, *args, **kwargs):
@@ -1784,9 +1792,9 @@ def extend(func=None, aslist=False, final=False):
             func_ = lambda seq: func(seq, *args, **kwargs)
 
         transform = transformations.Transformation(
-            'extended[{}]'.format(func.__name__),
+            'extended[{}]'.format(name or func.__name__),
             func_,
-            None
+            {ExecutionStrategies.PARALLEL} if parallel else None
         )
         return self.transform(transform)
 
