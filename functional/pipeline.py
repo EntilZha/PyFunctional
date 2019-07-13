@@ -1729,7 +1729,7 @@ def extend(func=None, aslist=False, final=False, name=None, parallel=False):
     """
     Function decorator for adding new methods to the Sequence class.
 
-    >>> @extend
+    >>> @extend()
         def zip2(it):
             return [(i,i) for i in it]
 
