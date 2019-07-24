@@ -6,7 +6,7 @@ from __future__ import division, absolute_import
 
 from operator import mul, add
 import collections
-from functools import reduce
+from functools import reduce, wraps, partial
 
 import json
 import csv
@@ -21,7 +21,7 @@ from functional.lineage import Lineage
 from functional.util import is_iterable, is_primitive, is_namedtuple, is_tabulatable, identity
 from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
-
+from functional.execution import ExecutionStrategies
 
 class Sequence(object):
     """
@@ -1724,3 +1724,68 @@ def _wrap(value):
         return Sequence(value)
     else:
         return value
+
+def extend(func=None, aslist=False, final=False, name=None, parallel=False):
+    """
+    Function decorator for adding new methods to the Sequence class.
+
+    >>> @extend()
+        def zip2(it):
+            return [(i,i) for i in it]
+
+    >>> seq.range(3).zip2()
+    [(0, 0), (1, 1), (2, 2)]
+
+
+    >>> @extend(aslist=True)
+        def zip2(it):
+            return zip(it,it)
+
+    >>> seq.range(3).zip2()
+    [(0, 0), (1, 1), (2, 2)]
+
+
+    >>> @extend(final=True)
+        def make_set(it):
+            return set(it)
+
+    >>> r = seq([0,1,1]).make_set()
+    >>> r
+    {0, 1}
+
+    >>> type(r)
+    <class 'set'>
+
+    :param func: function to decorate
+    :param aslist: if True convert input sequence to list (default False)
+    :param final: If True decorated function does not return a sequence. Useful
+        for creating functions such as to_list.
+    :param name: name of the function (default function definition name)
+    :param parallel: if true the function is executed in parallel execution strategy (default False)
+    """
+    if func is None:
+        return partial(extend, aslist=aslist, final=final, name=name, parallel=parallel)
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # pylint: disable=protected-access
+
+        # do not create a new Sequence - just apply a function
+        if final:
+            return func(self.sequence, *args, **kwargs)
+
+        if aslist:
+            func_ = lambda seq: func(list(seq), *args, **kwargs)
+        else:
+            func_ = lambda seq: func(seq, *args, **kwargs)
+
+        transform = transformations.Transformation(
+            'extended[{}]'.format(name or func.__name__),
+            func_,
+            {ExecutionStrategies.PARALLEL} if parallel else None
+        )
+        return self._transform(transform)
+
+    # dynamically add a new method
+    setattr(Sequence, func.__name__, wrapper)
+    return wrapper
