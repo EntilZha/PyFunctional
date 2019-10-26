@@ -1,6 +1,12 @@
 # Changelog
 ## Next Release
 
+## Release 1.3.0
+* added precompute attribute to reverse transformation (#137)
+* Update setup.py dill to requirements.txt (#138)
+* Docstring of tail fixed (#140)
+* adding extend feature (#144)
+
 ## Release 1.2.0
 * Fix Broken link in readme
 * Loosen version requirements #129
