@@ -1,16 +1,10 @@
-from __future__ import absolute_import
 import gzip
 import io
 import sys
-
-from future import builtins
-import six
+import builtins
 
 
-if six.PY2:
-    WRITE_MODE = 'wb'
-else:
-    WRITE_MODE = 'wt'
+WRITE_MODE = 'wt'
 
 
 class ReusableFile(object):
@@ -133,7 +127,7 @@ class BZ2File(CompressedFile):
                                       newline=newline)
 
     def __iter__(self):
-        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+        if '__pypy__' in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2
@@ -145,7 +139,7 @@ class BZ2File(CompressedFile):
                 yield line
 
     def read(self):
-        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+        if '__pypy__' in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2
@@ -220,11 +214,8 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
         return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
                              newline=newline)
     elif compression in ('gz', 'gzip'):
-        if six.PY2:
-            return gzip.open(path, mode=mode, compresslevel=compresslevel)
-        else:
-            return gzip.open(path, mode=mode, compresslevel=compresslevel,
-                             errors=errors, newline=newline, encoding=encoding)
+        return gzip.open(path, mode=mode, compresslevel=compresslevel,
+                         errors=errors, newline=newline, encoding=encoding)
     elif compression in ('lzma', 'xz'):
         try:
             import lzma
@@ -233,7 +224,7 @@ def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, n
         return lzma.open(path, mode=mode, format=format, check=check, preset=preset,
                          filters=filters, encoding=encoding, errors=errors, newline=newline)
     elif compression == 'bz2':
-        if six.PY2 or '__pypy__' in sys.builtin_module_names:
+        if '__pypy__' in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2

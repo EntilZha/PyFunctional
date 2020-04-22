@@ -1,9 +1,6 @@
 """
 The pipeline module contains the transformations and actions API of PyFunctional
 """
-
-from __future__ import division, absolute_import
-
 from operator import mul, add
 import collections
 from functools import reduce, wraps, partial
@@ -13,7 +10,6 @@ import csv
 import sqlite3
 import re
 
-import six
 from tabulate import tabulate
 
 from functional.execution import ExecutionEngine
@@ -1490,9 +1486,9 @@ class Sequence(object):
                                   compresslevel=compresslevel, format=format, check=check,
                                   preset=preset, filters=filters) as output:
             if delimiter:
-                output.write(six.u(self.make_string(delimiter)))
+                output.write(self.make_string(delimiter))
             else:
-                output.write(six.u(str(self)))
+                output.write(str(self))
 
     def to_jsonl(self, path, mode='wb', compression=None):
         """
@@ -1541,7 +1537,7 @@ class Sequence(object):
                                   newline=newline) as output:
             csv_writer = csv.writer(output, dialect=dialect, **fmtparams)
             for row in self:
-                csv_writer.writerow([six.u(str(element)) for element in row])
+                csv_writer.writerow([str(element) for element in row])
 
     def _to_sqlite3_by_query(self, conn, sql):
         """
@@ -1712,7 +1708,7 @@ def _wrap(value):
         return value
     if isinstance(value, (dict, set)) or is_namedtuple(value):
         return value
-    elif isinstance(value, collections.Iterable):
+    elif isinstance(value, collections.abc.Iterable):
         try:
             if type(value).__name__ == 'DataFrame':
                 import pandas

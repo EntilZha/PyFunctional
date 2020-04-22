@@ -1,0 +1,41 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, pypy3]
+        #include:
+        #  - python-version: 3.6
+        #    use_pandas: 1
+        #  - python-version: 3.7
+        #    use_pandas: 1
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip poetry
+        poetry install
+        apt install pandoc
+    - name: Pylint
+      run: poetry run pylint functional
+    - name: black
+      run: poetry run black --check functional
+    - name: Test with pytest
+      run: |
+        poetry run pytest --cov=functional
