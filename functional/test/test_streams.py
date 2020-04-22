@@ -5,15 +5,10 @@ import sys
 import gzip
 from platform import system
 import lzma
+import bz2
 
 from functional import seq, pseq
 from functional.streams import Stream, ParallelStream
-
-
-if "__pypy__" in sys.builtin_module_names:
-    import bz2file as bz2  # pylint: disable=import-error
-else:
-    import bz2
 
 
 class TestStreams(unittest.TestCase):
