@@ -4,7 +4,7 @@ import sys
 import builtins
 
 
-WRITE_MODE = 'wt'
+WRITE_MODE = "wt"
 
 
 class ReusableFile(object):
@@ -14,9 +14,18 @@ class ReusableFile(object):
     is useful for allowing a file object to be iterated over multiple times while keep evaluation
     lazy.
     """
+
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='r', buffering=-1, encoding=None,
-                 errors=None, newline=None):
+    def __init__(
+        self,
+        path,
+        delimiter=None,
+        mode="r",
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+    ):
         """
         Constructor arguments are passed directly to builtins.open
         :param path: passed to open
@@ -43,23 +52,27 @@ class ReusableFile(object):
         :return: iterator over file
         """
         # pylint: disable=no-member
-        with builtins.open(self.path,
-                           mode=self.mode,
-                           buffering=self.buffering,
-                           encoding=self.encoding,
-                           errors=self.errors,
-                           newline=self.newline) as file_content:
+        with builtins.open(
+            self.path,
+            mode=self.mode,
+            buffering=self.buffering,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             for line in file_content:
                 yield line
 
     def read(self):
         # pylint: disable=no-member
-        with builtins.open(self.path,
-                           mode=self.mode,
-                           buffering=self.buffering,
-                           encoding=self.encoding,
-                           errors=self.errors,
-                           newline=self.newline) as file_content:
+        with builtins.open(
+            self.path,
+            mode=self.mode,
+            buffering=self.buffering,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             return file_content.read()
 
 
@@ -67,11 +80,26 @@ class CompressedFile(ReusableFile):
     magic_bytes = None
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
-                 encoding=None, errors=None, newline=None):
-        super(CompressedFile, self).__init__(path, delimiter=delimiter, mode=mode,
-                                             buffering=buffering, encoding=encoding, errors=errors,
-                                             newline=newline)
+    def __init__(
+        self,
+        path,
+        delimiter=None,
+        mode="rt",
+        buffering=-1,
+        compresslevel=9,
+        encoding=None,
+        errors=None,
+        newline=None,
+    ):
+        super(CompressedFile, self).__init__(
+            path,
+            delimiter=delimiter,
+            mode=mode,
+            buffering=buffering,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
         self.compresslevel = compresslevel
 
     @classmethod
@@ -80,86 +108,151 @@ class CompressedFile(ReusableFile):
 
 
 class GZFile(CompressedFile):
-    magic_bytes = b'\x1f\x8b\x08'
+    magic_bytes = b"\x1f\x8b\x08"
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
-                 encoding=None, errors=None, newline=None):
-        super(GZFile, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
-                                     compresslevel=compresslevel, encoding=encoding, errors=errors,
-                                     newline=newline)
+    def __init__(
+        self,
+        path,
+        delimiter=None,
+        mode="rt",
+        buffering=-1,
+        compresslevel=9,
+        encoding=None,
+        errors=None,
+        newline=None,
+    ):
+        super(GZFile, self).__init__(
+            path,
+            delimiter=delimiter,
+            mode=mode,
+            buffering=buffering,
+            compresslevel=compresslevel,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
 
     def __iter__(self):
-        if 't' in self.mode:
+        if "t" in self.mode:
             with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
                 gz_file.read1 = gz_file.read
-                with io.TextIOWrapper(gz_file,
-                                      encoding=self.encoding,
-                                      errors=self.errors,
-                                      newline=self.newline) as file_content:
+                with io.TextIOWrapper(
+                    gz_file,
+                    encoding=self.encoding,
+                    errors=self.errors,
+                    newline=self.newline,
+                ) as file_content:
                     for line in file_content:
                         yield line
         else:
-            with gzip.open(self.path,
-                           mode=self.mode,
-                           compresslevel=self.compresslevel) as file_content:
+            with gzip.open(
+                self.path, mode=self.mode, compresslevel=self.compresslevel
+            ) as file_content:
                 for line in file_content:
                     yield line
 
     def read(self):
         with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
             gz_file.read1 = gz_file.read
-            with io.TextIOWrapper(gz_file,
-                                  encoding=self.encoding,
-                                  errors=self.errors,
-                                  newline=self.newline) as file_content:
+            with io.TextIOWrapper(
+                gz_file,
+                encoding=self.encoding,
+                errors=self.errors,
+                newline=self.newline,
+            ) as file_content:
                 return file_content.read()
 
 
 class BZ2File(CompressedFile):
-    magic_bytes = b'\x42\x5a\x68'
+    magic_bytes = b"\x42\x5a\x68"
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
-                 encoding=None, errors=None, newline=None):
-        super(BZ2File, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
-                                      compresslevel=compresslevel, encoding=encoding, errors=errors,
-                                      newline=newline)
+    def __init__(
+        self,
+        path,
+        delimiter=None,
+        mode="rt",
+        buffering=-1,
+        compresslevel=9,
+        encoding=None,
+        errors=None,
+        newline=None,
+    ):
+        super(BZ2File, self).__init__(
+            path,
+            delimiter=delimiter,
+            mode=mode,
+            buffering=buffering,
+            compresslevel=compresslevel,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
 
     def __iter__(self):
-        if '__pypy__' in sys.builtin_module_names:
+        if "__pypy__" in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2
 
-        with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
-                      encoding=self.encoding, errors=self.errors,
-                      newline=self.newline) as file_content:
+        with bz2.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             for line in file_content:
                 yield line
 
     def read(self):
-        if '__pypy__' in sys.builtin_module_names:
+        if "__pypy__" in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2
 
-        with bz2.open(self.path, mode=self.mode, compresslevel=self.compresslevel,
-                      encoding=self.encoding, errors=self.errors,
-                      newline=self.newline) as file_content:
+        with bz2.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             return file_content.read()
 
 
 class XZFile(CompressedFile):
-    magic_bytes = b'\xfd\x37\x7a\x58\x5a\x00'
+    magic_bytes = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, path, delimiter=None, mode='rt', buffering=-1, compresslevel=9,
-                 encoding=None, errors=None, newline=None, check=-1, preset=None, filters=None,
-                 format=None):
-        super(XZFile, self).__init__(path, delimiter=delimiter, mode=mode, buffering=buffering,
-                                     compresslevel=compresslevel, encoding=encoding, errors=errors,
-                                     newline=newline)
+    def __init__(
+        self,
+        path,
+        delimiter=None,
+        mode="rt",
+        buffering=-1,
+        compresslevel=9,
+        encoding=None,
+        errors=None,
+        newline=None,
+        check=-1,
+        preset=None,
+        filters=None,
+        format=None,
+    ):
+        super(XZFile, self).__init__(
+            path,
+            delimiter=delimiter,
+            mode=mode,
+            buffering=buffering,
+            compresslevel=compresslevel,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
         self.check = check
         self.preset = preset
         self.format = format
@@ -171,9 +264,17 @@ class XZFile(CompressedFile):
         except ImportError:
             from backports import lzma
 
-        with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
-                       preset=self.preset, filters=self.filters, encoding=self.encoding,
-                       errors=self.errors, newline=self.newline) as file_content:
+        with lzma.open(
+            self.path,
+            mode=self.mode,
+            format=self.format,
+            check=self.check,
+            preset=self.preset,
+            filters=self.filters,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             for line in file_content:
                 yield line
 
@@ -183,9 +284,17 @@ class XZFile(CompressedFile):
         except ImportError:
             from backports import lzma
 
-        with lzma.open(self.path, mode=self.mode, format=self.format, check=self.check,
-                       preset=self.preset, filters=self.filters, encoding=self.encoding,
-                       errors=self.errors, newline=self.newline) as file_content:
+        with lzma.open(
+            self.path,
+            mode=self.mode,
+            format=self.format,
+            check=self.check,
+            preset=self.preset,
+            filters=self.filters,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
             return file_content.read()
 
 
@@ -197,7 +306,7 @@ def get_read_function(filename, disable_compression):
     if disable_compression:
         return ReusableFile
     else:
-        with open(filename, 'rb') as f:
+        with open(filename, "rb") as f:
             start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
             for cls in COMPRESSION_CLASSES:
                 if cls.is_compressed(start_bytes):
@@ -206,31 +315,72 @@ def get_read_function(filename, disable_compression):
             return ReusableFile
 
 
-def universal_write_open(path, mode, buffering=-1, encoding=None, errors=None, newline=None,
-                         compresslevel=9, format=None, check=-1, preset=None, filters=None,
-                         compression=None):
+def universal_write_open(
+    path,
+    mode,
+    buffering=-1,
+    encoding=None,
+    errors=None,
+    newline=None,
+    compresslevel=9,
+    format=None,
+    check=-1,
+    preset=None,
+    filters=None,
+    compression=None,
+):
     # pylint: disable=unexpected-keyword-arg,no-member
     if compression is None:
-        return builtins.open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                             newline=newline)
-    elif compression in ('gz', 'gzip'):
-        return gzip.open(path, mode=mode, compresslevel=compresslevel,
-                         errors=errors, newline=newline, encoding=encoding)
-    elif compression in ('lzma', 'xz'):
+        return builtins.open(
+            path,
+            mode=mode,
+            buffering=buffering,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
+    elif compression in ("gz", "gzip"):
+        return gzip.open(
+            path,
+            mode=mode,
+            compresslevel=compresslevel,
+            errors=errors,
+            newline=newline,
+            encoding=encoding,
+        )
+    elif compression in ("lzma", "xz"):
         try:
             import lzma
         except ImportError:
             from backports import lzma
-        return lzma.open(path, mode=mode, format=format, check=check, preset=preset,
-                         filters=filters, encoding=encoding, errors=errors, newline=newline)
-    elif compression == 'bz2':
-        if '__pypy__' in sys.builtin_module_names:
+        return lzma.open(
+            path,
+            mode=mode,
+            format=format,
+            check=check,
+            preset=preset,
+            filters=filters,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
+    elif compression == "bz2":
+        if "__pypy__" in sys.builtin_module_names:
             import bz2file as bz2  # pylint: disable=import-error
         else:
             import bz2
 
-        return bz2.open(path, mode=mode, compresslevel=compresslevel, encoding=encoding,
-                        errors=errors, newline=newline)
+        return bz2.open(
+            path,
+            mode=mode,
+            compresslevel=compresslevel,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
     else:
         raise ValueError(
-            'compression must be None, gz, gzip, lzma, or xz and was {0}'.format(compression))
+            "compression must be None, gz, gzip, lzma, or xz and was {0}".format(
+                compression
+            )
+        )

@@ -35,8 +35,7 @@ def is_primitive(val):
     :param val: value to check
     :return: True if value is a primitive, else False
     """
-    return isinstance(val,
-                      (str, bool, float, complex, bytes, int))
+    return isinstance(val, (str, bool, float, complex, bytes, int))
 
 
 def is_namedtuple(val):
@@ -50,7 +49,7 @@ def is_namedtuple(val):
     bases = val_type.__bases__
     if len(bases) != 1 or bases[0] != tuple:
         return False
-    fields = getattr(val_type, '_fields', None)
+    fields = getattr(val_type, "_fields", None)
     return all(isinstance(n, str) for n in fields)
 
 
@@ -143,7 +142,8 @@ def parallelize(func, result, processes=None, partition_size=None):
     :return: Iterable of applying func on result
     """
     parallel_iter = lazy_parallelize(
-        func, result, processes=processes, partition_size=partition_size)
+        func, result, processes=processes, partition_size=partition_size
+    )
     return chain.from_iterable(parallel_iter)
 
 
@@ -163,7 +163,7 @@ def lazy_parallelize(func, result, processes=None, partition_size=None):
     partition_size = partition_size or compute_partition_size(result, processes)
     pool = Pool(processes=processes)
     partitions = split_every(partition_size, iter(result))
-    packed_partitions = (pack(func, (partition, )) for partition in partitions)
+    packed_partitions = (pack(func, (partition,)) for partition in partitions)
     for pool_result in pool.imap(unpack, packed_partitions):
         yield pool_result
     pool.terminate()

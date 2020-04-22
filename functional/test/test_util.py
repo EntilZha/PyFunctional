@@ -4,10 +4,16 @@ from collections import namedtuple
 from functools import reduce
 from operator import add
 
-from functional.util import (is_namedtuple, lazy_parallelize, split_every, pack,
-                             unpack, compute_partition_size)
+from functional.util import (
+    is_namedtuple,
+    lazy_parallelize,
+    split_every,
+    pack,
+    unpack,
+    compute_partition_size,
+)
 
-Data = namedtuple('Tuple', 'x y')
+Data = namedtuple("Tuple", "x y")
 
 
 class TestUtil(unittest.TestCase):
@@ -18,14 +24,23 @@ class TestUtil(unittest.TestCase):
         self.assertFalse(is_namedtuple(1))
 
     # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
-    @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
+    @unittest.skipIf(
+        "__pypy__" in sys.builtin_module_names, "Skip parallel tests on pypy"
+    )
     def test_lazy_parallelize(self):
-        self.assertListEqual(list(range(10)), reduce(add, lazy_parallelize(lambda x: x, range(10))))
-        self.assertListEqual(list(range(10)), list(
-            reduce(add, lazy_parallelize(lambda x: x, range(10), processes=10000))))
+        self.assertListEqual(
+            list(range(10)), reduce(add, lazy_parallelize(lambda x: x, range(10)))
+        )
+        self.assertListEqual(
+            list(range(10)),
+            list(
+                reduce(add, lazy_parallelize(lambda x: x, range(10), processes=10000))
+            ),
+        )
 
         def f():
             yield 0
+
         self.assertListEqual([[0]], list(lazy_parallelize(lambda x: x, f())))
 
     def test_split_every(self):
@@ -35,7 +50,9 @@ class TestUtil(unittest.TestCase):
         self.assertListEqual(list(split_every(2, result)), [[1, 2], [3, 4], [5]])
 
     # Skipping tests on pypy because of https://github.com/uqfoundation/dill/issues/73
-    @unittest.skipIf('__pypy__' in sys.builtin_module_names, 'Skip parallel tests on pypy')
+    @unittest.skipIf(
+        "__pypy__" in sys.builtin_module_names, "Skip parallel tests on pypy"
+    )
     def test_pack_unpack(self):
         packed = pack(map, [lambda x: x * 2, range(4)])
         self.assertListEqual(unpack(packed), [0, 2, 4, 6])
