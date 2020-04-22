@@ -1,6 +1,7 @@
 import gzip
+import lzma
+import bz2
 import io
-import sys
 import builtins
 
 
@@ -191,11 +192,6 @@ class BZ2File(CompressedFile):
         )
 
     def __iter__(self):
-        if "__pypy__" in sys.builtin_module_names:
-            import bz2file as bz2  # pylint: disable=import-error
-        else:
-            import bz2
-
         with bz2.open(
             self.path,
             mode=self.mode,
@@ -208,11 +204,6 @@ class BZ2File(CompressedFile):
                 yield line
 
     def read(self):
-        if "__pypy__" in sys.builtin_module_names:
-            import bz2file as bz2  # pylint: disable=import-error
-        else:
-            import bz2
-
         with bz2.open(
             self.path,
             mode=self.mode,
@@ -259,11 +250,6 @@ class XZFile(CompressedFile):
         self.filters = filters
 
     def __iter__(self):
-        try:
-            import lzma
-        except ImportError:
-            from backports import lzma
-
         with lzma.open(
             self.path,
             mode=self.mode,
@@ -279,11 +265,6 @@ class XZFile(CompressedFile):
                 yield line
 
     def read(self):
-        try:
-            import lzma
-        except ImportError:
-            from backports import lzma
-
         with lzma.open(
             self.path,
             mode=self.mode,
@@ -349,10 +330,6 @@ def universal_write_open(
             encoding=encoding,
         )
     elif compression in ("lzma", "xz"):
-        try:
-            import lzma
-        except ImportError:
-            from backports import lzma
         return lzma.open(
             path,
             mode=mode,
@@ -365,11 +342,6 @@ def universal_write_open(
             newline=newline,
         )
     elif compression == "bz2":
-        if "__pypy__" in sys.builtin_module_names:
-            import bz2file as bz2  # pylint: disable=import-error
-        else:
-            import bz2
-
         return bz2.open(
             path,
             mode=mode,
