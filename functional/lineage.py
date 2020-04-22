@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from functional.execution import ExecutionEngine
 from functional.transformations import CACHE_T
 

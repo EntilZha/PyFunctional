@@ -1,12 +1,8 @@
-from __future__ import absolute_import
-
 import re
 import csv as csvapi
 import json as jsonapi
 import sqlite3 as sqlite3api
-
-from future import builtins
-import six
+import builtins
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
@@ -201,7 +197,7 @@ class Stream(object):
         if isinstance(json_input, list):
             return self(json_input)
         else:
-            return self(six.viewitems(json_input))
+            return self(json_input.items())
 
     # pylint: disable=keyword-arg-before-vararg
     def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):

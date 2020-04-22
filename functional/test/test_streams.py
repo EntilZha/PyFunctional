@@ -1,23 +1,16 @@
-from __future__ import absolute_import
-
 import sqlite3
 import unittest
 import collections
 import sys
 import gzip
 from platform import system
-
-import six
+import lzma
 
 from functional import seq, pseq
 from functional.streams import Stream, ParallelStream
 
-try:
-    import lzma
-except ImportError:
-    from backports import lzma
 
-if six.PY2 or '__pypy__' in sys.builtin_module_names:
+if '__pypy__' in sys.builtin_module_names:
     import bz2file as bz2  # pylint: disable=import-error
 else:
     import bz2
@@ -146,7 +139,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = 'functional/test/data/test_list.json'
         dict_test_path = 'functional/test/data/test_dict.json'
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+        dict_expect = list({u'a': 1, u'b': 2, u'c': 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -167,7 +160,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = 'functional/test/data/test_list.json.gz'
         dict_test_path = 'functional/test/data/test_dict.json.gz'
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+        dict_expect = list({u'a': 1, u'b': 2, u'c': 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -181,7 +174,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = 'functional/test/data/test_list.json.bz2'
         dict_test_path = 'functional/test/data/test_dict.json.bz2'
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+        dict_expect = list({u'a': 1, u'b': 2, u'c': 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -195,7 +188,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = 'functional/test/data/test_list.json.xz'
         dict_test_path = 'functional/test/data/test_dict.json.xz'
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list(six.viewitems({u'a': 1, u'b': 2, u'c': 3}))
+        dict_expect = list({u'a': 1, u'b': 2, u'c': 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)

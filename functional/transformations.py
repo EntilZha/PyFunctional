@@ -1,13 +1,8 @@
-from __future__ import absolute_import
-
 from functools import partial
-from itertools import dropwhile, takewhile, islice, count, product, chain, starmap
+from itertools import dropwhile, takewhile, islice, count, product, chain, starmap, filterfalse
 import collections
 import types
 
-from future.builtins import map, filter, zip, range
-
-import six
 from functional.execution import ExecutionStrategies
 
 
@@ -94,7 +89,7 @@ def filter_not_t(func):
     :return: transformation
     """
     return Transformation('filter_not({0})'.format(name(func)),
-                          partial(six.moves.filterfalse, func),
+                          partial(filterfalse, func),
                           {ExecutionStrategies.PARALLEL})
 
 
@@ -445,7 +440,7 @@ def group_by_key_impl(sequence):
             result.get(element[0]).append(element[1])
         else:
             result[element[0]] = [element[1]]
-    return six.viewitems(result)
+    return result.items()
 
 
 def group_by_key_t():
@@ -473,7 +468,7 @@ def reduce_by_key_impl(func, sequence):
             result[key] = func(result[key], value)
         else:
             result[key] = value
-    return six.viewitems(result)
+    return result.items()
 
 
 def reduce_by_key_t(func):
@@ -488,17 +483,6 @@ def reduce_by_key_t(func):
         None
     )
 
-def _accumulate(sequence, func):
-    """
-    Python2 accumulate implementation taken from
-    https://docs.python.org/3/library/itertools.html#itertools.accumulate
-    """
-    iterator = iter(sequence)
-    total = next(iterator)
-    yield total
-    for element in iterator:
-        total = func(total, element)
-        yield total
 
 def accumulate_impl(func, sequence):
     # pylint: disable=no-name-in-module
@@ -507,11 +491,8 @@ def accumulate_impl(func, sequence):
     :param sequence: sequence to accumulate
     :param func: accumulate function
     """
-    if six.PY3:
-        from itertools import accumulate
-        return accumulate(sequence, func)
-    else:
-        return _accumulate(sequence, func)
+    from itertools import accumulate
+    return accumulate(sequence, func)
 
 def accumulate_t(func):
     """
@@ -532,7 +513,7 @@ def count_by_key_impl(sequence):
     counter = collections.Counter()
     for key, _ in sequence:
         counter[key] += 1
-    return six.viewitems(counter)
+    return counter.items()
 
 
 def count_by_key_t():
@@ -556,7 +537,7 @@ def count_by_value_impl(sequence):
     counter = collections.Counter()
     for e in sequence:
         counter[e] += 1
-    return six.viewitems(counter)
+    return counter.items()
 
 
 def count_by_value_t():
@@ -584,7 +565,7 @@ def group_by_impl(func, sequence):
             result.get(func(element)).append(element)
         else:
             result[func(element)] = [element]
-    return six.viewitems(result)
+    return result.items()
 
 
 def group_by_t(func):
@@ -705,7 +686,7 @@ def inner_join_impl(other, sequence):
     for k in keys:
         if k in seq_kv and k in other_kv:
             result[k] = (seq_kv[k], other_kv[k])
-    return six.viewitems(result)
+    return result.items()
 
 
 def join_impl(other, join_type, sequence):
@@ -734,7 +715,7 @@ def join_impl(other, join_type, sequence):
     result = {}
     for k in keys:
         result[k] = (seq_kv.get(k), other_kv.get(k))
-    return six.viewitems(result)
+    return result.items()
 
 
 def join_t(other, join_type):

@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division
-
 import collections
 import math
 from functools import reduce
@@ -7,13 +5,9 @@ from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
 
 import dill as serializer
-import six
 
 
-if six.PY2:
-    PROTOCOL = 2
-else:
-    PROTOCOL = serializer.HIGHEST_PROTOCOL
+PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
 
 
@@ -42,8 +36,7 @@ def is_primitive(val):
     :return: True if value is a primitive, else False
     """
     return isinstance(val,
-                      (str, bool, float, complex, bytes, six.text_type)
-                      + six.string_types + six.integer_types)
+                      (str, bool, float, complex, bytes, int))
 
 
 def is_namedtuple(val):
@@ -91,7 +84,7 @@ def is_iterable(val):
     """
     if isinstance(val, list):
         return False
-    return isinstance(val, collections.Iterable)
+    return isinstance(val, collections.abc.Iterable)
 
 
 def is_tabulatable(val):
@@ -125,7 +118,7 @@ def unpack(packed):
     """
     func, args = serializer.loads(packed)
     result = func(*args)
-    if isinstance(result, collections.Iterable):
+    if isinstance(result, collections.abc.Iterable):
         return list(result)
     return None
 
