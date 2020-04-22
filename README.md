@@ -1,9 +1,8 @@
 # PyFunctional
-[![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
-[![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
+![Build Status](https://github.com/EntilZha/PyFunctional/workflows/Python%20package/badge.svg)
+[![Code Coverage](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
 [![PyPI version](https://badge.fury.io/py/PyFunctional.svg)](https://badge.fury.io/py/PyFunctional)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/PyFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Features
 `PyFunctional` makes creating data pipelines easy by using chained functional operators. Here are a
@@ -440,7 +439,6 @@ file closing.
 ## Road Map Idea
 * SQL based query planner and interpreter
 * `_` lambda operator
-* Prepare for `1.0` next release
 
 ## Contributing and Bug Fixes
 Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
@@ -448,35 +446,33 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
-To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass
-when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
+To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass.
 In order to be merged, all pull requests must:
 
 * Pass all the unit tests
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
-* Achieve 100% test coverage on [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
+* Not significantly reduce covrage without a good reason [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
 * Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-`PyFunctional` supports and is tested against Python 2.7, 3.5, 3.6, and PyPy
+* `PyFunctional` 1.4 and above supports and is tested against Python 3.6, Python 3.7, and PyPy3
+* `PyFunctional` 1.4 and above does not support python 2.7
+* `PyFunctional` 1.4 and above works in Python 3.5, but is not tested against it
+* `PyFunctional` 1.4 and above partially works in 3.8, parallel processing currently has issues, but other feature work fine
+* `PyFunctional` 1.3 and below supports and was tested against Python 2.7, Python 3.5, Python 3.6, PyPy2, and PyPy3
+
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
 
 ## About me
 To learn more about me (the author) visit my webpage at
-[pedrorodriguez.io](http://pedrorodriguez.io).
+[pedro.ai](https://www.pedro.ai).
 
-I am a PhD student in Computer Science at the University of Colorado at Boulder. My research
-interests include large-scale machine learning, distributed computing, and adjacent fields. I
-completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
-research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and worked as a data scientist at Oracle Data Cloud this past summer.
-
-I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
+I created `PyFunctional` while using Python extensivel, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
 Scala is not an option or PySpark is overkill.
@@ -489,3 +485,4 @@ These people have generously contributed their time to improving `PyFunctional`
 * [lucidfrontier45](https://github.com/lucidfrontier45)
 * [Digenis](https://github.com/Digenis)
 * [ChuyuHsu](https://github.com/ChuyuHsu)
+* [jsemric](https://github.com/jsemric)
