@@ -6,6 +6,7 @@ class ExecutionStrategies(object):
     """
     Enum like object listing the types of execution strategies.
     """
+
     PRE_COMPUTE = 0
     PARALLEL = 1
 
@@ -14,6 +15,7 @@ class ExecutionEngine(object):
     """
     Class to perform serial execution of a Sequence evaluation.
     """
+
     def evaluate(self, sequence, transformations):
         """
         Execute the sequence of transformations in serial
@@ -36,6 +38,7 @@ class ParallelExecutionEngine(ExecutionEngine):
     """
     Class to perform parallel execution of a Sequence evaluation.
     """
+
     def __init__(self, processes=None, partition_size=None):
         """
         Set the number of processes for parallel execution.
@@ -54,7 +57,8 @@ class ParallelExecutionEngine(ExecutionEngine):
         """
         result = sequence
         parallel = partial(
-            parallelize, processes=self.processes, partition_size=self.partition_size)
+            parallelize, processes=self.processes, partition_size=self.partition_size
+        )
         staged = []
         for transform in transformations:
             strategies = transform.execution_strategies or {}

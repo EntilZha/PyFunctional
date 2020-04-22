@@ -8,15 +8,18 @@ from functional.pipeline import Sequence, is_iterable, _wrap, extend
 from functional.transformations import name
 from functional import seq, pseq
 
-Data = namedtuple('Data', 'x y')
+Data = namedtuple("Data", "x y")
+
 
 def pandas_is_installed():
     try:
         global pandas
         import pandas
+
         return True
     except ImportError:
         return False
+
 
 class TestPipeline(unittest.TestCase):
     def setUp(self):
@@ -350,7 +353,7 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(l.aggregate(f), 10)
         self.assertEqual(l.aggregate(0, f), 10)
         self.assertEqual(l.aggregate(0, f, lambda x: 2 * x), 20)
-        l = self.seq(['a', 'b', 'c'])
+        l = self.seq(["a", "b", "c"])
         self.assertEqual(l.aggregate(f), "abc")
         self.assertEqual(l.aggregate("", f), "abc")
         self.assertEqual(l.aggregate("", f, lambda x: x.upper()), "ABC")
@@ -367,24 +370,24 @@ class TestPipeline(unittest.TestCase):
         l = self.seq([1, 2, 3, 4])
         self.assertEqual(l.fold_left(0, f), 10)
         self.assertEqual(l.fold_left(-10, f), 0)
-        l = self.seq(['a', 'b', 'c'])
+        l = self.seq(["a", "b", "c"])
         self.assertEqual(l.fold_left("", f), "abc")
         self.assertEqual(l.fold_left("z", f), "zabc")
         f = lambda x, y: x + [y]
-        self.assertEqual(l.fold_left([], f), ['a', 'b', 'c'])
-        self.assertEqual(l.fold_left(['start'], f), ['start', 'a', 'b', 'c'])
+        self.assertEqual(l.fold_left([], f), ["a", "b", "c"])
+        self.assertEqual(l.fold_left(["start"], f), ["start", "a", "b", "c"])
 
     def test_fold_right(self):
         f = lambda next_element, current: current + next_element
         l = self.seq([1, 2, 3, 4])
         self.assertEqual(l.fold_right(0, f), 10)
         self.assertEqual(l.fold_right(-10, f), 0)
-        l = self.seq(['a', 'b', 'c'])
+        l = self.seq(["a", "b", "c"])
         self.assertEqual(l.fold_right("", f), "cba")
         self.assertEqual(l.fold_right("z", f), "zcba")
         f = lambda next_element, current: current + [next_element]
-        self.assertEqual(l.fold_right([], f), ['c', 'b', 'a'])
-        self.assertEqual(l.fold_right(['start'], f), ['start', 'c', 'b', 'a'])
+        self.assertEqual(l.fold_right([], f), ["c", "b", "a"])
+        self.assertEqual(l.fold_right(["start"], f), ["start", "c", "b", "a"])
 
     def test_sorted(self):
         s = self.seq([1, 3, 2, 5, 4])
@@ -393,9 +396,9 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(r)
 
     def test_order_by(self):
-        s = self.seq([(2, 'a'), (1, 'b'), (4, 'c'), (3, 'd')])
+        s = self.seq([(2, "a"), (1, "b"), (4, "c"), (3, "d")])
         r = s.order_by(lambda x: x[0])
-        self.assertIteratorEqual([(1, 'b'), (2, 'a'), (3, 'd'), (4, 'c')], r)
+        self.assertIteratorEqual([(1, "b"), (2, "a"), (3, "d"), (4, "c")], r)
         self.assert_type(r)
 
     def test_reverse(self):
@@ -454,47 +457,47 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_inner_join(self):
-        l0 = [('a', 1), ('b', 2), ('c', 3)]
-        l1 = [('a', 2), ('c', 4), ('d', 5)]
+        l0 = [("a", 1), ("b", 2), ("c", 3)]
+        l1 = [("a", 2), ("c", 4), ("d", 5)]
         result0 = self.seq(l0).inner_join(l1)
-        result1 = self.seq(l0).join(l1, 'inner')
-        e = [('a', (1, 2)), ('c', (3, 4))]
+        result1 = self.seq(l0).join(l1, "inner")
+        e = [("a", (1, 2)), ("c", (3, 4))]
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(e))
         self.assertDictEqual(dict(result1), dict(e))
 
         result0 = self.seq(l0).inner_join(self.seq(l1))
-        result1 = self.seq(l0).join(self.seq(l1), 'inner')
+        result1 = self.seq(l0).join(self.seq(l1), "inner")
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(e))
         self.assertDictEqual(dict(result1), dict(e))
 
     def test_left_join(self):
-        left = [('a', 1), ('b', 2)]
-        right = [('a', 2), ('c', 3)]
+        left = [("a", 1), ("b", 2)]
+        right = [("a", 2), ("c", 3)]
         result0 = self.seq(left).left_join(right)
-        result1 = self.seq(left).join(right, 'left')
-        expect = [('a', (1, 2)), ('b', (2, None))]
+        result1 = self.seq(left).join(right, "left")
+        expect = [("a", (1, 2)), ("b", (2, None))]
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(expect))
         self.assertDictEqual(dict(result1), dict(expect))
 
         result0 = self.seq(left).left_join(self.seq(right))
-        result1 = self.seq(left).join(self.seq(right), 'left')
+        result1 = self.seq(left).join(self.seq(right), "left")
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(expect))
         self.assertDictEqual(dict(result1), dict(expect))
 
     def test_right_join(self):
-        left = [('a', 1), ('b', 2)]
-        right = [('a', 2), ('c', 3)]
+        left = [("a", 1), ("b", 2)]
+        right = [("a", 2), ("c", 3)]
         result0 = self.seq(left).right_join(right)
-        result1 = self.seq(left).join(right, 'right')
-        expect = [('a', (1, 2)), ('c', (None, 3))]
+        result1 = self.seq(left).join(right, "right")
+        expect = [("a", (1, 2)), ("c", (None, 3))]
 
         self.assert_type(result0)
         self.assert_type(result1)
@@ -502,18 +505,18 @@ class TestPipeline(unittest.TestCase):
         self.assertDictEqual(dict(result1), dict(expect))
 
         result0 = self.seq(left).right_join(self.seq(right))
-        result1 = self.seq(left).join(self.seq(right), 'right')
+        result1 = self.seq(left).join(self.seq(right), "right")
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(expect))
         self.assertDictEqual(dict(result1), dict(expect))
 
     def test_outer_join(self):
-        left = [('a', 1), ('b', 2)]
-        right = [('a', 2), ('c', 3)]
+        left = [("a", 1), ("b", 2)]
+        right = [("a", 2), ("c", 3)]
         result0 = self.seq(left).outer_join(right)
-        result1 = self.seq(left).join(right, 'outer')
-        expect = [('a', (1, 2)), ('b', (2, None)), ('c', (None, 3))]
+        result1 = self.seq(left).join(right, "outer")
+        expect = [("a", (1, 2)), ("b", (2, None)), ("c", (None, 3))]
 
         self.assert_type(result0)
         self.assert_type(result1)
@@ -521,7 +524,7 @@ class TestPipeline(unittest.TestCase):
         self.assertDictEqual(dict(result1), dict(expect))
 
         result0 = self.seq(left).outer_join(self.seq(right))
-        result1 = self.seq(left).join(self.seq(right), 'outer')
+        result1 = self.seq(left).join(self.seq(right), "outer")
         self.assert_type(result0)
         self.assert_type(result1)
         self.assertDictEqual(dict(result0), dict(expect))
@@ -529,7 +532,7 @@ class TestPipeline(unittest.TestCase):
 
     def test_join(self):
         with self.assertRaises(TypeError):
-            self.seq([(1, 2)]).join([(2, 3)], '').to_list()
+            self.seq([(1, 2)]).join([(2, 3)], "").to_list()
 
     def test_max(self):
         l = [1, 2, 3]
@@ -581,7 +584,7 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_group_by_key(self):
-        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
+        l = [("a", 1), ("a", 2), ("a", 3), ("b", -1), ("b", 1), ("c", 10), ("c", 5)]
         e = {"a": [1, 2, 3], "b": [-1, 1], "c": [10, 5]}.items()
         result = self.seq(l).group_by_key()
         self.assertEqual(result.len(), len(e))
@@ -657,7 +660,9 @@ class TestPipeline(unittest.TestCase):
         self.assertListEqual(result, list(product(range(3), range(3), range(2))))
 
         result = seq.range(3).cartesian(range(3), range(2), repeat=2).list()
-        self.assertListEqual(result, list(product(range(3), range(3), range(2), repeat=2)))
+        self.assertListEqual(
+            result, list(product(range(3), range(3), range(2), repeat=2))
+        )
 
     def test_product(self):
         l = [2, 2, 3]
@@ -727,8 +732,10 @@ class TestPipeline(unittest.TestCase):
     def test_for_each(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = []
+
         def f(e):
             result.append(e)
+
         self.seq(l).for_each(f)
         self.assertEqual(result, l)
 
@@ -774,7 +781,7 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(result[4], 100)
 
     def test_reduce_by_key(self):
-        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5)]
+        l = [("a", 1), ("a", 2), ("a", 3), ("b", -1), ("b", 1), ("c", 10), ("c", 5)]
         e = {"a": 6, "b": 0, "c": 15}.items()
         result = self.seq(l).reduce_by_key(lambda x, y: x + y)
         self.assertEqual(result.len(), len(e))
@@ -783,7 +790,16 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_count_by_key(self):
-        l = [('a', 1), ('a', 2), ('a', 3), ('b', -1), ('b', 1), ('c', 10), ('c', 5), ('d', 1)]
+        l = [
+            ("a", 1),
+            ("a", 2),
+            ("a", 3),
+            ("b", -1),
+            ("b", 1),
+            ("c", 10),
+            ("c", 5),
+            ("d", 1),
+        ]
         e = {"a": 3, "b": 2, "c": 2, "d": 1}.items()
         result = self.seq(l).count_by_key()
         self.assertEqual(result.len(), len(e))
@@ -792,8 +808,8 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_count_by_value(self):
-        l = ['a', 'a', 'a', 'b', 'b', 'c', 'd']
-        e = {'a': 3, 'b': 2, 'c': 1, 'd': 1}.items()
+        l = ["a", "a", "a", "b", "b", "c", "d"]
+        e = {"a": 3, "b": 2, "c": 1, "d": 1}.items()
         result = self.seq(l).count_by_value()
         self.assertEqual(result.len(), len(e))
         for e0, e1 in zip(result, e):
@@ -812,20 +828,23 @@ class TestPipeline(unittest.TestCase):
     def test_wrap_objects(self):
         class A(object):
             a = 1
+
         l = [A(), A(), A()]
         self.assertIsInstance(_wrap(A()), A)
         self.assert_type(self.seq(l))
 
-    @unittest.skipUnless(pandas_is_installed(), 'Skip pandas tests if pandas is not installed')
+    @unittest.skipUnless(
+        pandas_is_installed(), "Skip pandas tests if pandas is not installed"
+    )
     def test_wrap_pandas(self):
-        df1 = pandas.DataFrame({'name': ['name1', 'name2'], 'value': [1, 2]})
-        df2 = pandas.DataFrame({'name': ['name1', 'name2'], 'value': [3, 4]})
+        df1 = pandas.DataFrame({"name": ["name1", "name2"], "value": [1, 2]})
+        df2 = pandas.DataFrame({"name": ["name1", "name2"], "value": [3, 4]})
         result = seq([df1, df2]).reduce(lambda x, y: x.append(y))
         self.assertEqual(result.len(), 4)
-        self.assertEqual(result[0].to_list(), ['name1', 1])
-        self.assertEqual(result[1].to_list(), ['name2', 2])
-        self.assertEqual(result[2].to_list(), ['name1', 3])
-        self.assertEqual(result[3].to_list(), ['name2', 4])
+        self.assertEqual(result[0].to_list(), ["name1", 1])
+        self.assertEqual(result[1].to_list(), ["name2", 2])
+        self.assertEqual(result[2].to_list(), ["name1", 3])
+        self.assertEqual(result[3].to_list(), ["name2", 4])
 
     def test_iterator_consumption(self):
         sequence = self.seq([1, 2, 3])
@@ -859,7 +878,9 @@ class TestPipeline(unittest.TestCase):
 
     def test_lineage_repr(self):
         s = self.seq(1).map(lambda x: x).filter(lambda x: True)
-        self.assertEqual(repr(s._lineage), 'Lineage: sequence -> map(<lambda>) -> filter(<lambda>)')
+        self.assertEqual(
+            repr(s._lineage), "Lineage: sequence -> map(<lambda>) -> filter(<lambda>)"
+        )
 
     def test_cache(self):
         if self.seq is pseq:
@@ -870,16 +891,18 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(len(calls), 3)
         self.assertEqual(result, [None, None, None])
         result = self.seq(1, 2, 3).map(lambda x: x).cache()
-        self.assertEqual(repr(result._lineage), 'Lineage: sequence -> map(<lambda>) -> cache')
+        self.assertEqual(
+            repr(result._lineage), "Lineage: sequence -> map(<lambda>) -> cache"
+        )
         result = self.seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
-        self.assertEqual(repr(result._lineage), 'Lineage: sequence')
+        self.assertEqual(repr(result._lineage), "Lineage: sequence")
 
     def test_tabulate(self):
         sequence = seq([[1, 2, 3], [4, 5, 6]])
         self.assertEqual(sequence.show(), None)
         self.assertNotEqual(sequence._repr_html_(), None)
         result = sequence.tabulate()
-        self.assertEqual(result, '-  -  -\n1  2  3\n4  5  6\n-  -  -')
+        self.assertEqual(result, "-  -  -\n1  2  3\n4  5  6\n-  -  -")
 
         sequence = seq(1, 2, 3)
         self.assertEqual(sequence.tabulate(), None)
@@ -891,13 +914,15 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(sequence.tabulate(), None)
 
         long_data = seq([(i, i + 1) for i in range(30)])
-        self.assertTrue('Showing 10 of 30 rows' in long_data.tabulate(n=10))
-        self.assertTrue('Showing 10 of 30 rows' in long_data._repr_html_())
-        self.assertTrue('Showing 10 of 30 rows' not in long_data.tabulate(n=10, tablefmt='plain'))
+        self.assertTrue("Showing 10 of 30 rows" in long_data.tabulate(n=10))
+        self.assertTrue("Showing 10 of 30 rows" in long_data._repr_html_())
+        self.assertTrue(
+            "Showing 10 of 30 rows" not in long_data.tabulate(n=10, tablefmt="plain")
+        )
 
     def test_tabulate_namedtuple(self):
         sequence_tabulated = seq([Data(1, 2), Data(6, 7)]).tabulate()
-        self.assertEqual(sequence_tabulated, '  x    y\n---  ---\n  1    2\n  6    7')
+        self.assertEqual(sequence_tabulated, "  x    y\n---  ---\n  1    2\n  6    7")
 
     def test_repr_max_lines(self):
         sequence = seq.range(200)
@@ -905,15 +930,15 @@ class TestPipeline(unittest.TestCase):
         sequence._max_repr_items = None
         self.assertEqual(len(repr(sequence)), 890)
 
+
 class TestExtend(unittest.TestCase):
     def test_custom_functions(self):
-
         @extend(aslist=True)
         def my_zip(it):
-            return zip(it,it)
+            return zip(it, it)
 
         result = seq.range(3).my_zip().list()
-        expected = list(zip(range(3),range(3)))
+        expected = list(zip(range(3), range(3)))
         self.assertEqual(result, expected)
 
         result = seq.range(3).my_zip().my_zip().list()
@@ -922,20 +947,23 @@ class TestExtend(unittest.TestCase):
 
         @extend
         def square(it):
-            return [i**2 for i in it]
+            return [i ** 2 for i in it]
 
         result = seq.range(100).square().list()
-        expected = [i**2 for i in range(100)]
+        expected = [i ** 2 for i in range(100)]
         self.assertEqual(result, expected)
 
-        name = 'PARALLEL_SQUARE'
+        name = "PARALLEL_SQUARE"
+
         @extend(parallel=True, name=name)
         def square_parallel(it):
-            return [i**2 for i in it]
+            return [i ** 2 for i in it]
 
         result = seq.range(100).square_parallel()
         self.assertEqual(result.sum(), sum(expected))
-        self.assertEqual(repr(result._lineage), 'Lineage: sequence -> extended[%s]' % name)
+        self.assertEqual(
+            repr(result._lineage), "Lineage: sequence -> extended[%s]" % name
+        )
 
         @extend
         def my_filter(it, n=10):
@@ -953,14 +981,14 @@ class TestExtend(unittest.TestCase):
         # test final
         @extend(final=True)
         def toarray(it):
-            return array.array('f', it)
+            return array.array("f", it)
 
         result = seq.range(10).toarray()
-        expected = array.array('f', range(10))
+        expected = array.array("f", range(10))
         self.assertEqual(result, expected)
 
-        result = seq.range(10).map(lambda x: x**2).toarray()
-        expected = array.array('f', [i ** 2 for i in range(10)])
+        result = seq.range(10).map(lambda x: x ** 2).toarray()
+        expected = array.array("f", [i ** 2 for i in range(10)])
         self.assertEqual(result, expected)
 
         # a more complex example combining all above
@@ -968,13 +996,21 @@ class TestExtend(unittest.TestCase):
         def sum_pair(it):
             return (i[0] + i[1] for i in it)
 
-        result = seq.range(100).my_filter(85).my_zip().sum_pair().square_parallel().toarray()
+        result = (
+            seq.range(100).my_filter(85).my_zip().sum_pair().square_parallel().toarray()
+        )
 
-        expected = array.array('f', list(
-            map(lambda x: (x[0] + x[1])**2,
-                map(lambda x: (x,x), filter(lambda x: x > 85, range(100))))
-        ))
+        expected = array.array(
+            "f",
+            list(
+                map(
+                    lambda x: (x[0] + x[1]) ** 2,
+                    map(lambda x: (x, x), filter(lambda x: x > 85, range(100))),
+                )
+            ),
+        )
         self.assertEqual(result, expected)
+
 
 class TestParallelPipeline(TestPipeline):
     def setUp(self):

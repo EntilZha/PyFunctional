@@ -17,6 +17,7 @@ class Stream(object):
 
     An instance of Stream is normally accessed as `seq`
     """
+
     def __init__(self, disable_compression=False, max_repr_items=100):
         """
         Default stream constructor.
@@ -40,30 +41,48 @@ class Stream(object):
         """
         # pylint: disable=no-self-use
         engine = ExecutionEngine()
-        return self._parse_args(args, engine, "seq() takes at least 1 argument ({0} given)")
+        return self._parse_args(
+            args, engine, "seq() takes at least 1 argument ({0} given)"
+        )
 
     def _parse_args(self, args, engine, error_message):
         if len(args) == 0:
             raise TypeError(error_message.format(len(args)))
         if len(args) == 1:
             try:
-                if type(args[0]).__name__ == 'DataFrame':
+                if type(args[0]).__name__ == "DataFrame":
                     import pandas
+
                     if isinstance(args[0], pandas.DataFrame):
                         return Sequence(
-                            args[0].values, engine=engine, max_repr_items=self.max_repr_items)
-            except ImportError: # pragma: no cover
+                            args[0].values,
+                            engine=engine,
+                            max_repr_items=self.max_repr_items,
+                        )
+            except ImportError:  # pragma: no cover
                 pass
 
         if len(args) > 1:
-            return Sequence(list(args), engine=engine, max_repr_items=self.max_repr_items)
+            return Sequence(
+                list(args), engine=engine, max_repr_items=self.max_repr_items
+            )
         elif is_primitive(args[0]):
-            return Sequence([args[0]], engine=engine, max_repr_items=self.max_repr_items)
+            return Sequence(
+                [args[0]], engine=engine, max_repr_items=self.max_repr_items
+            )
         else:
             return Sequence(args[0], engine=engine, max_repr_items=self.max_repr_items)
 
-    def open(self, path, delimiter=None, mode='r', buffering=-1, encoding=None, errors=None,
-             newline=None):
+    def open(
+        self,
+        path,
+        delimiter=None,
+        mode="r",
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+    ):
         """
         Reads and parses input files as defined.
 
@@ -84,16 +103,22 @@ class Stream(object):
         :param newline: passed to builtins.open
         :return: output of file depending on options wrapped in a Sequence via seq
         """
-        if not re.match('^[rbt]{1,3}$', mode):
-            raise ValueError('mode argument must be only have r, b, and t')
+        if not re.match("^[rbt]{1,3}$", mode):
+            raise ValueError("mode argument must be only have r, b, and t")
 
         file_open = get_read_function(path, self.disable_compression)
-        file = file_open(path, mode=mode, buffering=buffering, encoding=encoding, errors=errors,
-                         newline=newline)
+        file = file_open(
+            path,
+            mode=mode,
+            buffering=buffering,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+        )
         if delimiter is None:
             return self(file)
         else:
-            return self(''.join(list(file)).split(delimiter))
+            return self("".join(list(file)).split(delimiter))
 
     def range(self, *args):
         """
@@ -105,9 +130,9 @@ class Stream(object):
         :param args: args to range function
         :return: range(args) wrapped by a sequence
         """
-        return self(builtins.range(*args)) # pylint: disable=no-member
+        return self(builtins.range(*args))  # pylint: disable=no-member
 
-    def csv(self, csv_file, dialect='excel', **fmt_params):
+    def csv(self, csv_file, dialect="excel", **fmt_params):
         """
         Reads and parses the input of a csv stream or file.
 
@@ -125,26 +150,43 @@ class Stream(object):
         if isinstance(csv_file, str):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
-        elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
+        elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
             input_file = csv_file
         else:
-            raise ValueError('csv_file must be a file path or implement the iterator interface')
+            raise ValueError(
+                "csv_file must be a file path or implement the iterator interface"
+            )
 
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
         return self(csv_input).cache(delete_lineage=True)
 
-    def csv_dict_reader(self, csv_file, fieldnames=None, restkey=None, restval=None,
-                        dialect='excel', **kwds):
+    def csv_dict_reader(
+        self,
+        csv_file,
+        fieldnames=None,
+        restkey=None,
+        restval=None,
+        dialect="excel",
+        **kwds
+    ):
         if isinstance(csv_file, str):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
-        elif hasattr(csv_file, 'next') or hasattr(csv_file, '__next__'):
+        elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
             input_file = csv_file
         else:
-            raise ValueError('csv_file must be a file path or implement the iterator interface')
+            raise ValueError(
+                "csv_file must be a file path or implement the iterator interface"
+            )
 
-        csv_input = csvapi.DictReader(input_file, fieldnames=fieldnames, restkey=restkey,
-                                      restval=restval, dialect=dialect, **kwds)
+        csv_input = csvapi.DictReader(
+            input_file,
+            fieldnames=fieldnames,
+            restkey=restkey,
+            restval=restval,
+            dialect=dialect,
+            **kwds
+        )
         return self(csv_input).cache(delete_lineage=True)
 
     def jsonl(self, jsonl_file):
@@ -189,10 +231,12 @@ class Stream(object):
             file_open = get_read_function(json_file, self.disable_compression)
             input_file = file_open(json_file)
             json_input = jsonapi.load(input_file)
-        elif hasattr(json_file, 'read'):
+        elif hasattr(json_file, "read"):
             json_input = jsonapi.load(json_file)
         else:
-            raise ValueError('json_file must be a file path or implement the iterator interface')
+            raise ValueError(
+                "json_file must be a file path or implement the iterator interface"
+            )
 
         if isinstance(json_input, list):
             return self(json_input)
@@ -222,21 +266,23 @@ class Stream(object):
             with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
                 return self(input_conn.execute(sql, parameters))
         else:
-            raise ValueError('conn must be a must be a file path or sqlite3 Connection/Cursor')
+            raise ValueError(
+                "conn must be a must be a file path or sqlite3 Connection/Cursor"
+            )
 
 
 class ParallelStream(Stream):
     """
     Parallelized version of functional.streams.Stream normally accessible as `pseq`
     """
+
     def __init__(self, processes=None, partition_size=None, disable_compression=False):
         """
         Configure Stream for parallel processing and file compression detection
         :param processes: Number of parallel processes
         :param disable_compression: Disable file compression detection
         """
-        super(ParallelStream, self).__init__(
-            disable_compression=disable_compression)
+        super(ParallelStream, self).__init__(disable_compression=disable_compression)
         self.processes = processes
         self.partition_size = partition_size
 
@@ -253,10 +299,15 @@ class ParallelStream(Stream):
         :param args: Sequence to wrap
         :return: Wrapped sequence
         """
-        processes = kwargs.get('processes') or self.processes
-        partition_size = kwargs.get('partition_size') or self.partition_size
-        engine = ParallelExecutionEngine(processes=processes, partition_size=partition_size)
-        return self._parse_args(args, engine, 'pseq() takes at least 1 argument ({0} given)')
+        processes = kwargs.get("processes") or self.processes
+        partition_size = kwargs.get("partition_size") or self.partition_size
+        engine = ParallelExecutionEngine(
+            processes=processes, partition_size=partition_size
+        )
+        return self._parse_args(
+            args, engine, "pseq() takes at least 1 argument ({0} given)"
+        )
+
 
 # pylint: disable=invalid-name
 seq = Stream()
