@@ -34,8 +34,11 @@ jobs:
         apt install pandoc
     - name: Pylint
       run: poetry run pylint functional
+      if: always()
     - name: black
       run: poetry run black --check functional
+      if: always()
     - name: Test with pytest
       run: |
         poetry run pytest --cov=functional
+      if: always()
