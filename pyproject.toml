@@ -1,13 +1,16 @@
 [tool.poetry]
-name = "functional"
+name = "PyFunctional"
 version = "1.4.0"
 description = "Package for creating data pipelines with chain functional programming"
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
 license = "MIT"
+packages = [
+    { include = "functional" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.6,>=3.6.1"
-dill = "^0.2.5"
+dill = "^0.3.2"
 tabulate = "<=1.0.0"
 pandas = {version = "^1.0.3", extras = ["all"]}
 
