@@ -1,9 +1,28 @@
 [tool.poetry]
 name = "PyFunctional"
-version = "1.4.0"
+version = "1.4.1"
 description = "Package for creating data pipelines with chain functional programming"
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
+maintainers = ["Pedro Rodriguez <me@pedro.ai>"]
+readme = "README.md"
+homepage = "https://github.com/EntilZha/PyFunctional"
+repository = "https://github.com/EntilZha/PyFunctional"
+documentation = "https://docs.pyfunctional.org/en/master/"
+keywords = ["functional", "pipeline", "chain"]
 license = "MIT"
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    'Topic :: Software Development :: Libraries :: Python Modules'
+]
 packages = [
     { include = "functional" }
 ]
