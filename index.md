@@ -1,18 +1,15 @@
 ---
 layout: index
 ---
-
-
 # PyFunctional
-[![TravisCI](https://travis-ci.org/EntilZha/PyFunctional.svg?branch=master)](https://travis-ci.org/EntilZha/PyFunctional)
-[![Coverage by codecov.io](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
+![Build Status](https://github.com/EntilZha/PyFunctional/workflows/Python%20package/badge.svg)
+[![Code Coverage](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
-[![Latest Version](https://badge.fury.io/py/pyfunctional.svg)](https://pypi.python.org/pypi/pyfunctional/)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntilZha/ScalaFunctional?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![PyPI version](https://badge.fury.io/py/PyFunctional.svg)](https://badge.fury.io/py/PyFunctional)
 
 ## Features
 `PyFunctional` makes creating data pipelines easy by using chained functional operators. Here are a
-few examples of what `PyFunctional` and its builtin tools can do:
+few examples of what it can do:
 
 * Chained operators: `seq(1, 2, 3).map(lambda x: x * 2).reduce(lambda x, y: x + y)`
 * Expressive and feature complete API
@@ -23,6 +20,24 @@ robustness
 
 `PyFunctional`'s API takes inspiration from Scala collections, Apache Spark RDDs, and Microsoft
 LINQ.
+
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Examples](#examples)
+    1. [Simple Example](#simple-example)
+    2. [Aggregates and Joins](#aggregates-and-joins)
+    3. [Reading and Writing SQLite3](#readingwriting-sqlite3)
+    4. [Data Interchange with Pandas](https://github.com/EntilZha/PyFunctional/blob/master/examples/PyFunctional-pandas-tutorial.ipynb)
+3. [Writing to Files](#writing-to-files)
+4. [Parallel Execution](#parallel-execution)
+5. [Github Shortform Documentation](#documentation)
+    1. [Streams, Transformations, and Actions](#streams-transformations-and-actions)
+    2. [Streams API](#streams-api)
+    3. [Transformations and Actions APIs](#transformations-and-actions-apis)
+    4. [Lazy Execution](#lazy-execution)
+6. [Contributing and Bug Fixes](#contributing-and-bug-fixes)
+7. [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
 
 ## Installation
 `PyFunctional` is available on [pypi](https://pypi.python.org/pypi/PyFunctional) and can be
@@ -98,12 +113,12 @@ food_cost = seq(transactions)\
     .where(lambda x: x.reason == 'food')\
     .select(lambda x: x.amount).sum()
 
-# Using ScalaFunctional with fn
+# Using PyFunctional with fn
 from fn import _
 food_cost = seq(transactions).filter(_.reason == 'food').map(_.amount).sum()
 ```
 
-### Word Count and Joins
+### Aggregates and Joins
 The account transactions example could be done easily in pure python using list comprehensions. To
 show some of the things `PyFunctional` excels at, take a look at a couple of word count examples.
 
@@ -126,7 +141,7 @@ Below are a few lines out of `examples/chat_logs.jsonl`.
 ```python
 from operator import add
 import re
-messages = seq.jsonl('examples/chat_lots.jsonl')
+messages = seq.jsonl('examples/chat_logs.jsonl')
 
 # Split words on space and normalize before doing word count
 def extract_words(message):
@@ -228,7 +243,7 @@ with sqlite3.connect(':memory:') as conn:
     # [(1, 'pedro'), (2, 'fritz'), (3, 'sam'), (4, 'stan'), (5, 'tom'), (6, 'keiga'), (7, 'david'), (8, 'jordan')]
 ```
 
-### Writing to files
+## Writing to files
 Just as `PyFunctional` can read from `csv`, `json`, `jsonl`, `sqlite3`, and text files, it can
 also write them. For complete API documentation see the collections API table or the official docs.
 
@@ -256,7 +271,7 @@ all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
 Shortform documentation is below and full documentation is at
-[docs.pyfunctional.org](docs.pyfunctional.org/en/latest/functional.html).
+[docs.pyfunctional.org](http://docs.pyfunctional.org/en/latest/functional.html).
 
 ### Streams API
 All of `PyFunctional` streams can be accessed through the `seq` object. The primary way to create
@@ -294,22 +309,24 @@ seq.jsonl('filepath')
 
 # csv file
 seq.csv('filepath')
+seq.csv_dict_reader('filepath')
 
 # sqlite3 db and sql query
 seq.sqlite3('filepath', 'select * from data')
 ```
 
 For more information on the parameters that these functions can take, reference the
-[streams documentation](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.streams)
+[streams documentation](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.streams)
 
 ### Transformations and Actions APIs
 Below is the complete list of functions which can be called on a stream object from `seq`. For
 complete documentation reference
-[transformation and actions API](http://scalafunctional.readthedocs.org/en/latest/functional.html#module-functional.pipeline).
+[transformation and actions API](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.pipeline).
 
 Function | Description | Type
  ------- | ----------- | ----
 `map(func)/select(func)` | Maps `func` onto elements of sequence | transformation
+`starmap(func)/smap(func)` | Apply `func` to sequence with `itertools.starmap` | transformation
 `filter(func)/where(func)` | Filters elements of sequence to only those where `func(element)` is `True` | transformation
 `filter_not(func)` | Filters elements of sequence to only those where `func(element)` is `False` | transformation
 `flatten()` | Flattens sequence of lists to a single sequence | transformation
@@ -317,10 +334,12 @@ Function | Description | Type
 `group_by(func)` | Groups sequence into `(key, value)` pairs where `key=func(element)` and `value` is from the original sequence | transformation
 `group_by_key()` | Groups sequence of `(key, value)` pairs by `key` | transformation
 `reduce_by_key(func)` | Reduces list of `(key, value)` pairs using `func` | transformation
+`count_by_key()` | Counts occurrences of each `key` in list of `(key, value)` pairs | transformation
+`count_by_value()` | Counts occurrence of each value in a list | transformation
 `union(other)` | Union of unique elements in sequence and `other` | transformation
 `intersection(other)` | Intersection of unique elements in sequence and `other` | transformation
 `difference(other)` | New sequence with unique elements present in sequence but not in `other` | transformation
-`symmetric_difference(other)` | New sequence with unique elements present in sequnce or `other`, but not both | transformation
+`symmetric_difference(other)` | New sequence with unique elements present in sequence or `other`, but not both | transformation
 `distinct()` | Returns distinct elements of sequence. Elements must be hashable | transformation
 `distinct_by(func)` | Returns distinct elements of sequence using `func` as a key | transformation
 `drop(n)` | Drop the first `n` elements of the sequence | transformation
@@ -423,7 +442,6 @@ file closing.
 ## Road Map Idea
 * SQL based query planner and interpreter
 * `_` lambda operator
-* Prepare for `1.0` next release
 
 ## Contributing and Bug Fixes
 Any contributions or bug reports are welcome. Thus far, there is a 100% acceptance rate for pull
@@ -431,35 +449,33 @@ requests and contributors have offered valuable feedback and critique on code. I
 from users of the package, especially what it is used for, what works well, and what could be
 improved.
 
-To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass
-when running on [TravisCI](travis-ci.org) (you may need to sign up for an account and link Github).
+To contribute, create a fork of `PyFunctional`, make your changes, then make sure that they pass.
 In order to be merged, all pull requests must:
 
 * Pass all the unit tests
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
-* Achieve 100% test coverage on [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
+* Not significantly reduce covrage without a good reason [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
 * Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-`PyFunctional` supports and is tested against Python 2.7, 3.3, 3.4.4, 3.5, and PyPy
+* `PyFunctional` 1.4 and above supports and is tested against Python 3.6, Python 3.7, and PyPy3
+* `PyFunctional` 1.4 and above does not support python 2.7
+* `PyFunctional` 1.4 and above works in Python 3.5, but is not tested against it
+* `PyFunctional` 1.4 and above partially works in 3.8, parallel processing currently has issues, but other feature work fine
+* `PyFunctional` 1.3 and below supports and was tested against Python 2.7, Python 3.5, Python 3.6, PyPy2, and PyPy3
+
 
 ## Changelog
 [Changelog](https://github.com/EntilZha/PyFunctional/blob/master/CHANGELOG.md)
 
 ## About me
 To learn more about me (the author) visit my webpage at
-[pedrorodriguez.io](http://pedrorodriguez.io).
+[pedro.ai](https://www.pedro.ai).
 
-I am a PhD student in Computer Science at the University of Colorado at Boulder. My research
-interests include large-scale machine learning, distributed computing, and adjacent fields. I
-completed my undergraduate degree in Computer Science at UC Berkeley in 2015. I have previously done
-research in the UC Berkeley AMPLab with Apache Spark, worked at Trulia as a data scientist,
-and will be working as a data scientist at Oracle Data Cloud this summer.
-
-I created `PyFunctional` while using Python extensively at Trulia, and finding that I missed the
+I created `PyFunctional` while using Python extensivel, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
 Scala is not an option or PySpark is overkill.
@@ -472,3 +488,4 @@ These people have generously contributed their time to improving `PyFunctional`
 * [lucidfrontier45](https://github.com/lucidfrontier45)
 * [Digenis](https://github.com/Digenis)
 * [ChuyuHsu](https://github.com/ChuyuHsu)
+* [jsemric](https://github.com/jsemric)

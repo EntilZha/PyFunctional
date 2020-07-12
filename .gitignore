@@ -7,3 +7,9 @@ dist/
 __pycache__/
 functional/test/data/tmp
 .coverage
+.idea
+.vscode
+.mypy_cache/
+.python-version
+_site/
+.jekyll-cache/
