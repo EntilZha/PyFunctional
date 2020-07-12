@@ -1,6 +1,6 @@
 # PyFunctional
 ![Build Status](https://github.com/EntilZha/PyFunctional/workflows/Python%20package/badge.svg)
-[![Code Coverage](https://codecov.io/github/EntilZha/PyFunctional/coverage.svg?branch=master)](https://codecov.io/github/EntilZha/PyFunctional?branch=master)
+[![Code Coverage](https://codecov.io/gh/EntilZha/PyFunctional/branch/master/graph/badge.svg)](https://codecov.io/gh/EntilZha/PyFunctional)
 [![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
 [![PyPI version](https://badge.fury.io/py/PyFunctional.svg)](https://badge.fury.io/py/PyFunctional)
 
