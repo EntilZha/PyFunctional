@@ -7,7 +7,7 @@ from functional.streams import seq, pseq
 __author__ = "Pedro Rodriguez"
 __copyright__ = "Copyright 2020, Pedro Rodriguez"
 __license__ = "MIT"
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 __maintainer__ = "Pedro Rodriguez"
 __email__ = "me@pedro.ai"
 __status__ = "Production"
