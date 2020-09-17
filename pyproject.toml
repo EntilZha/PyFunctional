@@ -31,7 +31,10 @@ packages = [
 python = "^3.6,>=3.6.1"
 dill = "^0.3.2"
 tabulate = "<=1.0.0"
-pandas = {version = "^1.0.3", extras = ["all"]}
+pandas = {version = "^1.0.3", optional = true}
+
+[tool.poetry.extras]
+all = ["pandas"]
 
 [tool.poetry.dev-dependencies]
 pypandoc = "^1.5"
