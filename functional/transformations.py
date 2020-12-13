@@ -143,7 +143,8 @@ def distinct_t():
     """
 
     def distinct(sequence):
-        return iter(set(sequence))
+        seen = set()
+        return iter([x for x in sequence if not (x in seen or seen.add(x))])
 
     return Transformation("distinct", distinct, None)
 
