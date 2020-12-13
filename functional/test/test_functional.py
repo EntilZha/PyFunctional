@@ -419,7 +419,9 @@ class TestPipeline(unittest.TestCase):
         result = s.distinct()
         self.assertEqual(result.size(), len(expect))
         for er in zip(expect, result):
-            self.assertEqual(er[0], er[1], "Order was not preserved after running distinct!")
+            self.assertEqual(
+                er[0], er[1], "Order was not preserved after running distinct!"
+            )
         for e in result:
             self.assertTrue(e in expect)
         self.assert_type(result)
