@@ -413,14 +413,17 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_distinct(self):
-        l = [1, 1, 2, 3, 2, 3]
-        expect = [1, 2, 3]
+        l = [1, 3, 1, 2, 2, 3]
+        expect = [1, 3, 2]
         s = self.seq(l)
         result = s.distinct()
+        self.assertEqual(result.size(), len(expect))
+        for er in zip(expect, result):
+            self.assertEqual(
+                er[0], er[1], "Order was not preserved after running distinct!"
+            )
         for e in result:
             self.assertTrue(e in expect)
-        result = s.distinct()
-        self.assertEqual(result.size(), len(expect))
         self.assert_type(result)
 
     def test_distinct_by(self):
