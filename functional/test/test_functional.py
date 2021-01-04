@@ -741,6 +741,8 @@ class TestPipeline(unittest.TestCase):
 
         self.seq(l).for_each(f)
         self.assertEqual(result, l)
+        result = self.seq(l).for_each(f).list()
+        self.assertEqual(result, l)
 
     def test_exists(self):
         l = ["aaa", "BBB", "ccc"]

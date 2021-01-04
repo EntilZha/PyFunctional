@@ -542,9 +542,11 @@ class Sequence(object):
         [1, 2, 3, 4]
 
         :param func: function to execute
+        :return: unmodified sequence
         """
         for e in self:
             func(e)
+        return self
 
     def filter(self, func):
         """
