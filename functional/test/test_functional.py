@@ -211,6 +211,18 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(s.drop_right(0), s)
         self.assertIteratorEqual(s.drop_right(-1), s)
 
+        s = seq(1, 2, 3, 4, 5).filter(lambda x: x < 4)
+        expect = [1, 2]
+        result = s.drop_right(1)
+        self.assert_type(result)
+        self.assertIteratorEqual(result, expect)
+
+        s = seq(5, 4, 3, 2, 1).sorted()
+        expect = [1, 2, 3]
+        result = s.drop_right(2)
+        self.assert_type(result)
+        self.assertIteratorEqual(result, expect)
+
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
         f = lambda x: x < 4
