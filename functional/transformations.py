@@ -207,7 +207,9 @@ def drop_right_t(n):
     else:
         end_index = -n
     return Transformation(
-        "drop_right({0})".format(n), lambda sequence: sequence[:end_index], None
+        "drop_right({0})".format(n),
+        lambda sequence: sequence[:end_index],
+        [ExecutionStrategies.PRE_COMPUTE],
     )
 
 
