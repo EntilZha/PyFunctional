@@ -619,6 +619,38 @@ class TestPipeline(unittest.TestCase):
         self.assertTrue(is_iterable(l.grouped(2)))
         self.assertTrue(is_iterable(l.grouped(3)))
 
+    def test_grouped_returns_list_of_lists(self):
+        test_inputs = [
+            [i for i in "abcdefghijklmnop"],
+            [None for i in range(10)],
+            [i for i in range(10)],
+            [[i] for i in range(10)],
+            [{i} for i in range(10)],
+            [{i, i + 1} for i in range(10)],
+            [[i, i + 1] for i in range(10)],
+        ]
+
+        def gen_test(collection, group_size):
+            expected_type = type(collection[0])
+
+            types_after_grouping = (
+                seq(collection)
+                .grouped(group_size)
+                .flatten()
+                .map(lambda item: type(item))
+            )
+
+            err_msg = f"Typing was not maintained after grouping. An input of {collection} yielded output types of {set(types_after_grouping)} and not {expected_type} as expected."
+
+            return types_after_grouping.for_all(lambda t: t == expected_type), err_msg
+
+        for test_input in test_inputs:
+            for group_size in [1, 2, 4, 7]:
+                all_sub_collections_are_lists, err_msg = gen_test(
+                    test_input, group_size
+                )
+                self.assertTrue(all_sub_collections_are_lists, msg=err_msg)
+
     def test_sliding(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7])
         expect = [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]]

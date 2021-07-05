@@ -1266,7 +1266,7 @@ class Sequence(object):
         :param size: size of the partitions
         :return: sequence partitioned into groups of length size
         """
-        return self._transform(transformations.grouped_t(_wrap, size))
+        return self._transform(transformations.grouped_t(size))
 
     def sliding(self, size, step=1):
         """
