@@ -1,5 +1,6 @@
 # Changelog
 ## Next Release
+* Allow empty sequence expressions `seq()`, `pseq()` (#159)
 
 ## Release 1.3.0
 * added precompute attribute to reverse transformation (#137)

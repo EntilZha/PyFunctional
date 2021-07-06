@@ -41,13 +41,11 @@ class Stream(object):
         """
         # pylint: disable=no-self-use
         engine = ExecutionEngine()
-        return self._parse_args(
-            args, engine, "seq() takes at least 1 argument ({0} given)"
-        )
+        return self._parse_args(args, engine)
 
-    def _parse_args(self, args, engine, error_message):
+    def _parse_args(self, args, engine):
         if len(args) == 0:
-            raise TypeError(error_message.format(len(args)))
+            return Sequence([], engine=engine, max_repr_items=self.max_repr_items)
         if len(args) == 1:
             try:
                 if type(args[0]).__name__ == "DataFrame":
@@ -304,9 +302,7 @@ class ParallelStream(Stream):
         engine = ParallelExecutionEngine(
             processes=processes, partition_size=partition_size
         )
-        return self._parse_args(
-            args, engine, "pseq() takes at least 1 argument ({0} given)"
-        )
+        return self._parse_args(args, engine)
 
 
 # pylint: disable=invalid-name

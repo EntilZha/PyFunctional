@@ -663,6 +663,7 @@ class TestPipeline(unittest.TestCase):
 
     def test_empty(self):
         self.assertTrue(self.seq([]).empty())
+        self.assertEqual(self.seq(), self.seq([]))
 
     def test_non_empty(self):
         self.assertTrue(self.seq([1]).non_empty())
@@ -920,8 +921,7 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(self.seq(1, 2, 3), [1, 2, 3])
         self.assertIteratorEqual(self.seq(1), [1])
         self.assertIteratorEqual(self.seq(iter([1, 2, 3])), [1, 2, 3])
-        with self.assertRaises(TypeError):
-            self.seq()
+        self.assertIteratorEqual(self.seq(), [])
 
     def test_lineage_repr(self):
         s = self.seq(1).map(lambda x: x).filter(lambda x: True)
