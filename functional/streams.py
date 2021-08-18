@@ -3,11 +3,16 @@ import csv as csvapi
 import json as jsonapi
 import sqlite3 as sqlite3api
 import builtins
+from typing import Any, Iterable, TypeVar, overload
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
-from functional.pipeline import Sequence
+from functional.pipeline import Sequence, _PT
 from functional.util import is_primitive
 from functional.io import get_read_function
+
+
+_T_co = TypeVar("_T_co", covariant=True)
+_T2_co = TypeVar("_T2_co", contravariant=True)
 
 
 class Stream(object):
@@ -25,6 +30,24 @@ class Stream(object):
         """
         self.disable_compression = disable_compression
         self.max_repr_items = max_repr_items
+
+    @overload
+    def __call__(self) -> Sequence[Any]:
+        ...
+
+    @overload
+    def __call__(self, __iter: Iterable[_T_co]) -> Sequence[_T_co]:
+        ...
+
+    @overload
+    def __call__(self, __pt: _PT) -> Sequence[_PT]:
+        ...
+
+    @overload
+    def __call__(
+        self, __item: _T2_co, __item2: _T2_co, *__args: Iterable[_T2_co]
+    ) -> Sequence[_T2_co]:
+        ...
 
     def __call__(self, *args, **kwargs):
         """
