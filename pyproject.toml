@@ -32,6 +32,7 @@ python = "^3.6,>=3.6.1"
 dill = ">=0.2.5"
 tabulate = "<=1.0.0"
 pandas = {version = "^1.0.3", optional = true}
+typing-extensions = "^3.7"
 
 [tool.poetry.extras]
 all = ["pandas"]

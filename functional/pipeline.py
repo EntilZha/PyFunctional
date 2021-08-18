@@ -187,7 +187,7 @@ class Sequence(Generic[_T_co]):
         self.cache()
         return _wrap(self.sequence[item])
 
-    def __reversed__(self: _T0) -> _T0:
+    def __reversed__(self) -> "Sequence[_T_co]":
         """
         Return reversed sequence using sequence's reverse function
 
@@ -204,7 +204,9 @@ class Sequence(Generic[_T_co]):
         """
         return self.sequence.__contains__(item)
 
-    def __add__(self, other: "Sequence[_T_co]") -> "Sequence[_T_co]":
+    def __add__(
+        self, other: Union[List[_T_co], "Sequence[_T_co]"]
+    ) -> "Sequence[_T_co]":
         """
         Concatenates sequence with other.
 
@@ -1002,7 +1004,7 @@ class Sequence(Generic[_T_co]):
         """
         return _wrap(min(self, key=func))
 
-    def find(self, func: Callable[[_T_co], bool]) -> _T_co:
+    def find(self, func: Callable[[_T_co], bool]) -> Optional[_T_co]:
         """
         Finds the first element of the sequence that satisfies func. If no such element exists,
         then return None.
@@ -1658,7 +1660,7 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.order_by_t(func))
 
-    def reverse(self) -> "Sequence[_T_co]":
+    def reverse(self):
         """
         Returns the reversed sequence.
 
