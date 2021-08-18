@@ -4,27 +4,6 @@ The pipeline module contains the transformations and actions API of PyFunctional
 from operator import mul, add
 import collections
 from functools import reduce, wraps, partial
-
-import json
-import csv
-import sqlite3
-import re
-from typing_extensions import Literal
-
-from tabulate import tabulate
-
-from functional.execution import ExecutionEngine
-from functional.lineage import Lineage
-from functional.util import (
-    is_iterable,
-    is_primitive,
-    is_namedtuple,
-    is_tabulatable,
-    identity,
-)
-from functional.io import WRITE_MODE, universal_write_open
-from functional import transformations
-from functional.execution import ExecutionStrategies
 from typing import (
     Any,
     Callable,
@@ -42,6 +21,28 @@ from typing import (
     Union,
     overload,
 )
+
+import json
+import csv
+import sqlite3
+import re
+
+from typing_extensions import Literal
+
+from tabulate import tabulate
+
+from functional.execution import ExecutionEngine
+from functional.lineage import Lineage
+from functional.util import (
+    is_iterable,
+    is_primitive,
+    is_namedtuple,
+    is_tabulatable,
+    identity,
+)
+from functional.io import WRITE_MODE, universal_write_open
+from functional import transformations
+from functional.execution import ExecutionStrategies
 
 
 _T_co = TypeVar("_T_co", covariant=True)
