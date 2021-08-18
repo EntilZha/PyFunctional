@@ -35,20 +35,17 @@ from typing import (
     Iterator,
     List,
     NamedTuple,
-    NoReturn,
     Optional,
     Set,
     Tuple,
     TypeVar,
     Union,
-    cast,
     overload,
 )
 
 
 _T_co = TypeVar("_T_co", covariant=True)
 _T1_co = TypeVar("_T1_co", covariant=True)
-_T0 = TypeVar("_T0", bound="Sequence")
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 _T3 = TypeVar("_T3")
@@ -218,7 +215,7 @@ class Sequence(Generic[_T_co]):
         else:
             return Sequence(self.sequence + other)
 
-    def _evaluate(self) -> Iterable[_T_co]:
+    def _evaluate(self) -> Iterator[_T_co]:
         """
         Creates and returns an iterator which applies all the transformations in the lineage
 
