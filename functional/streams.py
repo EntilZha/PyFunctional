@@ -11,8 +11,8 @@ from functional.util import is_primitive
 from functional.io import get_read_function
 
 
-_T_co = TypeVar("_T_co", covariant=True)
-_T2_co = TypeVar("_T2_co", contravariant=True)
+_T_co = TypeVar("_T_co", covariant=True)  # pylint: disable=invalid-name
+_T2_co = TypeVar("_T2_co", contravariant=True)  # pylint: disable=invalid-name
 
 
 class Stream(object):

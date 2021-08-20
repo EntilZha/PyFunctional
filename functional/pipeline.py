@@ -4,7 +4,7 @@ The pipeline module contains the transformations and actions API of PyFunctional
 from operator import mul, add
 import collections
 from functools import reduce, wraps, partial
-from typing import (
+from typing import (  # pylint: disable=unused-import
     Any,
     Callable,
     DefaultDict,
@@ -45,8 +45,8 @@ from functional import transformations
 from functional.execution import ExecutionStrategies
 
 
-_T_co = TypeVar("_T_co", covariant=True)
-_T1_co = TypeVar("_T1_co", covariant=True)
+_T_co = TypeVar("_T_co", covariant=True)  # pylint: disable=invalid-name
+_T1_co = TypeVar("_T1_co", covariant=True)  # pylint: disable=invalid-name
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 _T3 = TypeVar("_T3")
