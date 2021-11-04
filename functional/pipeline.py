@@ -546,6 +546,21 @@ class Sequence(object):
         for e in self:
             func(e)
 
+    def peek(self, func):
+        """
+        Executes func on each element of the sequence and returns the element
+
+        >>> seq([1, 2, 3, 4]).peek(print).map(lambda x: x ** 2).to_list()
+        1
+        2
+        3
+        4
+        [1, 4, 9, 16]
+
+        :param func: function to execute
+        """
+        return self._transform(transformations.peek_t(func))
+
     def filter(self, func):
         """
         Filters sequence to include only elements where func is True.

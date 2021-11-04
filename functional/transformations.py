@@ -706,3 +706,28 @@ def join_t(other, join_type):
     return Transformation(
         "{0}_join".format(join_type), partial(join_impl, other, join_type), None
     )
+
+
+def peek_impl(func, sequence):
+    """
+    Implementation for peek_t
+    :param func: apply func
+    :param sequence: sequence to peek
+    :return: original sequence
+    """
+    for element in sequence:
+        func(element)
+        yield element
+
+
+def peek_t(func):
+    """
+    Transformation for Sequence.peek
+    :param func: peek function
+    :return: transformation
+    """
+    return Transformation(
+        "peek({0})".format(name(func)),
+        partial(peek_impl, func),
+        None
+    )
