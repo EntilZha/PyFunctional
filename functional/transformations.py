@@ -727,7 +727,5 @@ def peek_t(func):
     :return: transformation
     """
     return Transformation(
-        "peek({0})".format(name(func)),
-        partial(peek_impl, func),
-        None
+        "peek({0})".format(name(func)), partial(peek_impl, func), None
     )
