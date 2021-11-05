@@ -397,6 +397,7 @@ Function | Description | Type
 `to_pandas(columns=None)` | Converts the sequence to a pandas DataFrame | action
 `cache()` | Forces evaluation of sequence immediately and caches the result | action
 `for_each(func)` | Executes `func` on each element of the sequence | action
+`peek(func)` | Executes `func` on each element of the sequence but returns the element | transformation
 
 ### Lazy Execution
 Whenever possible, `PyFunctional` will compute lazily. This is accomplished by tracking the list
@@ -411,11 +412,17 @@ undesirable to keep recomputing the same value. Below are some examples of inspe
 
 ```python
 def times_2(x):
-    print(x)
     return 2 * x
-elements = seq(1, 1, 2, 3, 4).map(times_2).distinct()
+
+elements = (
+   seq(1, 1, 2, 3, 4)
+      .map(times_2)
+      .peek(print)
+      .distinct()
+)
+
 elements._lineage
-# Lineage: sequence -> map(times_2) -> distinct
+# Lineage: sequence -> map(times_2) -> peek(print) -> distinct
 
 l_elements = elements.to_list()
 # Prints: 1
@@ -425,7 +432,7 @@ l_elements = elements.to_list()
 # Prints: 4
 
 elements._lineage
-# Lineage: sequence -> map(times_2) -> distinct -> cache
+# Lineage: sequence -> map(times_2) -> peek(print) -> distinct -> cache
 
 l_elements = elements.to_list()
 # The cached result is returned so times_2 is not called and nothing is printed
@@ -472,7 +479,7 @@ In order to be merged, all pull requests must:
 To learn more about me (the author) visit my webpage at
 [pedro.ai](https://www.pedro.ai).
 
-I created `PyFunctional` while using Python extensivel, and finding that I missed the
+I created `PyFunctional` while using Python extensively, and finding that I missed the
 ease of use for manipulating data that Spark RDDs and Scala collections have. The project takes the
 best ideas from these APIs as well as LINQ to provide an easy way to manipulate data when using
 Scala is not an option or PySpark is overkill.

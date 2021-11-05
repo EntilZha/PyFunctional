@@ -787,6 +787,17 @@ class TestPipeline(unittest.TestCase):
         self.seq(l).for_each(f)
         self.assertEqual(result, l)
 
+    def test_peek(self):
+        l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
+        result = []
+
+        def f(e):
+            result.append(e)
+
+        result_iter = self.seq(l).peek(f).list()
+        self.assertIteratorEqual(result_iter, l)
+        self.assertEqual(result, l)
+
     def test_exists(self):
         l = ["aaa", "BBB", "ccc"]
         self.assertTrue(self.seq(l).exists(str.islower))
