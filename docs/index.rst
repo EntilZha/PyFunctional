@@ -7,7 +7,7 @@ PyFunctional Documentation
 =============================
 
 Welcome to the `PyFunctional` documentation. For a tutorial of how to use this package you should
-visit `pyfunctional.org <http://www.pyfunctional.org/>`_.
+visit `pyfunctional.pedro.ai <http://pyfunctional.pedro.ai/>`_.
 
 The documentation on this site should primarily be used as an API reference. The Streams
 documentation covers ways to read data into `PyFunctional` while the Transformations and Actions

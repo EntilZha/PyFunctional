@@ -9,7 +9,7 @@ and that pylint succeeds
 2. Push commit which is the candidate release to Github master
 3. Wait for tests to pass on [TravisCI](https://travis-ci.org/EntilZha/PyFunctional)
 4. Wait for coverage to complete at 100% on [Coveralls](https://coveralls.io/github/EntilZha/PyFunctional)
-5. Wait for docs to complete building successfully at [docs.pyfunctional.org/en/latest](http://docs.pyfunctional.org/en/latest/)
+5. Wait for docs to complete building successfully at [docs.pyfunctional.pedro.ai/en/latest](http://docs.pyfunctional.pedro.ai/en/latest/)
 
 ### Testing Local Release
 1. Run `docker run -it python bash` for clean python installation

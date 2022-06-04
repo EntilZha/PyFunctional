@@ -72,7 +72,7 @@ Reaching `1.0` primarily means that API stability has been reached so I don't ex
 * Parallel functions: `map`, `select`, `filter`, `filter_not`, `where`, `flatten`, and `flat_map`
 * Compressed file IO support for `gzip`/`lzma`/`bz2` as detailed at https://github.com/EntilZha/PyFunctional/issues/54
 * Cartesian product from `itertools.product` implemented as `Pipeline.cartesian`
-* Website at [pyfunctional.org](http://www.pyfunctional.org) and docs at [docs.pyfunctional.org](http://docs.pyfunctional.org)
+* Website at [pyfunctional.pedro.ai](http://pyfunctional.pedro.ai) and docs at [docs.pyfunctional.pedro.ai](http://docs.pyfunctional.pedro.ai)
 
 ### Bug Fixes
 * No option for encoding in `to_json` https://github.com/EntilZha/PyFunctional/issues/70

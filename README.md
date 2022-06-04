@@ -1,7 +1,7 @@
 # PyFunctional
 ![Build Status](https://github.com/EntilZha/PyFunctional/workflows/Python%20package/badge.svg)
 [![Code Coverage](https://codecov.io/gh/EntilZha/PyFunctional/branch/master/graph/badge.svg)](https://codecov.io/gh/EntilZha/PyFunctional)
-[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.org)
+[![ReadTheDocs](https://readthedocs.org/projects/scalafunctional/badge/?version=latest)](http://docs.pyfunctional.pedro.ai)
 [![PyPI version](https://badge.fury.io/py/PyFunctional.svg)](https://badge.fury.io/py/PyFunctional)
 
 ## Features
@@ -268,7 +268,7 @@ all at once rather than in multiple loops using `multiprocessing`
 
 ## Documentation
 Shortform documentation is below and full documentation is at
-[docs.pyfunctional.org](http://docs.pyfunctional.org/en/latest/functional.html).
+[docs.pyfunctional.pedro.ai](http://docs.pyfunctional.pedro.ai/en/latest/functional.html).
 
 ### Streams API
 All of `PyFunctional` streams can be accessed through the `seq` object. The primary way to create
@@ -313,12 +313,12 @@ seq.sqlite3('filepath', 'select * from data')
 ```
 
 For more information on the parameters that these functions can take, reference the
-[streams documentation](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.streams)
+[streams documentation](http://docs.pyfunctional.pedro.ai/en/latest/functional.html#module-functional.streams)
 
 ### Transformations and Actions APIs
 Below is the complete list of functions which can be called on a stream object from `seq`. For
 complete documentation reference
-[transformation and actions API](http://docs.pyfunctional.org/en/latest/functional.html#module-functional.pipeline).
+[transformation and actions API](http://docs.pyfunctional.pedro.ai/en/latest/functional.html#module-functional.pipeline).
 
 Function | Description | Type
  ------- | ----------- | ----
