@@ -362,10 +362,10 @@ Function | Description | Type
 `sorted(key=None, reverse=False)/order_by(func)` | Returns elements sorted according to python `sorted` | transformation
 `reverse()` | Returns the reversed sequence | transformation
 `slice(start, until)` | Sequence starting at `start` and including elements up to `until` | transformation
-`head()` / `first()` | Returns first element in sequence | action
-`head_option()` | Returns first element in sequence or `None` if its empty | action
-`last()` | Returns last element in sequence | action
-`last_option()` | Returns last element in sequence or `None` if its empty | action
+`head(raw=False)` / `first(raw=False)` | Returns first element in sequence (if `raw=True`, the result will never be wrapped with `Sequence`) | action
+`head_option(raw=False)` | Returns first element in sequence or `None` if its empty (if `raw=True`, the result will never be wrapped with `Sequence`) | action
+`last(raw=False)` | Returns last element in sequence (if `raw=True`, the result will never be wrapped with `Sequence`) | action
+`last_option(raw=False)` | Returns last element in sequence or `None` if its empty (if `raw=True`, the result will never be wrapped with `Sequence`) | action
 `len()` / `size()` | Returns length of sequence | action
 `count(func)` | Returns count of elements in sequence where `func(element)` is True | action
 `empty()` | Returns `True` if the sequence has zero length | action

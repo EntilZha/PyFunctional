@@ -220,7 +220,7 @@ class Sequence(object):
             self._lineage = Lineage(engine=self.engine)
         return self
 
-    def head(self):
+    def head(self, raw=False):
         """
         Returns the first element of the sequence.
 
@@ -234,11 +234,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
+        :param raw: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence
         """
-        return _wrap(self.take(1)[0])
+        return self.sequence[0] if raw else _wrap(self.take(1)[0])
 
-    def first(self):
+    def first(self, raw=False):
         """
         Returns the first element of the sequence.
 
@@ -252,11 +253,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
+        :param raw: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence
         """
-        return self.head()
+        return self.head(raw=raw)
 
-    def head_option(self):
+    def head_option(self, raw=False):
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
@@ -266,13 +268,14 @@ class Sequence(object):
         >>> seq([]).head_option()
         None
 
+        :param raw: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence or None if sequence is empty
         """
         if not self.sequence:
             return None
-        return self.head()
+        return self.head(raw=raw)
 
-    def last(self):
+    def last(self, raw=False):
         """
         Returns the last element of the sequence.
 
@@ -286,11 +289,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
+        :param raw: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence
         """
-        return _wrap(self.sequence[-1])
+        return self.sequence[-1] if raw else _wrap(self.sequence[-1])
 
-    def last_option(self):
+    def last_option(self, raw=False):
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
@@ -300,11 +304,12 @@ class Sequence(object):
         >>> seq([]).last_option()
         None
 
+        :param raw: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence or None if sequence is empty
         """
         if not self.sequence:
             return None
-        return self.last()
+        return self.last(raw=raw)
 
     def init(self):
         """

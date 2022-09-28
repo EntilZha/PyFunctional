@@ -1,7 +1,7 @@
 # pylint: skip-file
 import unittest
 import array
-from collections import namedtuple
+from collections import namedtuple, deque
 from itertools import product
 
 from functional.pipeline import Sequence, is_iterable, _wrap, extend
@@ -129,47 +129,83 @@ class TestPipeline(unittest.TestCase):
     def test_head(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.head(), 1)
+        self.assertEqual(l.head(raw=True), 1)
         l = self.seq([[1, 2], 3, 4])
         self.assertEqual(l.head(), [1, 2])
+        self.assertEqual(l.head(raw=True), [1, 2])
         self.assert_type(l.head())
         l = self.seq([])
         with self.assertRaises(IndexError):
             l.head()
+        with self.assertRaises(IndexError):
+            l.head(raw=True)
+        l = self.seq([deque(), deque()]).head()
+        self.assertTrue(isinstance(l, Sequence))
+        l = self.seq([deque(), deque()]).head(raw=True)
+        self.assertFalse(isinstance(l, Sequence))
 
     def test_first(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.first(), 1)
+        self.assertEqual(l.first(raw=True), 1)
         l = self.seq([[1, 2], 3, 4]).map(lambda x: x)
         self.assertEqual(l.first(), [1, 2])
+        self.assertEqual(l.first(raw=True), [1, 2])
         self.assert_type(l.first())
         l = self.seq([])
         with self.assertRaises(IndexError):
-            l.head()
+            l.first()
+        with self.assertRaises(IndexError):
+            l.first(raw=True)
+        l = self.seq([deque(), deque()]).first()
+        self.assertTrue(isinstance(l, Sequence))
+        l = self.seq([deque(), deque()]).first(raw=True)
+        self.assertFalse(isinstance(l, Sequence))
 
     def test_head_option(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.head_option(), 1)
+        self.assertEqual(l.head_option(raw=True), 1)
         l = self.seq([[1, 2], 3, 4]).map(lambda x: x)
         self.assertEqual(l.head_option(), [1, 2])
+        self.assertEqual(l.head_option(raw=True), [1, 2])
         self.assert_type(l.head_option())
         l = self.seq([])
         self.assertIsNone(l.head_option())
+        self.assertIsNone(l.head_option(raw=True))
+        l = self.seq([deque(), deque()]).head_option()
+        self.assertTrue(isinstance(l, Sequence))
+        l = self.seq([deque(), deque()]).head_option(raw=True)
+        self.assertFalse(isinstance(l, Sequence))
 
     def test_last(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.last(), 3)
+        self.assertEqual(l.last(raw=True), 3)
         l = self.seq([1, 2, [3, 4]]).map(lambda x: x)
         self.assertEqual(l.last(), [3, 4])
+        self.assertEqual(l.last(raw=True), [3, 4])
         self.assert_type(l.last())
+        l = self.seq([deque(), deque()]).last()
+        self.assertTrue(isinstance(l, Sequence))
+        l = self.seq([deque(), deque()]).last(raw=True)
+        self.assertFalse(isinstance(l, Sequence))
 
     def test_last_option(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.last_option(), 3)
+        self.assertEqual(l.last_option(raw=True), 3)
         l = self.seq([1, 2, [3, 4]]).map(lambda x: x)
         self.assertEqual(l.last_option(), [3, 4])
+        self.assertEqual(l.last_option(raw=True), [3, 4])
         self.assert_type(l.last_option())
         l = self.seq([])
         self.assertIsNone(l.last_option())
+        self.assertIsNone(l.last_option(raw=True))
+        l = self.seq([deque(), deque()]).last_option()
+        self.assertTrue(isinstance(l, Sequence))
+        l = self.seq([deque(), deque()]).last_option(raw=True)
+        self.assertFalse(isinstance(l, Sequence))
 
     def test_init(self):
         result = self.seq([1, 2, 3, 4]).map(lambda x: x).init()
