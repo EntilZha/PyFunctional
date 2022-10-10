@@ -6,7 +6,7 @@ import builtins
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
-from functional.util import is_primitive, default
+from functional.util import is_primitive, default_value
 from functional.io import get_read_function
 
 
@@ -43,11 +43,12 @@ class Stream(object):
         """
         # pylint: disable=no-self-use
         engine = ExecutionEngine()
-        return self._parse_args(args, engine, no_wrap=default(no_wrap, self.no_wrap, False))
+        return self._parse_args(args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False))
 
     def _parse_args(self, args, engine, no_wrap=None):
+        _no_wrap = default_value(no_wrap, self.no_wrap, False)
         if len(args) == 0:
-            return Sequence([], engine=engine, max_repr_items=self.max_repr_items, no_wrap=default(no_wrap, self.no_wrap, False))
+            return Sequence([], engine=engine, max_repr_items=self.max_repr_items, no_wrap=_no_wrap)
         if len(args) == 1:
             try:
                 if type(args[0]).__name__ == "DataFrame":
@@ -58,21 +59,23 @@ class Stream(object):
                             args[0].values,
                             engine=engine,
                             max_repr_items=self.max_repr_items,
-                            no_wrap=default(no_wrap, self.no_wrap, False)
+                            no_wrap=_no_wrap
                         )
             except ImportError:  # pragma: no cover
                 pass
 
         if len(args) > 1:
             return Sequence(
-                list(args), engine=engine, max_repr_items=self.max_repr_items, no_wrap=default(no_wrap, self.no_wrap, False)
+                list(args), engine=engine, max_repr_items=self.max_repr_items, no_wrap=_no_wrap
             )
         elif is_primitive(args[0]):
             return Sequence(
-                [args[0]], engine=engine, max_repr_items=self.max_repr_items, no_wrap=default(no_wrap, self.no_wrap, False)
+                [args[0]], engine=engine, max_repr_items=self.max_repr_items, no_wrap=_no_wrap
             )
         else:
-            return Sequence(args[0], engine=engine, max_repr_items=self.max_repr_items, no_wrap=default(no_wrap, self.no_wrap, False))
+            return Sequence(
+                args[0], engine=engine, max_repr_items=self.max_repr_items, no_wrap=_no_wrap
+            )
 
     def open(
         self,
@@ -277,14 +280,22 @@ class ParallelStream(Stream):
     Parallelized version of functional.streams.Stream normally accessible as `pseq`
     """
 
-    def __init__(self, processes=None, partition_size=None, disable_compression=False, no_wrap=None):
+    def __init__(
+        self,
+        processes=None,
+        partition_size=None,
+        disable_compression=False,
+        no_wrap=None
+    ):
         """
         Configure Stream for parallel processing and file compression detection
         :param processes: Number of parallel processes
         :param disable_compression: Disable file compression detection
         :param no_wrap: default value of no_wrap for functions like first() or last()
         """
-        super(ParallelStream, self).__init__(disable_compression=disable_compression, no_wrap=no_wrap)
+        super(ParallelStream, self).__init__(
+            disable_compression=disable_compression, no_wrap=no_wrap
+        )
         self.processes = processes
         self.partition_size = partition_size
 
@@ -306,7 +317,7 @@ class ParallelStream(Stream):
         engine = ParallelExecutionEngine(
             processes=processes, partition_size=partition_size
         )
-        return self._parse_args(args, engine, no_wrap=default(no_wrap, self.no_wrap, False))
+        return self._parse_args(args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False))
 
 
 # pylint: disable=invalid-name

@@ -20,7 +20,7 @@ from functional.util import (
     is_namedtuple,
     is_tabulatable,
     identity,
-    default,
+    default_value,
 )
 from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
@@ -240,7 +240,10 @@ class Sequence(object):
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence
         """
-        return self.sequence[0] if default(no_wrap, self.no_wrap, False) else _wrap(self.take(1)[0])
+        if default_value(no_wrap, self.no_wrap, False):
+            return self.sequence[0]
+        else:
+            return _wrap(self.take(1)[0])
 
     def first(self, no_wrap=None):
         """
@@ -295,7 +298,10 @@ class Sequence(object):
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence
         """
-        return self.sequence[-1] if default(no_wrap, self.no_wrap, False) else _wrap(self.sequence[-1])
+        if default_value(no_wrap, self.no_wrap, False):
+            return self.sequence[-1]
+        else:
+            return _wrap(self.sequence[-1])
 
     def last_option(self, no_wrap=None):
         """

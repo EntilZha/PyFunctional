@@ -194,8 +194,8 @@ def compose(*functions):
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
-def default(*vals):
-    for v in vals:
-        if v is not None:
-            return v
+def default_value(*vals):
+    for val in vals:
+        if val is not None:
+            return val
     raise ValueError(f"All values are unset in: {vals}")
