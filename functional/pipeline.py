@@ -20,6 +20,7 @@ from functional.util import (
     is_namedtuple,
     is_tabulatable,
     identity,
+    default,
 )
 from functional.io import WRITE_MODE, universal_write_open
 from functional import transformations
@@ -32,7 +33,7 @@ class Sequence(object):
     functional transformations and reductions in a data pipeline style
     """
 
-    def __init__(self, sequence, transform=None, engine=None, max_repr_items=None):
+    def __init__(self, sequence, transform=None, engine=None, max_repr_items=None, no_wrap=None):
         # pylint: disable=protected-access
         """
         Takes a Sequence, list, tuple. or iterable sequence and wraps it around a Sequence object.
@@ -43,6 +44,7 @@ class Sequence(object):
         :param transform: transformation to apply
         :param engine: execution engine
         :param max_repr_items: maximum number of items to print with repr
+        :param no_wrap: default value of no_wrap for functions like first() or last()
         :return: sequence wrapped in a Sequence
         """
         self.engine = engine or ExecutionEngine()
@@ -58,6 +60,7 @@ class Sequence(object):
             raise TypeError("Given sequence must be an iterable value")
         if transform is not None:
             self._lineage.apply(transform)
+        self.no_wrap = no_wrap
 
     def __iter__(self):
         """
@@ -164,9 +167,9 @@ class Sequence(object):
         :return: concatenated sequence with other
         """
         if isinstance(other, Sequence):
-            return Sequence(self.sequence + other.sequence)
+            return Sequence(self.sequence + other.sequence, no_wrap=self.no_wrap)
         else:
-            return Sequence(self.sequence + other)
+            return Sequence(self.sequence + other, no_wrap=self.no_wrap)
 
     def _evaluate(self):
         """
@@ -185,9 +188,9 @@ class Sequence(object):
         sequence = None
         for transform in transforms:
             if sequence:
-                sequence = Sequence(sequence, transform=transform)
+                sequence = Sequence(sequence, transform=transform, no_wrap=self.no_wrap)
             else:
-                sequence = Sequence(self, transform=transform)
+                sequence = Sequence(self, transform=transform, no_wrap=self.no_wrap)
         return sequence
 
     @property
@@ -220,7 +223,7 @@ class Sequence(object):
             self._lineage = Lineage(engine=self.engine)
         return self
 
-    def head(self, raw=False):
+    def head(self, no_wrap=None):
         """
         Returns the first element of the sequence.
 
@@ -234,12 +237,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
-        :param raw: If set to True, the returned value will never be wrapped with Sequence
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence
         """
-        return self.sequence[0] if raw else _wrap(self.take(1)[0])
+        return self.sequence[0] if default(no_wrap, self.no_wrap, False) else _wrap(self.take(1)[0])
 
-    def first(self, raw=False):
+    def first(self, no_wrap=None):
         """
         Returns the first element of the sequence.
 
@@ -253,12 +256,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
-        :param raw: If set to True, the returned value will never be wrapped with Sequence
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence
         """
-        return self.head(raw=raw)
+        return self.head(no_wrap=no_wrap)
 
-    def head_option(self, raw=False):
+    def head_option(self, no_wrap=None):
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
@@ -268,14 +271,14 @@ class Sequence(object):
         >>> seq([]).head_option()
         None
 
-        :param raw: If set to True, the returned value will never be wrapped with Sequence
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence or None if sequence is empty
         """
         if not self.sequence:
             return None
-        return self.head(raw=raw)
+        return self.head(no_wrap=no_wrap)
 
-    def last(self, raw=False):
+    def last(self, no_wrap=None):
         """
         Returns the last element of the sequence.
 
@@ -289,12 +292,12 @@ class Sequence(object):
          ...
         IndexError: list index out of range
 
-        :param raw: If set to True, the returned value will never be wrapped with Sequence
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence
         """
-        return self.sequence[-1] if raw else _wrap(self.sequence[-1])
+        return self.sequence[-1] if default(no_wrap, self.no_wrap, False) else _wrap(self.sequence[-1])
 
-    def last_option(self, raw=False):
+    def last_option(self, no_wrap=None):
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
@@ -304,12 +307,12 @@ class Sequence(object):
         >>> seq([]).last_option()
         None
 
-        :param raw: If set to True, the returned value will never be wrapped with Sequence
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence or None if sequence is empty
         """
         if not self.sequence:
             return None
-        return self.last(raw=raw)
+        return self.last(no_wrap=no_wrap)
 
     def init(self):
         """

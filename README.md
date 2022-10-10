@@ -362,10 +362,10 @@ Function | Description | Type
 `sorted(key=None, reverse=False)/order_by(func)` | Returns elements sorted according to python `sorted` | transformation
 `reverse()` | Returns the reversed sequence | transformation
 `slice(start, until)` | Sequence starting at `start` and including elements up to `until` | transformation
-`head(raw=False)` / `first(raw=False)` | Returns first element in sequence (if `raw=True`, the result will never be wrapped with `Sequence`) | action
-`head_option(raw=False)` | Returns first element in sequence or `None` if its empty (if `raw=True`, the result will never be wrapped with `Sequence`) | action
-`last(raw=False)` | Returns last element in sequence (if `raw=True`, the result will never be wrapped with `Sequence`) | action
-`last_option(raw=False)` | Returns last element in sequence or `None` if its empty (if `raw=True`, the result will never be wrapped with `Sequence`) | action
+`head(no_wrap=None)` / `first(no_wrap=None)` | Returns first element in sequence (if `no_wrap=True`, the result will never be wrapped with `Sequence`) | action
+`head_option(no_wrap=None)` | Returns first element in sequence or `None` if its empty (if `no_wrap=True`, the result will never be wrapped with `Sequence`) | action
+`last(no_wrap=None)` | Returns last element in sequence (if `no_wrap=True`, the result will never be wrapped with `Sequence`) | action
+`last_option(no_wrap=None)` | Returns last element in sequence or `None` if its empty (if `no_wrap=True`, the result will never be wrapped with `Sequence`) | action
 `len()` / `size()` | Returns length of sequence | action
 `count(func)` | Returns count of elements in sequence where `func(element)` is True | action
 `empty()` | Returns `True` if the sequence has zero length | action
@@ -442,6 +442,30 @@ Files are given special treatment if opened through the `seq.open` and related A
 `functional.util.ReusableFile` implements a wrapper around the standard python file to support
 multiple iteration over a single file object while correctly handling iteration termination and
 file closing.
+
+### `no_wrap` option
+Even though functions like `first()` are supposed to return a single element, if the element is an iterable,
+then it is wrapped into a `Sequence`. For instance:
+
+```
+>>> s = seq(list(), list())
+>>> type(a.first())
+<class 'functional.pipeline.Sequence'>
+```
+
+That behaviour can be changed with `no_wrap` option:
+
+```
+>>> type(a.first(no_wrap=True))
+<class 'list'>
+```
+
+The option is also accpeted by `seq()`/`pseq()` as well as `Sequence()` constructor, for example:
+
+```
+>>> type(seq([list(), list()], no_wrap=True).last())
+<class 'list'>
+```
 
 ## Road Map Idea
 * SQL based query planner and interpreter
