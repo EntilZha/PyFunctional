@@ -11,6 +11,7 @@ from functional.util import (
     pack,
     unpack,
     compute_partition_size,
+    default_value,
 )
 
 Data = namedtuple("Tuple", "x y")
@@ -64,3 +65,15 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(result, 2)
         result = compute_partition_size(iter([0, 1, 2, 3]), 2)
         self.assertEqual(result, 1)
+
+    def test_default_value(self):
+        result = default_value(True)
+        self.assertEqual(result, True)
+        result = default_value(False)
+        self.assertEqual(result, False)
+        result = default_value(None, True)
+        self.assertEqual(result, True)
+        result = default_value(None, False)
+        self.assertEqual(result, False)
+        with self.assertRaises(ValueError):
+            result = default_value(None, None)
