@@ -33,7 +33,9 @@ class Sequence(object):
     functional transformations and reductions in a data pipeline style
     """
 
-    def __init__(self, sequence, transform=None, engine=None, max_repr_items=None, no_wrap=None):
+    def __init__(
+        self, sequence, transform=None, engine=None, max_repr_items=None, no_wrap=None
+    ):
         # pylint: disable=protected-access
         """
         Takes a Sequence, list, tuple. or iterable sequence and wraps it around a Sequence object.
