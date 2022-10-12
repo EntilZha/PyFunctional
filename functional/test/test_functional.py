@@ -1,7 +1,7 @@
 # pylint: skip-file
 import unittest
 import array
-from collections import namedtuple
+from collections import namedtuple, deque
 from itertools import product
 
 from functional.pipeline import Sequence, is_iterable, _wrap, extend
@@ -129,47 +129,116 @@ class TestPipeline(unittest.TestCase):
     def test_head(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.head(), 1)
+        self.assertEqual(l.head(no_wrap=True), 1)
         l = self.seq([[1, 2], 3, 4])
         self.assertEqual(l.head(), [1, 2])
+        self.assertEqual(l.head(no_wrap=True), [1, 2])
         self.assert_type(l.head())
+        self.assert_not_type(l.head(no_wrap=True))
+        l = self.seq([[1, 2], 3, 4], no_wrap=True)
+        self.assert_not_type(l.head())
         l = self.seq([])
         with self.assertRaises(IndexError):
             l.head()
+        with self.assertRaises(IndexError):
+            l.head(no_wrap=True)
+        l = self.seq([deque(), deque()]).head()
+        self.assert_type(l)
+        l = self.seq([deque(), deque()]).head(no_wrap=True)
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).head()
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).head(no_wrap=False)
+        self.assert_type(l)
 
     def test_first(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.first(), 1)
+        self.assertEqual(l.first(no_wrap=True), 1)
         l = self.seq([[1, 2], 3, 4]).map(lambda x: x)
         self.assertEqual(l.first(), [1, 2])
+        self.assertEqual(l.first(no_wrap=True), [1, 2])
         self.assert_type(l.first())
+        self.assert_not_type(l.first(no_wrap=True))
+        l = self.seq([[1, 2], 3, 4], no_wrap=True).map(lambda x: x)
+        self.assert_not_type(l.first())
         l = self.seq([])
         with self.assertRaises(IndexError):
-            l.head()
+            l.first()
+        with self.assertRaises(IndexError):
+            l.first(no_wrap=True)
+        l = self.seq([deque(), deque()]).first()
+        self.assert_type(l)
+        l = self.seq([deque(), deque()]).first(no_wrap=True)
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).first()
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).first(no_wrap=False)
+        self.assert_type(l)
 
     def test_head_option(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.head_option(), 1)
+        self.assertEqual(l.head_option(no_wrap=True), 1)
         l = self.seq([[1, 2], 3, 4]).map(lambda x: x)
         self.assertEqual(l.head_option(), [1, 2])
+        self.assertEqual(l.head_option(no_wrap=True), [1, 2])
         self.assert_type(l.head_option())
+        self.assert_not_type(l.head_option(no_wrap=True))
+        l = self.seq([[1, 2], 3, 4], no_wrap=True).map(lambda x: x)
+        self.assert_not_type(l.head_option())
         l = self.seq([])
         self.assertIsNone(l.head_option())
+        self.assertIsNone(l.head_option(no_wrap=True))
+        l = self.seq([deque(), deque()]).head_option()
+        self.assert_type(l)
+        l = self.seq([deque(), deque()]).head_option(no_wrap=True)
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).head_option()
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).head_option(no_wrap=False)
+        self.assert_type(l)
 
     def test_last(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.last(), 3)
+        self.assertEqual(l.last(no_wrap=True), 3)
         l = self.seq([1, 2, [3, 4]]).map(lambda x: x)
         self.assertEqual(l.last(), [3, 4])
+        self.assertEqual(l.last(no_wrap=True), [3, 4])
         self.assert_type(l.last())
+        self.assert_not_type(l.last(no_wrap=True))
+        l = self.seq([1, 2, [3, 4]], no_wrap=True).map(lambda x: x)
+        self.assert_not_type(l.last())
+        l = self.seq([deque(), deque()]).last()
+        self.assert_type(l)
+        l = self.seq([deque(), deque()]).last(no_wrap=True)
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).last()
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).last(no_wrap=False)
+        self.assert_type(l)
 
     def test_last_option(self):
         l = self.seq([1, 2, 3]).map(lambda x: x)
         self.assertEqual(l.last_option(), 3)
+        self.assertEqual(l.last_option(no_wrap=True), 3)
         l = self.seq([1, 2, [3, 4]]).map(lambda x: x)
         self.assertEqual(l.last_option(), [3, 4])
+        self.assertEqual(l.last_option(no_wrap=True), [3, 4])
         self.assert_type(l.last_option())
+        self.assert_not_type(l.last_option(no_wrap=True))
         l = self.seq([])
         self.assertIsNone(l.last_option())
+        self.assertIsNone(l.last_option(no_wrap=True))
+        l = self.seq([deque(), deque()]).last_option()
+        self.assert_type(l)
+        l = self.seq([deque(), deque()]).last_option(no_wrap=True)
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).last_option()
+        self.assert_not_type(l)
+        l = self.seq([deque(), deque()], no_wrap=True).last_option(no_wrap=False)
+        self.assert_type(l)
 
     def test_init(self):
         result = self.seq([1, 2, 3, 4]).map(lambda x: x).init()

@@ -1,6 +1,7 @@
 # Changelog
 ## Next Release
 * Allow empty sequence expressions `seq()`, `pseq()` (#159)
+* Add `no_wrap` option to `head()`, `head_option()`, `first()`, `last()` and `last_option()`, as well as to `seq()`, `pseq()` and `Sequence` constructor
 
 ## Release 1.3.0
 * added precompute attribute to reverse transformation (#137)

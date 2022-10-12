@@ -192,3 +192,10 @@ def compose(*functions):
     """
     # pylint: disable=undefined-variable
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
+
+
+def default_value(*vals):
+    for val in vals:
+        if val is not None:
+            return val
+    raise ValueError(f"All values are unset in: {vals}")
