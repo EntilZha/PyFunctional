@@ -1383,6 +1383,16 @@ class Sequence(object):
         """
         return self._transform(transformations.slice_t(start, until))
 
+    def split(self, func):
+        """
+        Returns a sequence of list splitted by elements that return True given a func transform. The return
+        value of func must be boolean.
+
+        :param func: function to use for splitting the sequence, return True if you want a split at this element.
+        :return: sequence of lists
+        """
+        return self._transform(transformations.split_t(func))
+
     def to_list(self, n=None):
         """
         Converts sequence to list of elements.

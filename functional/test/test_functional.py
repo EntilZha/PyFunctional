@@ -769,6 +769,20 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, list(result))
         self.assert_type(result)
 
+    def test_split(self):
+        l = [1, 2, -2, 3, 4, -1, 3]
+        e = [[1, 2], [3, 4], [3]]
+        f = lambda x: x < 0
+        s = self.seq(l)
+        p = s.split(f)
+        self.assertIteratorEqual(e, list(p))
+        self.assert_type(p)
+
+        result = self.seq([[1, 2, 3], [4, 5, 6]]).flatten().partition(lambda x: x > 2)
+        expect = [[3, 4, 5, 6], [1, 2]]
+        self.assertIteratorEqual(expect, list(result))
+        self.assert_type(result)
+
     def test_cartesian(self):
         result = seq.range(3).cartesian(range(3)).list()
         self.assertListEqual(result, list(product(range(3), range(3))))

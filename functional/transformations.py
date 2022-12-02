@@ -729,3 +729,31 @@ def peek_t(func):
     return Transformation(
         "peek({0})".format(name(func)), partial(peek_impl, func), None
     )
+
+
+def split_impl(func, sequence):
+    """
+    Implementation for split_t
+    :param func: apply func
+    :param sequence: sequence to split
+    :return: splitted sequence
+    """
+    result = []
+    for element in sequence:
+        if func(element):
+            yield result
+            result = []
+        else:
+            result = [*result, element]
+    yield result
+
+
+def split_t(func):
+    """
+    Transformation for Sequence.split
+    :param func: split function
+    :return: transformation
+    """
+    return Transformation(
+        "peek({0})".format(name(func)), partial(split_impl, func), None
+    )
