@@ -1385,8 +1385,8 @@ class Sequence(object):
 
     def split(self, func):
         """
-        Returns a sequence of list splitted by elements that return True given a func transform. The return
-        value of func must be boolean.
+        Returns a sequence of lists splitted by elements that return True given a func transform. 
+        The return value of func must be boolean.
 
         :param func: function to use for splitting the sequence, return True if you want a split at this element.
         :return: sequence of lists
