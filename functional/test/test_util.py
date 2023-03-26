@@ -14,7 +14,7 @@ from functional.util import (
     default_value,
 )
 
-Data = namedtuple("Tuple", "x y")
+Data = namedtuple("Data", "x y")
 
 
 class TestUtil(unittest.TestCase):
