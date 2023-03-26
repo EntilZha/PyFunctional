@@ -1089,7 +1089,7 @@ class TestExtend(unittest.TestCase):
         result = seq.range(100).square_parallel()
         self.assertEqual(result.sum(), sum(expected))
         self.assertEqual(
-            repr(result._lineage), "Lineage: sequence -> extended[%s]" % name
+            repr(result._lineage), f"Lineage: sequence -> extended[{name}]"
         )
 
         @extend

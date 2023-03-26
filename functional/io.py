@@ -352,7 +352,5 @@ def universal_write_open(
         )
     else:
         raise ValueError(
-            "compression must be None, gz, gzip, lzma, or xz and was {0}".format(
-                compression
-            )
+            f"compression must be None, gz, gzip, lzma, or xz and was {compression}"
         )
