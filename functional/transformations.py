@@ -43,7 +43,7 @@ def map_t(func):
     :return: transformation
     """
     return Transformation(
-        "map({0})".format(name(func)),
+        f"map({name(func)})",
         partial(map, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -56,7 +56,7 @@ def select_t(func):
     :return: transformation
     """
     return Transformation(
-        "select({0})".format(name(func)),
+        "select({name(func)})",
         partial(map, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -69,7 +69,7 @@ def starmap_t(func):
     :return: transformation
     """
     return Transformation(
-        "starmap({})".format(name(func)),
+        "starmap({name(func)})",
         partial(starmap, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -82,7 +82,7 @@ def filter_t(func):
     :return: transformation
     """
     return Transformation(
-        "filter({0})".format(name(func)),
+        f"filter({name(func)})",
         partial(filter, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -95,7 +95,7 @@ def where_t(func):
     :return: transformation
     """
     return Transformation(
-        "where({0})".format(name(func)),
+        f"where({name(func)})",
         partial(filter, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -108,7 +108,7 @@ def filter_not_t(func):
     :return: transformation
     """
     return Transformation(
-        "filter_not({0})".format(name(func)),
+        f"filter_not({name(func)})",
         partial(filterfalse, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -130,7 +130,7 @@ def slice_t(start, until):
     :return: transformation
     """
     return Transformation(
-        "slice({0}, {1})".format(start, until),
+        f"slice({start}, {until})",
         lambda sequence: islice(sequence, start, until),
         None,
     )
@@ -168,7 +168,7 @@ def distinct_by_t(func):
                 distinct_lookup[key] = element
         return distinct_lookup.values()
 
-    return Transformation("distinct_by({0})".format(name(func)), distinct_by, None)
+    return Transformation(f"distinct_by({name(func)})", distinct_by, None)
 
 
 def sorted_t(key=None, reverse=False):
@@ -190,7 +190,7 @@ def order_by_t(func):
     :return: transformation
     """
     return Transformation(
-        "order_by({0})".format(name(func)),
+        f"order_by({name(func)})",
         lambda sequence: sorted(sequence, key=func),
         None,
     )
@@ -207,7 +207,7 @@ def drop_right_t(n):
     else:
         end_index = -n
     return Transformation(
-        "drop_right({0})".format(n),
+        f"drop_right({n})",
         lambda sequence: sequence[:end_index],
         [ExecutionStrategies.PRE_COMPUTE],
     )
@@ -220,7 +220,7 @@ def drop_t(n):
     :return: transformation
     """
     return Transformation(
-        "drop({0})".format(n), lambda sequence: islice(sequence, n, None), None
+        f"drop({n})", lambda sequence: islice(sequence, n, None), None
     )
 
 
@@ -230,9 +230,7 @@ def drop_while_t(func):
     :param func: drops while func is true
     :return: transformation
     """
-    return Transformation(
-        "drop_while({0})".format(name(func)), partial(dropwhile, func), None
-    )
+    return Transformation(f"drop_while({name(func)})", partial(dropwhile, func), None)
 
 
 def take_t(n):
@@ -241,9 +239,7 @@ def take_t(n):
     :param n: number to take
     :return: transformation
     """
-    return Transformation(
-        "take({0})".format(n), lambda sequence: islice(sequence, 0, n), None
-    )
+    return Transformation(f"take({n})", lambda sequence: islice(sequence, 0, n), None)
 
 
 def take_while_t(func):
@@ -252,9 +248,7 @@ def take_while_t(func):
     :param func: takes while func is True
     :return: transformation
     """
-    return Transformation(
-        "take_while({0})".format(name(func)), partial(takewhile, func), None
-    )
+    return Transformation(f"take_while({name(func)})", partial(takewhile, func), None)
 
 
 def flat_map_impl(func, sequence):
@@ -276,7 +270,7 @@ def flat_map_t(func):
     :return: transformation
     """
     return Transformation(
-        "flat_map({0})".format(name(func)),
+        f"flat_map({name(func)})",
         partial(flat_map_impl, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -472,7 +466,7 @@ def reduce_by_key_t(func):
     :return: transformation
     """
     return Transformation(
-        "reduce_by_key({0})".format(name(func)), partial(reduce_by_key_impl, func), None
+        f"reduce_by_key({name(func)})", partial(reduce_by_key_impl, func), None
     )
 
 
@@ -493,7 +487,7 @@ def accumulate_t(func):
     Transformation for Sequence.accumulate
     """
     return Transformation(
-        "accumulate({0})".format(name(func)), partial(accumulate_impl, func), None
+        f"accumulate({name(func)})", partial(accumulate_impl, func), None
     )
 
 
@@ -559,9 +553,7 @@ def group_by_t(func):
     :param func: grouping function
     :return: transformation
     """
-    return Transformation(
-        "group_by({0})".format(name(func)), partial(group_by_impl, func), None
-    )
+    return Transformation(f"group_by({name(func)})", partial(group_by_impl, func), None)
 
 
 def grouped_impl(size, sequence):
@@ -586,9 +578,7 @@ def grouped_t(size):
     :param size: size of groups
     :return: transformation
     """
-    return Transformation(
-        "grouped({0})".format(size), partial(grouped_impl, size), None
-    )
+    return Transformation(f"grouped({size})", partial(grouped_impl, size), None)
 
 
 def sliding_impl(wrap, size, step, sequence):
@@ -616,7 +606,7 @@ def sliding_t(wrap, size, step):
     :return: transformation
     """
     return Transformation(
-        "sliding({0}, {1})".format(size, step),
+        f"sliding({size}, {step})",
         partial(sliding_impl, wrap, size, step),
         {ExecutionStrategies.PRE_COMPUTE},
     )
@@ -642,7 +632,7 @@ def partition_t(wrap, func):
     :return: transformation
     """
     return Transformation(
-        "partition({0})".format(name(func)), partial(partition_impl, wrap, func), None
+        f"partition({name(func)})", partial(partition_impl, wrap, func), None
     )
 
 
@@ -704,7 +694,7 @@ def join_t(other, join_type):
     :return: transformation
     """
     return Transformation(
-        "{0}_join".format(join_type), partial(join_impl, other, join_type), None
+        f"{join_type}_join", partial(join_impl, other, join_type), None
     )
 
 
@@ -726,6 +716,4 @@ def peek_t(func):
     :param func: peek function
     :return: transformation
     """
-    return Transformation(
-        "peek({0})".format(name(func)), partial(peek_impl, func), None
-    )
+    return Transformation(f"peek({name(func)})", partial(peek_impl, func), None)
