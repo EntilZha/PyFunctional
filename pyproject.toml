@@ -39,7 +39,7 @@ all = ["pandas"]
 
 [tool.poetry.dev-dependencies]
 pypandoc = "^1.5"
-black = "^19.10b0"
+black = "^23.1"
 pytest = "^7.0"
 pylint = "^2"
 pytest-cov = "^4.0"
