@@ -43,6 +43,9 @@ pylint = "^2.17.4"
 pytest-cov = "^4.0.0"
 coverage = "^7.2.5"
 
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.1.1"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
