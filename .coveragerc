@@ -1,3 +1,7 @@
 # .coveragerc
 [report]
 show_missing = True
+exclude_lines = 
+    pragma: no cover
+    # ignore lines contains only ellipsis
+    ^\s*\.\.\.\s*$
