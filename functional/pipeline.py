@@ -68,6 +68,7 @@ class Sequence(Generic[_T_co]):
     Sequence is a wrapper around any type of sequence which provides access to common
     functional transformations and reductions in a data pipeline style
     """
+
     _base_sequence: Iterable[_T_co]
     _max_repr_items: Optional[int]
     _lineage: Lineage
@@ -78,7 +79,7 @@ class Sequence(Generic[_T_co]):
         transform=None,
         engine=None,
         max_repr_items=None,
-        no_wrap=None
+        no_wrap=None,
     ):
         # pylint: disable=protected-access
         """
@@ -317,7 +318,9 @@ class Sequence(Generic[_T_co]):
         ...
 
     @overload
-    def head_option(self: "Sequence[Iterable[_T1]]", no_wrap=None) -> Optional["Sequence[_T1]"]:
+    def head_option(
+        self: "Sequence[Iterable[_T1]]", no_wrap=None
+    ) -> Optional["Sequence[_T1]"]:
         ...
 
     @overload
@@ -443,7 +446,7 @@ class Sequence(Generic[_T_co]):
         __iter2: Iterable[_T2],
         __iter3: Iterable[_T3],
         *,
-        repeat: int = 1
+        repeat: int = 1,
     ) -> "Sequence[Tuple[_T_co, _T1, _T2, _T3]]":
         ...
 
@@ -455,7 +458,7 @@ class Sequence(Generic[_T_co]):
         __iter3: Iterable[_T3],
         __iter4: Iterable[_T4],
         *,
-        repeat: int = 1
+        repeat: int = 1,
     ) -> "Sequence[Tuple[_T_co, _T1, _T2, _T3, _T4]]":
         ...
 
@@ -468,7 +471,7 @@ class Sequence(Generic[_T_co]):
         __iter4: Iterable[Any],
         __iter5: Iterable[Any],
         *__iters: Iterable[Any],
-        repeat: int = 1
+        repeat: int = 1,
     ) -> "Sequence[Tuple[Any, ...]]":
         ...
 

@@ -282,7 +282,7 @@ class XZFile(CompressedFile):
 
 
 COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
-N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES) # type: ignore
+N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
 
 
 def get_read_function(filename, disable_compression):
