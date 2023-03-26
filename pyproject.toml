@@ -22,17 +22,15 @@ classifiers = [
     'Programming Language :: Python :: Implementation :: PyPy',
     'Natural Language :: English',
     'Operating System :: OS Independent',
-    'Topic :: Software Development :: Libraries :: Python Modules'
+    'Topic :: Software Development :: Libraries :: Python Modules',
 ]
-packages = [
-    { include = "functional" }
-]
+packages = [{ include = "functional" }]
 
 [tool.poetry.dependencies]
-python = "^3.7,>=3.7.2"
+python = "^3.7.2"
 dill = ">=0.2.5"
 tabulate = "<=1.0.0"
-pandas = {version = "^1.0.3", optional = true}
+pandas = { version = "^1.0.3", optional = true }
 
 [tool.poetry.extras]
 all = ["pandas"]
