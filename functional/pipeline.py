@@ -78,6 +78,7 @@ class Sequence(Generic[_T_co]):
         transform=None,
         engine=None,
         max_repr_items=None,
+        no_wrap=None
     ):
         # pylint: disable=protected-access
         """
@@ -703,7 +704,7 @@ class Sequence(Generic[_T_co]):
         for e in self:
             func(e)
 
-    def peek(self, func: Callable[[_T_co]]}):
+    def peek(self, func: Callable[[_T_co], None]):
         """
         Executes func on each element of the sequence and returns the element
 
