@@ -3,11 +3,16 @@ import csv as csvapi
 import json as jsonapi
 import sqlite3 as sqlite3api
 import builtins
+from typing import Any, Iterable, TypeVar, overload
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
-from functional.pipeline import Sequence
+from functional.pipeline import Sequence, _PT
 from functional.util import is_primitive, default_value
 from functional.io import get_read_function
+
+
+_T_co = TypeVar("_T_co", covariant=True)  # pylint: disable=invalid-name
+_T2_co = TypeVar("_T2_co", contravariant=True)  # pylint: disable=invalid-name
 
 
 class Stream(object):
@@ -28,7 +33,25 @@ class Stream(object):
         self.max_repr_items = max_repr_items
         self.no_wrap = no_wrap
 
-    def __call__(self, *args, no_wrap=None, **kwargs):
+    @overload
+    def __call__(self, no_wrap=None) -> Sequence[Any]:
+        ...
+
+    @overload
+    def __call__(self, __iter: Iterable[_T_co], no_wrap=None) -> Sequence[_T_co]:
+        ...
+
+    @overload
+    def __call__(self, __pt: _PT, no_wrap=None) -> Sequence[_PT]:
+        ...
+
+    @overload
+    def __call__(
+        self, __item: _T2_co, __item2: _T2_co, *__args: Iterable[_T2_co], no_wrap=None
+    ) -> Sequence[_T2_co]:
+        ...
+
+    def __call__(self, *args, **kwargs):
         """
         Create a Sequence using a sequential ExecutionEngine.
 

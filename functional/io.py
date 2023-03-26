@@ -4,6 +4,8 @@ import bz2
 import io
 import builtins
 
+from typing import Optional
+
 
 WRITE_MODE = "wt"
 
@@ -78,7 +80,7 @@ class ReusableFile(object):
 
 
 class CompressedFile(ReusableFile):
-    magic_bytes = None
+    magic_bytes: Optional[bytes] = None
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -280,7 +282,7 @@ class XZFile(CompressedFile):
 
 
 COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
-N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
+N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
 
 
 def get_read_function(filename, disable_compression):
@@ -352,7 +354,5 @@ def universal_write_open(
         )
     else:
         raise ValueError(
-            "compression must be None, gz, gzip, lzma, or xz and was {0}".format(
-                compression
-            )
+            f"compression must be None, gz, gzip, lzma, or xz and was {compression}"
         )
