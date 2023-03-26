@@ -48,9 +48,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"PyFunctional"
-copyright = u"2019, Pedro Rodriguez"
-author = u"Pedro Rodriguez"
+project = "PyFunctional"
+copyright = "2019, Pedro Rodriguez"
+author = "Pedro Rodriguez"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -224,8 +224,8 @@ latex_documents = [
     (
         master_doc,
         "PyFunctional.tex",
-        u"PyFunctional Documentation",
-        u"Pedro Rodriguez",
+        "PyFunctional Documentation",
+        "Pedro Rodriguez",
         "manual",
     ),
 ]
@@ -255,7 +255,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "pyfunctional", u"PyFunctional Documentation", [author], 1)]
+man_pages = [(master_doc, "pyfunctional", "PyFunctional Documentation", [author], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -270,7 +270,7 @@ texinfo_documents = [
     (
         master_doc,
         "PyFunctional",
-        u"PyFunctional Documentation",
+        "PyFunctional Documentation",
         author,
         "PyFunctional",
         "One line description of project.",

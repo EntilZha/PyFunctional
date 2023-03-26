@@ -144,7 +144,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = "functional/test/data/test_list.json"
         dict_test_path = "functional/test/data/test_dict.json"
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list({u"a": 1, u"b": 2, u"c": 3}.items())
+        dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -165,7 +165,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = "functional/test/data/test_list.json.gz"
         dict_test_path = "functional/test/data/test_dict.json.gz"
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list({u"a": 1, u"b": 2, u"c": 3}.items())
+        dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -179,7 +179,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = "functional/test/data/test_list.json.bz2"
         dict_test_path = "functional/test/data/test_dict.json.bz2"
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list({u"a": 1, u"b": 2, u"c": 3}.items())
+        dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -193,7 +193,7 @@ class TestStreams(unittest.TestCase):
         list_test_path = "functional/test/data/test_list.json.xz"
         dict_test_path = "functional/test/data/test_dict.json.xz"
         list_expect = [1, 2, 3, 4, 5]
-        dict_expect = list({u"a": 1, u"b": 2, u"c": 3}.items())
+        dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
         result = self.seq.json(list_test_path).to_list()
         self.assertEqual(list_expect, result)
@@ -312,22 +312,22 @@ class TestStreams(unittest.TestCase):
 
     def test_to_json(self):
         tmp_path = "functional/test/data/tmp/output.txt"
-        elements = [[u"a", 1], [u"b", 2], [u"c", 3]]
+        elements = [["a", 1], ["b", 2], ["c", 3]]
         sequence = self.seq(elements)
 
         sequence.to_json(tmp_path)
         result = self.seq.json(tmp_path).to_list()
         self.assertEqual(elements, result)
 
-        dict_expect = {u"a": 1, u"b": 2, u"c": 3}
+        dict_expect = {"a": 1, "b": 2, "c": 3}
         sequence.to_json(tmp_path, root_array=False)
         result = self.seq.json(tmp_path).to_dict()
         self.assertEqual(dict_expect, result)
 
     def test_to_json_compressed(self):
         tmp_path = "functional/test/data/tmp/output.txt"
-        elements = [[u"a", 1], [u"b", 2], [u"c", 3]]
-        dict_expect = {u"a": 1, u"b": 2, u"c": 3}
+        elements = [["a", 1], ["b", 2], ["c", 3]]
+        dict_expect = {"a": 1, "b": 2, "c": 3}
         sequence = self.seq(elements)
 
         sequence.to_json(tmp_path, compression="gzip")

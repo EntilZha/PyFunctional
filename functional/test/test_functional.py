@@ -1074,17 +1074,17 @@ class TestExtend(unittest.TestCase):
 
         @extend
         def square(it):
-            return [i ** 2 for i in it]
+            return [i**2 for i in it]
 
         result = seq.range(100).square().list()
-        expected = [i ** 2 for i in range(100)]
+        expected = [i**2 for i in range(100)]
         self.assertEqual(result, expected)
 
         name = "PARALLEL_SQUARE"
 
         @extend(parallel=True, name=name)
         def square_parallel(it):
-            return [i ** 2 for i in it]
+            return [i**2 for i in it]
 
         result = seq.range(100).square_parallel()
         self.assertEqual(result.sum(), sum(expected))
@@ -1114,8 +1114,8 @@ class TestExtend(unittest.TestCase):
         expected = array.array("f", range(10))
         self.assertEqual(result, expected)
 
-        result = seq.range(10).map(lambda x: x ** 2).toarray()
-        expected = array.array("f", [i ** 2 for i in range(10)])
+        result = seq.range(10).map(lambda x: x**2).toarray()
+        expected = array.array("f", [i**2 for i in range(10)])
         self.assertEqual(result, expected)
 
         # a more complex example combining all above
