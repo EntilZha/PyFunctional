@@ -6,7 +6,7 @@ from functional.io import ReusableFile, GZFile, BZ2File, XZFile, universal_write
 class TestUtil(unittest.TestCase):
     def test_reusable_file(self):
         license_file_lf = ReusableFile("LICENSE.txt")
-        with open("LICENSE.txt", encoding="us-ascii") as license_file:
+        with open("LICENSE.txt", encoding="utf8") as license_file:
             self.assertEqual(list(license_file), list(license_file_lf))
         iter_1 = iter(license_file_lf)
         iter_2 = iter(license_file_lf)
@@ -19,9 +19,7 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(
-            expect, list(GZFile(file_name, mode="rt", encoding="utf-8"))
-        )
+        self.assertListEqual(expect, list(GZFile(file_name, mode="rt", encoding="utf-8")))
 
         expect = [
             b"line0\n",
@@ -37,9 +35,7 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(
-            expect, list(BZ2File(file_name, mode="rt", encoding="utf-8"))
-        )
+        self.assertListEqual(expect, list(BZ2File(file_name, mode="rt", encoding="utf-8")))
 
         expect = [
             b"line0\n",
@@ -55,9 +51,7 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(
-            expect, list(XZFile(file_name, mode="rt", encoding="utf-8"))
-        )
+        self.assertListEqual(expect, list(XZFile(file_name, mode="rt", encoding="utf-8")))
 
         expect = [
             b"line0\n",
