@@ -43,7 +43,6 @@ black = "^19.10b0"
 pytest = "^5.4.1"
 pylint = "^2.4.4"
 pytest-cov = "^2.8.1"
-codecov = "^2.0.22"
 coverage = "<5.0.0"
 
 [build-system]
