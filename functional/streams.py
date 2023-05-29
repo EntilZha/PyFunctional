@@ -4,6 +4,8 @@ import json as jsonapi
 import sqlite3 as sqlite3api
 import builtins
 
+from itertools import chain
+
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
 from functional.util import is_primitive, default_value
@@ -45,6 +47,13 @@ class Stream(object):
         return self._parse_args(
             args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False)
         )
+
+    def chain(self, *args, no_wrap=None, **kwargs):
+        """
+        Merge given the iterators firstly, then new the seq.
+        """
+        merged = list(chain.from_iterable(args))
+        return self(*merged, no_wrap=no_wrap, **kwargs)
 
     def _parse_args(self, args, engine, no_wrap=None):
         _no_wrap = default_value(no_wrap, self.no_wrap, False)

@@ -64,6 +64,32 @@ class TestStreams(unittest.TestCase):
         data = [-5, -3, -1, 1, 3, 5, 7]
         self.assertListEqual(data, self.seq.range(-5, 8, 2).to_list())
 
+    def test_chain(self):
+        data_a = range(1, 5)
+        data_b = range(6, 11)
+        self.assertEqual(
+            list(data_a) + list(data_b), self.seq.chain(data_a, data_b).to_list()
+        )
+
+        data_c = set(data_b)
+        self.assertEqual(
+            list(data_a) + list(data_c), self.seq.chain(data_a, data_c).to_list()
+        )
+
+        data_d = {"a": 1, "b": 2}
+        self.assertEqual(
+            list(data_a) + list(data_d.keys()), self.seq.chain(data_a, data_d).to_list()
+        )
+
+        def iter_func():
+            for i in range(10):
+                yield i
+
+        self.assertEqual(
+            list(data_a) + list(range(10)),
+            self.seq.chain(data_a, iter_func()).to_list(),
+        )
+
     def test_csv(self):
         result = self.seq.csv("functional/test/data/test.csv").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
