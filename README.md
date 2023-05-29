@@ -221,22 +221,22 @@ with sqlite3.connect(':memory:') as conn:
     conn.execute('CREATE TABLE user (id INT, name TEXT)')
     conn.commit()
     User = namedtuple('User', 'id name')
-    
+
     # Write using a specific query
     seq([(1, 'pedro'), (2, 'fritz')]).to_sqlite3(conn, 'INSERT INTO user (id, name) VALUES (?, ?)')
-    
+
     # Write by inserting values positionally from a tuple/list into named table
     seq([(3, 'sam'), (4, 'stan')]).to_sqlite3(conn, 'user')
-    
+
     # Write by inferring schema from namedtuple
     seq([User(name='tom', id=5), User(name='keiga', id=6)]).to_sqlite3(conn, 'user')
-    
+
     # Write by inferring schema from dict
     seq([dict(name='david', id=7), dict(name='jordan', id=8)]).to_sqlite3(conn, 'user')
-    
+
     # Read everything back to make sure it wrote correctly
     print(list(conn.execute('SELECT * FROM user')))
-    
+
     # [(1, 'pedro'), (2, 'fritz'), (3, 'sam'), (4, 'stan'), (5, 'tom'), (6, 'keiga'), (7, 'david'), (8, 'jordan')]
 ```
 
@@ -482,16 +482,17 @@ In order to be merged, all pull requests must:
 
 * Pass all the unit tests
 * Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
-* Not significantly reduce covrage without a good reason [coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
+* Not significantly reduce coverage without a good reason ([coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
 * Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
 ## Contact
 [Gitter for chat](https://gitter.im/EntilZha/PyFunctional)
 
 ## Supported Python Versions
-* `PyFunctional` 1.4 and above supports and is tested against Python 3.6, Python 3.7, and PyPy3
-* `PyFunctional` 1.4 and above does not support python 2.7
-* `PyFunctional` 1.4 and above works in Python 3.5, but is not tested against it
+* `PyFunctional` 1.5 is tested against Python 3.7 to 3.10
+* `PyFunctional` 1.4 supports and is tested against Python 3.6, Python 3.7, and PyPy3
+* `PyFunctional` 1.4 and above do not support python 2.7
+* `PyFunctional` 1.4 works in Python 3.5, but is not tested against it
 * `PyFunctional` 1.4 and above partially works in 3.8, parallel processing currently has issues, but other feature work fine
 * `PyFunctional` 1.3 and below supports and was tested against Python 2.7, Python 3.5, Python 3.6, PyPy2, and PyPy3
 

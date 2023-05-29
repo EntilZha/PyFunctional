@@ -14,9 +14,10 @@ classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: PyPy',
     'Natural Language :: English',
@@ -28,7 +29,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6,>=3.6.1"
+python = "^3.7,>=3.7.2"
 dill = ">=0.2.5"
 tabulate = "<=1.0.0"
 pandas = {version = "^1.0.3", optional = true}
@@ -39,11 +40,10 @@ all = ["pandas"]
 [tool.poetry.dev-dependencies]
 pypandoc = "^1.5"
 black = "^19.10b0"
-pytest = "^5.4.1"
-pylint = "^2.4.4"
-pytest-cov = "^2.8.1"
-codecov = "^2.0.22"
-coverage = "<5.0.0"
+pytest = "^7.3.1"
+pylint = "^2.17.4"
+pytest-cov = "^4.0.0"
+coverage = "^7.2.5"
 
 [build-system]
 requires = ["poetry>=0.12"]
