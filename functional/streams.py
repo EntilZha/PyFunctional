@@ -5,6 +5,7 @@ import sqlite3 as sqlite3api
 import builtins
 
 from itertools import chain
+from typing import Iterable
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
@@ -52,6 +53,10 @@ class Stream(object):
         """
         Merge given the iterators firstly, then new the seq.
         """
+        for arg in args:
+            if not isinstance(arg, Iterable):
+                raise TypeError("The type of arg should be iterator.")
+
         merged = list(chain.from_iterable(args))
         return self(*merged, no_wrap=no_wrap, **kwargs)
 

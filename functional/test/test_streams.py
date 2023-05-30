@@ -81,14 +81,12 @@ class TestStreams(unittest.TestCase):
             list(data_a) + list(data_d.keys()), self.seq.chain(data_a, data_d).to_list()
         )
 
-        def iter_func():
-            for i in range(10):
-                yield i
+        self.assertEqual([], self.seq.chain().to_list())
 
-        self.assertEqual(
-            list(data_a) + list(range(10)),
-            self.seq.chain(data_a, iter_func()).to_list(),
-        )
+        with self.assertRaises(TypeError):
+            self.seq.chain(1, 2).to_list()
+
+        self.assertEqual(list(data_a), self.seq.chain(data_a).to_list())
 
     def test_csv(self):
         result = self.seq.csv("functional/test/data/test.csv").to_list()
