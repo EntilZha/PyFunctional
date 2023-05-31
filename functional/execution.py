@@ -23,7 +23,6 @@ class ExecutionEngine(object):
         :param transformations: Transformations to apply
         :return: Resulting sequence or value
         """
-        # pylint: disable=no-self-use
         result = sequence
         for transform in transformations:
             strategies = transform.execution_strategies

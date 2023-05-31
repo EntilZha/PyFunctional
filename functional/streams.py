@@ -41,7 +41,6 @@ class Stream(object):
         :param args: Sequence to wrap
         :return: Wrapped sequence
         """
-        # pylint: disable=no-self-use
         engine = ExecutionEngine()
         return self._parse_args(
             args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False)
