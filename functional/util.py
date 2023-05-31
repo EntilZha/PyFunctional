@@ -161,12 +161,11 @@ def lazy_parallelize(func, result, processes=None, partition_size=None):
     else:
         processes = min(processes, CPU_COUNT)
     partition_size = partition_size or compute_partition_size(result, processes)
-    pool = Pool(processes=processes)
-    partitions = split_every(partition_size, iter(result))
-    packed_partitions = (pack(func, (partition,)) for partition in partitions)
-    for pool_result in pool.imap(unpack, packed_partitions):
-        yield pool_result
-    pool.terminate()
+    with Pool(processes=processes) as pool:
+        partitions = split_every(partition_size, iter(result))
+        packed_partitions = (pack(func, (partition,)) for partition in partitions)
+        for pool_result in pool.imap(unpack, packed_partitions):
+            yield pool_result
 
 
 def compute_partition_size(result, processes):
