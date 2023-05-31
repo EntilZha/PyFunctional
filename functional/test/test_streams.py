@@ -88,6 +88,8 @@ class TestStreams(unittest.TestCase):
 
         self.assertEqual(list(data_a), self.seq.chain(data_a).to_list())
 
+        self.assertEqual([1], self.seq.chain([1]).to_list())
+
     def test_csv(self):
         result = self.seq.csv("functional/test/data/test.csv").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]

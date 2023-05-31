@@ -58,7 +58,7 @@ class Stream(object):
                 raise TypeError("The type of arg should be iterator.")
 
         merged = list(chain.from_iterable(args))
-        return self(*merged, no_wrap=no_wrap, **kwargs)
+        return self(merged, no_wrap=no_wrap, **kwargs)
 
     def _parse_args(self, args, engine, no_wrap=None):
         _no_wrap = default_value(no_wrap, self.no_wrap, False)
