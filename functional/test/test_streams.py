@@ -64,6 +64,34 @@ class TestStreams(unittest.TestCase):
         data = [-5, -3, -1, 1, 3, 5, 7]
         self.assertListEqual(data, self.seq.range(-5, 8, 2).to_list())
 
+    def test_lazyiness(self):
+        def yielder():
+            nonlocal step
+            step += 1
+            yield 1
+            step += 1
+            yield 2
+
+        step = 0
+        sequence = iter(seq(yielder()).map(str))
+        assert (
+            step == 0
+            and next(sequence) == "1"
+            and step == 1
+            and next(sequence) == "2"
+            and step == 2
+        )
+
+        step = 0
+        sequence = iter(seq.chain(yielder()).map(str))
+        assert (
+            step == 0
+            and next(sequence) == "1"
+            and step == 1
+            and next(sequence) == "2"
+            and step == 2
+        )
+
     def test_chain(self):
         data_a = range(1, 5)
         data_b = range(6, 11)
