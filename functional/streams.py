@@ -51,14 +51,13 @@ class Stream(object):
 
     def chain(self, *args, no_wrap=None, **kwargs):
         """
-        Merge given the iterators firstly, then new the seq.
+        Create a Sequence chaining multiple iterators.
         """
         for arg in args:
             if not isinstance(arg, Iterable):
                 raise TypeError("The type of arg should be iterator.")
 
-        merged = list(chain.from_iterable(args))
-        return self(merged, no_wrap=no_wrap, **kwargs)
+        return self(chain(*args), no_wrap=no_wrap, **kwargs)
 
     def _parse_args(self, args, engine, no_wrap=None):
         _no_wrap = default_value(no_wrap, self.no_wrap, False)
