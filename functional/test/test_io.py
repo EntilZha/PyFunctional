@@ -19,7 +19,9 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(expect, list(GZFile(file_name, mode="rt", encoding="utf-8")))
+        self.assertListEqual(
+            expect, list(GZFile(file_name, mode="rt", encoding="utf-8"))
+        )
 
         expect = [
             b"line0\n",
@@ -35,7 +37,9 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(expect, list(BZ2File(file_name, mode="rt", encoding="utf-8")))
+        self.assertListEqual(
+            expect, list(BZ2File(file_name, mode="rt", encoding="utf-8"))
+        )
 
         expect = [
             b"line0\n",
@@ -51,7 +55,9 @@ class TestUtil(unittest.TestCase):
             "line1\n",
             "line2",
         ]
-        self.assertListEqual(expect, list(XZFile(file_name, mode="rt", encoding="utf-8")))
+        self.assertListEqual(
+            expect, list(XZFile(file_name, mode="rt", encoding="utf-8"))
+        )
 
         expect = [
             b"line0\n",

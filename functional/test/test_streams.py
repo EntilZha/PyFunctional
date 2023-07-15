@@ -22,7 +22,9 @@ class TestStreams(unittest.TestCase):
         self.assertListEqual(data, self.seq.open("LICENSE.txt").to_list())
 
         text = "".join(data).split(",")
-        self.assertListEqual(text, self.seq.open("LICENSE.txt", delimiter=",").to_list())
+        self.assertListEqual(
+            text, self.seq.open("LICENSE.txt", delimiter=",").to_list()
+        )
 
         with self.assertRaises(ValueError):
             self.seq.open("LICENSE.txt", mode="w").to_list()
@@ -52,7 +54,9 @@ class TestStreams(unittest.TestCase):
         file_name = "functional/test/data/test.txt.gz"
         with open(file_name, "rb") as f:
             expect = f.readlines()
-        self.assertListEqual(expect, self.seq_c_disabled.open(file_name, mode="rb").to_list())
+        self.assertListEqual(
+            expect, self.seq_c_disabled.open(file_name, mode="rb").to_list()
+        )
 
     def test_range(self):
         self.assertListEqual([0, 1, 2, 3], self.seq.range(4).to_list())
@@ -70,7 +74,9 @@ class TestStreams(unittest.TestCase):
             self.seq.csv(1)
 
     def test_csv_dict_reader(self):
-        result = self.seq.csv_dict_reader("functional/test/data/test_header.csv").to_list()
+        result = self.seq.csv_dict_reader(
+            "functional/test/data/test_header.csv"
+        ).to_list()
         self.assertEqual(result[0]["a"], "1")
         self.assertEqual(result[0]["b"], "2")
         self.assertEqual(result[0]["c"], "3")
@@ -226,12 +232,16 @@ class TestStreams(unittest.TestCase):
         self.assertListEqual(expected_0, result_0_3)
 
         # test order by
-        result_1 = self.seq.sqlite3(db_file, "SELECT id, name FROM user ORDER BY name;").to_list()
+        result_1 = self.seq.sqlite3(
+            db_file, "SELECT id, name FROM user ORDER BY name;"
+        ).to_list()
         expected_1 = [(2, "Jack"), (3, "Jane"), (4, "Stephan"), (1, "Tom")]
         self.assertListEqual(expected_1, result_1)
 
         # test query with params
-        result_2 = self.seq.sqlite3(db_file, "SELECT id, name FROM user WHERE id = ?;", parameters=(1,)).to_list()
+        result_2 = self.seq.sqlite3(
+            db_file, "SELECT id, name FROM user WHERE id = ?;", parameters=(1,)
+        ).to_list()
         expected_2 = [(1, "Tom")]
         self.assertListEqual(expected_2, result_2)
 
@@ -439,7 +449,9 @@ class TestStreams(unittest.TestCase):
             conn.commit()
 
             table_name = "user"
-            self.seq(elements).map(lambda u: user(u[0], u[1])).to_sqlite3(conn, table_name)
+            self.seq(elements).map(lambda u: user(u[0], u[1])).to_sqlite3(
+                conn, table_name
+            )
             result = self.seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
 
@@ -451,7 +463,9 @@ class TestStreams(unittest.TestCase):
             conn.commit()
 
             table_name = "user"
-            self.seq(elements).map(lambda u: user(u[1], u[0])).to_sqlite3(conn, table_name)
+            self.seq(elements).map(lambda u: user(u[1], u[0])).to_sqlite3(
+                conn, table_name
+            )
             result = self.seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
 
@@ -463,7 +477,9 @@ class TestStreams(unittest.TestCase):
             conn.commit()
 
             table_name = "user"
-            self.seq(elements).map(lambda x: {"id": x[0], "name": x[1]}).to_sqlite3(conn, table_name)
+            self.seq(elements).map(lambda x: {"id": x[0], "name": x[1]}).to_sqlite3(
+                conn, table_name
+            )
             result = self.seq.sqlite3(conn, "SELECT id, name FROM user;").to_list()
             self.assertListEqual(elements, result)
 
