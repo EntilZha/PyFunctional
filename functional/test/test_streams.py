@@ -17,7 +17,7 @@ class TestStreams(unittest.TestCase):
         self.seq_c_disabled = Stream(disable_compression=True)
 
     def test_open(self):
-        with open("LICENSE.txt") as f:
+        with open("LICENSE.txt", encoding="utf8") as f:
             data = f.readlines()
         self.assertListEqual(data, self.seq.open("LICENSE.txt").to_list())
 
@@ -68,7 +68,7 @@ class TestStreams(unittest.TestCase):
         result = self.seq.csv("functional/test/data/test.csv").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
-        with open("functional/test/data/test.csv", "r") as csv_file:
+        with open("functional/test/data/test.csv", "r", encoding="utf8") as csv_file:
             self.assertEqual(expect, self.seq.csv(csv_file).to_list())
         with self.assertRaises(ValueError):
             self.seq.csv(1)
@@ -84,7 +84,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(result[1]["b"], "5")
         self.assertEqual(result[1]["c"], "6")
 
-        with open("functional/test/data/test_header.csv", "r") as f:
+        with open("functional/test/data/test_header.csv", "r", encoding="utf8") as f:
             result = self.seq.csv_dict_reader(f).to_list()
         self.assertEqual(result[0]["a"], "1")
         self.assertEqual(result[0]["b"], "2")
@@ -151,10 +151,10 @@ class TestStreams(unittest.TestCase):
         result = self.seq.json(dict_test_path).to_list()
         self.assertEqual(dict_expect, result)
 
-        with open(list_test_path) as file_handle:
+        with open(list_test_path, encoding="utf8") as file_handle:
             result = self.seq.json(file_handle).to_list()
             self.assertEqual(list_expect, result)
-        with open(dict_test_path) as file_handle:
+        with open(dict_test_path, encoding="utf8") as file_handle:
             result = self.seq.json(file_handle).to_list()
             self.assertEqual(dict_expect, result)
 
@@ -262,11 +262,11 @@ class TestStreams(unittest.TestCase):
         tmp_path = "functional/test/data/tmp/output.txt"
         sequence = self.seq(1, 2, 3, 4)
         sequence.to_file(tmp_path)
-        with open(tmp_path, "r") as output:
+        with open(tmp_path, "r", encoding="utf8") as output:
             self.assertEqual("[1, 2, 3, 4]", output.readlines()[0])
 
         sequence.to_file(tmp_path, delimiter=":")
-        with open(tmp_path, "r") as output:
+        with open(tmp_path, "r", encoding="utf8") as output:
             self.assertEqual("1:2:3:4", output.readlines()[0])
 
     def test_to_file_compressed(self):

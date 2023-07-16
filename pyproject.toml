@@ -22,28 +22,29 @@ classifiers = [
     'Programming Language :: Python :: Implementation :: PyPy',
     'Natural Language :: English',
     'Operating System :: OS Independent',
-    'Topic :: Software Development :: Libraries :: Python Modules'
+    'Topic :: Software Development :: Libraries :: Python Modules',
 ]
-packages = [
-    { include = "functional" }
-]
+packages = [{ include = "functional" }]
 
 [tool.poetry.dependencies]
-python = "^3.7,>=3.7.2"
+python = "^3.7.2"
 dill = ">=0.2.5"
 tabulate = "<=1.0.0"
-pandas = {version = "^1.0.3", optional = true}
+pandas = { version = "^1.0.3", optional = true }
 
 [tool.poetry.extras]
 all = ["pandas"]
 
 [tool.poetry.dev-dependencies]
 pypandoc = "^1.5"
-black = "^19.10b0"
+black = "^23.1"
 pytest = "^7.3.1"
 pylint = "^2.17.4"
 pytest-cov = "^4.0.0"
 coverage = "^7.2.5"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

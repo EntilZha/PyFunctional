@@ -1102,9 +1102,7 @@ class Sequence(object):
             func = args[1]
             result_lambda = args[2]
         else:
-            raise ValueError(
-                "aggregate takes 1-3 arguments, {0} were given".format(len(args))
-            )
+            raise ValueError(f"aggregate takes 1-3 arguments, {len(args)} were given")
         if len(args) == 1:
             return result_lambda(self.drop(1).fold_left(self.first(), func))
         else:
@@ -1593,7 +1591,7 @@ class Sequence(object):
         dialect="excel",
         compression=None,
         newline="",
-        **fmtparams
+        **fmtparams,
     ):
         """
         Saves the sequence to a csv file. Each element should be an iterable which will be expanded
@@ -1640,26 +1638,20 @@ class Sequence(object):
             if isinstance(item, dict):
                 cols = ", ".join(item.keys())
                 placeholders = ", ".join("?" * len(item))
-                sql = "INSERT INTO {} ({}) VALUES ({})".format(
-                    table_name, cols, placeholders
-                )
+                sql = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders})"
                 conn.execute(sql, tuple(item.values()))
             elif is_namedtuple(item):
                 cols = ", ".join(item._fields)
                 placeholders = ", ".join("?" * len(item))
-                sql = "INSERT INTO {} ({}) VALUES ({})".format(
-                    table_name, cols, placeholders
-                )
+                sql = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders})"
                 conn.execute(sql, item)
             elif isinstance(item, (list, tuple)):
                 placeholders = ", ".join("?" * len(item))
-                sql = "INSERT INTO {} VALUES ({})".format(table_name, placeholders)
+                sql = f"INSERT INTO {table_name} VALUES ({placeholders})"
                 conn.execute(sql, item)
             else:
                 raise TypeError(
-                    "item must be one of dict, namedtuple, tuple or list got {}".format(
-                        type(item)
-                    )
+                    f"item must be one of dict, namedtuple, tuple or list got {type(item)}"
                 )
 
         self.for_each(_insert_item)
@@ -1785,9 +1777,9 @@ class Sequence(object):
         else:
             rows = self.take(n).list()
             if tablefmt == "simple":
-                message = "\nShowing {} of {} rows".format(n, length)
+                message = f"\nShowing {n} of {length} rows"
             elif tablefmt == "html":
-                message = "<p>Showing {} of {} rows".format(n, length)
+                message = f"<p>Showing {n} of {length} rows"
             else:
                 message = ""
         if len(headers) == 0 and is_namedtuple(rows[0]):
@@ -1897,7 +1889,7 @@ def extend(func=None, aslist=False, final=False, name=None, parallel=False):
             func_ = lambda seq: func(seq, *args, **kwargs)
 
         transform = transformations.Transformation(
-            "extended[{}]".format(name or func.__name__),
+            f"extended[{name or func.__name__}]",
             func_,
             {ExecutionStrategies.PARALLEL} if parallel else None,
         )
