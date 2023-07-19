@@ -1,5 +1,6 @@
-import sys
-from setuptools import setup, find_packages
+from pathlib import Path
+
+from setuptools import find_packages, setup
 
 try:
     import pypandoc
@@ -8,15 +9,7 @@ try:
         "README.md", "rst", extra_args=["--columns=300"]
     )
 except (IOError, ImportError):
-    long_description = open("README.md").read()
-
-common_install_requires = ["dill>=0.2.5", "tabulate<=1.0.0"]
-if "__pypy__" in sys.builtin_module_names:
-    compression_requires = ["bz2file==0.98", "backports.lzma==0.0.6"]
-    install_requires = common_install_requires
-else:
-    compression_requires = []
-    install_requires = common_install_requires
+    long_description = Path("README.md").read_text()
 
 setup(
     name="PyFunctional",
@@ -31,10 +24,9 @@ setup(
     keywords="functional pipeline data collection chain rdd linq parallel",
     packages=find_packages(exclude=["contrib", "docs", "tests*", "test"]),
     version="1.4.3",
-    install_requires=install_requires,
+    install_requires=["dill>=0.2.5", "tabulate<=1.0.0"],
     extras_requires={
-        "all": ["pandas"] + compression_requires,
-        "compression": compression_requires,
+        "all": ["pandas"],
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
