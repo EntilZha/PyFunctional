@@ -2,19 +2,10 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert(
-        "README.md", "rst", extra_args=["--columns=300"]
-    )
-except (IOError, ImportError):
-    long_description = Path("README.md").read_text()
-
 setup(
     name="PyFunctional",
     description="Package for creating data pipelines with chain functional programming",
-    long_description=long_description,
+    long_description=Path("README.md").read_text(),
     url="https://github.com/EntilZha/PyFunctional",
     author="Pedro Rodriguez",
     author_email="me@pedro.ai",
