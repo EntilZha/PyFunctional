@@ -37,7 +37,6 @@ pandas = { version = "^1.0.3", optional = true }
 all = ["pandas"]
 
 [tool.poetry.dev-dependencies]
-pypandoc = "^1.5"
 black = "^23.1"
 pytest = "^7.3.1"
 pylint = "^2.17.4"
