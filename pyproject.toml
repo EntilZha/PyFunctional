@@ -8,7 +8,7 @@ readme = "README.md"
 homepage = "https://github.com/EntilZha/PyFunctional"
 repository = "https://github.com/EntilZha/PyFunctional"
 documentation = "https://docs.pyfunctional.pedro.ai/en/master/"
-keywords = ["functional", "pipeline", "chain"]
+keywords = ["functional", "pipeline", "collection", "chain", "linq", "parallel"]
 license = "MIT"
 classifiers = [
     'Development Status :: 5 - Production/Stable',
@@ -18,6 +18,7 @@ classifiers = [
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: PyPy',
     'Natural Language :: English',
