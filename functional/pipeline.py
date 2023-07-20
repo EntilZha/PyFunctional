@@ -9,6 +9,7 @@ import json
 import csv
 import sqlite3
 import re
+from typing import List, Tuple, Union
 
 from tabulate import tabulate
 
@@ -383,6 +384,21 @@ class Sequence(object):
         return self._transform(
             transformations.cartesian_t(iterables, kwargs.get("repeat", 1))
         )
+
+    def remove_all(self, iters: Union[List, Tuple]) -> None:
+        """
+        Remove the given members which are in the seq and keep the order.
+
+        >>> s = seq.range(5)
+        >>> s.remove_all([3, 4, 100])
+        >>> s
+        [0, 1, 2]
+        """
+        self._base_sequence = [
+            member
+            for member in self.to_list()
+            if member not in iters
+        ]
 
     def drop(self, n):
         """

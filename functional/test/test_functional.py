@@ -262,6 +262,19 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(l.tails(), expect)
         self.assertIteratorEqual(l.tails().map(lambda s: s.sum()), [6, 5, 3, 0])
 
+    def test_remove_all(self):
+        source = self.seq([1, 2, 3, 1]).map(lambda x: x)
+        expect = [1, 2, 1]
+
+        source.remove_all([3, 100])
+        self.assertEqual(source, expect)
+
+        source = self.seq([1, 2, 3, 1]).map(lambda x: x)
+        source.remove_all((1, 2, 3000))
+
+        expect = [3]
+        self.assertEqual(source, expect)
+
     def test_drop(self):
         s = self.seq([1, 2, 3, 4, 5, 6])
         expect = [5, 6]
