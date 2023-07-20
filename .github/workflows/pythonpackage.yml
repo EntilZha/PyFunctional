@@ -21,24 +21,19 @@ jobs:
             use_pandas: 1
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - run: pipx install poetry
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip poetry
-          poetry install
-          sudo apt-get install pandoc
+          cache: poetry
+      - run: poetry install
       - name: Pylint
         run: poetry run pylint functional
-        if: always()
       - name: black
         run: poetry run black --check functional
         if: always()
       - name: Test with pytest
-        run: |
-          poetry run pytest --cov=functional --cov-report=xml
+        run: poetry run pytest --cov=functional --cov-report=xml
         if: always()
       - uses: codecov/codecov-action@v1
         with:
