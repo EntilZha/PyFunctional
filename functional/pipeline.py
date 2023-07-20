@@ -395,9 +395,7 @@ class Sequence(object):
         [0, 1, 2]
         """
         self._base_sequence = [
-            member
-            for member in self.to_list()
-            if member not in iters
+            member for member in self.to_list() if member not in iters
         ]
 
     def drop(self, n):
