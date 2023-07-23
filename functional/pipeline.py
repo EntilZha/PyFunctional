@@ -29,7 +29,7 @@ from functional import transformations
 from functional.execution import ExecutionStrategies
 
 
-TSequence = TypeVar("TSequence", covariant=True, bound="Sequence") 
+TSequence = TypeVar("TSequence", covariant=True, bound="Sequence")
 
 
 class Sequence(object):
@@ -39,7 +39,12 @@ class Sequence(object):
     """
 
     def __init__(
-        self, sequence: TSequence, transform=None, engine: ExecutionEngine=None, max_repr_items: int=None, no_wrap: bool=False
+        self,
+        sequence: TSequence,
+        transform=None,
+        engine: ExecutionEngine = None,
+        max_repr_items: int = None,
+        no_wrap: bool = False,
     ):
         # pylint: disable=protected-access
         """
@@ -230,7 +235,7 @@ class Sequence(object):
             self._lineage = Lineage(engine=self.engine)
         return self
 
-    def head(self, no_wrap: bool=False):
+    def head(self, no_wrap: bool = False):
         """
         Returns the first element of the sequence.
 
@@ -252,7 +257,7 @@ class Sequence(object):
         else:
             return _wrap(self.take(1)[0])
 
-    def first(self, no_wrap: bool=False):
+    def first(self, no_wrap: bool = False):
         """
         Returns the first element of the sequence.
 
@@ -271,7 +276,7 @@ class Sequence(object):
         """
         return self.head(no_wrap=no_wrap)
 
-    def head_option(self, no_wrap: bool=False):
+    def head_option(self, no_wrap: bool = False):
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
@@ -288,7 +293,7 @@ class Sequence(object):
             return None
         return self.head(no_wrap=no_wrap)
 
-    def last(self, no_wrap: bool=False):
+    def last(self, no_wrap: bool = False):
         """
         Returns the last element of the sequence.
 
@@ -310,7 +315,7 @@ class Sequence(object):
         else:
             return _wrap(self.sequence[-1])
 
-    def last_option(self, no_wrap: bool=False):
+    def last_option(self, no_wrap: bool = False):
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 

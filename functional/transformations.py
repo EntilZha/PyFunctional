@@ -172,7 +172,7 @@ def distinct_by_t(func: Callable):
     return Transformation(f"distinct_by({name(func)})", distinct_by, None)
 
 
-def sorted_t(key=None, reverse: bool=False):
+def sorted_t(key=None, reverse: bool = False):
     """
     Transformation for Sequence.sorted
     :param key: key to sort by
