@@ -10,6 +10,8 @@ import csv
 import sqlite3
 import re
 
+from typing import TypeVar
+
 from tabulate import tabulate
 
 from functional.execution import ExecutionEngine
@@ -27,6 +29,9 @@ from functional import transformations
 from functional.execution import ExecutionStrategies
 
 
+TSequence = TypeVar("TSequence", covariant=True, bound="Sequence") 
+
+
 class Sequence(object):
     """
     Sequence is a wrapper around any type of sequence which provides access to common
@@ -34,7 +39,7 @@ class Sequence(object):
     """
 
     def __init__(
-        self, sequence, transform=None, engine=None, max_repr_items=None, no_wrap=None
+        self, sequence: TSequence, transform=None, engine: ExecutionEngine=None, max_repr_items: int=None, no_wrap: bool=False
     ):
         # pylint: disable=protected-access
         """
@@ -225,7 +230,7 @@ class Sequence(object):
             self._lineage = Lineage(engine=self.engine)
         return self
 
-    def head(self, no_wrap=None):
+    def head(self, no_wrap: bool=False):
         """
         Returns the first element of the sequence.
 
@@ -247,7 +252,7 @@ class Sequence(object):
         else:
             return _wrap(self.take(1)[0])
 
-    def first(self, no_wrap=None):
+    def first(self, no_wrap: bool=False):
         """
         Returns the first element of the sequence.
 
@@ -266,7 +271,7 @@ class Sequence(object):
         """
         return self.head(no_wrap=no_wrap)
 
-    def head_option(self, no_wrap=None):
+    def head_option(self, no_wrap: bool=False):
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
@@ -283,7 +288,7 @@ class Sequence(object):
             return None
         return self.head(no_wrap=no_wrap)
 
-    def last(self, no_wrap=None):
+    def last(self, no_wrap: bool=False):
         """
         Returns the last element of the sequence.
 
@@ -305,7 +310,7 @@ class Sequence(object):
         else:
             return _wrap(self.sequence[-1])
 
-    def last_option(self, no_wrap=None):
+    def last_option(self, no_wrap: bool=False):
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
