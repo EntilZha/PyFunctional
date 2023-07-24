@@ -30,7 +30,6 @@ from functional import transformations
 from functional.execution import ExecutionStrategies
 
 
-
 class Sequence(object):
     """
     Sequence is a wrapper around any type of sequence which provides access to common
@@ -43,7 +42,7 @@ class Sequence(object):
         transform=None,
         engine: ExecutionEngine = None,
         max_repr_items: Optional[int] = None,
-        no_wrap: bool = False,
+        no_wrap: Optional[bool] = None,
     ):
         # pylint: disable=protected-access
         """
@@ -256,7 +255,7 @@ class Sequence(object):
         else:
             return _wrap(self.take(1)[0])
 
-    def first(self, no_wrap: bool = False):
+    def first(self, no_wrap: Optional[bool] = None):
         """
         Returns the first element of the sequence.
 
@@ -275,7 +274,7 @@ class Sequence(object):
         """
         return self.head(no_wrap=no_wrap)
 
-    def head_option(self, no_wrap: bool = False):
+    def head_option(self, no_wrap: Optional[bool] = None):
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
@@ -292,7 +291,7 @@ class Sequence(object):
             return None
         return self.head(no_wrap=no_wrap)
 
-    def last(self, no_wrap: bool = False):
+    def last(self, no_wrap: Optional[bool] = None):
         """
         Returns the last element of the sequence.
 
@@ -314,7 +313,7 @@ class Sequence(object):
         else:
             return _wrap(self.sequence[-1])
 
-    def last_option(self, no_wrap: bool = False):
+    def last_option(self, no_wrap: Optional[bool] = None):
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
