@@ -41,7 +41,7 @@ class Sequence(object):
         sequence: Iterable,
         transform=None,
         engine: ExecutionEngine = None,
-        max_repr_items: int = None,
+        max_repr_items: Optional[int] = None,
         no_wrap: bool = False,
     ):
         # pylint: disable=protected-access
