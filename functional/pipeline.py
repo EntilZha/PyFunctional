@@ -233,7 +233,7 @@ class Sequence(object):
             self._lineage = Lineage(engine=self.engine)
         return self
 
-    def head(self, no_wrap: bool = False):
+    def head(self, no_wrap: Optional[bool] = None):
         """
         Returns the first element of the sequence.
 
