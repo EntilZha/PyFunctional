@@ -64,6 +64,60 @@ class TestStreams(unittest.TestCase):
         data = [-5, -3, -1, 1, 3, 5, 7]
         self.assertListEqual(data, self.seq.range(-5, 8, 2).to_list())
 
+    def test_lazyiness(self):
+        def yielder():
+            nonlocal step
+            step += 1
+            yield 1
+            step += 1
+            yield 2
+
+        step = 0
+        sequence = iter(seq(yielder()).map(str))
+        assert (
+            step == 0
+            and next(sequence) == "1"
+            and step == 1
+            and next(sequence) == "2"
+            and step == 2
+        )
+
+        step = 0
+        sequence = iter(seq.chain(yielder()).map(str))
+        assert (
+            step == 0
+            and next(sequence) == "1"
+            and step == 1
+            and next(sequence) == "2"
+            and step == 2
+        )
+
+    def test_chain(self):
+        data_a = range(1, 5)
+        data_b = range(6, 11)
+        self.assertEqual(
+            list(data_a) + list(data_b), self.seq.chain(data_a, data_b).to_list()
+        )
+
+        data_c = set(data_b)
+        self.assertEqual(
+            list(data_a) + list(data_c), self.seq.chain(data_a, data_c).to_list()
+        )
+
+        data_d = {"a": 1, "b": 2}
+        self.assertEqual(
+            list(data_a) + list(data_d.keys()), self.seq.chain(data_a, data_d).to_list()
+        )
+
+        self.assertEqual([], self.seq.chain().to_list())
+
+        with self.assertRaises(TypeError):
+            self.seq.chain(1, 2).to_list()
+
+        self.assertEqual(list(data_a), self.seq.chain(data_a).to_list())
+
+        self.assertEqual([1], self.seq.chain([1]).to_list())
+
     def test_csv(self):
         result = self.seq.csv("functional/test/data/test.csv").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
