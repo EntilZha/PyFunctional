@@ -10,7 +10,7 @@ import csv
 import sqlite3
 import re
 
-from typing import TypeVar
+from collections.abc import Iterable
 
 from tabulate import tabulate
 
@@ -29,8 +29,6 @@ from functional import transformations
 from functional.execution import ExecutionStrategies
 
 
-TSequence = TypeVar("TSequence", covariant=True, bound="Sequence")
-
 
 class Sequence(object):
     """
@@ -40,7 +38,7 @@ class Sequence(object):
 
     def __init__(
         self,
-        sequence: TSequence,
+        sequence: Iterable,
         transform=None,
         engine: ExecutionEngine = None,
         max_repr_items: int = None,
