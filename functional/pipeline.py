@@ -11,6 +11,7 @@ import sqlite3
 import re
 
 from collections.abc import Iterable
+from typing import Optional
 
 from tabulate import tabulate
 
