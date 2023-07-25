@@ -1,4 +1,0 @@
-dill>=0.2.5
-bz2file==0.98
-backports.lzma>=0.0.3,<=0.0.8
-tabulate<=1.0.0

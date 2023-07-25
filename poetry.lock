@@ -570,17 +570,6 @@ spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
 
 [[package]]
-name = "pypandoc"
-version = "1.11"
-description = "Thin wrapper for pandoc."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pypandoc-1.11-py3-none-any.whl", hash = "sha256:b260596934e9cfc6513056110a7c8600171d414f90558bf4407e68b209be8007"},
-    {file = "pypandoc-1.11.tar.gz", hash = "sha256:7f6d68db0e57e0f6961bec2190897118c4d305fc2d31c22cd16037f22ee084a5"},
-]
-
-[[package]]
 name = "pytest"
 version = "7.4.0"
 description = "pytest: simple powerful testing with Python"
@@ -859,4 +848,4 @@ all = ["pandas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7.2"
-content-hash = "4e5101c67c2eb8d310506394a5cc35ea1fe6f9a9a2f900267a3a5926b81d559e"
+content-hash = "b63acaee39d40fc127f88f757b9d29562c2fdf26650d0119ad835d9d611b4aa8"
