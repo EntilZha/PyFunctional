@@ -11,6 +11,7 @@ from itertools import (
 )
 import collections
 import types
+from collections.abc import Callable
 
 from functional.execution import ExecutionStrategies
 
@@ -24,7 +25,7 @@ Transformation = collections.namedtuple(
 CACHE_T = Transformation("cache", None, None)
 
 
-def name(function):
+def name(function: Callable):
     """
     Retrieve a pretty name for the function
     :param function: function to get name from
@@ -36,7 +37,7 @@ def name(function):
         return str(function)
 
 
-def map_t(func):
+def map_t(func: Callable):
     """
     Transformation for Sequence.map
     :param func: map function
@@ -49,7 +50,7 @@ def map_t(func):
     )
 
 
-def select_t(func):
+def select_t(func: Callable):
     """
     Transformation for Sequence.select
     :param func: select function
@@ -62,7 +63,7 @@ def select_t(func):
     )
 
 
-def starmap_t(func):
+def starmap_t(func: Callable):
     """
     Transformation for Sequence.starmap and Sequence.smap
     :param func: starmap function
@@ -75,7 +76,7 @@ def starmap_t(func):
     )
 
 
-def filter_t(func):
+def filter_t(func: Callable):
     """
     Transformation for Sequence.filter
     :param func: filter function
@@ -88,7 +89,7 @@ def filter_t(func):
     )
 
 
-def where_t(func):
+def where_t(func: Callable):
     """
     Transformation for Sequence.where
     :param func: where function
@@ -101,7 +102,7 @@ def where_t(func):
     )
 
 
-def filter_not_t(func):
+def filter_not_t(func: Callable):
     """
     Transformation for Sequence.filter_not
     :param func: filter_not function
@@ -122,7 +123,7 @@ def reversed_t():
     return Transformation("reversed", reversed, [ExecutionStrategies.PRE_COMPUTE])
 
 
-def slice_t(start, until):
+def slice_t(start: int, until: int):
     """
     Transformation for Sequence.slice
     :param start: start index
@@ -153,7 +154,7 @@ def distinct_t():
     return Transformation("distinct", distinct, None)
 
 
-def distinct_by_t(func):
+def distinct_by_t(func: Callable):
     """
     Transformation for Sequence.distinct_by
     :param func: distinct_by function
@@ -171,7 +172,7 @@ def distinct_by_t(func):
     return Transformation(f"distinct_by({name(func)})", distinct_by, None)
 
 
-def sorted_t(key=None, reverse=False):
+def sorted_t(key=None, reverse: bool = False):
     """
     Transformation for Sequence.sorted
     :param key: key to sort by
@@ -183,7 +184,7 @@ def sorted_t(key=None, reverse=False):
     )
 
 
-def order_by_t(func):
+def order_by_t(func: Callable):
     """
     Transformation for Sequence.order_by
     :param func: order_by function
@@ -196,7 +197,7 @@ def order_by_t(func):
     )
 
 
-def drop_right_t(n):
+def drop_right_t(n: int):
     """
     Transformation for Sequence.drop_right
     :param n: number to drop from right
@@ -213,7 +214,7 @@ def drop_right_t(n):
     )
 
 
-def drop_t(n):
+def drop_t(n: int):
     """
     Transformation for Sequence.drop
     :param n: number to drop from left
@@ -224,7 +225,7 @@ def drop_t(n):
     )
 
 
-def drop_while_t(func):
+def drop_while_t(func: Callable):
     """
     Transformation for Sequence.drop_while
     :param func: drops while func is true
@@ -233,7 +234,7 @@ def drop_while_t(func):
     return Transformation(f"drop_while({name(func)})", partial(dropwhile, func), None)
 
 
-def take_t(n):
+def take_t(n: int):
     """
     Transformation for Sequence.take
     :param n: number to take
@@ -242,7 +243,7 @@ def take_t(n):
     return Transformation(f"take({n})", lambda sequence: islice(sequence, 0, n), None)
 
 
-def take_while_t(func):
+def take_while_t(func: Callable):
     """
     Transformation for Sequence.take_while
     :param func: takes while func is True
@@ -251,7 +252,7 @@ def take_while_t(func):
     return Transformation(f"take_while({name(func)})", partial(takewhile, func), None)
 
 
-def flat_map_impl(func, sequence):
+def flat_map_impl(func: Callable, sequence):
     """
     Implementation for flat_map_t
     :param func: function to map
@@ -710,7 +711,7 @@ def peek_impl(func, sequence):
         yield element
 
 
-def peek_t(func):
+def peek_t(func: Callable):
     """
     Transformation for Sequence.peek
     :param func: peek function
