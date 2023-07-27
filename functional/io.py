@@ -4,7 +4,7 @@ import bz2
 import io
 import builtins
 
-from typing import Optional, Generic, TypeVar
+from typing import Optional, Generic, TypeVar, Any
 
 
 WRITE_MODE = "wt"
@@ -170,7 +170,7 @@ class GZFile(CompressedFile):
 
 
 class BZ2File(CompressedFile):
-    magic_bytes: Optional[bytes] = b"\x42\x5a\x68"
+    magic_bytes: bytes = b"\x42\x5a\x68"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -220,7 +220,7 @@ class BZ2File(CompressedFile):
 
 
 class XZFile(CompressedFile):
-    magic_bytes: Optional[bytes] = b"\xfd\x37\x7a\x58\x5a\x00"
+    magic_bytes: bytes = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -287,7 +287,7 @@ COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
 
 
-def get_read_function(filename, disable_compression):
+def get_read_function(filename: str, disable_compression: bool):
     if disable_compression:
         return ReusableFile
     else:
@@ -301,18 +301,18 @@ def get_read_function(filename, disable_compression):
 
 
 def universal_write_open(
-    path,
-    mode,
-    buffering=-1,
-    encoding=None,
-    errors=None,
-    newline=None,
-    compresslevel=9,
-    format=None,
-    check=-1,
-    preset=None,
-    filters=None,
-    compression=None,
+    path: str,
+    mode: str,
+    buffering: int = -1,
+    encoding: Optional[str] = None,
+    errors: Optional[str] = None,
+    newline: Optional[str] = None,
+    compresslevel: int = 9,
+    format: Optional[int] = None,
+    check: int = -1,
+    preset: Optional[int] = None,
+    filters: Any = None,
+    compression: Optional[str] = None,
 ):
     # pylint: disable=unexpected-keyword-arg,no-member
     if compression is None:
