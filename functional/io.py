@@ -11,6 +11,7 @@ WRITE_MODE = "wt"
 
 File_Conv = TypeVar("File_Conv", covariant=True)
 
+
 class ReusableFile(Generic[File_Conv]):
     """
     Class which emulates the builtin file except that calling iter() on it will return separate
