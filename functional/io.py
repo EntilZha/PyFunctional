@@ -4,13 +4,14 @@ import bz2
 import io
 import builtins
 
-from typing import Optional
+from typing import Optional, Generic, TypeVar
 
 
 WRITE_MODE = "wt"
 
+File_Conv = TypeVar("File_Conv", covariant=True)
 
-class ReusableFile(object):
+class ReusableFile(Generic[File_Conv]):
     """
     Class which emulates the builtin file except that calling iter() on it will return separate
     iterators on different file handlers (which are automatically closed when iteration stops). This
@@ -21,13 +22,13 @@ class ReusableFile(object):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path,
-        delimiter=None,
-        mode="r",
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: str,
+        delimiter: Optional[str] = None,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
     ):
         """
         Constructor arguments are passed directly to builtins.open
@@ -85,14 +86,14 @@ class CompressedFile(ReusableFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path,
-        delimiter=None,
-        mode="rt",
-        buffering=-1,
-        compresslevel=9,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: str,
+        delimiter: Optional[str] = None,
+        mode: str = "rt",
+        buffering: int = -1,
+        compresslevel: int = 9,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
     ):
         super(CompressedFile, self).__init__(
             path,
@@ -111,19 +112,19 @@ class CompressedFile(ReusableFile):
 
 
 class GZFile(CompressedFile):
-    magic_bytes = b"\x1f\x8b\x08"
+    magic_bytes: bytes = b"\x1f\x8b\x08"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path,
-        delimiter=None,
-        mode="rt",
-        buffering=-1,
-        compresslevel=9,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: str,
+        delimiter: Optional[str] = None,
+        mode: str = "rt",
+        buffering: int = -1,
+        compresslevel: int = 9,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
     ):
         super(GZFile, self).__init__(
             path,
@@ -168,19 +169,19 @@ class GZFile(CompressedFile):
 
 
 class BZ2File(CompressedFile):
-    magic_bytes = b"\x42\x5a\x68"
+    magic_bytes: Optional[bytes] = b"\x42\x5a\x68"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path,
-        delimiter=None,
-        mode="rt",
-        buffering=-1,
-        compresslevel=9,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: str,
+        delimiter: Optional[str] = None,
+        mode: str = "rt",
+        buffering: int = -1,
+        compresslevel: int = 9,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
     ):
         super(BZ2File, self).__init__(
             path,
@@ -218,7 +219,7 @@ class BZ2File(CompressedFile):
 
 
 class XZFile(CompressedFile):
-    magic_bytes = b"\xfd\x37\x7a\x58\x5a\x00"
+    magic_bytes: Optional[bytes] = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
