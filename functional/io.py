@@ -9,10 +9,10 @@ from typing import Optional, Generic, TypeVar, Any
 
 WRITE_MODE = "wt"
 
-File_Conv = TypeVar("File_Conv", covariant=True)
+_FileConv = TypeVar("_FileConv", covariant=True)
 
 
-class ReusableFile(Generic[File_Conv]):
+class ReusableFile(Generic[_FileConv]):
     """
     Class which emulates the builtin file except that calling iter() on it will return separate
     iterators on different file handlers (which are automatically closed when iteration stops). This
