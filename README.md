@@ -449,14 +449,14 @@ then it is wrapped into a `Sequence`. For instance:
 
 ```
 >>> s = seq(list(), list())
->>> type(a.first())
+>>> type(s.first())
 <class 'functional.pipeline.Sequence'>
 ```
 
 That behaviour can be changed with `no_wrap` option:
 
 ```
->>> type(a.first(no_wrap=True))
+>>> type(s.first(no_wrap=True))
 <class 'list'>
 ```
 
