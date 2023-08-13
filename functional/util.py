@@ -89,9 +89,7 @@ def is_iterable(val):
 def is_tabulatable(val):
     if is_primitive(val):
         return False
-    if is_iterable(val) or is_namedtuple(val) or isinstance(val, list):
-        return True
-    return False
+    return is_iterable(val) or is_namedtuple(val) or isinstance(val, list)
 
 
 def split_every(parts, iterable):
