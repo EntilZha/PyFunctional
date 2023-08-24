@@ -959,7 +959,7 @@ class Sequence(object):
         :param initial: single optional argument acting as initial value
         :return: reduced value using func
         """
-        if not initial:
+        if len(initial) == 0:
             return _wrap(reduce(func, self))
         elif len(initial) == 1:
             return _wrap(reduce(func, self, initial[0]))
