@@ -1012,10 +1012,20 @@ class Sequence(object):
         :return: product of elements in sequence
         """
         if self.empty():
-            return projection(1) if projection else 1
+            if projection:
+                return projection(1)
+            else:
+                return 1
         if self.size() == 1:
-            return projection(self.first()) if projection else self.first()
-        return self.map(projection).reduce(mul) if projection else self.reduce(mul)
+            if projection:
+                return projection(self.first())
+            else:
+                return self.first()
+
+        if projection:
+            return self.map(projection).reduce(mul)
+        else:
+            return self.reduce(mul)
 
     def sum(self, projection=None):
         """
@@ -1030,7 +1040,10 @@ class Sequence(object):
         :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
-        return sum(self.map(projection)) if projection else sum(self)
+        if projection:
+            return sum(self.map(projection))
+        else:
+            return sum(self)
 
     def average(self, projection=None):
         """
@@ -1045,7 +1058,10 @@ class Sequence(object):
         :return: average of elements in the sequence
         """
         length = self.size()
-        return sum(self.map(projection)) / length if projection else sum(self) / length
+        if projection:
+            return sum(self.map(projection)) / length
+        else:
+            return sum(self) / length
 
     def aggregate(self, *args):
         """
