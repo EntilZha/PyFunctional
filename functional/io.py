@@ -287,10 +287,10 @@ def get_read_function(filename: str, disable_compression: bool):
         return ReusableFile
     with open(filename, "rb") as f:
         start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
-        return next(
-            (cls for cls in COMPRESSION_CLASSES if cls.is_compressed(start_bytes)),
-            ReusableFile,
-        )
+        for cls in COMPRESSION_CLASSES:
+            if cls.is_compressed(start_bytes):
+                return cls
+        return ReusableFile
 
 
 def universal_write_open(
