@@ -3,8 +3,9 @@ from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
+from typing import Any
 
-import dill as serializer
+import dill as serializer  # type: ignore
 
 
 PROTOCOL = serializer.HIGHEST_PROTOCOL
@@ -188,7 +189,7 @@ def compose(*functions):
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
-def default_value(*vals: tuple):
+def default_value(*vals: Any):
     for val in vals:
         if val is not None:
             return val

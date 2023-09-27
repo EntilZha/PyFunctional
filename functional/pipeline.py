@@ -11,7 +11,7 @@ import sqlite3
 import re
 
 from collections.abc import Iterable
-from typing import Optional
+from typing import List, Optional, Tuple, Union
 
 from tabulate import tabulate
 
@@ -40,7 +40,7 @@ class Sequence(object):
         self,
         sequence: Iterable,
         transform=None,
-        engine: ExecutionEngine = None,
+        engine: Optional[ExecutionEngine] = None,
         max_repr_items: Optional[int] = None,
         no_wrap: Optional[bool] = None,
     ):
@@ -59,9 +59,13 @@ class Sequence(object):
         """
         self.engine = engine or ExecutionEngine()
         if isinstance(sequence, Sequence):
-            self._max_repr_items = max_repr_items or sequence._max_repr_items
-            self._base_sequence = sequence._base_sequence
-            self._lineage = Lineage(prior_lineage=sequence._lineage, engine=engine)
+            self._max_repr_items: Optional[int] = (
+                max_repr_items or sequence._max_repr_items
+            )
+            self._base_sequence: Union[Iterable, List, Tuple] = sequence._base_sequence
+            self._lineage: Lineage = Lineage(
+                prior_lineage=sequence._lineage, engine=engine
+            )
         elif isinstance(sequence, (list, tuple)) or is_iterable(sequence):
             self._max_repr_items = max_repr_items
             self._base_sequence = sequence
