@@ -195,12 +195,9 @@ class Sequence(object):
         :param transform: transform to apply or list of transforms to apply
         :return: transformed sequence
         """
-        sequence = None
+        sequence = self
         for transform in transforms:
-            if sequence:
-                sequence = Sequence(sequence, transform=transform, no_wrap=self.no_wrap)
-            else:
-                sequence = Sequence(self, transform=transform, no_wrap=self.no_wrap)
+            sequence = Sequence(sequence, transform=transform, no_wrap=self.no_wrap)
         return sequence
 
     @property
@@ -631,11 +628,7 @@ class Sequence(object):
         :param func: predicate to count elements on
         :return: count of elements that satisfy predicate
         """
-        n = 0
-        for element in self:
-            if func(element):
-                n += 1
-        return n
+        return sum(bool(func(element)) for element in self)
 
     def len(self):
         """
@@ -726,10 +719,7 @@ class Sequence(object):
         :param func: existence check function
         :return: True if any element satisfies func
         """
-        for element in self:
-            if func(element):
-                return True
-        return False
+        return any(func(element) for element in self)
 
     def for_all(self, func):
         """
@@ -744,10 +734,7 @@ class Sequence(object):
         :param func: function to check truth value of all elements with
         :return: True if all elements make func evaluate to True
         """
-        for element in self:
-            if not func(element):
-                return False
-        return True
+        return all(func(element) for element in self)
 
     def max(self):
         """
@@ -872,10 +859,7 @@ class Sequence(object):
         :param func: function to find with
         :return: first element to satisfy func or None
         """
-        for element in self:
-            if func(element):
-                return element
-        return None
+        return next((element for element in self if func(element)), None)
 
     def flatten(self):
         """
@@ -1479,9 +1463,7 @@ class Sequence(object):
             value and used for collections.defaultdict
         :return: dictionary from sequence of (Key, Value) elements
         """
-        dictionary = {}
-        for e in self.sequence:
-            dictionary[e[0]] = e[1]
+        dictionary = dict(self.sequence)
         if default is None:
             return dictionary
         else:
@@ -1882,6 +1864,7 @@ def extend(func=None, aslist=False, final=False, name=None, parallel=False):
     """
     if func is None:
         return partial(extend, aslist=aslist, final=final, name=name, parallel=parallel)
+    assert func is not None  # this is for mypy
 
     @wraps(func)
     def wrapper(self, *args, **kwargs):

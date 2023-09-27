@@ -65,7 +65,7 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(repr(l), repr(self.seq(l)))
 
     def test_lineage_name(self):
-        f = lambda x: x
+        f = lambda x: x  # noqa: E731
         self.assertEqual(f.__name__, name(f))
         f = "test"
         self.assertEqual("test", name(f))
@@ -294,9 +294,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_drop_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
-        f = lambda x: x < 4
         expect = [4, 5, 6, 7, 8]
-        result = self.seq(l).drop_while(f)
+        result = self.seq(l).drop_while(lambda x: x < 4)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
@@ -311,9 +310,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_take_while(self):
         l = [1, 2, 3, 4, 5, 6, 7, 8]
-        f = lambda x: x < 4
         expect = [1, 2, 3]
-        result = self.seq(l).take_while(f)
+        result = self.seq(l).take_while(lambda x: x < 4)
         self.assertIteratorEqual(result, expect)
         self.assert_type(result)
 
@@ -342,18 +340,16 @@ class TestPipeline(unittest.TestCase):
         self.assertSetEqual(result.set(), set(expect))
 
     def test_map(self):
-        f = lambda x: x * 2
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]
-        result = self.seq(l).map(f)
+        result = self.seq(l).map(lambda x: x * 2)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_select(self):
-        f = lambda x: x * 2
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]
-        result = self.seq(l).select(f)
+        result = self.seq(l).select(lambda x: x * 2)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
@@ -369,16 +365,17 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_filter(self):
-        f = lambda x: x > 0
         l = [0, -1, 5, 10]
         expect = [5, 10]
         s = self.seq(l)
-        result = s.filter(f)
+        result = s.filter(lambda x: x > 0)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_where(self):
-        f = lambda x: x > 0
+        def f(x):
+            return x > 0
+
         l = [0, -1, 5, 10]
         expect = [5, 10]
         s = self.seq(l)
@@ -1013,7 +1010,7 @@ class TestPipeline(unittest.TestCase):
         if self.seq is pseq:
             raise self.skipTest("pseq doesn't support functions with side-effects")
         calls = []
-        func = lambda x: calls.append(x)
+        func = calls.append
         result = self.seq(1, 2, 3).map(func).cache().map(lambda x: x).to_list()
         self.assertEqual(len(calls), 3)
         self.assertEqual(result, [None, None, None])

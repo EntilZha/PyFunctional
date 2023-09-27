@@ -1,5 +1,5 @@
-import collections
 import math
+from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
@@ -49,7 +49,7 @@ def is_namedtuple(val):
     bases = val_type.__bases__
     if len(bases) != 1 or bases[0] != tuple:
         return False
-    fields = getattr(val_type, "_fields", None)
+    fields = getattr(val_type, "_fields")
     return all(isinstance(n, str) for n in fields)
 
 
@@ -69,7 +69,7 @@ def identity(arg):
 
 def is_iterable(val):
     """
-    Check if val is not a list, but is a collections.Iterable type. This is used to determine
+    Check if val is not a list, but is a Iterable type. This is used to determine
     when list() should be called on val
 
     >>> l = [1, 2]
@@ -79,19 +79,15 @@ def is_iterable(val):
     True
 
     :param val: value to check
-    :return: True if it is not a list, but is a collections.Iterable
+    :return: True if it is not a list, but is a Iterable
     """
-    if isinstance(val, list):
-        return False
-    return isinstance(val, collections.abc.Iterable)
+    return not isinstance(val, list) and isinstance(val, Iterable)
 
 
-def is_tabulatable(val):
-    if is_primitive(val):
-        return False
-    if is_iterable(val) or is_namedtuple(val) or isinstance(val, list):
-        return True
-    return False
+def is_tabulatable(val: object) -> bool:
+    return not is_primitive(val) and (
+        is_iterable(val) or is_namedtuple(val) or isinstance(val, list)
+    )
 
 
 def split_every(parts, iterable):
@@ -117,7 +113,7 @@ def unpack(packed):
     """
     func, args = serializer.loads(packed)
     result = func(*args)
-    if isinstance(result, collections.abc.Iterable):
+    if isinstance(result, Iterable):
         return list(result)
     return None
 
@@ -164,8 +160,7 @@ def lazy_parallelize(func, result, processes=None, partition_size=None):
     with Pool(processes=processes) as pool:
         partitions = split_every(partition_size, iter(result))
         packed_partitions = (pack(func, (partition,)) for partition in partitions)
-        for pool_result in pool.imap(unpack, packed_partitions):
-            yield pool_result
+        yield from pool.imap(unpack, packed_partitions)
 
 
 def compute_partition_size(result, processes):
