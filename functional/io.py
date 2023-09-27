@@ -288,7 +288,7 @@ def get_read_function(filename: str, disable_compression: bool):
     with open(filename, "rb") as f:
         start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
         for cls in COMPRESSION_CLASSES:
-            if cls.is_compressed(start_bytes):
+            if cls.is_compressed(start_bytes):  # type: ignore
                 return cls
         return ReusableFile
 
