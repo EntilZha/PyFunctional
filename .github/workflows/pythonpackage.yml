@@ -42,6 +42,7 @@ jobs:
         with:
           level: warning
           execute_command: "poetry run mypy"
+          filter_mode: nofilter
           mypy_flags: --strict
       - uses: codecov/codecov-action@v1
         with:
