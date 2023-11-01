@@ -38,6 +38,9 @@ jobs:
       - name: mypy
         run: poetry run mypy functional
         if: always()
+      - uses: tsuyoshicho/action-mypy@v4
+        with:
+          level: warning
       - uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
