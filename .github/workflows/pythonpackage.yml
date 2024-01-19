@@ -42,9 +42,10 @@ jobs:
         with:
           reporter: github-pr-review
           level: warning
-          execute_command: "poetry run mypy"
+          execute_command: poetry run mypy
           filter_mode: nofilter
           mypy_flags: --strict
+        if: matrix.python-version == '3.11' # run only on latest to avoid duplicate warnings
       - uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
