@@ -38,16 +38,15 @@ jobs:
         run: poetry run pytest --cov=functional --cov-report=xml
         if: always()
       - name: mypy
-        run: poetry run mypy functional
+        run: poetry run mypy --strict functional
         if: always()
       - uses: tsuyoshicho/action-mypy@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           level: warning
-          execute_command: poetry run mypy
+          execute_command: poetry run mypy --strict
           filter_mode: nofilter
-          mypy_flags: --strict
         if: matrix.python-version == '3.11' # run only on latest to avoid duplicate warnings
       - uses: codecov/codecov-action@v1
         with:
