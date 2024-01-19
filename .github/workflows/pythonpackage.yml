@@ -40,6 +40,7 @@ jobs:
         if: always()
       - uses: tsuyoshicho/action-mypy@v4
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           level: warning
           execute_command: poetry run mypy
