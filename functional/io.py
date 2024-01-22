@@ -1,18 +1,19 @@
-import gzip
-import lzma
-import bz2
-import io
 import builtins
+import bz2
+import gzip
+import io
+import lzma
+from os import PathLike
+from typing import Any, Optional, TypeAlias
 
-from typing import Optional, Generic, TypeVar, Any
-
+# from typeshed
+StrOrBytesPath: TypeAlias = str | bytes | PathLike[str] | PathLike[bytes]
+FileDescriptorOrPath: TypeAlias = int | StrOrBytesPath
 
 WRITE_MODE = "wt"
 
-_FileConv_co = TypeVar("_FileConv_co", covariant=True)
 
-
-class ReusableFile(Generic[_FileConv_co]):
+class ReusableFile:
     """
     Class which emulates the builtin file except that calling iter() on it will return separate
     iterators on different file handlers (which are automatically closed when iteration stops). This
@@ -23,7 +24,7 @@ class ReusableFile(Generic[_FileConv_co]):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: FileDescriptorOrPath,
         delimiter: Optional[str] = None,
         mode: str = "r",
         buffering: int = -1,
@@ -95,7 +96,7 @@ class CompressedFile(ReusableFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(CompressedFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -126,7 +127,7 @@ class GZFile(CompressedFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(GZFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -181,7 +182,7 @@ class BZ2File(CompressedFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(BZ2File, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -234,7 +235,7 @@ class XZFile(CompressedFile):
         filters=None,
         format=None,
     ):
-        super(XZFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -278,7 +279,7 @@ class XZFile(CompressedFile):
             return file_content.read()
 
 
-COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
+COMPRESSION_CLASSES: list[type[CompressedFile]] = [GZFile, BZ2File, XZFile]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
 
 
@@ -288,7 +289,7 @@ def get_read_function(filename: str, disable_compression: bool):
     with open(filename, "rb") as f:
         start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
         for cls in COMPRESSION_CLASSES:
-            if cls.is_compressed(start_bytes):  # type: ignore
+            if cls.is_compressed(start_bytes):
                 return cls
         return ReusableFile
 

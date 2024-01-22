@@ -2,7 +2,7 @@ from functools import partial
 from functional.util import compose, parallelize
 
 
-class ExecutionStrategies(object):
+class ExecutionStrategies:
     """
     Enum like object listing the types of execution strategies.
     """
@@ -11,7 +11,7 @@ class ExecutionStrategies(object):
     PARALLEL = 1
 
 
-class ExecutionEngine(object):
+class ExecutionEngine:
     """
     Class to perform serial execution of a Sequence evaluation.
     """
@@ -43,7 +43,7 @@ class ParallelExecutionEngine(ExecutionEngine):
         Set the number of processes for parallel execution.
         :param processes: Number of parallel Processes
         """
-        super(ParallelExecutionEngine, self).__init__()
+        super().__init__()
         self.processes = processes
         self.partition_size = partition_size
 

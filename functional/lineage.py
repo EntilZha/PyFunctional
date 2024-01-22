@@ -1,13 +1,20 @@
+from __future__ import annotations
+
+from typing import Optional
 from functional.execution import ExecutionEngine
 from functional.transformations import CACHE_T
 
 
-class Lineage(object):
+class Lineage:
     """
     Class for tracking the lineage of transformations, and applying them to a given sequence.
     """
 
-    def __init__(self, prior_lineage=None, engine=None):
+    def __init__(
+        self,
+        prior_lineage: Optional[Lineage] = None,
+        engine: Optional[ExecutionEngine] = None,
+    ):
         """
         Construct an empty lineage if prior_lineage is None or if its not use it as the list of
         current transformations
@@ -16,7 +23,7 @@ class Lineage(object):
         :return: new Lineage object
         """
         self.transformations = (
-            [] if prior_lineage is None else list(prior_lineage.transformations)
+            [] if prior_lineage is None else prior_lineage.transformations.copy()
         )
         self.engine = (
             (engine or ExecutionEngine())

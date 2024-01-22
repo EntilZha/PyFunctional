@@ -3,16 +3,18 @@ from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
-from typing import Any
+from typing import Callable, Optional, Sized, TypeVar
 
 import dill as serializer  # type: ignore
 
+T = TypeVar('T')
+U = TypeVar('U')
 
 PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
 
 
-def is_primitive(val):
+def is_primitive(val: object) -> bool:
     """
     Checks if the passed value is a primitive type.
 
@@ -39,7 +41,7 @@ def is_primitive(val):
     return isinstance(val, (str, bool, float, complex, bytes, int))
 
 
-def is_namedtuple(val):
+def is_namedtuple(val: object) -> bool:
     """
     Use Duck Typing to check if val is a named tuple. Checks that val is of type tuple and contains
     the attribute _fields which is defined for named tuples.
@@ -54,7 +56,7 @@ def is_namedtuple(val):
     return all(isinstance(n, str) for n in fields)
 
 
-def identity(arg):
+def identity(arg: T) -> T:
     """
     Function which returns the argument. Used as a default lambda function.
 
@@ -68,7 +70,7 @@ def identity(arg):
     return arg
 
 
-def is_iterable(val):
+def is_iterable(val: object) -> bool:
     """
     Check if val is not a list, but is a Iterable type. This is used to determine
     when list() should be called on val
@@ -91,7 +93,7 @@ def is_tabulatable(val: object) -> bool:
     )
 
 
-def split_every(parts, iterable):
+def split_every(parts: int, iterable: Iterable[T]) -> Iterable[list[T]]:
     """
     Split an iterable into parts of length parts
 
@@ -106,7 +108,7 @@ def split_every(parts, iterable):
     return takewhile(bool, (list(islice(iterable, parts)) for _ in count()))
 
 
-def unpack(packed):
+def unpack(packed: bytes) -> Optional[list]:
     """
     Unpack the function and args then apply the function to the arguments and return result
     :param packed: input packed tuple of (func, args)
@@ -119,7 +121,7 @@ def unpack(packed):
     return None
 
 
-def pack(func, args):
+def pack(func: Callable, args: Iterable) -> bytes:
     """
     Pack a function and the args it should be applied to
     :param func: Function to apply
@@ -144,9 +146,14 @@ def parallelize(func, result, processes=None, partition_size=None):
     return chain.from_iterable(parallel_iter)
 
 
-def lazy_parallelize(func, result, processes=None, partition_size=None):
+def lazy_parallelize(
+    func: Callable[[T], U],
+    result: Iterable[T],
+    processes: Optional[int] = None,
+    partition_size: Optional[int] = None,
+) -> Iterable[list[U]]:
     """
-    Lazily computes an iterable in parallel, and returns them in pool chunks
+    Lazily computes an map in parallel, and returns them in pool chunks
     :param func: Function to apply
     :param result: Data to apply to
     :param processes: Number of processes to use in parallel
@@ -164,7 +171,7 @@ def lazy_parallelize(func, result, processes=None, partition_size=None):
         yield from pool.imap(unpack, packed_partitions)
 
 
-def compute_partition_size(result, processes):
+def compute_partition_size(result: Sized, processes: int) -> int:
     """
     Attempts to compute the partition size to evenly distribute work across processes. Defaults to
     1 if the length of result cannot be determined.
@@ -179,7 +186,7 @@ def compute_partition_size(result, processes):
         return 1
 
 
-def compose(*functions):
+def compose(*functions: Callable) -> Callable:
     """
     Compose all the function arguments together
     :param functions: Functions to compose
@@ -189,7 +196,7 @@ def compose(*functions):
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
-def default_value(*vals: Any):
+def default_value(*vals: Optional[bool]):
     for val in vals:
         if val is not None:
             return val

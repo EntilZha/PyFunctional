@@ -951,7 +951,7 @@ class TestPipeline(unittest.TestCase):
         self.assert_not_type(_wrap(Data(1, 2)))
 
     def test_wrap_objects(self):
-        class A(object):
+        class A:
             a = 1
 
         l = [A(), A(), A()]
@@ -1031,7 +1031,7 @@ class TestPipeline(unittest.TestCase):
         sequence = seq(1, 2, 3)
         self.assertEqual(sequence.tabulate(), None)
 
-        class NotTabulatable(object):
+        class NotTabulatable:
             pass
 
         sequence = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())

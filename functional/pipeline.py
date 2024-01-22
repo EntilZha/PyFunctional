@@ -1,44 +1,49 @@
 """
 The pipeline module contains the transformations and actions API of PyFunctional
 """
-from operator import mul, add
 import collections
-from functools import reduce, wraps, partial
-
-import json
 import csv
-import sqlite3
+import json
 import re
-
+import sqlite3
 from collections.abc import Iterable
-from typing import List, Optional, Tuple, Union
+from functools import partial, reduce, wraps
+from operator import add, mul
+from typing import Any, Callable, Generic, Optional, TypeVar, Union, reveal_type
 
 from tabulate import tabulate
 
-from functional.execution import ExecutionEngine
+from functional import transformations
+from functional.execution import ExecutionEngine, ExecutionStrategies
+from functional.io import WRITE_MODE, universal_write_open
 from functional.lineage import Lineage
 from functional.util import (
-    is_iterable,
-    is_primitive,
-    is_namedtuple,
-    is_tabulatable,
-    identity,
     default_value,
+    identity,
+    is_iterable,
+    is_namedtuple,
+    is_primitive,
+    is_tabulatable,
 )
-from functional.io import WRITE_MODE, universal_write_open
-from functional import transformations
-from functional.execution import ExecutionStrategies
+
+T = TypeVar('T')
 
 
-class Sequence(object):
+class Sequence(Generic[T]):
     """
     Sequence is a wrapper around any type of sequence which provides access to common
     functional transformations and reductions in a data pipeline style
     """
 
+    engine: ExecutionEngine
+    _max_repr_items: Optional[int]
+    _base_sequence: Iterable[T]
+    _lineage: Lineage
+    no_wrap: Optional[bool]
+
     def __init__(
         self,
-        sequence: Iterable,
+        sequence: Iterable[T],
         transform=None,
         engine: Optional[ExecutionEngine] = None,
         max_repr_items: Optional[int] = None,
@@ -62,7 +67,7 @@ class Sequence(object):
             self._max_repr_items: Optional[int] = (
                 max_repr_items or sequence._max_repr_items
             )
-            self._base_sequence: Union[Iterable, List, Tuple] = sequence._base_sequence
+            self._base_sequence: Union[Iterable, list, tuple] = sequence._base_sequence
             self._lineage: Lineage = Lineage(
                 prior_lineage=sequence._lineage, engine=engine
             )
@@ -432,7 +437,7 @@ class Sequence(object):
         """
         return self._transform(transformations.drop_while_t(func))
 
-    def take(self, n):
+    def take(self, n: int):
         """
         Take the first n elements of the sequence.
 
@@ -963,7 +968,7 @@ class Sequence(object):
         :param initial: single optional argument acting as initial value
         :return: reduced value using func
         """
-        if len(initial) == 0:
+        if not initial:
             return _wrap(reduce(func, self))
         elif len(initial) == 1:
             return _wrap(reduce(func, self, initial[0]))
@@ -987,7 +992,7 @@ class Sequence(object):
         """
         return self._transform(transformations.accumulate_t(func))
 
-    def make_string(self, separator):
+    def make_string(self, separator: str) -> str:
         """
         Concatenate the elements of the sequence into a string separated by separator.
 
@@ -1016,20 +1021,10 @@ class Sequence(object):
         :return: product of elements in sequence
         """
         if self.empty():
-            if projection:
-                return projection(1)
-            else:
-                return 1
+            return projection(1) if projection else 1
         if self.size() == 1:
-            if projection:
-                return projection(self.first())
-            else:
-                return self.first()
-
-        if projection:
-            return self.map(projection).reduce(mul)
-        else:
-            return self.reduce(mul)
+            return projection(self.first()) if projection else self.first()
+        return (self.map(projection) if projection else self).reduce(mul)
 
     def sum(self, projection=None):
         """
@@ -1044,10 +1039,7 @@ class Sequence(object):
         :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
-        if projection:
-            return sum(self.map(projection))
-        else:
-            return sum(self)
+        return sum(self.map(projection) if projection else self)
 
     def average(self, projection=None):
         """
@@ -1062,10 +1054,7 @@ class Sequence(object):
         :return: average of elements in the sequence
         """
         length = self.size()
-        if projection:
-            return sum(self.map(projection)) / length
-        else:
-            return sum(self) / length
+        return sum(self.map(projection) if projection else self) / length
 
     def aggregate(self, *args):
         """
@@ -1377,7 +1366,7 @@ class Sequence(object):
         """
         return self._transform(transformations.slice_t(start, until))
 
-    def to_list(self, n=None):
+    def to_list(self, n: Optional[int] = None) -> list[T]:
         """
         Converts sequence to list of elements.
 
@@ -1399,7 +1388,7 @@ class Sequence(object):
         else:
             return self.cache().take(n).list()
 
-    def list(self, n=None):
+    def list(self, n: Optional[int] = None) -> list[T]:
         """
         Converts sequence to list of elements.
 
@@ -1417,7 +1406,7 @@ class Sequence(object):
         """
         return self.to_list(n=n)
 
-    def to_set(self):
+    def to_set(self) -> set[T]:
         """
         Converts sequence to a set of elements.
 
@@ -1434,7 +1423,7 @@ class Sequence(object):
         """
         return set(self.sequence)
 
-    def set(self):
+    def set(self) -> set[T]:
         """
         Converts sequence to a set of elements.
 
@@ -1828,7 +1817,13 @@ def _wrap(value):
         return value
 
 
-def extend(func=None, aslist=False, final=False, name=None, parallel=False):
+def extend(
+    func: Optional[Callable[[Any], Any]] = None,
+    aslist: bool = False,
+    final: bool = False,
+    name: str = '',
+    parallel: bool = False,
+):
     """
     Function decorator for adding new methods to the Sequence class.
 

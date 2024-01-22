@@ -13,7 +13,7 @@ from functional.util import is_primitive, default_value
 from functional.io import get_read_function
 
 
-class Stream(object):
+class Stream:
     """
     Represents and implements a stream which separates the responsibilities of Sequence and
     ExecutionEngine.
@@ -318,9 +318,7 @@ class ParallelStream(Stream):
         :param disable_compression: Disable file compression detection
         :param no_wrap: default value of no_wrap for functions like first() or last()
         """
-        super(ParallelStream, self).__init__(
-            disable_compression=disable_compression, no_wrap=no_wrap
-        )
+        super().__init__(disable_compression=disable_compression, no_wrap=no_wrap)
         self.processes = processes
         self.partition_size = partition_size
 
