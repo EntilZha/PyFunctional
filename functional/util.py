@@ -7,8 +7,8 @@ from typing import Callable, Optional, Sized, TypeVar
 
 import dill as serializer  # type: ignore
 
-T = TypeVar('T')
-U = TypeVar('U')
+T = TypeVar("T")
+U = TypeVar("U")
 
 PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()

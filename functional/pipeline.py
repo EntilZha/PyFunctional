@@ -26,7 +26,7 @@ from functional.util import (
     is_tabulatable,
 )
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Sequence(Generic[T]):
@@ -1821,7 +1821,7 @@ def extend(
     func: Optional[Callable[[Any], Any]] = None,
     aslist: bool = False,
     final: bool = False,
-    name: str = '',
+    name: str = "",
     parallel: bool = False,
 ):
     """
