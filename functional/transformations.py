@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import collections
+import collections.abc
 import types
-import typing
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Set
 from functools import partial
 from itertools import (
     accumulate,
@@ -15,20 +15,26 @@ from itertools import (
     starmap,
     takewhile,
 )
-from typing import NamedTuple, Optional, TypeVar
+from typing import TYPE_CHECKING, NamedTuple, Optional, TypeVar
+
 from functional.execution import ExecutionStrategies
+from functional.util import identity
+
+if TYPE_CHECKING:
+    from functional.pipeline import Sequence
 
 
 class Transformation(NamedTuple):
     name: str
-    function: Optional[Callable[[Iterable], Iterable]]
-    execution_strategies: set[ExecutionStrategies] = {}
+    function: Callable[[Iterable], Iterable]
+    execution_strategies: Set[int] = frozenset()
 
 
 T = TypeVar("T")
 
 #: Cache transformation
-CACHE_T = Transformation("cache", None)
+CACHE_T = Transformation("cache", identity)
+# this identity will not be used but it's to comply with typing
 
 
 def name(function: Callable) -> str:
@@ -43,13 +49,13 @@ def name(function: Callable) -> str:
         return str(function)
 
 
-def listify(sequence: Iterable[T]) -> typing.Sequence[T]:
+def listify(sequence: Iterable[T]) -> collections.abc.Sequence[T]:
     """
     Convert an iterable to a list
     :param sequence: sequence to convert
     :return: list
     """
-    if isinstance(sequence, typing.Sequence):
+    if isinstance(sequence, collections.abc.Sequence):
         return sequence
     return list(sequence)
 
@@ -107,7 +113,7 @@ def _reverse_iter(iterable: Iterable[T]) -> Iterable[T]:
     :return: reversed iterable
     """
     try:  # avoid a copy if we can
-        return reversed(iterable)
+        return reversed(iterable)  # type: ignore
     except TypeError:
         return reversed(list(iterable))
 
@@ -278,7 +284,7 @@ def tail_t() -> Transformation:
     return Transformation("tail", lambda sequence: islice(sequence, 1, None))
 
 
-def _inits(sequence: Iterable[T], wrap) -> list[typing.Sequence[T]]:
+def _inits(sequence: Iterable[T], wrap) -> list[Sequence[T]]:
     """
     Implementation for inits_t
     :param sequence: sequence to inits
@@ -297,7 +303,7 @@ def inits_t(wrap):
     return Transformation("inits", partial(_inits, wrap=wrap))
 
 
-def _tails(sequence: Iterable[T], wrap) -> list[typing.Sequence[T]]:
+def _tails(sequence: Iterable[T], wrap) -> list[Sequence[T]]:
     """
     Implementation for tails_t
     :param sequence: sequence to tails

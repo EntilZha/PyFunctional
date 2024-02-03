@@ -1118,3 +1118,10 @@ class TestExtend(unittest.TestCase):
 class TestParallelPipeline(TestPipeline):
     def setUp(self):
         self.seq = pseq
+
+
+def test_typing() -> None:
+    assert_type(seq([1, 2, 3]), Sequence[int])
+    assert_type(seq([1]).map(str), Sequence[str])
+    assert_type(seq("ab").to_list(), list[str])
+    assert_type(seq(["ab"]).to_list(), list[str])

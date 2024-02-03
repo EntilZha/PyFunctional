@@ -5,13 +5,13 @@ import bz2
 import gzip
 import io
 import lzma
-from os import PathLike
+from pathlib import Path
 from typing import Any, Optional
 
 from typing_extensions import TypeAlias
 
-# from typeshed
-StrOrBytesPath: TypeAlias = str | bytes | PathLike
+# adapted from typeshed
+StrOrBytesPath: TypeAlias = str | bytes | Path
 FileDescriptorOrPath: TypeAlias = int | StrOrBytesPath
 
 WRITE_MODE = "wt"
@@ -28,7 +28,7 @@ class ReusableFile:
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: FileDescriptorOrPath,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "r",
         buffering: int = -1,
@@ -91,7 +91,7 @@ class CompressedFile(ReusableFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: FileDescriptorOrPath,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -122,7 +122,7 @@ class GZFile(CompressedFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: FileDescriptorOrPath,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -177,7 +177,7 @@ class BZ2File(CompressedFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: FileDescriptorOrPath,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -299,7 +299,7 @@ def get_read_function(filename: FileDescriptorOrPath, disable_compression: bool)
 
 
 def universal_write_open(
-    path: FileDescriptorOrPath,
+    path: StrOrBytesPath,
     mode: str,
     buffering: int = -1,
     encoding: Optional[str] = None,

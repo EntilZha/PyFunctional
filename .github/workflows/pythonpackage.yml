@@ -34,13 +34,13 @@ jobs:
         run: poetry run pylint functional
       - name: black
         run: poetry run black --check --diff --color functional
-        if: always()
+        if: success() || failure()
       - name: Test with pytest
         run: poetry run pytest --cov=functional --cov-report=xml
-        if: always()
+        if: success() || failure()
       - name: mypy
         run: poetry run mypy --warn-unused-configs --check-untyped-defs --warn-redundant-casts --warn-unused-ignores --extra-checks functional
-        if: always()
+        if: success() || failure()
       - uses: tsuyoshicho/action-mypy@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
           level: warning
           execute_command: poetry run mypy --strict
           filter_mode: nofilter
-        if: matrix.python-version == '3.11' # run only on latest to avoid duplicate warnings
+        if: (success() || failure()) && matrix.python-version == '3.11' # run only on latest to avoid duplicate warnings
       - uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml

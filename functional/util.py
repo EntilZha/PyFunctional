@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
-from typing import Any, Callable, Optional, Protocol, Sized, TypeVar, Union
+from typing import Any, Callable, Optional, Protocol, Sized, TypeVar, Union, cast
 
 import dill as serializer  # type: ignore
 from typing_extensions import TypeAlias
@@ -190,7 +190,9 @@ def lazy_parallelize(
         processes = CPU_COUNT
     else:
         processes = min(processes, CPU_COUNT)
-    partition_size = partition_size or compute_partition_size(seq, processes)
+    partition_size = partition_size or compute_partition_size(
+        cast(Sized, seq), processes
+    )
     with Pool(processes=processes) as pool:
         partitions = split_every(partition_size, iter(seq))
         packed_partitions = (pack(func, (partition,)) for partition in partitions)

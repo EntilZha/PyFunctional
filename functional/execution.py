@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, Iterable, Iterator, Optional
+from typing import TYPE_CHECKING, Callable, Iterable, Iterator, Optional
 
 from functional.util import compose, parallelize
 
@@ -66,7 +66,7 @@ class ParallelExecutionEngine(ExecutionEngine):
         parallel = partial(
             parallelize, processes=self.processes, partition_size=self.partition_size
         )
-        staged = []
+        staged: list[Callable[[Iterable], Iterable]] = []
         for transform in transformations:
             strategies = transform.execution_strategies
             if ExecutionStrategies.PARALLEL in strategies:

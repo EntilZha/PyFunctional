@@ -3,6 +3,7 @@ The pipeline module contains the transformations and actions API of PyFunctional
 """
 
 from __future__ import annotations
+import builtins
 
 import collections
 import csv
@@ -10,7 +11,7 @@ import itertools
 import json
 import re
 import sqlite3
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from functools import partial, reduce, wraps
 from operator import add, mul
 from typing import (
@@ -23,6 +24,7 @@ from typing import (
     Optional,
     TypeVar,
     Union,
+    cast,
     overload,
 )
 
@@ -31,7 +33,7 @@ from typing_extensions import Self
 
 from functional import transformations
 from functional.execution import ExecutionEngine, ExecutionStrategies
-from functional.io import WRITE_MODE, FileDescriptorOrPath, universal_write_open
+from functional.io import WRITE_MODE, StrOrBytesPath, universal_write_open
 from functional.lineage import Lineage
 from functional.util import (
     SupportsRichComparisonT,
@@ -51,7 +53,7 @@ W = TypeVar("W")
 Unset = object()
 
 
-class Sequence(Generic[T]):
+class Sequence(Generic[T], Iterable[T]):
     """
     Sequence is a wrapper around any type of sequence which provides access to common
     functional transformations and reductions in a data pipeline style
@@ -103,7 +105,7 @@ class Sequence(Generic[T]):
             self._lineage.apply(transform)
         self.no_wrap = no_wrap
 
-    def __iter__(self) -> Iterable[T]:
+    def __iter__(self) -> Iterator[T]:
         """
         Return iterator of sequence.
 
@@ -173,7 +175,7 @@ class Sequence(Generic[T]):
         """
         return self.len() != 0
 
-    def __getitem__(self, item: int) -> T | Sequence:  # TODO
+    def __getitem__(self, item: int) -> T | Sequence:
         """
         Gets item at given index.
 
@@ -212,7 +214,7 @@ class Sequence(Generic[T]):
         else:
             return Sequence(self.sequence + other, no_wrap=self.no_wrap)
 
-    def _evaluate(self) -> Iterable[str]:
+    def _evaluate(self) -> Iterator:
         """
         Creates and returns an iterator which applies all the transformations in the lineage
 
@@ -1483,7 +1485,7 @@ class Sequence(Generic[T]):
         ...
 
     def to_dict(
-        self: Sequence[tuple[U, V]], default: Optional[Callable[[], V]] = None
+        self: Sequence[tuple[U, V]], default: Callable[[], V] | V | None = None
     ) -> dict[U, V] | collections.defaultdict[U, V]:
         """
         Converts sequence of (Key, Value) pairs to a dictionary.
@@ -1505,7 +1507,7 @@ class Sequence(Generic[T]):
             return dictionary
         else:
             return collections.defaultdict(
-                default if callable(default) else lambda: default, dictionary
+                default if callable(default) else lambda: cast(V, default), dictionary
             )
 
     @overload
@@ -1541,19 +1543,19 @@ class Sequence(Generic[T]):
     # pylint: disable=too-many-locals
     def to_file(
         self,
-        path: FileDescriptorOrPath,
-        delimiter=None,
-        mode="wt",
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
-        compresslevel=9,
-        format=None,
-        check=-1,
-        preset=None,
-        filters=None,
-        compression=None,
+        path: StrOrBytesPath,
+        delimiter: Optional[str] = None,
+        mode: str = "wt",
+        buffering: int = -1,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
+        compresslevel: int = 9,
+        format: Optional[int] = None,
+        check: int = -1,
+        preset: Optional[int] = None,
+        filters: Optional[Iterable[builtins.dict]] = None,
+        compression: Optional[str] = None,
     ):
         """
         Saves the sequence to a file by executing str(self) which becomes str(self.to_list()). If
@@ -1594,9 +1596,9 @@ class Sequence(Generic[T]):
 
     def to_jsonl(
         self,
-        path: FileDescriptorOrPath,
+        path: StrOrBytesPath,
         mode: str = "wb",
-        compression: Optional[bool] = None,
+        compression: Optional[str] = None,
     ):
         """
         Saves the sequence to a jsonl file. Each element is mapped using json.dumps then written

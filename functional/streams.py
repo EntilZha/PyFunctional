@@ -3,6 +3,7 @@ from __future__ import annotations
 import builtins
 import csv as csvapi
 import json as jsonapi
+from pathlib import Path
 import re
 import sqlite3 as sqlite3api
 from itertools import chain
@@ -218,7 +219,7 @@ class Stream:
         :param fmt_params: options passed to csv.reader
         :return: Sequence wrapping csv file
         """
-        if isinstance(csv_file, FileDescriptorOrPath):
+        if isinstance(csv_file, (int, str, bytes, Path)):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
         elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
@@ -240,7 +241,7 @@ class Stream:
         dialect="excel",
         **kwds,
     ):
-        if isinstance(csv_file, FileDescriptorOrPath):
+        if isinstance(csv_file, (int, str, bytes, Path)):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
         elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
@@ -273,7 +274,7 @@ class Stream:
         :param jsonl_file: path or file containing jsonl content
         :return: Sequence wrapping jsonl file
         """
-        if isinstance(jsonl_file, FileDescriptorOrPath):
+        if isinstance(jsonl_file, (int, str, bytes, Path)):
             file_open = get_read_function(jsonl_file, self.disable_compression)
             input_file = file_open(jsonl_file)
         else:
@@ -298,7 +299,7 @@ class Stream:
         :param json_file: path or file containing json content
         :return: Sequence wrapping jsonl file
         """
-        if isinstance(json_file, FileDescriptorOrPath):
+        if isinstance(json_file, (str, bytes, Path)):
             file_open = get_read_function(json_file, self.disable_compression)
             input_file = file_open(json_file)
             json_input = jsonapi.load(input_file)
