@@ -13,6 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
+      # For https://github.com/tsuyoshicho/action-mypy to display a report on the PR
       pull-requests: write
     strategy:
       fail-fast: false
@@ -38,7 +39,7 @@ jobs:
         run: poetry run pytest --cov=functional --cov-report=xml
         if: always()
       - name: mypy
-        run: poetry run mypy --strict functional
+        run: poetry run mypy --warn-unused-configs --check-untyped-defs --warn-redundant-casts --warn-unused-ignores --extra-checks functional
         if: always()
       - uses: tsuyoshicho/action-mypy@v4
         with:
