@@ -33,7 +33,7 @@ jobs:
       - name: Pylint
         run: poetry run pylint functional
       - name: black
-        run: poetry run black --check functional
+        run: poetry run black --check --diff --color functional
         if: always()
       - name: Test with pytest
         run: poetry run pytest --cov=functional --cov-report=xml
