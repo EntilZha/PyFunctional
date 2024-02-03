@@ -9,7 +9,7 @@ import sqlite3
 from collections.abc import Iterable
 from functools import partial, reduce, wraps
 from operator import add, mul
-from typing import Any, Callable, Generic, Optional, TypeVar, Union, reveal_type
+from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
 from tabulate import tabulate
 
