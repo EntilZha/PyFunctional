@@ -1,16 +1,34 @@
-import re
+from __future__ import annotations
+
+import builtins
 import csv as csvapi
 import json as jsonapi
+import re
 import sqlite3 as sqlite3api
-import builtins
-
 from itertools import chain
-from typing import Iterable
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Iterable,
+    Mapping,
+    Optional,
+    TypeVar,
+    overload,
+    IO,
+    AnyStr,
+)
+import typing
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
+from functional.io import FileDescriptorOrPath, get_read_function
 from functional.pipeline import Sequence
-from functional.util import is_primitive, default_value
-from functional.io import get_read_function
+from functional.util import coalesce, is_primitive
+
+T = TypeVar("T")
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 class Stream:
@@ -21,7 +39,12 @@ class Stream:
     An instance of Stream is normally accessed as `seq`
     """
 
-    def __init__(self, disable_compression=False, max_repr_items=100, no_wrap=None):
+    def __init__(
+        self,
+        disable_compression: bool = False,
+        max_repr_items: int = 100,
+        no_wrap: Optional[bool] = None,
+    ):
         """
         Default stream constructor.
         :param disable_compression: Disable file compression detection
@@ -31,7 +54,21 @@ class Stream:
         self.max_repr_items = max_repr_items
         self.no_wrap = no_wrap
 
-    def __call__(self, *args, no_wrap=None, **kwargs):
+    @overload
+    def __call__(
+        self, arg: pd.DataFrame, no_wrap: Optional[bool] = None
+    ) -> Sequence[list[Any]]:
+        ...
+
+    @overload
+    def __call__(self, arg: Iterable[T], no_wrap: Optional[bool] = None) -> Sequence[T]:
+        ...
+
+    @overload
+    def __call__(self, *args: T, no_wrap: Optional[bool] = None) -> Sequence[T]:
+        ...
+
+    def __call__(self, *args, no_wrap: Optional[bool] = None):  # type: ignore
         """
         Create a Sequence using a sequential ExecutionEngine.
 
@@ -46,10 +83,10 @@ class Stream:
         """
         engine = ExecutionEngine()
         return self._parse_args(
-            args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False)
+            args, engine, no_wrap=coalesce(no_wrap, self.no_wrap, False)
         )
 
-    def chain(self, *args, no_wrap=None, **kwargs):
+    def chain(self, *args: Iterable[T], no_wrap: Optional[bool] = None) -> Sequence[T]:
         """
         Create a Sequence chaining multiple iterators.
         """
@@ -57,10 +94,12 @@ class Stream:
             if not isinstance(arg, Iterable):
                 raise TypeError("The type of arg should be iterator.")
 
-        return self(chain(*args), no_wrap=no_wrap, **kwargs)
+        return self(chain(*args), no_wrap=no_wrap)
 
-    def _parse_args(self, args, engine, no_wrap=None):
-        _no_wrap = default_value(no_wrap, self.no_wrap, False)
+    def _parse_args(
+        self, args, engine: Optional[ExecutionEngine], no_wrap: Optional[bool] = None
+    ) -> Sequence[T]:
+        _no_wrap = coalesce(no_wrap, self.no_wrap, False)
         if len(args) == 0:
             return Sequence(
                 [], engine=engine, max_repr_items=self.max_repr_items, no_wrap=_no_wrap
@@ -104,13 +143,13 @@ class Stream:
 
     def open(
         self,
-        path,
-        delimiter=None,
-        mode="r",
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: FileDescriptorOrPath,
+        delimiter: Optional[str] = None,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: Optional[str] = None,
+        errors: Optional[str] = None,
+        newline: Optional[str] = None,
     ):
         """
         Reads and parses input files as defined.
@@ -149,7 +188,7 @@ class Stream:
         else:
             return self("".join(list(file)).split(delimiter))
 
-    def range(self, *args):
+    def range(self, *args: int) -> Sequence[int]:
         """
         Alias to range function where seq.range(args) is equivalent to seq(range(args)).
 
@@ -161,7 +200,12 @@ class Stream:
         """
         return self(builtins.range(*args))  # pylint: disable=no-member
 
-    def csv(self, csv_file, dialect="excel", **fmt_params):
+    def csv(
+        self,
+        csv_file: FileDescriptorOrPath | Iterable[str],
+        dialect: str = "excel",
+        **fmt_params,
+    ):
         """
         Reads and parses the input of a csv stream or file.
 
@@ -176,14 +220,14 @@ class Stream:
         :param fmt_params: options passed to csv.reader
         :return: Sequence wrapping csv file
         """
-        if isinstance(csv_file, str):
+        if isinstance(csv_file, FileDescriptorOrPath):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
         elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
             input_file = csv_file
         else:
-            raise ValueError(
-                "csv_file must be a file path or implement the iterator interface"
+            raise TypeError(
+                "csv_file must be a file descriptor or implement the iterator interface"
             )
 
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
@@ -191,20 +235,20 @@ class Stream:
 
     def csv_dict_reader(
         self,
-        csv_file,
+        csv_file: FileDescriptorOrPath | Iterable[str],
         fieldnames=None,
         restkey=None,
         restval=None,
         dialect="excel",
-        **kwds
+        **kwds,
     ):
-        if isinstance(csv_file, str):
+        if isinstance(csv_file, FileDescriptorOrPath):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
         elif hasattr(csv_file, "next") or hasattr(csv_file, "__next__"):
             input_file = csv_file
         else:
-            raise ValueError(
+            raise TypeError(
                 "csv_file must be a file path or implement the iterator interface"
             )
 
@@ -214,11 +258,11 @@ class Stream:
             restkey=restkey,
             restval=restval,
             dialect=dialect,
-            **kwds
+            **kwds,
         )
         return self(csv_input).cache(delete_lineage=True)
 
-    def jsonl(self, jsonl_file):
+    def jsonl(self, jsonl_file: FileDescriptorOrPath | Iterable[str]):
         """
         Reads and parses the input of a jsonl file stream or file.
 
@@ -231,14 +275,14 @@ class Stream:
         :param jsonl_file: path or file containing jsonl content
         :return: Sequence wrapping jsonl file
         """
-        if isinstance(jsonl_file, str):
+        if isinstance(jsonl_file, FileDescriptorOrPath):
             file_open = get_read_function(jsonl_file, self.disable_compression)
             input_file = file_open(jsonl_file)
         else:
             input_file = jsonl_file
         return self(input_file).map(jsonapi.loads).cache(delete_lineage=True)
 
-    def json(self, json_file):
+    def json(self, json_file: FileDescriptorOrPath | IO) -> Sequence[Any]:
         """
         Reads and parses the input of a json file handler or file.
 
@@ -256,14 +300,14 @@ class Stream:
         :param json_file: path or file containing json content
         :return: Sequence wrapping jsonl file
         """
-        if isinstance(json_file, str):
+        if isinstance(json_file, FileDescriptorOrPath):
             file_open = get_read_function(json_file, self.disable_compression)
             input_file = file_open(json_file)
             json_input = jsonapi.load(input_file)
         elif hasattr(json_file, "read"):
             json_input = jsonapi.load(json_file)
         else:
-            raise ValueError(
+            raise TypeError(
                 "json_file must be a file path or implement the iterator interface"
             )
 
@@ -273,7 +317,14 @@ class Stream:
             return self(json_input.items())
 
     # pylint: disable=keyword-arg-before-vararg
-    def sqlite3(self, conn, sql, parameters=None, *args, **kwargs):
+    def sqlite3(
+        self,
+        conn: sqlite3api.Connection | sqlite3api.Cursor | str,
+        sql: str,
+        parameters: typing.Sequence[Any] | Mapping[str, Any] | None = None,
+        *args,
+        **kwargs,
+    ) -> Sequence[Any]:
         """
         Reads input by querying from a sqlite database.
 
@@ -295,8 +346,10 @@ class Stream:
             with sqlite3api.connect(conn, *args, **kwargs) as input_conn:
                 return self(input_conn.execute(sql, parameters))
         else:
-            raise ValueError(
-                "conn must be a must be a file path or sqlite3 Connection/Cursor"
+            raise TypeError(
+                "conn must be a file path or sqlite3 Connection/Cursor, got:",
+                type(conn),
+                conn,
             )
 
 
@@ -307,10 +360,10 @@ class ParallelStream(Stream):
 
     def __init__(
         self,
-        processes=None,
-        partition_size=None,
-        disable_compression=False,
-        no_wrap=None,
+        processes: Optional[int] = None,
+        partition_size: Optional[int] = None,
+        disable_compression: bool = False,
+        no_wrap: bool | None = None,
     ):
         """
         Configure Stream for parallel processing and file compression detection
@@ -322,7 +375,13 @@ class ParallelStream(Stream):
         self.processes = processes
         self.partition_size = partition_size
 
-    def __call__(self, *args, no_wrap=None, **kwargs):
+    def __call__(
+        self,
+        *args,
+        no_wrap: Optional[bool] = None,
+        processes: Optional[int] = None,
+        partition_size: Optional[int] = None,
+    ):
         """
         Create a Sequence using a parallel ExecutionEngine.
 
@@ -335,13 +394,14 @@ class ParallelStream(Stream):
         :param args: Sequence to wrap
         :return: Wrapped sequence
         """
-        processes = kwargs.get("processes") or self.processes
-        partition_size = kwargs.get("partition_size") or self.partition_size
         engine = ParallelExecutionEngine(
-            processes=processes, partition_size=partition_size
+            processes=processes if processes is not None else self.processes,
+            partition_size=(
+                partition_size if partition_size is not None else self.partition_size
+            ),
         )
         return self._parse_args(
-            args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False)
+            args, engine, no_wrap=coalesce(no_wrap, self.no_wrap, False)
         )
 
 

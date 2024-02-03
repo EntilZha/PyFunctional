@@ -1,14 +1,19 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from typing import Optional
+
 from functional.execution import ExecutionEngine
-from functional.transformations import CACHE_T
+from functional.transformations import CACHE_T, Transformation
 
 
 class Lineage:
     """
     Class for tracking the lineage of transformations, and applying them to a given sequence.
     """
+
+    transformations: list[Transformation]
+    engine: ExecutionEngine
 
     def __init__(
         self,
@@ -31,7 +36,7 @@ class Lineage:
             else prior_lineage.engine
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Returns readable representation of Lineage
 
@@ -41,7 +46,7 @@ class Lineage:
             ["sequence"] + [transform.name for transform in self.transformations]
         )
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Number of transformations in lineage
 
@@ -49,7 +54,7 @@ class Lineage:
         """
         return len(self.transformations)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Transformation:
         """
         Return specific transformation in lineage.
         :param item: Transformation to retrieve
@@ -57,14 +62,14 @@ class Lineage:
         """
         return self.transformations[item]
 
-    def apply(self, transform):
+    def apply(self, transform: Transformation):
         """
         Add the transformation to the lineage
         :param transform: Transformation to apply
         """
         self.transformations.append(transform)
 
-    def evaluate(self, sequence):
+    def evaluate(self, sequence: Iterable) -> Iterator:
         """
         Compute the lineage on the sequence.
 
@@ -75,7 +80,7 @@ class Lineage:
         transformations = self.transformations[last_cache_index:]
         return self.engine.evaluate(sequence, transformations)
 
-    def cache_scan(self):
+    def cache_scan(self) -> int:
         """
         Scan the lineage for the index of the most recent cache.
         :return: Index of most recent cache

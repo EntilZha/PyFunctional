@@ -112,7 +112,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual([], self.seq.chain().to_list())
 
         with self.assertRaises(TypeError):
-            self.seq.chain(1, 2).to_list()
+            self.seq.chain(1, 2).to_list()  # type: ignore
 
         self.assertEqual(list(data_a), self.seq.chain(data_a).to_list())
 
@@ -124,8 +124,8 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(expect, result)
         with open("functional/test/data/test.csv", encoding="utf8") as csv_file:
             self.assertEqual(expect, self.seq.csv(csv_file).to_list())
-        with self.assertRaises(ValueError):
-            self.seq.csv(1)
+        with self.assertRaises(TypeError):
+            self.seq.csv([])  # type: ignore
 
     def test_csv_dict_reader(self):
         result = self.seq.csv_dict_reader(
@@ -147,28 +147,28 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(result[1]["b"], "5")
         self.assertEqual(result[1]["c"], "6")
 
-        with self.assertRaises(ValueError):
-            self.seq.csv_dict_reader(1)
+        with self.assertRaises(TypeError):
+            self.seq.csv_dict_reader([])  # type: ignore
 
     def test_gzip_csv(self):
         result = self.seq.csv("functional/test/data/test.csv.gz").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
-        with self.assertRaises(ValueError):
-            self.seq.csv(1)
+        with self.assertRaises(TypeError):
+            self.seq.csv([])  # type: ignore
 
     def test_bz2_csv(self):
         result = self.seq.csv("functional/test/data/test.csv.bz2").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
-        with self.assertRaises(ValueError):
-            self.seq.csv(1)
+        with self.assertRaises(TypeError):
+            self.seq.csv([])  # type: ignore
 
     def test_xz_csv(self):
         result = self.seq.csv("functional/test/data/test.csv.xz").to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(OSError):
             self.seq.csv(1)
 
     def test_jsonl(self):
@@ -212,8 +212,8 @@ class TestStreams(unittest.TestCase):
             result = self.seq.json(file_handle).to_list()
             self.assertEqual(dict_expect, result)
 
-        with self.assertRaises(ValueError):
-            self.seq.json(1)
+        with self.assertRaises(TypeError):
+            self.seq.json([])  # type: ignore
 
     def test_gzip_json(self):
         list_test_path = "functional/test/data/test_list.json.gz"
@@ -226,8 +226,8 @@ class TestStreams(unittest.TestCase):
         result = self.seq.json(dict_test_path).to_list()
         self.assertEqual(dict_expect, result)
 
-        with self.assertRaises(ValueError):
-            self.seq.json(1)
+        with self.assertRaises(TypeError):
+            self.seq.json([])  # type: ignore
 
     def test_bz2_json(self):
         list_test_path = "functional/test/data/test_list.json.bz2"
@@ -240,8 +240,8 @@ class TestStreams(unittest.TestCase):
         result = self.seq.json(dict_test_path).to_list()
         self.assertEqual(dict_expect, result)
 
-        with self.assertRaises(ValueError):
-            self.seq.json(1)
+        with self.assertRaises(TypeError):
+            self.seq.json([])  # type: ignore
 
     def test_xz_json(self):
         list_test_path = "functional/test/data/test_list.json.xz"
@@ -254,15 +254,15 @@ class TestStreams(unittest.TestCase):
         result = self.seq.json(dict_test_path).to_list()
         self.assertEqual(dict_expect, result)
 
-        with self.assertRaises(ValueError):
-            self.seq.json(1)
+        with self.assertRaises(TypeError):
+            self.seq.json([])  # type: ignore
 
     def test_sqlite3(self):
         db_file = "functional/test/data/test_sqlite3.db"
 
         # test failure case
-        with self.assertRaises(ValueError):
-            self.seq.sqlite3(1, "SELECT * from user").to_list()
+        with self.assertRaises(TypeError):
+            self.seq.sqlite3(1, "SELECT * from user").to_list()  # type: ignore
 
         # test select from file path
         query_0 = "SELECT id, name FROM user;"
@@ -299,7 +299,7 @@ class TestStreams(unittest.TestCase):
         expected_2 = [(1, "Tom")]
         self.assertListEqual(expected_2, result_2)
 
-    def test_pandas(self):
+    def test_pandas(self) -> None:
         try:
             import pandas
 
@@ -448,7 +448,7 @@ class TestStreams(unittest.TestCase):
     def test_to_sqlite3_failure(self):
         insert_sql = "INSERT INTO user (id, name) VALUES (?, ?)"
         elements = [(1, "Tom"), (2, "Jack"), (3, "Jane"), (4, "Stephan")]
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             self.seq(elements).to_sqlite3(1, insert_sql)
 
     def test_to_sqlite3_file(self):

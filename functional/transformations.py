@@ -1,31 +1,35 @@
-from functools import partial
-from itertools import (
-    dropwhile,
-    takewhile,
-    islice,
-    count,
-    product,
-    chain,
-    starmap,
-    filterfalse,
-)
 import collections
 import types
-from collections.abc import Callable
-
+import typing
+from collections.abc import Callable, Iterable
+from functools import partial
+from itertools import (
+    accumulate,
+    chain,
+    dropwhile,
+    filterfalse,
+    islice,
+    product,
+    starmap,
+    takewhile,
+)
+from typing import NamedTuple, Optional, TypeVar
 from functional.execution import ExecutionStrategies
 
 
-#: Defines a Transformation from a name, function, and execution_strategies
-Transformation = collections.namedtuple(
-    "Transformation", ["name", "function", "execution_strategies"]
-)
+class Transformation(NamedTuple):
+    name: str
+    function: Optional[Callable[[Iterable], Iterable]]
+    execution_strategies: set[ExecutionStrategies] = {}
+
+
+T = TypeVar("T")
 
 #: Cache transformation
-CACHE_T = Transformation("cache", None, None)
+CACHE_T = Transformation("cache", None)
 
 
-def name(function: Callable):
+def name(function: Callable) -> str:
     """
     Retrieve a pretty name for the function
     :param function: function to get name from
@@ -37,72 +41,51 @@ def name(function: Callable):
         return str(function)
 
 
-def map_t(func: Callable):
+def listify(sequence: Iterable[T]) -> typing.Sequence[T]:
+    """
+    Convert an iterable to a list
+    :param sequence: sequence to convert
+    :return: list
+    """
+    if isinstance(sequence, typing.Sequence):
+        return sequence
+    return list(sequence)
+
+
+def map_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.map
     :param func: map function
     :return: transformation
     """
     return Transformation(
-        f"map({name(func)})",
-        partial(map, func),
-        {ExecutionStrategies.PARALLEL},
+        f"map({name(func)})", partial(map, func), {ExecutionStrategies.PARALLEL}
     )
 
 
-def select_t(func: Callable):
-    """
-    Transformation for Sequence.select
-    :param func: select function
-    :return: transformation
-    """
-    return Transformation(
-        "select({name(func)})",
-        partial(map, func),
-        {ExecutionStrategies.PARALLEL},
-    )
-
-
-def starmap_t(func: Callable):
+def starmap_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.starmap and Sequence.smap
     :param func: starmap function
     :return: transformation
     """
     return Transformation(
-        "starmap({name(func)})",
-        partial(starmap, func),
-        {ExecutionStrategies.PARALLEL},
+        f"starmap({name(func)})", partial(starmap, func), {ExecutionStrategies.PARALLEL}
     )
 
 
-def filter_t(func: Callable):
+def filter_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.filter
     :param func: filter function
     :return: transformation
     """
     return Transformation(
-        f"filter({name(func)})",
-        partial(filter, func),
-        {ExecutionStrategies.PARALLEL},
+        f"filter({name(func)})", partial(filter, func), {ExecutionStrategies.PARALLEL}
     )
 
 
-def where_t(func: Callable):
-    """
-    Transformation for Sequence.where
-    :param func: where function
-    :return: transformation
-    """
-    return Transformation(
-        f"where({name(func)})",
-        partial(filter, func),
-        {ExecutionStrategies.PARALLEL},
-    )
-
-
-def filter_not_t(func: Callable):
+def filter_not_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.filter_not
     :param func: filter_not function
@@ -115,15 +98,27 @@ def filter_not_t(func: Callable):
     )
 
 
-def reversed_t():
+def _reverse_iter(iterable: Iterable[T]) -> Iterable[T]:
+    """
+    Reverse an iterable
+    :param iterable: iterable to reverse
+    :return: reversed iterable
+    """
+    try:  # avoid a copy if we can
+        return reversed(iterable)
+    except TypeError:
+        return reversed(list(iterable))
+
+
+def reversed_t() -> Transformation:
     """
     Transformation for Sequence.reverse
     :return: transformation
     """
-    return Transformation("reversed", reversed, [ExecutionStrategies.PRE_COMPUTE])
+    return Transformation("reversed", _reverse_iter)
 
 
-def slice_t(start: int, until: int):
+def slice_t(start: int, until: int) -> Transformation:
     """
     Transformation for Sequence.slice
     :param start: start index
@@ -133,28 +128,10 @@ def slice_t(start: int, until: int):
     return Transformation(
         f"slice({start}, {until})",
         lambda sequence: islice(sequence, start, until),
-        None,
     )
 
 
-def distinct_t():
-    """
-    Transformation for Sequence.distinct
-    :return: transformation
-    """
-
-    def distinct(sequence):
-        seen = set()
-        for element in sequence:
-            if element in seen:
-                continue
-            seen.add(element)
-            yield element
-
-    return Transformation("distinct", distinct, None)
-
-
-def distinct_by_t(func: Callable):
+def distinct_by_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.distinct_by
     :param func: distinct_by function
@@ -162,42 +139,27 @@ def distinct_by_t(func: Callable):
     """
 
     def distinct_by(sequence):
-        distinct_lookup = {}
+        seen = set()
         for element in sequence:
             key = func(element)
-            if key not in distinct_lookup:
-                distinct_lookup[key] = element
-        return distinct_lookup.values()
+            if key not in seen:
+                seen.add(key)
+                yield element
 
-    return Transformation(f"distinct_by({name(func)})", distinct_by, None)
+    return Transformation(f"distinct_by({name(func)})", distinct_by)
 
 
-def sorted_t(key=None, reverse: bool = False):
+def sorted_t(key: Optional[Callable] = None, reverse: bool = False):
     """
     Transformation for Sequence.sorted
     :param key: key to sort by
     :param reverse: reverse or not
     :return: transformation
     """
-    return Transformation(
-        "sorted", lambda sequence: sorted(sequence, key=key, reverse=reverse), None
-    )
+    return Transformation("sorted", partial(sorted, key=key, reverse=reverse))
 
 
-def order_by_t(func: Callable):
-    """
-    Transformation for Sequence.order_by
-    :param func: order_by function
-    :return: transformation
-    """
-    return Transformation(
-        f"order_by({name(func)})",
-        lambda sequence: sorted(sequence, key=func),
-        None,
-    )
-
-
-def drop_right_t(n: int):
+def drop_right_t(n: int) -> Transformation:
     """
     Transformation for Sequence.drop_right
     :param n: number to drop from right
@@ -208,48 +170,44 @@ def drop_right_t(n: int):
     else:
         end_index = -n
     return Transformation(
-        f"drop_right({n})",
-        lambda sequence: sequence[:end_index],
-        [ExecutionStrategies.PRE_COMPUTE],
+        f"drop_right({n})", lambda sequence: listify(sequence)[:end_index]
     )
 
 
-def drop_t(n: int):
+def drop_t(n: int) -> Transformation:
     """
     Transformation for Sequence.drop
     :param n: number to drop from left
     :return: transformation
     """
-    return Transformation(
-        f"drop({n})", lambda sequence: islice(sequence, n, None), None
-    )
+    return Transformation(f"drop({n})", lambda sequence: islice(sequence, n, None))
 
 
-def drop_while_t(func: Callable):
+def drop_while_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.drop_while
     :param func: drops while func is true
     :return: transformation
     """
-    return Transformation(f"drop_while({name(func)})", partial(dropwhile, func), None)
+    return Transformation(f"drop_while({name(func)})", partial(dropwhile, func))
 
 
-def take_t(n: int):
+def take_t(n: int) -> Transformation:
     """
     Transformation for Sequence.take
     :param n: number to take
     :return: transformation
     """
-    return Transformation(f"take({n})", lambda sequence: islice(sequence, 0, n), None)
+    return Transformation(f"take({n})", lambda sequence: islice(sequence, 0, n))
 
 
-def take_while_t(func: Callable):
+def take_while_t(func: Callable) -> Transformation:
     """
     Transformation for Sequence.take_while
     :param func: takes while func is True
     :return: transformation
     """
-    return Transformation(f"take_while({name(func)})", partial(takewhile, func), None)
+    return Transformation(f"take_while({name(func)})", partial(takewhile, func))
 
 
 def flat_map_impl(func: Callable, sequence):
@@ -263,7 +221,7 @@ def flat_map_impl(func: Callable, sequence):
         yield from func(element)
 
 
-def flat_map_t(func):
+def flat_map_t(func) -> Transformation:
     """
     Transformation for Sequence.flat_map
     :param func: function to flat_map
@@ -276,49 +234,29 @@ def flat_map_t(func):
     )
 
 
-def flatten_t():
-    """
-    Transformation for Sequence.flatten
-    :return: transformation
-    """
-    return Transformation(
-        "flatten", partial(flat_map_impl, lambda x: x), {ExecutionStrategies.PARALLEL}
-    )
-
-
-def zip_t(zip_sequence):
+def zip_t(zip_sequence) -> Transformation:
     """
     Transformation for Sequence.zip
     :param zip_sequence: sequence to zip with
     :return: transformation
     """
     return Transformation(
-        "zip(<sequence>)", lambda sequence: zip(sequence, zip_sequence), None
+        "zip(<sequence>)", lambda sequence: zip(sequence, zip_sequence)
     )
 
 
-def zip_with_index_t(start):
-    """
-    Transformation for Sequence.zip_with_index
-    :return: transformation
-    """
-    return Transformation(
-        "zip_with_index", lambda sequence: zip(sequence, count(start=start)), None
-    )
-
-
-def enumerate_t(start):
+def enumerate_t(start) -> Transformation:
     """
     Transformation for Sequence.enumerate
     :param start: start index for enumerate
     :return: transformation
     """
     return Transformation(
-        "enumerate", lambda sequence: enumerate(sequence, start=start), None
+        "enumerate", lambda sequence: enumerate(sequence, start=start)
     )
 
 
-def cartesian_t(iterables, repeat):
+def cartesian_t(iterables, repeat: int) -> Transformation:
     """
     Transformation for Sequence.cartesian
     :param iterables: elements for cartesian product
@@ -326,26 +264,26 @@ def cartesian_t(iterables, repeat):
     :return: transformation
     """
     return Transformation(
-        "cartesian", lambda sequence: product(sequence, *iterables, repeat=repeat), None
+        "cartesian", lambda sequence: product(sequence, *iterables, repeat=repeat)
     )
 
 
-def init_t():
-    """
-    Transformation for Sequence.init
-    :return: transformation
-    """
-    return Transformation(
-        "init", lambda sequence: sequence[:-1], {ExecutionStrategies.PRE_COMPUTE}
-    )
-
-
-def tail_t():
+def tail_t() -> Transformation:
     """
     Transformation for Sequence.tail
     :return: transformation
     """
-    return Transformation("tail", lambda sequence: islice(sequence, 1, None), None)
+    return Transformation("tail", lambda sequence: islice(sequence, 1, None))
+
+
+def _inits(sequence: Iterable[T], wrap) -> list[typing.Sequence[T]]:
+    """
+    Implementation for inits_t
+    :param sequence: sequence to inits
+    :return: inits of sequence
+    """
+    lseq = listify(sequence)
+    return [wrap(lseq[:i]) for i in reversed(range(len(lseq) + 1))]
 
 
 def inits_t(wrap):
@@ -354,13 +292,17 @@ def inits_t(wrap):
     :param wrap: wrap children values with this
     :return: transformation
     """
-    return Transformation(
-        "inits",
-        lambda sequence: [
-            wrap(sequence[:i]) for i in reversed(range(len(sequence) + 1))
-        ],
-        {ExecutionStrategies.PRE_COMPUTE},
-    )
+    return Transformation("inits", partial(_inits, wrap=wrap))
+
+
+def _tails(sequence: Iterable[T], wrap) -> list[typing.Sequence[T]]:
+    """
+    Implementation for tails_t
+    :param sequence: sequence to tails
+    :return: tails of sequence
+    """
+    lseq = listify(sequence)
+    return [wrap(lseq[i:]) for i in range(len(lseq) + 1)]
 
 
 def tails_t(wrap):
@@ -369,11 +311,7 @@ def tails_t(wrap):
     :param wrap: wrap children values with this
     :return: transformation
     """
-    return Transformation(
-        "tails",
-        lambda sequence: [wrap(sequence[i:]) for i in range(len(sequence) + 1)],
-        {ExecutionStrategies.PRE_COMPUTE},
-    )
+    return Transformation("tails", partial(_tails, wrap=wrap))
 
 
 def union_t(other):
@@ -382,7 +320,7 @@ def union_t(other):
     :param other: sequence to union with
     :return: transformation
     """
-    return Transformation("union", lambda sequence: set(sequence).union(other), None)
+    return Transformation("union", lambda sequence: set(sequence).union(other))
 
 
 def intersection_t(other):
@@ -392,7 +330,7 @@ def intersection_t(other):
     :return: transformation
     """
     return Transformation(
-        "intersection", lambda sequence: set(sequence).intersection(other), None
+        "intersection", lambda sequence: set(sequence).intersection(other)
     )
 
 
@@ -403,7 +341,7 @@ def difference_t(other):
     :return: transformation
     """
     return Transformation(
-        "difference", lambda sequence: set(sequence).difference(other), None
+        "difference", lambda sequence: set(sequence).difference(other)
     )
 
 
@@ -416,7 +354,6 @@ def symmetric_difference_t(other):
     return Transformation(
         "symmetric_difference",
         lambda sequence: set(sequence).symmetric_difference(other),
-        None,
     )
 
 
@@ -427,11 +364,8 @@ def group_by_key_impl(sequence):
     :return: grouped sequence
     """
     result = {}
-    for element in sequence:
-        if result.get(element[0]):
-            result.get(element[0]).append(element[1])
-        else:
-            result[element[0]] = [element[1]]
+    for key, value in sequence:
+        result.setdefault(key, []).append(value)
     return result.items()
 
 
@@ -440,7 +374,7 @@ def group_by_key_t():
     Transformation for Sequence.group_by_key
     :return: transformation
     """
-    return Transformation("group_by_key", group_by_key_impl, None)
+    return Transformation("group_by_key", group_by_key_impl)
 
 
 def reduce_by_key_impl(func, sequence):
@@ -466,7 +400,7 @@ def reduce_by_key_t(func):
     :return: transformation
     """
     return Transformation(
-        f"reduce_by_key({name(func)})", partial(reduce_by_key_impl, func), None
+        f"reduce_by_key({name(func)})", partial(reduce_by_key_impl, func)
     )
 
 
@@ -477,8 +411,6 @@ def accumulate_impl(func, sequence):
     :param sequence: sequence to accumulate
     :param func: accumulate function
     """
-    from itertools import accumulate
-
     return accumulate(sequence, func)
 
 
@@ -486,9 +418,7 @@ def accumulate_t(func):
     """
     Transformation for Sequence.accumulate
     """
-    return Transformation(
-        f"accumulate({name(func)})", partial(accumulate_impl, func), None
-    )
+    return Transformation(f"accumulate({name(func)})", partial(accumulate_impl, func))
 
 
 def count_by_key_impl(sequence):
@@ -497,10 +427,7 @@ def count_by_key_impl(sequence):
     :param sequence: sequence of (key, value) pairs
     :return: counts by key
     """
-    counter = collections.Counter()
-    for key, _ in sequence:
-        counter[key] += 1
-    return counter.items()
+    return collections.Counter(key for key, _ in sequence).items()
 
 
 def count_by_key_t():
@@ -508,7 +435,7 @@ def count_by_key_t():
     Transformation for Sequence.count_by_key
     :return: transformation
     """
-    return Transformation("count_by_key", count_by_key_impl, None)
+    return Transformation("count_by_key", count_by_key_impl)
 
 
 def count_by_value_impl(sequence):
@@ -517,10 +444,7 @@ def count_by_value_impl(sequence):
     :param sequence: sequence of values
     :return: counts by value
     """
-    counter = collections.Counter()
-    for e in sequence:
-        counter[e] += 1
-    return counter.items()
+    return collections.Counter(sequence).items()
 
 
 def count_by_value_t():
@@ -528,7 +452,7 @@ def count_by_value_t():
     Transformation for Sequence.count_by_value
     :return: transformation
     """
-    return Transformation("count_by_value", count_by_value_impl, None)
+    return Transformation("count_by_value", count_by_value_impl)
 
 
 def group_by_impl(func, sequence):
@@ -540,10 +464,7 @@ def group_by_impl(func, sequence):
     """
     result = {}
     for element in sequence:
-        if result.get(func(element)):
-            result.get(func(element)).append(element)
-        else:
-            result[func(element)] = [element]
+        result.setdefault(func(element), []).append(element)
     return result.items()
 
 
@@ -553,10 +474,10 @@ def group_by_t(func):
     :param func: grouping function
     :return: transformation
     """
-    return Transformation(f"group_by({name(func)})", partial(group_by_impl, func), None)
+    return Transformation(f"group_by({name(func)})", partial(group_by_impl, func))
 
 
-def grouped_impl(size, sequence):
+def grouped_impl(size: int, sequence: Iterable[T]) -> Iterable[list[T]]:
     """
     Implementation for grouped_t
     :param size: size of groups
@@ -572,16 +493,18 @@ def grouped_impl(size, sequence):
         return
 
 
-def grouped_t(size):
+def grouped_t(size: int) -> Transformation:
     """
     Transformation for Sequence.grouped
     :param size: size of groups
     :return: transformation
     """
-    return Transformation(f"grouped({size})", partial(grouped_impl, size), None)
+    return Transformation(f"grouped({size})", partial(grouped_impl, size))
 
 
-def sliding_impl(wrap, size, step, sequence):
+def sliding_impl(
+    wrap, size: int, step: int, sequence: Iterable[T]
+) -> Iterable[list[T]]:
     """
     Implementation for sliding_t
     :param wrap: wrap children values with this
@@ -590,10 +513,11 @@ def sliding_impl(wrap, size, step, sequence):
     :param sequence: sequence to create sliding windows from
     :return: sequence of sliding windows
     """
+    lseq = listify(sequence)
     i = 0
-    n = len(sequence)
+    n = len(lseq)
     while i + size <= n or (step != 1 and i < n):
-        yield wrap(sequence[i : i + size])
+        yield wrap(lseq[i : i + size])
         i += step
 
 
@@ -606,9 +530,7 @@ def sliding_t(wrap, size, step):
     :return: transformation
     """
     return Transformation(
-        f"sliding({size}, {step})",
-        partial(sliding_impl, wrap, size, step),
-        {ExecutionStrategies.PRE_COMPUTE},
+        f"sliding({size}, {step})", partial(sliding_impl, wrap, size, step)
     )
 
 
@@ -632,7 +554,7 @@ def partition_t(wrap, func):
     :return: transformation
     """
     return Transformation(
-        f"partition({name(func)})", partial(partition_impl, wrap, func), None
+        f"partition({name(func)})", partial(partition_impl, wrap, func)
     )
 
 
@@ -678,7 +600,7 @@ def join_impl(other, join_type, sequence):
     elif join_type == "outer":
         keys = set(list(seq_kv.keys()) + list(other_kv.keys()))
     else:
-        raise TypeError("Wrong type of join specified")
+        raise ValueError("Wrong type of join specified")
     result = {}
     for k in keys:
         result[k] = (seq_kv.get(k), other_kv.get(k))
@@ -693,9 +615,7 @@ def join_t(other, join_type):
     :param join_type: join type from left, right, inner, and outer
     :return: transformation
     """
-    return Transformation(
-        f"{join_type}_join", partial(join_impl, other, join_type), None
-    )
+    return Transformation(f"{join_type}_join", partial(join_impl, other, join_type))
 
 
 def peek_impl(func, sequence):
@@ -716,4 +636,4 @@ def peek_t(func: Callable):
     :param func: peek function
     :return: transformation
     """
-    return Transformation(f"peek({name(func)})", partial(peek_impl, func), None)
+    return Transformation(f"peek({name(func)})", partial(peek_impl, func))

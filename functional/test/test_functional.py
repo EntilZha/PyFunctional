@@ -1,24 +1,22 @@
 # pylint: skip-file
-import unittest
 import array
-from collections import namedtuple, deque
+import importlib.util
+import unittest
+from collections import deque, namedtuple
 from itertools import product
 
-from functional.pipeline import Sequence, is_iterable, _wrap, extend
+from typing_extensions import assert_type
+
+from functional import pseq, seq
+from functional.pipeline import Sequence, _wrap, extend, is_iterable_not_list
 from functional.transformations import name
-from functional import seq, pseq
+from functional.util import identity
 
 Data = namedtuple("Data", "x y")
 
 
-def pandas_is_installed():
-    try:
-        global pandas
-        import pandas
-
-        return True
-    except ImportError:
-        return False
+def pandas_is_installed() -> bool:
+    return importlib.util.find_spec("pandas") is not None
 
 
 class TestPipeline(unittest.TestCase):
@@ -26,10 +24,10 @@ class TestPipeline(unittest.TestCase):
         self.seq = seq
 
     def assert_type(self, s):
-        self.assertTrue(isinstance(s, Sequence))
+        assert isinstance(s, Sequence)
 
     def assert_not_type(self, s):
-        self.assertFalse(isinstance(s, Sequence))
+        assert not isinstance(s, Sequence)
 
     def assertIteratorEqual(self, iter_0, iter_1):
         seq_0 = list(iter_0)
@@ -37,8 +35,8 @@ class TestPipeline(unittest.TestCase):
         self.assertListEqual(seq_0, seq_1)
 
     def test_is_iterable(self):
-        self.assertFalse(is_iterable([]))
-        self.assertTrue(is_iterable(iter([1, 2])))
+        assert not is_iterable_not_list([])
+        assert is_iterable_not_list(iter([1, 2]))
 
     def test_constructor(self):
         self.assertRaises(TypeError, lambda: Sequence(1))
@@ -116,7 +114,7 @@ class TestPipeline(unittest.TestCase):
     def test_contains(self):
         string = "abcdef"
         s = self.seq(iter(string)).map(lambda x: x)
-        self.assertTrue("c" in s)
+        assert "c" in s
 
     def test_add(self):
         l0 = self.seq([1, 2, 3]).map(lambda x: x)
@@ -410,14 +408,13 @@ class TestPipeline(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             seq([]).reduce(f)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             seq([]).reduce(f, 0, 0)
 
         self.assertEqual(seq([]).reduce(f, 1), 1)
         self.assertEqual(seq([0, 2]).reduce(f, 1), 3)
 
     def test_accumulate(self):
-        f = lambda x, y: x + y
         l_char = ["a", "b", "c"]
         expect_char = ["a", "ab", "abc"]
         l_num = [1, 2, 3]
@@ -438,9 +435,9 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(l.aggregate(f), "abc")
         self.assertEqual(l.aggregate("z", f), "zabc")
         self.assertEqual(l.aggregate("z", f, lambda x: x.upper()), "ZABC")
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             l.aggregate()
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             l.aggregate(None, None, None, None)
 
     def test_fold_left(self):
@@ -497,11 +494,9 @@ class TestPipeline(unittest.TestCase):
         result = s.distinct()
         self.assertEqual(result.size(), len(expect))
         for er in zip(expect, result):
-            self.assertEqual(
-                er[0], er[1], "Order was not preserved after running distinct!"
-            )
+            assert er[0] == er[1], "Order was not preserved after running distinct!"
         for e in result:
-            self.assertTrue(e in expect)
+            assert e in expect
         self.assert_type(result)
 
     def test_distinct_by(self):
@@ -521,20 +516,15 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(result)
 
     def test_any(self):
-        l = [True, False]
-        self.assertTrue(self.seq(l).any())
+        assert self.seq([True, False]).any()
 
     def test_all(self):
-        l = [True, False]
-        self.assertFalse(self.seq(l).all())
-        l = [True, True]
-        self.assertTrue(self.seq(l).all())
+        assert not self.seq([True, False]).all()
+        assert self.seq([True, True]).all()
 
     def test_enumerate(self):
-        l = [2, 3, 4]
-        e = [(0, 2), (1, 3), (2, 4)]
-        result = self.seq(l).enumerate()
-        self.assertIteratorEqual(result, e)
+        result = self.seq([2, 3, 4]).enumerate()
+        assert result == [(0, 2), (1, 3), (2, 4)]
         self.assert_type(result)
 
     def test_inner_join(self):
@@ -647,17 +637,15 @@ class TestPipeline(unittest.TestCase):
 
     def test_flat_map(self):
         l = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
-        f = lambda x: x
         expect = [1, 1, 1, 2, 2, 2, 3, 3, 3]
-        result = self.seq(l).flat_map(f)
+        result = self.seq(l).flat_map(identity)
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
     def test_group_by(self):
         l = [(1, 1), (1, 2), (1, 3), (2, 2)]
-        f = lambda x: x[0]
         expect = {1: [(1, 1), (1, 2), (1, 3)], 2: [(2, 2)]}
-        result = self.seq(l).group_by(f)
+        result = self.seq(l).group_by(lambda x: x[0])
         result_comparison = {}
         for kv in result:
             result_comparison[kv[0]] = kv[1]
@@ -682,8 +670,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_grouped_returns_list(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7, 8])
-        self.assertTrue(is_iterable(l.grouped(2)))
-        self.assertTrue(is_iterable(l.grouped(3)))
+        assert is_iterable_not_list(l.grouped(2))
+        assert is_iterable_not_list(l.grouped(3))
 
     def test_grouped_returns_list_of_lists(self):
         test_inputs = [
@@ -715,7 +703,7 @@ class TestPipeline(unittest.TestCase):
                 all_sub_collections_are_lists, err_msg = gen_test(
                     test_input, group_size
                 )
-                self.assertTrue(all_sub_collections_are_lists, msg=err_msg)
+                assert all_sub_collections_are_lists, err_msg
 
     def test_sliding(self):
         l = self.seq([1, 2, 3, 4, 5, 6, 7])
@@ -728,15 +716,15 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(l.sliding(2, 3), expect)
 
     def test_empty(self):
-        self.assertTrue(self.seq([]).empty())
+        assert self.seq([]).empty()
         self.assertEqual(self.seq(), self.seq([]))
 
     def test_non_empty(self):
-        self.assertTrue(self.seq([1]).non_empty())
+        assert self.seq([1]).non_empty()
 
     def test_non_zero_bool(self):
-        self.assertTrue(bool(self.seq([1])))
-        self.assertFalse(bool(self.seq([])))
+        assert bool(self.seq([1]))
+        assert not bool(self.seq([]))
 
     def test_make_string(self):
         l = [1, 2, 3]
@@ -753,9 +741,8 @@ class TestPipeline(unittest.TestCase):
         l = [-1, -2, -3, 1, 2, 3]
         e2 = [-1, -2, -3]
         e1 = [1, 2, 3]
-        f = lambda x: x > 0
         s = self.seq(l)
-        p1, p2 = s.partition(f)
+        p1, p2 = s.partition(lambda x: x > 0)
         self.assertIteratorEqual(e1, list(p1))
         self.assertIteratorEqual(e2, list(p2))
         self.assert_type(p1)
@@ -827,7 +814,7 @@ class TestPipeline(unittest.TestCase):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = self.seq(l).to_list()
         self.assertIteratorEqual(result, l)
-        self.assertTrue(isinstance(result, list))
+        assert isinstance(result, list)
         result = self.seq(iter([0, 1, 2])).to_list()
         self.assertIsInstance(result, list)
         result = self.seq(l).list(n=2)
@@ -837,7 +824,7 @@ class TestPipeline(unittest.TestCase):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = self.seq(l).list()
         self.assertEqual(result, l)
-        self.assertTrue(isinstance(result, list))
+        assert isinstance(result, list)
         result = self.seq(iter([0, 1, 2])).to_list()
         self.assertIsInstance(result, list)
         result = self.seq(l).list(n=2)
@@ -866,28 +853,28 @@ class TestPipeline(unittest.TestCase):
 
     def test_exists(self):
         l = ["aaa", "BBB", "ccc"]
-        self.assertTrue(self.seq(l).exists(str.islower))
-        self.assertTrue(self.seq(l).exists(str.isupper))
-        self.assertFalse(self.seq(l).exists(lambda s: "d" in s))
+        assert self.seq(l).exists(str.islower)
+        assert self.seq(l).exists(str.isupper)
+        assert not self.seq(l).exists(lambda s: "d" in s)
 
     def test_for_all(self):
         l = ["aaa", "bbb", "ccc"]
-        self.assertTrue(self.seq(l).for_all(str.islower))
-        self.assertFalse(self.seq(l).for_all(str.isupper))
+        assert self.seq(l).for_all(str.islower)
+        assert not self.seq(l).for_all(str.isupper)
 
     def test_to_dict(self):
         l = [(1, 2), (2, 10), (7, 2)]
         d = {1: 2, 2: 10, 7: 2}
         result = self.seq(l).to_dict()
         self.assertDictEqual(result, d)
-        self.assertTrue(isinstance(result, dict))
+        assert isinstance(result, dict)
         result = self.seq(l).to_dict(default=lambda: 100)
-        self.assertTrue(1 in result)
-        self.assertFalse(3 in result)
+        assert 1 in result
+        assert not 3 in result
         self.assertEqual(result[4], 100)
         result = self.seq(l).dict(default=100)
-        self.assertTrue(1 in result)
-        self.assertFalse(3 in result)
+        assert 1 in result
+        assert not 3 in result
         self.assertEqual(result[4], 100)
 
     def test_dict(self):
@@ -895,14 +882,14 @@ class TestPipeline(unittest.TestCase):
         d = {1: 2, 2: 10, 7: 2}
         result = self.seq(l).dict()
         self.assertDictEqual(result, d)
-        self.assertTrue(isinstance(result, dict))
+        assert isinstance(result, dict)
         result = self.seq(l).dict(default=lambda: 100)
-        self.assertTrue(1 in result)
-        self.assertFalse(3 in result)
+        assert 1 in result
+        assert not 3 in result
         self.assertEqual(result[4], 100)
         result = self.seq(l).dict(default=100)
-        self.assertTrue(1 in result)
-        self.assertFalse(3 in result)
+        assert 1 in result
+        assert not 3 in result
         self.assertEqual(result[4], 100)
 
     def test_reduce_by_key(self):
@@ -962,6 +949,8 @@ class TestPipeline(unittest.TestCase):
         pandas_is_installed(), "Skip pandas tests if pandas is not installed"
     )
     def test_wrap_pandas(self):
+        import pandas
+
         df1 = pandas.DataFrame({"name": ["name1", "name2"], "value": [1, 2]})
         df2 = pandas.DataFrame({"name": ["name1", "name2"], "value": [3, 4]})
         result = seq([df1, df2]).reduce(lambda x, y: pandas.concat([x, y]))
@@ -1038,11 +1027,9 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(sequence.tabulate(), None)
 
         long_data = seq([(i, i + 1) for i in range(30)])
-        self.assertTrue("Showing 10 of 30 rows" in long_data.tabulate(n=10))
-        self.assertTrue("Showing 10 of 30 rows" in long_data._repr_html_())
-        self.assertTrue(
-            "Showing 10 of 30 rows" not in long_data.tabulate(n=10, tablefmt="plain")
-        )
+        assert "Showing 10 of 30 rows" in long_data.tabulate(n=10)
+        assert "Showing 10 of 30 rows" in long_data._repr_html_()
+        assert "Showing 10 of 30 rows" not in long_data.tabulate(n=10, tablefmt="plain")
 
     def test_tabulate_namedtuple(self):
         sequence_tabulated = seq([Data(1, 2), Data(6, 7)]).tabulate()
@@ -1061,21 +1048,18 @@ class TestExtend(unittest.TestCase):
         def my_zip(it):
             return zip(it, it)
 
-        result = seq.range(3).my_zip().list()
-        expected = list(zip(range(3), range(3)))
-        self.assertEqual(result, expected)
-
-        result = seq.range(3).my_zip().my_zip().list()
-        expected = list(zip(expected, expected))
-        self.assertEqual(result, expected)
+        assert seq.range(3).my_zip().list() == [(0, 0), (1, 1), (2, 2)]
+        assert seq.range(3).my_zip().my_zip().list() == [
+            ((0, 0), (0, 0)),
+            ((1, 1), (1, 1)),
+            ((2, 2), (2, 2)),
+        ]
 
         @extend
         def square(it):
             return [i**2 for i in it]
 
-        result = seq.range(100).square().list()
-        expected = [i**2 for i in range(100)]
-        self.assertEqual(result, expected)
+        assert seq.range(100).square().list() == [i**2 for i in range(100)]
 
         name = "PARALLEL_SQUARE"
 
@@ -1084,36 +1068,29 @@ class TestExtend(unittest.TestCase):
             return [i**2 for i in it]
 
         result = seq.range(100).square_parallel()
-        self.assertEqual(result.sum(), sum(expected))
-        self.assertEqual(
-            repr(result._lineage), f"Lineage: sequence -> extended[{name}]"
-        )
+        assert result.sum() == sum(i**2 for i in range(100))
+        assert repr(result._lineage) == f"Lineage: sequence -> extended[{name}]"
 
         @extend
         def my_filter(it, n=10):
             return (i for i in it if i > n)
 
         # test keyword args
-        result = seq.range(20).my_filter(n=10).list()
-        expected = list(filter(lambda x: x > 10, range(20)))
-        self.assertEqual(result, expected)
+        assert seq.range(20).my_filter(n=10).list() == list(range(11, 20))
 
         # test args
-        result = seq.range(20).my_filter(10).list()
-        self.assertEqual(result, expected)
+        assert seq.range(20).my_filter(10).list() == list(range(11, 20))
 
         # test final
         @extend(final=True)
         def toarray(it):
             return array.array("f", it)
 
-        result = seq.range(10).toarray()
-        expected = array.array("f", range(10))
-        self.assertEqual(result, expected)
+        assert seq.range(10).toarray() == array.array("f", range(10))
 
-        result = seq.range(10).map(lambda x: x**2).toarray()
-        expected = array.array("f", [i**2 for i in range(10)])
-        self.assertEqual(result, expected)
+        assert seq.range(10).map(lambda x: x**2).toarray() == array.array(
+            "f", [i**2 for i in range(10)]
+        )
 
         # a more complex example combining all above
         @extend()

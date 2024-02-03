@@ -7,7 +7,7 @@ from os import PathLike
 from typing import Any, Optional, TypeAlias
 
 # from typeshed
-StrOrBytesPath: TypeAlias = str | bytes | PathLike[str] | PathLike[bytes]
+StrOrBytesPath: TypeAlias = str | bytes | PathLike
 FileDescriptorOrPath: TypeAlias = int | StrOrBytesPath
 
 WRITE_MODE = "wt"
@@ -87,7 +87,7 @@ class CompressedFile(ReusableFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: FileDescriptorOrPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -118,7 +118,7 @@ class GZFile(CompressedFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: FileDescriptorOrPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -173,7 +173,7 @@ class BZ2File(CompressedFile):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: FileDescriptorOrPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -283,7 +283,7 @@ COMPRESSION_CLASSES: list[type[CompressedFile]] = [GZFile, BZ2File, XZFile]
 N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
 
 
-def get_read_function(filename: str, disable_compression: bool):
+def get_read_function(filename: FileDescriptorOrPath, disable_compression: bool):
     if disable_compression:
         return ReusableFile
     with open(filename, "rb") as f:
@@ -295,7 +295,7 @@ def get_read_function(filename: str, disable_compression: bool):
 
 
 def universal_write_open(
-    path: str,
+    path: FileDescriptorOrPath,
     mode: str,
     buffering: int = -1,
     encoding: Optional[str] = None,

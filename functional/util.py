@@ -1,14 +1,34 @@
+from __future__ import annotations
+
 import math
 from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
-from typing import Callable, Optional, Sized, TypeVar
-
+from typing import Any, Callable, Optional, Protocol, Sized, TypeVar
+from typing_extensions import TypeAlias
 import dill as serializer  # type: ignore
 
 T = TypeVar("T")
 U = TypeVar("U")
+_T_contra = TypeVar("_T_contra", contravariant=True)
+
+
+# from typeshed
+class SupportsDunderLT(Protocol[_T_contra]):
+    def __lt__(self, __other: _T_contra) -> bool:
+        ...
+
+
+class SupportsDunderGT(Protocol[_T_contra]):
+    def __gt__(self, __other: _T_contra) -> bool:
+        ...
+
+
+SupportsRichComparison: TypeAlias = SupportsDunderLT[Any] | SupportsDunderGT[Any]
+SupportsRichComparisonT = TypeVar(
+    "SupportsRichComparisonT", bound=SupportsRichComparison
+)  # noqa: Y001
 
 PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
@@ -70,7 +90,7 @@ def identity(arg: T) -> T:
     return arg
 
 
-def is_iterable(val: object) -> bool:
+def is_iterable_not_list(val: object) -> bool:
     """
     Check if val is not a list, but is a Iterable type. This is used to determine
     when list() should be called on val
@@ -89,7 +109,7 @@ def is_iterable(val: object) -> bool:
 
 def is_tabulatable(val: object) -> bool:
     return not is_primitive(val) and (
-        is_iterable(val) or is_namedtuple(val) or isinstance(val, list)
+        is_iterable_not_list(val) or is_namedtuple(val) or isinstance(val, list)
     )
 
 
@@ -131,31 +151,36 @@ def pack(func: Callable, args: Iterable) -> bytes:
     return serializer.dumps((func, args), PROTOCOL)
 
 
-def parallelize(func, result, processes=None, partition_size=None):
+def parallelize(
+    func: Callable[[T], U],
+    seq: Iterable[T],
+    processes: Optional[int] = None,
+    partition_size: Optional[int] = None,
+):
     """
-    Creates an iterable which is lazily computed in parallel from applying func on result
+    Creates an iterable which is lazily computed in parallel from applying func on seq
     :param func: Function to apply
-    :param result: Data to apply to
+    :param seq: Data to apply to
     :param processes: Number of processes to use in parallel
     :param partition_size: Size of partitions for each parallel process
-    :return: Iterable of applying func on result
+    :return: Iterable of applying func on seq
     """
     parallel_iter = lazy_parallelize(
-        func, result, processes=processes, partition_size=partition_size
+        func, seq, processes=processes, partition_size=partition_size
     )
     return chain.from_iterable(parallel_iter)
 
 
 def lazy_parallelize(
     func: Callable[[T], U],
-    result: Iterable[T],
+    seq: Iterable[T],
     processes: Optional[int] = None,
     partition_size: Optional[int] = None,
 ) -> Iterable[list[U]]:
     """
     Lazily computes an map in parallel, and returns them in pool chunks
     :param func: Function to apply
-    :param result: Data to apply to
+    :param seq: Data to apply to
     :param processes: Number of processes to use in parallel
     :param partition_size: Size of partitions for each parallel process
     :return: Iterable of chunks where each chunk as func applied to it
@@ -164,9 +189,9 @@ def lazy_parallelize(
         processes = CPU_COUNT
     else:
         processes = min(processes, CPU_COUNT)
-    partition_size = partition_size or compute_partition_size(result, processes)
+    partition_size = partition_size or compute_partition_size(seq, processes)
     with Pool(processes=processes) as pool:
-        partitions = split_every(partition_size, iter(result))
+        partitions = split_every(partition_size, iter(seq))
         packed_partitions = (pack(func, (partition,)) for partition in partitions)
         yield from pool.imap(unpack, packed_partitions)
 
@@ -196,7 +221,7 @@ def compose(*functions: Callable) -> Callable:
     return reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
 
 
-def default_value(*vals: Optional[bool]):
+def coalesce(*vals: Optional[bool]) -> bool:
     for val in vals:
         if val is not None:
             return val
