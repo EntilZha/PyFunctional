@@ -964,7 +964,7 @@ class TestPipeline(unittest.TestCase):
     def test_wrap_pandas(self):
         df1 = pandas.DataFrame({"name": ["name1", "name2"], "value": [1, 2]})
         df2 = pandas.DataFrame({"name": ["name1", "name2"], "value": [3, 4]})
-        result = seq([df1, df2]).reduce(lambda x, y: x.append(y))
+        result = seq([df1, df2]).reduce(lambda x, y: pandas.concat([x, y]))
         self.assertEqual(result.len(), 4)
         self.assertEqual(result[0].to_list(), ["name1", 1])
         self.assertEqual(result[1].to_list(), ["name2", 2])

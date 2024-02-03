@@ -793,4 +793,4 @@ all = ["pandas"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.0"
-content-hash = "42bee4db76080cd74e5550c92d43a8b6145f780ff3b4d0950403df5a0982d29f"
+content-hash = "572c0c730940e90c6ebdd16dab8a20e66fedb8e751486bffba87455ce549c1b6"
