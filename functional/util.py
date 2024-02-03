@@ -5,9 +5,10 @@ from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
-from typing import Any, Callable, Optional, Protocol, Sized, TypeVar
-from typing_extensions import TypeAlias
+from typing import Any, Callable, Optional, Protocol, Sized, TypeVar, Union
+
 import dill as serializer  # type: ignore
+from typing_extensions import TypeAlias
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -25,7 +26,7 @@ class SupportsDunderGT(Protocol[_T_contra]):
         ...
 
 
-SupportsRichComparison: TypeAlias = SupportsDunderLT[Any] | SupportsDunderGT[Any]
+SupportsRichComparison: TypeAlias = Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]
 SupportsRichComparisonT = TypeVar(
     "SupportsRichComparisonT", bound=SupportsRichComparison
 )  # noqa: Y001

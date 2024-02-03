@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import builtins
 import bz2
 import gzip
 import io
 import lzma
 from os import PathLike
-from typing import Any, Optional, TypeAlias
+from typing import Any, Optional
+
+from typing_extensions import TypeAlias
 
 # from typeshed
 StrOrBytesPath: TypeAlias = str | bytes | PathLike

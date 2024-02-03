@@ -1,6 +1,7 @@
 # pylint: skip-file
 import array
 import importlib.util
+from typing import no_type_check
 import unittest
 from collections import deque, namedtuple
 from itertools import product
@@ -602,7 +603,7 @@ class TestPipeline(unittest.TestCase):
         self.assertDictEqual(dict(result1), dict(expect))
 
     def test_join(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             self.seq([(1, 2)]).join([(2, 3)], "").to_list()
 
     def test_max(self):
@@ -1043,6 +1044,7 @@ class TestPipeline(unittest.TestCase):
 
 
 class TestExtend(unittest.TestCase):
+    @no_type_check
     def test_custom_functions(self):
         @extend(aslist=True)
         def my_zip(it):

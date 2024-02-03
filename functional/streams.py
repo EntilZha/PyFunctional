@@ -6,7 +6,6 @@ import json as jsonapi
 import re
 import sqlite3 as sqlite3api
 from itertools import chain
-from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -16,7 +15,6 @@ from typing import (
     TypeVar,
     overload,
     IO,
-    AnyStr,
 )
 import typing
 
