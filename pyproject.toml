@@ -30,7 +30,7 @@ packages = [{ include = "functional" }]
 python = "^3.8.0"
 dill = ">=0.2.5"
 tabulate = "<=1.0.0"
-pandas = { version = "^1.0.3", optional = true }
+pandas = { version = ">=1.0.3", optional = true }
 
 [tool.poetry.extras]
 all = ["pandas"]
