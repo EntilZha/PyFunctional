@@ -1,10 +1,10 @@
 # pylint: skip-file
 import array
 import importlib.util
-from typing import no_type_check
 import unittest
 from collections import deque, namedtuple
 from itertools import product
+from typing import no_type_check
 
 from typing_extensions import assert_type
 

@@ -6,13 +6,13 @@ import gzip
 import io
 import lzma
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from typing_extensions import TypeAlias
 
 # adapted from typeshed
-StrOrBytesPath: TypeAlias = str | bytes | Path
-FileDescriptorOrPath: TypeAlias = int | StrOrBytesPath
+StrOrBytesPath: TypeAlias = Union[str, bytes, Path]
+FileDescriptorOrPath: TypeAlias = Union[int, StrOrBytesPath]
 
 WRITE_MODE = "wt"
 
