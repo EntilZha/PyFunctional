@@ -1716,9 +1716,10 @@ class Sequence(Generic[T], Iterable[T]):
         The table schema is inferred from the elements in the sequence
         if only target table name is supplied.
 
+        >>> conn = sqlite3.connect(':memory:')
+        >>> _ = conn.execute('CREATE TABLE user (id int, name text)')
         >>> seq([(1, 'Tom'), (2, 'Jack')])\
-                .to_sqlite3('examples/users.db', 'INSERT INTO user (id, name) VALUES (?, ?)')
-
+                .to_sqlite3(conn, 'INSERT INTO user (id, name) VALUES (?, ?)')
         >>> seq([{'id': 1, 'name': 'Tom'}, {'id': 2, 'name': 'Jack'}]).to_sqlite3(conn, 'user')
 
         :param conn: path or sqlite connection, cursor
