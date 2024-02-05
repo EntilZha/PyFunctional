@@ -6,7 +6,7 @@ import gzip
 import io
 import lzma
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from typing_extensions import TypeAlias
 
@@ -86,7 +86,7 @@ class ReusableFile:
 
 
 class CompressedFile(ReusableFile):
-    magic_bytes: Optional[bytes] = None
+    magic_bytes: ClassVar[bytes]
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -117,7 +117,7 @@ class CompressedFile(ReusableFile):
 
 
 class GZFile(CompressedFile):
-    magic_bytes: bytes = b"\x1f\x8b\x08"
+    magic_bytes = b"\x1f\x8b\x08"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -172,7 +172,7 @@ class GZFile(CompressedFile):
 
 
 class BZ2File(CompressedFile):
-    magic_bytes: bytes = b"\x42\x5a\x68"
+    magic_bytes = b"\x42\x5a\x68"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -221,7 +221,7 @@ class BZ2File(CompressedFile):
 
 
 class XZFile(CompressedFile):
-    magic_bytes: bytes = b"\xfd\x37\x7a\x58\x5a\x00"
+    magic_bytes = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -284,7 +284,7 @@ class XZFile(CompressedFile):
 
 
 COMPRESSION_CLASSES: list[type[CompressedFile]] = [GZFile, BZ2File, XZFile]
-N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
+N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
 
 
 def get_read_function(filename: FileDescriptorOrPath, disable_compression: bool):

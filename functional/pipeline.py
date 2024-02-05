@@ -36,7 +36,7 @@ from functional.execution import ExecutionEngine, ExecutionStrategies
 from functional.io import WRITE_MODE, StrOrBytesPath, universal_write_open
 from functional.lineage import Lineage
 from functional.util import (
-    SupportsRichComparisonT,
+    SupportsRichComparison,
     coalesce,
     identity,
     is_iterable_not_list,
@@ -555,7 +555,7 @@ class Sequence(Generic[T], Iterable[T]):
         :return: sequence with func mapped onto it
         """
         if func is identity:
-            return self
+            return self  # type: ignore, U is T here but mypy doesn't understand
         return self._transform(transformations.map_t(func))
 
     def select(self, func: Callable[[T], U]) -> Sequence[U]:
@@ -667,6 +667,7 @@ class Sequence(Generic[T], Iterable[T]):
         :return: length of sequence
         """
         self.cache()
+        assert isinstance(self._base_sequence, list)
         return len(self._base_sequence)
 
     def size(self) -> int:
@@ -825,7 +826,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return _wrap(min(self))
 
-    def max_by(self, func: Callable[[T], SupportsRichComparisonT[U]]) -> T | Sequence:
+    def max_by(self, func: Callable[[T], SupportsRichComparison]) -> T | Sequence:
         """
         Returns the largest element in the sequence.
         Provided function is used to generate key used to compare the elements.
@@ -850,7 +851,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return _wrap(max(self, key=func))
 
-    def min_by(self, func: Callable[[T], SupportsRichComparisonT[U]]) -> T | Sequence:
+    def min_by(self, func: Callable[[T], SupportsRichComparison]) -> T | Sequence:
         """
         Returns the smallest element in the sequence.
         Provided function is used to generate key used to compare the elements.
@@ -1330,7 +1331,7 @@ class Sequence(Generic[T], Iterable[T]):
 
     def sorted(
         self,
-        key: Callable[[T], SupportsRichComparisonT[U]] | None = None,
+        key: Callable[[T], SupportsRichComparison] | None = None,
         reverse: bool = False,
     ) -> Sequence[T]:
         """
@@ -1348,7 +1349,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return self._transform(transformations.sorted_t(key=key, reverse=reverse))
 
-    def order_by(self, func: Callable[[T], SupportsRichComparisonT[U]]) -> Sequence[T]:
+    def order_by(self, func: Callable[[T], SupportsRichComparison]) -> Sequence[T]:
         """Alias for sorted."""
         return self._transform(transformations.sorted_t(key=func))
 
