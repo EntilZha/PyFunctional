@@ -3,7 +3,6 @@ from __future__ import annotations
 import builtins
 import bz2
 import gzip
-import io
 import lzma
 from pathlib import Path
 from typing import Any, ClassVar, Optional, Union
@@ -143,32 +142,26 @@ class GZFile(CompressedFile):
         )
 
     def __iter__(self):
-        if "t" in self.mode:
-            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
-                gz_file.read1 = gz_file.read
-                with io.TextIOWrapper(
-                    gz_file,
-                    encoding=self.encoding,
-                    errors=self.errors,
-                    newline=self.newline,
-                ) as file_content:
-                    yield from file_content
-        else:
-            with gzip.open(
-                self.path, mode=self.mode, compresslevel=self.compresslevel
-            ) as file_content:
-                yield from file_content
+        with gzip.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
+            yield from file_content
 
-    def read(self):
-        with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
-            gz_file.read1 = gz_file.read
-            with io.TextIOWrapper(
-                gz_file,
-                encoding=self.encoding,
-                errors=self.errors,
-                newline=self.newline,
-            ) as file_content:
-                return file_content.read()
+    def read(self) -> str | bytes:
+        with gzip.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
+            return file_content.read()
 
 
 class BZ2File(CompressedFile):
