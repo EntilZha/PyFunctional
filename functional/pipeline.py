@@ -1055,7 +1055,7 @@ class Sequence(Generic[T], Iterable[T]):
         :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
-        return sum(self.map(projection))
+        return sum(self.map(projection))  # type: ignore # sum wants int but our Tnumber is a bit better
 
     def average(self, projection: Callable[[T], Tnumber] = identity) -> Tnumber:  # type: ignore
         """
@@ -1071,7 +1071,7 @@ class Sequence(Generic[T], Iterable[T]):
         :return: average of elements in the sequence
         """
         length = self.len()  # call .len() before because it calls .cache()
-        return sum(self.map(projection)) / length
+        return sum(self.map(projection)) / length  # type: ignore
 
     @overload
     def aggregate(
