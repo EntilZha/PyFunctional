@@ -24,14 +24,13 @@ from typing import (
     NoReturn,
     Optional,
     TypeVar,
-    TypeVarTuple,
     Union,
     cast,
     overload,
 )
 
 from tabulate import tabulate
-from typing_extensions import Self
+from typing_extensions import Self, TypeVarTuple, Unpack
 
 from functional import transformations
 from functional.execution import ExecutionEngine, ExecutionStrategies
@@ -555,7 +554,9 @@ class Sequence(Generic[T], Iterable[T]):
         """Alias for map."""
         return self.map(func)
 
-    def starmap(self: Sequence[tuple[*Ts]], func: Callable[[*Ts], U]) -> Sequence[U]:
+    def starmap(
+        self: Sequence[tuple[Unpack[Ts]]], func: Callable[[Unpack[Ts]], U]
+    ) -> Sequence[U]:
         """
         starmaps f onto the sequence as itertools.starmap does.
 
@@ -567,7 +568,9 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return self._transform(transformations.starmap_t(func))
 
-    def smap(self: Sequence[tuple[*Ts]], func: Callable[[*Ts], U]) -> Sequence[U]:
+    def smap(
+        self: Sequence[tuple[Unpack[Ts]]], func: Callable[[Unpack[Ts]], U]
+    ) -> Sequence[U]:
         """
         Alias to Sequence.starmap
 
