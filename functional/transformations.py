@@ -606,7 +606,7 @@ def join_impl(other, join_type, sequence):
     elif join_type == "right":
         keys = other_kv.keys()
     elif join_type == "outer":
-        keys = set(list(seq_kv.keys()) + list(other_kv.keys()))
+        keys = (seq_kv | other_kv).keys()  # keeps ordering vs set union
     else:
         raise ValueError("Wrong type of join specified")
     result = {}
