@@ -1,13 +1,25 @@
+from __future__ import annotations
+
+from collections.abc import Iterable, Iterator
+from typing import Optional
+
 from functional.execution import ExecutionEngine
-from functional.transformations import CACHE_T
+from functional.transformations import CACHE_T, Transformation
 
 
-class Lineage(object):
+class Lineage:
     """
     Class for tracking the lineage of transformations, and applying them to a given sequence.
     """
 
-    def __init__(self, prior_lineage=None, engine=None):
+    transformations: list[Transformation]
+    engine: ExecutionEngine
+
+    def __init__(
+        self,
+        prior_lineage: Optional[Lineage] = None,
+        engine: Optional[ExecutionEngine] = None,
+    ):
         """
         Construct an empty lineage if prior_lineage is None or if its not use it as the list of
         current transformations
@@ -16,7 +28,7 @@ class Lineage(object):
         :return: new Lineage object
         """
         self.transformations = (
-            [] if prior_lineage is None else list(prior_lineage.transformations)
+            [] if prior_lineage is None else prior_lineage.transformations.copy()
         )
         self.engine = (
             (engine or ExecutionEngine())
@@ -24,7 +36,7 @@ class Lineage(object):
             else prior_lineage.engine
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Returns readable representation of Lineage
 
@@ -34,7 +46,7 @@ class Lineage(object):
             ["sequence"] + [transform.name for transform in self.transformations]
         )
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Number of transformations in lineage
 
@@ -42,7 +54,7 @@ class Lineage(object):
         """
         return len(self.transformations)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Transformation:
         """
         Return specific transformation in lineage.
         :param item: Transformation to retrieve
@@ -50,14 +62,14 @@ class Lineage(object):
         """
         return self.transformations[item]
 
-    def apply(self, transform):
+    def apply(self, transform: Transformation):
         """
         Add the transformation to the lineage
         :param transform: Transformation to apply
         """
         self.transformations.append(transform)
 
-    def evaluate(self, sequence):
+    def evaluate(self, sequence: Iterable) -> Iterator:
         """
         Compute the lineage on the sequence.
 
@@ -68,7 +80,7 @@ class Lineage(object):
         transformations = self.transformations[last_cache_index:]
         return self.engine.evaluate(sequence, transformations)
 
-    def cache_scan(self):
+    def cache_scan(self) -> int:
         """
         Scan the lineage for the index of the most recent cache.
         :return: Index of most recent cache

@@ -1,18 +1,22 @@
+from __future__ import annotations
+
+import builtins
+import bz2
 import gzip
 import lzma
-import bz2
-import io
-import builtins
+from pathlib import Path
+from typing import Any, ClassVar, Optional, Union
 
-from typing import Optional, Generic, TypeVar, Any
+from typing_extensions import TypeAlias
 
+# adapted from typeshed
+StrOrBytesPath: TypeAlias = Union[str, bytes, Path]
+FileDescriptorOrPath: TypeAlias = Union[int, StrOrBytesPath]
 
 WRITE_MODE = "wt"
 
-_FileConv_co = TypeVar("_FileConv_co", covariant=True)
 
-
-class ReusableFile(Generic[_FileConv_co]):
+class ReusableFile:
     """
     Class which emulates the builtin file except that calling iter() on it will return separate
     iterators on different file handlers (which are automatically closed when iteration stops). This
@@ -23,7 +27,7 @@ class ReusableFile(Generic[_FileConv_co]):
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "r",
         buffering: int = -1,
@@ -81,12 +85,12 @@ class ReusableFile(Generic[_FileConv_co]):
 
 
 class CompressedFile(ReusableFile):
-    magic_bytes: Optional[bytes] = None
+    magic_bytes: ClassVar[bytes]
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -95,7 +99,7 @@ class CompressedFile(ReusableFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(CompressedFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -112,12 +116,12 @@ class CompressedFile(ReusableFile):
 
 
 class GZFile(CompressedFile):
-    magic_bytes: bytes = b"\x1f\x8b\x08"
+    magic_bytes = b"\x1f\x8b\x08"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -126,7 +130,7 @@ class GZFile(CompressedFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(GZFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -138,41 +142,35 @@ class GZFile(CompressedFile):
         )
 
     def __iter__(self):
-        if "t" in self.mode:
-            with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
-                gz_file.read1 = gz_file.read
-                with io.TextIOWrapper(
-                    gz_file,
-                    encoding=self.encoding,
-                    errors=self.errors,
-                    newline=self.newline,
-                ) as file_content:
-                    yield from file_content
-        else:
-            with gzip.open(
-                self.path, mode=self.mode, compresslevel=self.compresslevel
-            ) as file_content:
-                yield from file_content
+        with gzip.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
+            yield from file_content
 
-    def read(self):
-        with gzip.GzipFile(self.path, compresslevel=self.compresslevel) as gz_file:
-            gz_file.read1 = gz_file.read
-            with io.TextIOWrapper(
-                gz_file,
-                encoding=self.encoding,
-                errors=self.errors,
-                newline=self.newline,
-            ) as file_content:
-                return file_content.read()
+    def read(self) -> str | bytes:
+        with gzip.open(
+            self.path,
+            mode=self.mode,
+            compresslevel=self.compresslevel,
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as file_content:
+            return file_content.read()
 
 
 class BZ2File(CompressedFile):
-    magic_bytes: bytes = b"\x42\x5a\x68"
+    magic_bytes = b"\x42\x5a\x68"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        path: str,
+        path: StrOrBytesPath,
         delimiter: Optional[str] = None,
         mode: str = "rt",
         buffering: int = -1,
@@ -181,7 +179,7 @@ class BZ2File(CompressedFile):
         errors: Optional[str] = None,
         newline: Optional[str] = None,
     ):
-        super(BZ2File, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -216,7 +214,7 @@ class BZ2File(CompressedFile):
 
 
 class XZFile(CompressedFile):
-    magic_bytes: bytes = b"\xfd\x37\x7a\x58\x5a\x00"
+    magic_bytes = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
@@ -234,7 +232,7 @@ class XZFile(CompressedFile):
         filters=None,
         format=None,
     ):
-        super(XZFile, self).__init__(
+        super().__init__(
             path,
             delimiter=delimiter,
             mode=mode,
@@ -278,23 +276,23 @@ class XZFile(CompressedFile):
             return file_content.read()
 
 
-COMPRESSION_CLASSES = [GZFile, BZ2File, XZFile]
-N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)  # type: ignore
+COMPRESSION_CLASSES: list[type[CompressedFile]] = [GZFile, BZ2File, XZFile]
+N_COMPRESSION_CHECK_BYTES = max(len(cls.magic_bytes) for cls in COMPRESSION_CLASSES)
 
 
-def get_read_function(filename: str, disable_compression: bool):
+def get_read_function(filename: FileDescriptorOrPath, disable_compression: bool):
     if disable_compression:
         return ReusableFile
     with open(filename, "rb") as f:
         start_bytes = f.read(N_COMPRESSION_CHECK_BYTES)
         for cls in COMPRESSION_CLASSES:
-            if cls.is_compressed(start_bytes):  # type: ignore
+            if cls.is_compressed(start_bytes):
                 return cls
         return ReusableFile
 
 
 def universal_write_open(
-    path: str,
+    path: StrOrBytesPath,
     mode: str,
     buffering: int = -1,
     encoding: Optional[str] = None,

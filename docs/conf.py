@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # ScalaFunctional documentation build configuration file, created by
 # sphinx-quickstart on Wed Mar 11 23:00:20 2015.
