@@ -275,7 +275,7 @@ class Sequence(Generic[T], Iterable[T]):
         1
 
         >>> seq([]).head()
-        ...
+        Traceback (most recent call last):
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -294,7 +294,7 @@ class Sequence(Generic[T], Iterable[T]):
         1
 
         >>> seq([]).first()
-        ...
+        Traceback (most recent call last):
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -328,7 +328,7 @@ class Sequence(Generic[T], Iterable[T]):
         Raises IndexError when the sequence is empty.
 
         >>> seq([]).last()
-        ...
+        Traceback (most recent call last):
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -777,11 +777,11 @@ class Sequence(Generic[T], Iterable[T]):
         'xyz'
 
         >>> seq([1, "a"]).max()
-        ...
+        Traceback (most recent call last):
         TypeError: ...
 
         >>> seq([]).max()
-        ...
+        Traceback (most recent call last):
         ValueError: max() arg is an empty sequence
 
         :return: Maximal value of sequence
@@ -808,11 +808,11 @@ class Sequence(Generic[T], Iterable[T]):
         'aa'
 
         >>> seq([1, "a"]).min()
-        ...
+        Traceback (most recent call last):
         TypeError: unorderable types: int() < str()
 
         >>> seq([]).min()
-        ...
+        Traceback (most recent call last):
         ValueError: min() arg is an empty sequence
 
         :return: Minimal value of sequence
@@ -835,7 +835,7 @@ class Sequence(Generic[T], Iterable[T]):
         'abcd'
 
         >>> seq([]).max_by(lambda x: x)
-        ...
+        Traceback (most recent call last):
         ValueError: max() arg is an empty sequence
 
         :param func: function to compute max by
@@ -859,7 +859,7 @@ class Sequence(Generic[T], Iterable[T]):
         'aa'
 
         >>> seq([]).min_by(lambda x: x)
-        ...
+        Traceback (most recent call last):
         ValueError: min() arg is an empty sequence
 
         :param func: function to compute min by
