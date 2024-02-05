@@ -55,6 +55,7 @@ def is_primitive(val: object) -> bool:
     False
 
     >>> is_primitive(set([]))
+    False
 
     :param val: value to check
     :return: True if value is a primitive, else False

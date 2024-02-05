@@ -269,16 +269,13 @@ class Sequence(Generic[T], Iterable[T]):
 
     def head(self, no_wrap: Optional[bool] = None) -> T | Sequence:
         """
-        Returns the first element of the sequence.
+        Returns the first element of the sequence. Raises IndexError when the sequence is empty.
 
         >>> seq([1, 2, 3]).head()
         1
 
-        Raises IndexError when the sequence is empty.
-
         >>> seq([]).head()
-        Traceback (most recent call last):
-         ...
+        ...
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -291,16 +288,13 @@ class Sequence(Generic[T], Iterable[T]):
 
     def first(self, no_wrap: Optional[bool] = None) -> T | Sequence:
         """
-        Returns the first element of the sequence.
+        Returns the first element of the sequence. Raises IndexError when the sequence is empty.
 
         >>> seq([1, 2, 3]).first()
         1
 
-        Raises IndexError when the sequence is empty.
-
         >>> seq([]).first()
-        Traceback (most recent call last):
-         ...
+        ...
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -316,7 +310,6 @@ class Sequence(Generic[T], Iterable[T]):
         1
 
         >>> seq([]).head_option()
-        None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: first element of sequence or None if sequence is empty
@@ -335,8 +328,7 @@ class Sequence(Generic[T], Iterable[T]):
         Raises IndexError when the sequence is empty.
 
         >>> seq([]).last()
-        Traceback (most recent call last):
-         ...
+        ...
         IndexError: list index out of range
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -355,7 +347,6 @@ class Sequence(Generic[T], Iterable[T]):
         3
 
         >>> seq([]).last_option()
-        None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
         :return: last element of sequence or None if sequence is empty
@@ -786,13 +777,11 @@ class Sequence(Generic[T], Iterable[T]):
         'xyz'
 
         >>> seq([1, "a"]).max()
-        Traceback (most recent call last):
-         ...
-        TypeError: unorderable types: int() < str()
+        ...
+        TypeError: ...
 
         >>> seq([]).max()
-        Traceback (most recent call last):
-         ...
+        ...
         ValueError: max() arg is an empty sequence
 
         :return: Maximal value of sequence
@@ -819,13 +808,11 @@ class Sequence(Generic[T], Iterable[T]):
         'aa'
 
         >>> seq([1, "a"]).min()
-        Traceback (most recent call last):
-         ...
+        ...
         TypeError: unorderable types: int() < str()
 
         >>> seq([]).min()
-        Traceback (most recent call last):
-         ...
+        ...
         ValueError: min() arg is an empty sequence
 
         :return: Minimal value of sequence
@@ -848,8 +835,7 @@ class Sequence(Generic[T], Iterable[T]):
         'abcd'
 
         >>> seq([]).max_by(lambda x: x)
-        Traceback (most recent call last):
-         ...
+        ...
         ValueError: max() arg is an empty sequence
 
         :param func: function to compute max by
@@ -866,15 +852,14 @@ class Sequence(Generic[T], Iterable[T]):
         The sequence can not be empty.
         Raises ValueError when the sequence is empty.
 
-        >>> seq([2, 4, 5, 1, 3]).min_by(lambda num: num % 6)
+        >>> seq([2, 4, 5, 1, 3]).min_by(lambda num: num % 5)
         5
 
         >>> seq('aa', 'xyz', 'abcd', 'xyy').min_by(len)
         'aa'
 
         >>> seq([]).min_by(lambda x: x)
-        Traceback (most recent call last):
-         ...
+        ...
         ValueError: min() arg is an empty sequence
 
         :param func: function to compute min by
@@ -899,7 +884,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         Flattens a sequence of sequences to a single sequence of elements.
 
-        >>> seq([[1, 2], [3, 4], [5, 6]])
+        >>> seq([[1, 2], [3, 4], [5, 6]]).flatten()
         [1, 2, 3, 4, 5, 6]
 
         :return: flattened sequence
@@ -931,7 +916,7 @@ class Sequence(Generic[T], Iterable[T]):
         to values matching that key.
 
         >>> seq(["abc", "ab", "z", "f", "qw"]).group_by(len)
-        [(1, ['z', 'f']), (2, ['ab', 'qw']), (3, ['abc'])]
+        [(3, ['abc']), (2, ['ab', 'qw']), (1, ['z', 'f'])]
 
         :param func: group by result of this function
         :return: grouped sequence
@@ -943,7 +928,7 @@ class Sequence(Generic[T], Iterable[T]):
         Group sequence of (Key, Value) elements by Key.
 
         >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]).group_by_key()
-        [('a', [1]), ('c', [3, 0]), ('b', [2, 3, 4])]
+        [('a', [1]), ('b', [2, 3, 4]), ('c', [3, 0])]
 
         :return: sequence grouped by key
         """
@@ -957,7 +942,7 @@ class Sequence(Generic[T], Iterable[T]):
 
         >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]) \
                 .reduce_by_key(lambda x, y: x + y)
-        [('a', 1), ('c', 3), ('b', 9)]
+        [('a', 1), ('b', 9), ('c', 3)]
 
         :param func: reduce each list of values using two parameter, associative func
         :return: Sequence of tuples where the value is reduced with func
@@ -1079,7 +1064,8 @@ class Sequence(Generic[T], Iterable[T]):
         >>> seq([1, 2]).average()
         1.5
 
-        >>> seq([('a', 1), ('b', 2)]).average(lambda x: x[1])
+        >>> seq([('a', 1), ('b', 3)]).average(lambda x: x[1])
+        2.0
 
         :param projection: function to project on the sequence before taking the average
         :return: average of elements in the sequence
@@ -1131,7 +1117,7 @@ class Sequence(Generic[T], Iterable[T]):
         func(current: B, next: A) => B. current represents the folded value so far and next is the
         next element from the sequence to fold into current.
 
-        >>> seq('a', 'b', 'c').fold_left(['start'], lambda current, next: current + [next]))
+        >>> seq('a', 'b', 'c').fold_left(['start'], lambda current, next: current + [next])
         ['start', 'a', 'b', 'c']
 
         :param zero_value: zero value to reduce into
@@ -1150,8 +1136,8 @@ class Sequence(Generic[T], Iterable[T]):
         func(next: A, current: B) => B. current represents the folded value so far and next is the
         next element from the sequence to fold into current.
 
-        >>> seq('a', 'b', 'c').fold_left(['start'], lambda next, current: current + [next])
-        ['start', 'c', 'b', a']
+        >>> seq('a', 'b', 'c').fold_right(['start'], lambda next, current: current + [next])
+        ['start', 'c', 'b', 'a']
 
         :param zero_value: zero value to reduce into
         :param func: Two parameter function as described by function docs
@@ -1234,10 +1220,10 @@ class Sequence(Generic[T], Iterable[T]):
         [('a', (1, 2)), ('c', (3, 5))]
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)], "left")
-        [('a', (1, 3)), ('b', (2, None)]
+        [('a', (1, 3)), ('b', (2, None))]
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)], "right")
-        [('a', (1, 3)), ('c', (None, 4)]
+        [('a', (1, 3)), ('c', (None, 4))]
 
         >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)], "outer")
         [('a', (1, 3)), ('b', (2, None)), ('c', (None, 4))]
@@ -1256,8 +1242,8 @@ class Sequence(Generic[T], Iterable[T]):
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
         V values will always be present, W values may be present or None.
 
-        >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
-        [('a', (1, 3)), ('b', (2, None)]
+        >>> seq([('a', 1), ('b', 2)]).left_join([('a', 3), ('c', 4)])
+        [('a', (1, 3)), ('b', (2, None))]
 
         :param other: sequence to join with
         :return: left joined sequence of (K, (V, W)) pairs
@@ -1272,8 +1258,8 @@ class Sequence(Generic[T], Iterable[T]):
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
         W values will always bepresent, V values may be present or None.
 
-        >>> seq([('a', 1), ('b', 2)]).join([('a', 3), ('c', 4)])
-        [('a', (1, 3)), ('b', (2, None)]
+        >>> seq([('a', 1), ('b', 2)]).right_join([('a', 3), ('c', 4)])
+        [('a', (1, 3)), ('c', (None, 4))]
 
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
@@ -1288,7 +1274,7 @@ class Sequence(Generic[T], Iterable[T]):
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
         One of V or W will always be not None, but the other may be None
 
-        >>> seq([('a', 1), ('b', 2)]).outer_join([('a', 3), ('c', 4)], "outer")
+        >>> seq([('a', 1), ('b', 2)]).outer_join([('a', 3), ('c', 4)])
         [('a', (1, 3)), ('b', (2, None)), ('c', (None, 4))]
 
         :param other: sequence to join with
@@ -1301,7 +1287,7 @@ class Sequence(Generic[T], Iterable[T]):
         Partition the sequence based on satisfying the predicate func.
 
         >>> seq([-1, 1, -2, 2]).partition(lambda x: x < 0)
-        ([-1, -2], [1, 2])
+        [[-1, -2], [1, 2]]
 
         :param func: predicate to partition on
         :return: tuple of partitioned sequences
@@ -1414,10 +1400,10 @@ class Sequence(Generic[T], Iterable[T]):
         Converts sequence to list of elements.
 
         >>> type(seq([]).to_list())
-        list
+        <class 'list'>
 
         >>> type(seq([]))
-        functional.pipeline.Sequence
+        <class 'functional.pipeline.Sequence'>
 
         >>> seq([1, 2, 3]).to_list()
         [1, 2, 3]
@@ -1437,10 +1423,10 @@ class Sequence(Generic[T], Iterable[T]):
         Converts sequence to list of elements.
 
         >>> type(seq([]).list())
-        list
+        <class 'list'>
 
         >>> type(seq([]))
-        functional.pipeline.Sequence
+        <class 'functional.pipeline.Sequence'>
 
         >>> seq([1, 2, 3]).list()
         [1, 2, 3]
@@ -1454,11 +1440,11 @@ class Sequence(Generic[T], Iterable[T]):
         """
         Converts sequence to a set of elements.
 
-        >>> type(seq([])).to_set()
-        set
+        >>> type(seq([]).to_set())
+        <class 'set'>
 
         >>> type(seq([]))
-        functional.pipeline.Sequence
+        <class 'functional.pipeline.Sequence'>
 
         >>> seq([1, 1, 2, 2]).to_set()
         {1, 2}
@@ -1471,11 +1457,11 @@ class Sequence(Generic[T], Iterable[T]):
         """
         Converts sequence to a set of elements.
 
-        >>> type(seq([])).to_set()
-        set
+        >>> type(seq([]).to_set())
+        <class 'set'>
 
         >>> type(seq([]))
-        functional.pipeline.Sequence
+        <class 'functional.pipeline.Sequence'>
 
         >>> seq([1, 1, 2, 2]).set()
         {1, 2}
@@ -1501,7 +1487,7 @@ class Sequence(Generic[T], Iterable[T]):
         Converts sequence of (Key, Value) pairs to a dictionary.
 
         >>> type(seq([('a', 1)]).to_dict())
-        dict
+        <class 'dict'>
 
         >>> seq([('a', 1), ('b', 2)]).to_dict()
         {'a': 1, 'b': 2}
@@ -1537,7 +1523,7 @@ class Sequence(Generic[T], Iterable[T]):
         Converts sequence of (Key, Value) pairs to a dictionary.
 
         >>> type(seq([('a', 1)]).dict())
-        dict
+        <class 'dict'>
 
         >>> seq([('a', 1), ('b', 2)]).dict()
         {'a': 1, 'b': 2}
@@ -1727,7 +1713,7 @@ class Sequence(Generic[T], Iterable[T]):
         if only target table name is supplied.
 
         >>> seq([(1, 'Tom'), (2, 'Jack')])\
-                .to_sqlite3('users.db', 'INSERT INTO user (id, name) VALUES (?, ?)')
+                .to_sqlite3('examples/users.db', 'INSERT INTO user (id, name) VALUES (?, ?)')
 
         >>> seq([{'id': 1, 'name': 'Tom'}, {'id': 2, 'name': 'Jack'}]).to_sqlite3(conn, 'user')
 
@@ -1865,17 +1851,15 @@ class Sequence(Generic[T], Iterable[T]):
 
 def _wrap(value):
     """
-    Wraps the passed value in a Sequence if it is not a primitive. If it is a string
-    argument it is expanded to a list of characters.
+    Wraps the passed value in a Sequence if it is not a primitive.
 
     >>> _wrap(1)
     1
-
     >>> _wrap("abc")
-    ['a', 'b', 'c']
+    'abc'
 
     >>> type(_wrap([1, 2]))
-    functional.pipeline.Sequence
+    <class 'functional.pipeline.Sequence'>
 
     :param value: value to wrap
     :return: wrapped or not wrapped value
@@ -1910,31 +1894,27 @@ def extend(
     Function decorator for adding new methods to the Sequence class.
 
     >>> @extend()
-        def zip2(it):
-            return [(i,i) for i in it]
+    ... def zip2(it):
+    ...     return [(i,i) for i in it]
 
     >>> seq.range(3).zip2()
     [(0, 0), (1, 1), (2, 2)]
 
 
     >>> @extend(aslist=True)
-        def zip2(it):
-            return zip(it,it)
+    ... def zip2(it):
+    ...     return zip(it,it)
 
     >>> seq.range(3).zip2()
     [(0, 0), (1, 1), (2, 2)]
 
 
     >>> @extend(final=True)
-        def make_set(it):
-            return set(it)
-
+    ... def make_set(it):
+    ...     return set(it)
     >>> r = seq([0,1,1]).make_set()
     >>> r
     {0, 1}
-
-    >>> type(r)
-    <class 'set'>
 
     :param func: function to decorate
     :param aslist: if True convert input sequence to list (default False)

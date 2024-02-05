@@ -159,7 +159,7 @@ class Stream:
         allowed.
 
         >>> seq.open('examples/gear_list.txt').take(1)
-        [u'tent\\n']
+        ['tent\\n']
 
         :param path: path to file
         :param delimiter: delimiter to split joined text on. if None, defaults to per line split
@@ -269,7 +269,7 @@ class Stream:
         the python json module.
 
         >>> seq.jsonl('examples/chat_logs.jsonl').first()
-        {u'date': u'10/09', u'message': u'hello anyone there?', u'user': u'bob'}
+        {'message': 'hello anyone there?', 'date': '10/09', 'user': 'bob'}
 
         :param jsonl_file: path or file containing jsonl content
         :return: Sequence wrapping jsonl file
@@ -294,7 +294,7 @@ class Stream:
         of entries
 
         >>> seq.json('examples/users.json').first()
-        [u'sarah', {u'date_created': u'08/08', u'news_email': True, u'email': u'sarah@gmail.com'}]
+        ['bob', {'date_created': '09/01', 'email': 'bob@gmail.com', 'news_mail': True}]
 
         :param json_file: path or file containing json content
         :return: Sequence wrapping jsonl file
@@ -327,8 +327,8 @@ class Stream:
         """
         Reads input by querying from a sqlite database.
 
-        >>> seq.sqlite3('examples/users.db', 'select id, name from users where id = 1;').first()
-        [(1, 'Tom')]
+        >>> seq.sqlite3('examples/users.db', 'select id, name from user where id = 1;').first()
+        [1, 'Tom']
 
         :param conn: path or sqlite connection, cursor
         :param sql: SQL query string

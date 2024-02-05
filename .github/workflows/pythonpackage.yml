@@ -36,7 +36,7 @@ jobs:
         run: poetry run black --check --diff --color functional
         if: success() || failure()
       - name: Test with pytest
-        run: poetry run pytest --cov=functional --cov-report=xml
+        run: poetry run pytest --doctest-modules --cov=functional --cov-report=xml
         if: success() || failure()
       - name: mypy
         run: |
