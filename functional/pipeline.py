@@ -1055,9 +1055,12 @@ class Sequence(Generic[T], Iterable[T]):
         :param projection: function to project on the sequence before taking the sum
         :return: sum of elements in sequence
         """
-        return sum(self.map(projection))  # type: ignore # sum wants int but our Tnumber is a bit better
+        return sum(self.map(projection))  # type: ignore
+        # sum wants int but our Tnumber is a bit better
 
-    def average(self, projection: Callable[[T], Tnumber] = identity) -> Tnumber:  # type: ignore
+    def average(
+        self, projection: Callable[[T], Tnumber] = identity
+    ) -> Tnumber:  # type: ignore
         """
         Takes the average of elements in the sequence
 
@@ -1357,7 +1360,8 @@ class Sequence(Generic[T], Iterable[T]):
         :return: reversed sequence
         """
         return reversed(self)  # type: ignore
-        # __reversed__ is supposed to return an iterator but ours does not :/ it's a Sequence (can't call next())
+        # __reversed__ is supposed to return an iterator but ours does not :/
+        # it's a Sequence (can't call next())
 
     def distinct(self) -> Sequence[T]:
         """
