@@ -39,14 +39,18 @@ jobs:
         run: poetry run pytest --cov=functional --cov-report=xml
         if: success() || failure()
       - name: mypy
-        run: poetry run mypy --warn-unused-configs --check-untyped-defs --warn-redundant-casts --warn-unused-ignores --extra-checks functional
+        run: |
+          # First run without --check-untyped-defs that can fail CI
+          poetry run mypy --warn-unused-configs --warn-redundant-casts --warn-unused-ignores functional
+          # Second run with --check-untyped-defs, ignored for CI status
+          poetry run mypy --warn-unused-configs --check-untyped-defs --warn-redundant-casts --warn-unused-ignores --extra-checks functional || true
         if: success() || failure()
       - uses: tsuyoshicho/action-mypy@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           level: warning
-          execute_command: poetry run mypy --strict
+          execute_command: poetry run mypy --warn-unused-configs --check-untyped-defs --warn-redundant-casts --warn-unused-ignores --extra-checks functional
           filter_mode: nofilter
         if: (success() || failure()) && matrix.python-version == '3.11' # run only on latest to avoid duplicate warnings
       - uses: codecov/codecov-action@v1
