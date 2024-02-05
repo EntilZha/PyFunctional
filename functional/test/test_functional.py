@@ -478,15 +478,11 @@ class TestPipeline(unittest.TestCase):
         self.assert_type(r)
 
     def test_reverse(self):
-        l = [1, 2, 3]
-        expect = [4, 3, 2]
-        s = self.seq(l).map(lambda x: x + 1)
-        result = s.reverse()
-        self.assertIteratorEqual(expect, result)
-        self.assert_type(result)
-        result = s.__reversed__()
-        self.assertIteratorEqual(expect, result)
-        self.assert_type(result)
+        s = self.seq([1, 2, 3]).map(lambda x: x + 1)
+        assert s.reverse() == [4, 3, 2]
+        self.assert_type(s.reverse())
+        assert reversed(s) == [4, 3, 2]
+        self.assert_type(reversed(s))
 
     def test_distinct(self):
         l = [1, 3, 1, 2, 2, 3]
@@ -1001,15 +997,16 @@ class TestPipeline(unittest.TestCase):
             raise self.skipTest("pseq doesn't support functions with side-effects")
         calls = []
         func = calls.append
-        result = self.seq(1, 2, 3).map(func).cache().map(lambda x: x).to_list()
+        r1 = self.seq(1, 2, 3).map(func).cache().map(lambda x: x).to_list()
         self.assertEqual(len(calls), 3)
-        self.assertEqual(result, [None, None, None])
-        result = self.seq(1, 2, 3).map(lambda x: x).cache()
+        self.assertEqual(r1, [None, None, None])
+
         self.assertEqual(
-            repr(result._lineage), "Lineage: sequence -> map(<lambda>) -> cache"
+            repr(self.seq(1, 2, 3).map(lambda x: x).cache()._lineage),
+            "Lineage: sequence -> map(<lambda>) -> cache",
         )
-        result = self.seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
-        self.assertEqual(repr(result._lineage), "Lineage: sequence")
+        r2 = self.seq(1, 2, 3).map(lambda x: x).cache(delete_lineage=True)
+        self.assertEqual(repr(r2._lineage), "Lineage: sequence")
 
     def test_tabulate(self):
         sequence = seq([[1, 2, 3], [4, 5, 6]])
@@ -1018,14 +1015,13 @@ class TestPipeline(unittest.TestCase):
         result = sequence.tabulate()
         self.assertEqual(result, "-  -  -\n1  2  3\n4  5  6\n-  -  -")
 
-        sequence = seq(1, 2, 3)
-        self.assertEqual(sequence.tabulate(), None)
+        self.assertEqual(seq(1, 2, 3).tabulate(), None)
 
         class NotTabulatable:
             pass
 
-        sequence = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())
-        self.assertEqual(sequence.tabulate(), None)
+        s2 = seq(NotTabulatable(), NotTabulatable(), NotTabulatable())
+        self.assertEqual(s2.tabulate(), None)
 
         long_data = seq([(i, i + 1) for i in range(30)])
         assert "Showing 10 of 30 rows" in long_data.tabulate(n=10)
@@ -1122,6 +1118,7 @@ class TestParallelPipeline(TestPipeline):
 
 def test_typing() -> None:
     assert_type(seq([1, 2, 3]), Sequence[int])
+    assert_type(seq([1, 2, 3]).map(identity), Sequence[int])
     assert_type(seq([1]).map(str), Sequence[str])
     assert_type(seq("ab").to_list(), list[str])
     assert_type(seq(["ab"]).to_list(), list[str])

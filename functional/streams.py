@@ -67,7 +67,7 @@ class Stream:
     def __call__(self, *args: T, no_wrap: Optional[bool] = None) -> Sequence[T]:
         ...
 
-    def __call__(self, *args, no_wrap: Optional[bool] = None):  # type: ignore
+    def __call__(self, *args, no_wrap=None):
         """
         Create a Sequence using a sequential ExecutionEngine.
 

@@ -97,9 +97,9 @@ def is_iterable_not_list(val: object) -> bool:
     when list() should be called on val
 
     >>> l = [1, 2]
-    >>> is_iterable(l)
+    >>> is_iterable_not_list(l)
     False
-    >>> is_iterable(iter(l))
+    >>> is_iterable_not_list(iter(l))
     True
 
     :param val: value to check
@@ -119,7 +119,7 @@ def split_every(parts: int, iterable: Iterable[T]) -> Iterable[list[T]]:
     Split an iterable into parts of length parts
 
     >>> l = iter([1, 2, 3, 4])
-    >>> split_every(2, l)
+    >>> list(split_every(2, l))
     [[1, 2], [3, 4]]
 
     :param iterable: iterable to split

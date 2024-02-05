@@ -3,8 +3,8 @@ The pipeline module contains the transformations and actions API of PyFunctional
 """
 
 from __future__ import annotations
-import builtins
 
+import builtins
 import collections
 import csv
 import itertools
@@ -13,6 +13,7 @@ import re
 import sqlite3
 from collections.abc import Iterable, Iterator
 from functools import partial, reduce, wraps
+from numbers import Number
 from operator import add, mul
 from typing import (
     Any,
@@ -23,6 +24,7 @@ from typing import (
     NoReturn,
     Optional,
     TypeVar,
+    TypeVarTuple,
     Union,
     cast,
     overload,
@@ -49,6 +51,8 @@ T = TypeVar("T")
 U = TypeVar("U")
 V = TypeVar("V")
 W = TypeVar("W")
+Ts = TypeVarTuple("Ts")
+Tnumber = TypeVar("Tnumber", bound=Number)
 
 Unset = object()
 
@@ -418,9 +422,7 @@ class Sequence(Generic[T], Iterable[T]):
     ) -> Sequence[tuple[T, U, V, W]]:
         ...
 
-    def cartesian(
-        self, *iterables: Iterable[T], repeat: int = 1
-    ) -> Sequence[tuple[T, ...]]:
+    def cartesian(self, *iterables, repeat=1):
         """
         Returns the cartesian product of the passed iterables with the specified number of
         repetitions.
@@ -555,14 +557,14 @@ class Sequence(Generic[T], Iterable[T]):
         :return: sequence with func mapped onto it
         """
         if func is identity:
-            return self  # type: ignore, U is T here but mypy doesn't understand
+            return self  # type: ignore # U is T here but mypy doesn't understand
         return self._transform(transformations.map_t(func))
 
     def select(self, func: Callable[[T], U]) -> Sequence[U]:
         """Alias for map."""
         return self.map(func)
 
-    def starmap(self, func: Callable[[*T], U]) -> Sequence[U]:
+    def starmap(self: Sequence[tuple[*Ts]], func: Callable[[*Ts], U]) -> Sequence[U]:
         """
         starmaps f onto the sequence as itertools.starmap does.
 
@@ -574,7 +576,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return self._transform(transformations.starmap_t(func))
 
-    def smap(self, func: Callable[[*T], U]) -> Sequence[U]:
+    def smap(self: Sequence[tuple[*Ts]], func: Callable[[*Ts], U]) -> Sequence[U]:
         """
         Alias to Sequence.starmap
 
@@ -764,7 +766,9 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return all(func(element) for element in self)
 
-    def max(self) -> T | Sequence:
+    def max(
+        self: Sequence[SupportsRichComparison],
+    ) -> SupportsRichComparison | Sequence:
         """
         Returns the largest element in the sequence.
         If the sequence has multiple maximal elements, only the first one is returned.
@@ -795,7 +799,9 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return _wrap(max(self))
 
-    def min(self) -> T | Sequence:
+    def min(
+        self: Sequence[SupportsRichComparison],
+    ) -> SupportsRichComparison | Sequence:
         """
         Returns the smallest element in the sequence.
         If the sequence has multiple minimal elements, only the first one is returned.
@@ -964,6 +970,7 @@ class Sequence(Generic[T], Iterable[T]):
 
         >>> seq([('a', 1), ('b', 2), ('b', 3), ('b', 4), ('c', 3), ('c', 0)]).count_by_key()
         [('a', 1), ('b', 3), ('c', 2)]
+
         :return: Sequence of tuples where value is the count of each key
         """
         return self._transform(transformations.count_by_key_t())
@@ -974,6 +981,7 @@ class Sequence(Generic[T], Iterable[T]):
 
         >>> seq(['a', 'a', 'a', 'b', 'b', 'c', 'd']).count_by_value()
         [('a', 3), ('b', 2), ('c', 1), ('d', 1)]
+
         :return: Sequence of tuples where value is the count of each key
         """
         return self._transform(transformations.count_by_value_t())
@@ -986,7 +994,7 @@ class Sequence(Generic[T], Iterable[T]):
     def reduce(self, func: Callable[[U, T], U], initial: U) -> U:
         ...
 
-    def reduce(self, func: Callable[[U, T], U], initial: U | Unset = Unset) -> U:
+    def reduce(self, func, initial=Unset):
         """
         Reduce sequence of elements using func. API mirrors functools.reduce
 
@@ -1029,7 +1037,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return separator.join(str(e) for e in self)
 
-    def product(self, projection: Callable[[T], U] = identity) -> U:
+    def product(self, projection: Callable[[T], U] = identity) -> U:  # type: ignore
         """
         Takes product of elements in sequence.
 
@@ -1049,7 +1057,7 @@ class Sequence(Generic[T], Iterable[T]):
             return projection(1)  # type: ignore
         return self.map(projection).reduce(mul)
 
-    def sum(self, projection: Callable[[T], U] = identity) -> U:
+    def sum(self, projection: Callable[[T], Tnumber] = identity) -> Tnumber:  # type: ignore
         """
         Takes sum of elements in sequence.
 
@@ -1064,7 +1072,7 @@ class Sequence(Generic[T], Iterable[T]):
         """
         return sum(self.map(projection))
 
-    def average(self, projection: Callable[[T], U] = identity) -> U:
+    def average(self, projection: Callable[[T], Tnumber] = identity) -> Tnumber:  # type: ignore
         """
         Takes the average of elements in the sequence
 
@@ -1154,7 +1162,7 @@ class Sequence(Generic[T], Iterable[T]):
             result = func(element, result)
         return _wrap(result)
 
-    def zip(self, sequence: Sequence[U]) -> Sequence[tuple[T, U]]:
+    def zip(self, sequence: Iterable[U]) -> Sequence[tuple[T, U]]:
         """
         Zips the stored sequence with the given sequence.
 
@@ -1204,7 +1212,7 @@ class Sequence(Generic[T], Iterable[T]):
         :param other: sequence to join with
         :return: joined sequence of (K, (V, W)) pairs
         """
-        return self.join(other, "inner")
+        return self.join(other, "inner")  # type: ignore
 
     def join(
         self: Sequence[tuple[U, V]],
@@ -1254,7 +1262,7 @@ class Sequence(Generic[T], Iterable[T]):
         :param other: sequence to join with
         :return: left joined sequence of (K, (V, W)) pairs
         """
-        return self.join(other, "left")
+        return self.join(other, "left")  # type: ignore
 
     def right_join(
         self: Sequence[tuple[U, V]], other: Sequence[tuple[U, W]]
@@ -1270,7 +1278,7 @@ class Sequence(Generic[T], Iterable[T]):
         :param other: sequence to join with
         :return: right joined sequence of (K, (V, W)) pairs
         """
-        return self.join(other, "right")
+        return self.join(other, "right")  # type: ignore
 
     def outer_join(
         self: Sequence[tuple[U, V]], other: Sequence[tuple[U, W]]
@@ -1362,7 +1370,8 @@ class Sequence(Generic[T], Iterable[T]):
 
         :return: reversed sequence
         """
-        return reversed(self)
+        return reversed(self)  # type: ignore
+        # __reversed__ is supposed to return an iterator but ours does not :/ it's a Sequence (can't call next())
 
     def distinct(self) -> Sequence[T]:
         """
@@ -1476,7 +1485,7 @@ class Sequence(Generic[T], Iterable[T]):
         return self.to_set()
 
     @overload
-    def to_dict(self: Sequence[tuple[U, V]]) -> dict[U, V]:
+    def to_dict(self: Sequence[tuple[U, V]], default: None) -> dict[U, V]:
         ...
 
     @overload
@@ -1704,7 +1713,13 @@ class Sequence(Generic[T], Iterable[T]):
 
         self.for_each(_insert_item)
 
-    def to_sqlite3(self, conn, target, *args, **kwargs):
+    def to_sqlite3(
+        self,
+        conn: StrOrBytesPath | sqlite3.Connection | sqlite3.Cursor,
+        target: str,
+        *args,
+        **kwargs,
+    ):
         """
         Saves the sequence to sqlite3 database.
         Target table must be created in advance.
