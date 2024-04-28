@@ -2,7 +2,7 @@ from functional.execution import ExecutionEngine
 from functional.transformations import CACHE_T
 
 
-class Lineage(object):
+class Lineage:
     """
     Class for tracking the lineage of transformations, and applying them to a given sequence.
     """

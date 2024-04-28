@@ -1,11 +1,15 @@
+from __future__ import annotations
 import math
 from collections.abc import Iterable
 from functools import reduce
 from itertools import chain, count, islice, takewhile
 from multiprocessing import Pool, cpu_count
-from typing import Any
+from typing import Any, NamedTuple, TYPE_CHECKING
 
-import dill as serializer  # type: ignore
+import dill as serializer  # type: ignore[import-untyped]
+
+if TYPE_CHECKING:
+    from typing_extensions import TypeGuard
 
 
 PROTOCOL = serializer.HIGHEST_PROTOCOL
@@ -39,7 +43,7 @@ def is_primitive(val):
     return isinstance(val, (str, bool, float, complex, bytes, int))
 
 
-def is_namedtuple(val):
+def is_namedtuple(val) -> TypeGuard[NamedTuple]:
     """
     Use Duck Typing to check if val is a named tuple. Checks that val is of type tuple and contains
     the attribute _fields which is defined for named tuples.

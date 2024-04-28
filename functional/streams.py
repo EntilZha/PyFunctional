@@ -1,3 +1,4 @@
+from __future__ import annotations
 import re
 import csv as csvapi
 import json as jsonapi
@@ -5,15 +6,22 @@ import sqlite3 as sqlite3api
 import builtins
 
 from itertools import chain
-from typing import Iterable
+from typing import Any, Iterable, Iterator, SupportsIndex
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
 from functional.util import is_primitive, default_value
 from functional.io import get_read_function
+from typing import TypeVar, overload
+import typing
+
+if typing.TYPE_CHECKING:
+    from _typeshed import SupportsRead
+
+_T = TypeVar("_T")
 
 
-class Stream(object):
+class Stream:
     """
     Represents and implements a stream which separates the responsibilities of Sequence and
     ExecutionEngine.
@@ -21,15 +29,32 @@ class Stream(object):
     An instance of Stream is normally accessed as `seq`
     """
 
-    def __init__(self, disable_compression=False, max_repr_items=100, no_wrap=None):
+    def __init__(
+        self,
+        disable_compression: bool = False,
+        max_repr_items: int = 100,
+        no_wrap: bool | None = None,
+    ) -> None:
         """
         Default stream constructor.
         :param disable_compression: Disable file compression detection
         :param no_wrap: default value of no_wrap for functions like first() or last()
         """
-        self.disable_compression = disable_compression
-        self.max_repr_items = max_repr_items
-        self.no_wrap = no_wrap
+        self.disable_compression: bool = disable_compression
+        self.max_repr_items: int = max_repr_items
+        self.no_wrap: bool | None = no_wrap
+
+    @overload
+    def __call__(
+        self,
+        args: list[_T] | tuple[_T] | Iterable[_T] | Sequence[_T],
+        no_wrap: bool | None = None,
+        **kwargs,
+    ) -> Sequence[_T]: ...
+    @overload
+    def __call__(
+        self, *args: _T, no_wrap: bool | None = None, **kwargs
+    ) -> Sequence[_T]: ...
 
     def __call__(self, *args, no_wrap=None, **kwargs):
         """
@@ -49,7 +74,9 @@ class Stream(object):
             args, engine, no_wrap=default_value(no_wrap, self.no_wrap, False)
         )
 
-    def chain(self, *args, no_wrap=None, **kwargs):
+    def chain(
+        self, *args: Iterable[_T], no_wrap: bool | None = None, **kwargs
+    ) -> Sequence[_T]:
         """
         Create a Sequence chaining multiple iterators.
         """
@@ -59,7 +86,9 @@ class Stream(object):
 
         return self(chain(*args), no_wrap=no_wrap, **kwargs)
 
-    def _parse_args(self, args, engine, no_wrap=None):
+    def _parse_args(
+        self, args, engine: ExecutionEngine | None, no_wrap: bool | None = None
+    ):
         _no_wrap = default_value(no_wrap, self.no_wrap, False)
         if len(args) == 0:
             return Sequence(
@@ -104,13 +133,13 @@ class Stream(object):
 
     def open(
         self,
-        path,
-        delimiter=None,
-        mode="r",
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
+        path: str,
+        delimiter: str | None = None,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ):
         """
         Reads and parses input files as defined.
@@ -149,6 +178,13 @@ class Stream(object):
         else:
             return self("".join(list(file)).split(delimiter))
 
+    @overload
+    def range(self, stop: SupportsIndex, /) -> Sequence[int]: ...
+    @overload
+    def range(
+        self, start: SupportsIndex, stop: SupportsIndex, step: SupportsIndex = ..., /
+    ) -> Sequence[int]: ...
+
     def range(self, *args):
         """
         Alias to range function where seq.range(args) is equivalent to seq(range(args)).
@@ -161,7 +197,9 @@ class Stream(object):
         """
         return self(builtins.range(*args))  # pylint: disable=no-member
 
-    def csv(self, csv_file, dialect="excel", **fmt_params):
+    def csv(
+        self, csv_file: str | Iterator[str], dialect="excel", **fmt_params
+    ) -> Sequence[list[str]]:
         """
         Reads and parses the input of a csv stream or file.
 
@@ -191,13 +229,13 @@ class Stream(object):
 
     def csv_dict_reader(
         self,
-        csv_file,
-        fieldnames=None,
-        restkey=None,
-        restval=None,
-        dialect="excel",
-        **kwds
-    ):
+        csv_file: str | Iterator[str],
+        fieldnames: typing.Sequence[str] | None = None,
+        restkey: str | None = None,
+        restval: str | Any | None = None,
+        dialect: str = "excel",
+        **kwds,
+    ) -> Sequence[dict[str | Any, str | Any]]:
         if isinstance(csv_file, str):
             file_open = get_read_function(csv_file, self.disable_compression)
             input_file = file_open(csv_file)
@@ -214,11 +252,11 @@ class Stream(object):
             restkey=restkey,
             restval=restval,
             dialect=dialect,
-            **kwds
+            **kwds,
         )
         return self(csv_input).cache(delete_lineage=True)
 
-    def jsonl(self, jsonl_file):
+    def jsonl(self, jsonl_file: str | Iterator[str]) -> Sequence[Any]:
         """
         Reads and parses the input of a jsonl file stream or file.
 
@@ -238,7 +276,9 @@ class Stream(object):
             input_file = jsonl_file
         return self(input_file).map(jsonapi.loads).cache(delete_lineage=True)
 
-    def json(self, json_file):
+    def json(
+        self, json_file: str | Iterator[str] | SupportsRead[str | bytes]
+    ) -> Sequence[tuple[str, Any]] | Sequence[Any]:
         """
         Reads and parses the input of a json file handler or file.
 
@@ -259,9 +299,9 @@ class Stream(object):
         if isinstance(json_file, str):
             file_open = get_read_function(json_file, self.disable_compression)
             input_file = file_open(json_file)
-            json_input = jsonapi.load(input_file)
+            json_input = jsonapi.load(input_file)  # pyright: ignore[reportArgumentType]
         elif hasattr(json_file, "read"):
-            json_input = jsonapi.load(json_file)
+            json_input = jsonapi.load(json_file)  # type: ignore
         else:
             raise ValueError(
                 "json_file must be a file path or implement the iterator interface"

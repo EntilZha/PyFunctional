@@ -50,3 +50,45 @@ pandas-stubs = "^2.0.3.230814"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+# COMMON SETTINGS BELOW
+[tool.pyright]
+pythonVersion = "3.8"
+
+[tool.mypy]
+python_version = "3.8"
+check_untyped_defs = false
+disallow_any_generics = false
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+
+[tool.ruff.lint]
+select = [
+  "F",
+  "FA",
+  "TCH",
+  "UP",
+]
+ignore = [
+  "UP008",
+  "UP028",
+]
+
+# https://github.com/astral-sh/ruff/issues/4368
+[tool.ruff.lint.per-file-ignores]
+"**/test/*.py" = [
+  "ALL",
+]
+"docs/**/*.py" = [
+  "ALL",
+]
