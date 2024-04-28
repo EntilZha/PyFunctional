@@ -1,10 +1,11 @@
+from __future__ import annotations
 import gzip
 import lzma
 import bz2
 import io
 import builtins
 
-from typing import Optional, Generic, TypeVar, Any
+from typing import Generic, TypeVar, Any
 
 
 WRITE_MODE = "wt"
@@ -24,12 +25,12 @@ class ReusableFile(Generic[_FileConv_co]):
     def __init__(
         self,
         path: str,
-        delimiter: Optional[str] = None,
+        delimiter: str | None = None,
         mode: str = "r",
         buffering: int = -1,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = None,
-        newline: Optional[str] = None,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ):
         """
         Constructor arguments are passed directly to builtins.open
@@ -81,19 +82,19 @@ class ReusableFile(Generic[_FileConv_co]):
 
 
 class CompressedFile(ReusableFile):
-    magic_bytes: Optional[bytes] = None
+    magic_bytes: bytes | None = None
 
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         path: str,
-        delimiter: Optional[str] = None,
+        delimiter: str | None = None,
         mode: str = "rt",
         buffering: int = -1,
         compresslevel: int = 9,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = None,
-        newline: Optional[str] = None,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ):
         super(CompressedFile, self).__init__(
             path,
@@ -118,13 +119,13 @@ class GZFile(CompressedFile):
     def __init__(
         self,
         path: str,
-        delimiter: Optional[str] = None,
+        delimiter: str | None = None,
         mode: str = "rt",
         buffering: int = -1,
         compresslevel: int = 9,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = None,
-        newline: Optional[str] = None,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ):
         super(GZFile, self).__init__(
             path,
@@ -173,13 +174,13 @@ class BZ2File(CompressedFile):
     def __init__(
         self,
         path: str,
-        delimiter: Optional[str] = None,
+        delimiter: str | None = None,
         mode: str = "rt",
         buffering: int = -1,
         compresslevel: int = 9,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = None,
-        newline: Optional[str] = None,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ):
         super(BZ2File, self).__init__(
             path,
@@ -297,15 +298,15 @@ def universal_write_open(
     path: str,
     mode: str,
     buffering: int = -1,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = None,
-    newline: Optional[str] = None,
+    encoding: str | None = None,
+    errors: str | None = None,
+    newline: str | None = None,
     compresslevel: int = 9,
-    format: Optional[int] = None,
+    format: int | None = None,
     check: int = -1,
-    preset: Optional[int] = None,
+    preset: int | None = None,
     filters: Any = None,
-    compression: Optional[str] = None,
+    compression: str | None = None,
 ):
     # pylint: disable=unexpected-keyword-arg,no-member
     if compression is None:
