@@ -61,3 +61,4 @@ functional/test/data/tmp
 .vscode/
 .python-version
 .watchman-*
+.coverage.*
