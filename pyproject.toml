@@ -78,10 +78,14 @@ select = [
   "FA",
   "TCH",
   "UP",
+  "PL",
 ]
 ignore = [
   "UP008",
   "UP028",
+  "PLR0913",
+  "PLR2004",
+  "PLR5501",
 ]
 
 # https://github.com/astral-sh/ruff/issues/4368

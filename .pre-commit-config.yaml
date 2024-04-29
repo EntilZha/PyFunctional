@@ -16,6 +16,11 @@ repos:
     rev: v1.10.0
     hooks:
       - id: mypy
+        args:
+          - --ignore-missing-imports
+          - --scripts-are-modules
+          - --show-error-codes
+          # - --pretty
         additional_dependencies: [types-tabulate]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit

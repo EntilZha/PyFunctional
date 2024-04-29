@@ -16,7 +16,7 @@ PROTOCOL = serializer.HIGHEST_PROTOCOL
 CPU_COUNT = cpu_count()
 
 
-def is_primitive(val):
+def is_primitive(val) -> TypeGuard[str | bool | float | complex | bytes | int]:
     """
     Checks if the passed value is a primitive type.
 
