@@ -8,24 +8,19 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint functional --rcfile=pylintrc
-        language: python
-        additional_dependencies: [pylint, tabulate]
+        entry: poetry run pylint functional
+        language: system
         pass_filenames: false
-  - repo: https://github.com/psf/black
-    rev: 23.12.1
-    hooks:
       - id: black
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0
-    hooks:
+        name: black
+        entry: poetry run black functional
+        language: system
+        pass_filenames: false
       - id: mypy
-        args:
-          - --ignore-missing-imports
-          - --scripts-are-modules
-          - --show-error-codes
-          # - --pretty
-        additional_dependencies: [types-tabulate]
+        name: mypy
+        entry: poetry run mypy functional
+        language: system
+        pass_filenames: false
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.4.2
