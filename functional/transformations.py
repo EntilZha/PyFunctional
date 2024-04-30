@@ -260,8 +260,7 @@ def flat_map_impl(func: Callable, sequence):
     :return: flat_map generator
     """
     for element in sequence:
-        for value in func(element):
-            yield value
+        yield from func(element)
 
 
 def flat_map_t(func):

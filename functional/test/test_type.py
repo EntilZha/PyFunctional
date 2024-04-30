@@ -1,3 +1,4 @@
+# pylint: disable-all
 from __future__ import annotations
 from typing import Any, Iterator, TYPE_CHECKING, Mapping
 
@@ -122,11 +123,11 @@ def type_checking() -> None:
         ["abc", "ab", "z", "f", "qw"]
     ).group_by(len)
 
-    t_group_by_key: Sequence[tuple[str, list[int]]] = (
-        seq(  # pyright: ignore[reportAssignmentType]
-            [("a", 1), ("b", 2), ("b", 3), ("b", 4), ("c", 3), ("c", 0)]
-        ).group_by_key()
-    )
+    t_group_by_key: Sequence[
+        tuple[str, list[int]]
+    ] = seq(  # pyright: ignore[reportAssignmentType]
+        [("a", 1), ("b", 2), ("b", 3), ("b", 4), ("c", 3), ("c", 0)]
+    ).group_by_key()
 
     t_reduce_by_key: Sequence[tuple[str, int]] = seq(
         [("a", 1), ("b", 2), ("b", 3), ("b", 4), ("c", 3), ("c", 0)]

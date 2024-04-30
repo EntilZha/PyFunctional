@@ -37,6 +37,8 @@ _T_co = TypeVar("_T_co", covariant=True)  # Main Sequence Generic Type
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    # pylint: disable=deprecated-class
     from typing import Callable, Any, Iterator, NoReturn, Hashable
     from _typeshed import SupportsRichComparison
     from _typeshed import SupportsRichComparisonT
@@ -46,6 +48,7 @@ if TYPE_CHECKING:
     from lzma import _FilterChain
     from pandas import DataFrame
 
+    # pylint: disable=invalid-name
     _T1 = TypeVar("_T1")
     _T2 = TypeVar("_T2")
     _T3 = TypeVar("_T3")
@@ -213,6 +216,7 @@ class Sequence(Generic[_T_co]):
         :return: concatenated sequence with other
         """
         if isinstance(other, Sequence):
+            # pylint: disable=line-too-long
             return Sequence(self.sequence + other.sequence, no_wrap=self.no_wrap)  # type: ignore[operator]
         else:
             return Sequence(self.sequence + other, no_wrap=self.no_wrap)
@@ -408,17 +412,25 @@ class Sequence(Generic[_T_co]):
         return self._transform(transformations.tails_t(_wrap))
 
     @overload
-    def cartesian(self, /) -> Sequence[tuple[_T_co]]: ...
+    def cartesian(self, /) -> Sequence[tuple[_T_co]]:
+        ...
+
     @overload
-    def cartesian(self, iter1: Iterable[_T1], /) -> Sequence[tuple[_T_co, _T1]]: ...
+    def cartesian(self, iter1: Iterable[_T1], /) -> Sequence[tuple[_T_co, _T1]]:
+        ...
+
     @overload
     def cartesian(
         self, iter1: Iterable[_T1], iter2: Iterable[_T2], /
-    ) -> Sequence[tuple[_T_co, _T1, _T2]]: ...
+    ) -> Sequence[tuple[_T_co, _T1, _T2]]:
+        ...
+
     @overload
     def cartesian(
         self, iter1: Iterable[_T1], iter2: Iterable[_T2], iter3: Iterable[_T3], /
-    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3]]: ...
+    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3]]:
+        ...
+
     @overload
     def cartesian(
         self,
@@ -427,7 +439,9 @@ class Sequence(Generic[_T_co]):
         iter3: Iterable[_T3],
         iter4: Iterable[_T4],
         /,
-    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4]]: ...
+    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4]]:
+        ...
+
     @overload
     def cartesian(
         self,
@@ -437,7 +451,9 @@ class Sequence(Generic[_T_co]):
         iter4: Iterable[_T4],
         iter5: Iterable[_T5],
         /,
-    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4, _T5]]: ...
+    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4, _T5]]:
+        ...
+
     @overload
     def cartesian(
         self,
@@ -448,7 +464,8 @@ class Sequence(Generic[_T_co]):
         iter5: Iterable[_T5],
         iter6: Iterable[_T6],
         /,
-    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4, _T5, _T6]]: ...
+    ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4, _T5, _T6]]:
+        ...
 
     def cartesian(self, *iterables, **kwargs):
         """
@@ -607,34 +624,38 @@ class Sequence(Generic[_T_co]):
         return self._transform(transformations.select_t(func))
 
     @overload
-    def starmap(
-        self: Sequence[tuple[_T1]], func: Callable[[_T1], _R]
-    ) -> Sequence[_R]: ...
+    def starmap(self: Sequence[tuple[_T1]], func: Callable[[_T1], _R]) -> Sequence[_R]:
+        ...
 
     @overload
     def starmap(
         self: Sequence[tuple[_T1, _T2]], func: Callable[[_T1, _T2], _R]
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def starmap(
         self: Sequence[tuple[_T1, _T2, _T3]], func: Callable[[_T1, _T2, _T3], _R]
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def starmap(
         self: Sequence[tuple[_T1, _T2, _T3, _T4]],
         func: Callable[[_T1, _T2, _T3, _T4], _R],
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def starmap(
         self: Sequence[tuple[_T1, _T2, _T3, _T4, _T5]],
         func: Callable[[_T1, _T2, _T3, _T4, _T5], _R],
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
-    def starmap(self, func: Callable[..., _R]) -> Sequence[_R]: ...
+    def starmap(self, func: Callable[..., _R]) -> Sequence[_R]:
+        ...
 
     def starmap(self, func):
         """
@@ -649,32 +670,38 @@ class Sequence(Generic[_T_co]):
         return self._transform(transformations.starmap_t(func))
 
     @overload
-    def smap(self: Sequence[tuple[_T1]], func: Callable[[_T1], _R]) -> Sequence[_R]: ...
+    def smap(self: Sequence[tuple[_T1]], func: Callable[[_T1], _R]) -> Sequence[_R]:
+        ...
 
     @overload
     def smap(
         self: Sequence[tuple[_T1, _T2]], func: Callable[[_T1, _T2], _R]
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def smap(
         self: Sequence[tuple[_T1, _T2, _T3]], func: Callable[[_T1, _T2, _T3], _R]
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def smap(
         self: Sequence[tuple[_T1, _T2, _T3, _T4]],
         func: Callable[[_T1, _T2, _T3, _T4], _R],
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
     def smap(
         self: Sequence[tuple[_T1, _T2, _T3, _T4, _T5]],
         func: Callable[[_T1, _T2, _T3, _T4, _T5], _R],
-    ) -> Sequence[_R]: ...
+    ) -> Sequence[_R]:
+        ...
 
     @overload
-    def smap(self, func: Callable[..., _R]) -> Sequence[_R]: ...
+    def smap(self, func: Callable[..., _R]) -> Sequence[_R]:
+        ...
 
     def smap(self, func):
         """
@@ -729,9 +756,12 @@ class Sequence(Generic[_T_co]):
         return self.filter(lambda x: x is not None)  # type: ignore
 
     @overload
-    def filter(self, func: Callable[[_T_co], TypeGuard[_T]]) -> Sequence[_T]: ...
+    def filter(self, func: Callable[[_T_co], TypeGuard[_T]]) -> Sequence[_T]:
+        ...
+
     @overload
-    def filter(self, func: Callable[[_T_co], Any]) -> Sequence[_T_co]: ...
+    def filter(self, func: Callable[[_T_co], Any]) -> Sequence[_T_co]:
+        ...
 
     def filter(self, func):
         """
@@ -1060,11 +1090,14 @@ class Sequence(Generic[_T_co]):
     @overload
     def group_by_key(
         self: Sequence[tuple[_U, _V]],
-    ) -> Sequence[tuple[_U, list[_V]]]: ...
+    ) -> Sequence[tuple[_U, list[_V]]]:
+        ...
+
     @overload
     def group_by_key(
         self: Sequence[Iterable[_U]],
-    ) -> Sequence[tuple[_U, list[_U]]]: ...
+    ) -> Sequence[tuple[_U, list[_U]]]:
+        ...
 
     def group_by_key(self):
         """
@@ -1114,10 +1147,12 @@ class Sequence(Generic[_T_co]):
         return self._transform(transformations.count_by_value_t())
 
     @overload
-    def reduce(self, function: Callable[[_P, _T_co], _P], initial: _P, /) -> _P: ...
+    def reduce(self, function: Callable[[_P, _T_co], _P], initial: _P, /) -> _P:
+        ...
 
     @overload
-    def reduce(self, func: Callable[[_T_co, _T_co], _T_co], /) -> _T_co: ...
+    def reduce(self, func: Callable[[_T_co, _T_co], _T_co], /) -> _T_co:
+        ...
 
     def reduce(self, func, *initial):
         """
@@ -1237,9 +1272,13 @@ class Sequence(Generic[_T_co]):
             return sum(self) / length  # type: ignore
 
     @overload
-    def aggregate(self, func: Callable[[Sequence[_T], _T], _T], /) -> _T: ...
+    def aggregate(self, func: Callable[[Sequence[_T], _T], _T], /) -> _T:
+        ...
+
     @overload
-    def aggregate(self, seed: _T, func: Callable[[_T, _T], _T], /) -> _T: ...
+    def aggregate(self, seed: _T, func: Callable[[_T, _T], _T], /) -> _T:
+        ...
+
     @overload
     def aggregate(
         self,
@@ -1247,7 +1286,8 @@ class Sequence(Generic[_T_co]):
         func: Callable[[_T, _T], _T],
         result_map: Callable[[_T], _R],
         /,
-    ) -> _R: ...
+    ) -> _R:
+        ...
 
     def aggregate(self, *args):
         """
@@ -1359,7 +1399,7 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.enumerate_t(start))
 
-    def inner_join(self, other):  # TODO: Add type hints
+    def inner_join(self, other):
         """
         Sequence and other must be composed of (Key, Value) pairs.
         If self.sequence contains (K, V) pairs and other contains (K, W) pairs, the return result
@@ -1374,7 +1414,7 @@ class Sequence(Generic[_T_co]):
         """
         return self.join(other, "inner")
 
-    def join(self, other, join_type="inner"):  # TODO: Add type hints
+    def join(self, other, join_type="inner"):
         """
         Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
@@ -1404,7 +1444,7 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.join_t(other, join_type))
 
-    def left_join(self, other):  # TODO: Add type hints
+    def left_join(self, other):
         """
         Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
@@ -1418,7 +1458,7 @@ class Sequence(Generic[_T_co]):
         """
         return self.join(other, "left")
 
-    def right_join(self, other):  # TODO: Add type hints
+    def right_join(self, other):
         """
         Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
@@ -1432,7 +1472,7 @@ class Sequence(Generic[_T_co]):
         """
         return self.join(other, "right")
 
-    def outer_join(self, other):  # TODO: Add type hints
+    def outer_join(self, other):
         """
         Sequence and other must be composed of (Key, Value) pairs. If self.sequence contains (K, V)
         pairs and other contains (K, W) pairs, the return result is a sequence of (K, (V, W)) pairs.
@@ -1642,17 +1682,20 @@ class Sequence(Generic[_T_co]):
         return self.to_set()
 
     @overload
-    def to_dict(self: Sequence[tuple[_K, _V]]) -> dict[_K, _V]: ...
+    def to_dict(self: Sequence[tuple[_K, _V]]) -> dict[_K, _V]:
+        ...
 
     @overload
     def to_dict(
         self: Sequence[tuple[_K, _V]], default: Callable[[], _V]
-    ) -> collections.defaultdict[_K, _V]: ...
+    ) -> collections.defaultdict[_K, _V]:
+        ...
 
     @overload
     def to_dict(
         self: Sequence[tuple[_K, _V]], default: _V
-    ) -> collections.defaultdict[_K, _V]: ...
+    ) -> collections.defaultdict[_K, _V]:
+        ...
 
     def to_dict(self, default=None):  # pyright: ignore[reportInconsistentOverload]
         """
@@ -1680,17 +1723,20 @@ class Sequence(Generic[_T_co]):
                 return collections.defaultdict(lambda: default, dictionary)
 
     @overload
-    def dict(self: Sequence[tuple[_K, _V]]) -> dict[_K, _V]: ...
+    def dict(self: Sequence[tuple[_K, _V]]) -> dict[_K, _V]:
+        ...
 
     @overload
     def dict(
         self: Sequence[tuple[_K, _V]], default: Callable[[], _V]
-    ) -> collections.defaultdict[_K, _V]: ...
+    ) -> collections.defaultdict[_K, _V]:
+        ...
 
     @overload
     def dict(
         self: Sequence[tuple[_K, _V]], default: _V
-    ) -> collections.defaultdict[_K, _V]: ...
+    ) -> collections.defaultdict[_K, _V]:
+        ...
 
     def dict(self, default=None):  # pyright: ignore[reportInconsistentOverload]
         """
@@ -2035,23 +2081,28 @@ _SetT = TypeVar("_SetT", bound=set)
 
 
 @overload
-def _wrap(value: _PrimitiveT) -> _PrimitiveT: ...
+def _wrap(value: _PrimitiveT) -> _PrimitiveT:
+    ...
 
 
 @overload
-def _wrap(value: _DictT) -> _DictT: ...  # type: ignore
+def _wrap(value: _DictT) -> _DictT:  # type: ignore
+    ...
 
 
 @overload
-def _wrap(value: _SetT) -> _SetT: ...  # type: ignore
+def _wrap(value: _SetT) -> _SetT:  # type: ignore
+    ...
 
 
 @overload
-def _wrap(value: _NamedTupleT) -> _NamedTupleT: ...  # type: ignore
+def _wrap(value: _NamedTupleT) -> _NamedTupleT:  # type: ignore
+    ...
 
 
 @overload
-def _wrap(value: Iterable[_T]) -> Sequence[_T]: ...
+def _wrap(value: Iterable[_T]) -> Sequence[_T]:
+    ...
 
 
 def _wrap(value):
