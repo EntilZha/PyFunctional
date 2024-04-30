@@ -7,13 +7,13 @@ import builtins
 
 from itertools import chain
 from typing import Any, Iterable, Iterator, SupportsIndex
+from typing import TypeVar, overload
+import typing
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
 from functional.pipeline import Sequence
 from functional.util import is_primitive, default_value
 from functional.io import get_read_function
-from typing import TypeVar, overload
-import typing
 
 if typing.TYPE_CHECKING:
     from _typeshed import SupportsRead
@@ -50,11 +50,14 @@ class Stream:
         args: list[_T] | tuple[_T] | Iterable[_T] | Sequence[_T],
         no_wrap: bool | None = None,
         **kwargs,
-    ) -> Sequence[_T]: ...
+    ) -> Sequence[_T]:
+        ...
+
     @overload
     def __call__(
         self, *args: _T, no_wrap: bool | None = None, **kwargs
-    ) -> Sequence[_T]: ...
+    ) -> Sequence[_T]:
+        ...
 
     def __call__(self, *args, no_wrap=None, **kwargs):
         """
@@ -179,11 +182,14 @@ class Stream:
             return self("".join(list(file)).split(delimiter))
 
     @overload
-    def range(self, stop: SupportsIndex, /) -> Sequence[int]: ...
+    def range(self, stop: SupportsIndex, /) -> Sequence[int]:
+        ...
+
     @overload
     def range(
         self, start: SupportsIndex, stop: SupportsIndex, step: SupportsIndex = ..., /
-    ) -> Sequence[int]: ...
+    ) -> Sequence[int]:
+        ...
 
     def range(self, *args):
         """
