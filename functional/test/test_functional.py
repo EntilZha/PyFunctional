@@ -364,6 +364,14 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
+    def test_remove_none(self) -> None:
+        l = [None, -1, 0, None, 10]
+        expect = [-1, 0, 10]
+        s = self.seq(l)
+        result = s.remove_none()
+        self.assertIteratorEqual(expect, result)
+        self.assert_type(result)
+
     def test_filter(self):
         l = [0, -1, 5, 10]
         expect = [5, 10]
