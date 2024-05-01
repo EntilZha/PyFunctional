@@ -57,7 +57,7 @@ def select_t(func: Callable):
     :return: transformation
     """
     return Transformation(
-        "select({name(func)})",
+        f"select({name(func)})",
         partial(map, func),
         {ExecutionStrategies.PARALLEL},
     )
@@ -70,7 +70,7 @@ def starmap_t(func: Callable):
     :return: transformation
     """
     return Transformation(
-        "starmap({name(func)})",
+        f"starmap({name(func)})",
         partial(starmap, func),
         {ExecutionStrategies.PARALLEL},
     )
