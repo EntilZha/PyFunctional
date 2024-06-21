@@ -47,9 +47,12 @@ mypy = "^1.1.1"
 types-tabulate = "^0.9.0.3"
 pandas-stubs = "^2.0.3.230814"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.coverage.report]
 exclude_lines = [
