@@ -176,6 +176,10 @@ if TYPE_CHECKING:
             ["a", "b", "c"]
         ).zip_with_index()
 
+        t_zip_with_next: Sequence[tuple[str, str]] = seq(
+            ["a", "b", "c"]
+        ).zip_with_next()
+
         t_enumerate: Sequence[tuple[int, str]] = seq(["a", "b", "c"]).enumerate(start=1)
 
         # t_inner_join: Sequence[tuple[str, Sequence[int]]] = seq([('a', 1), ('b', 2), ('c', 3)]).inner_join([('a', 2), ('c', 5)])
