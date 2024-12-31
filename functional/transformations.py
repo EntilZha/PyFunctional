@@ -115,6 +115,24 @@ def filter_not_t(func: Callable):
     )
 
 
+def filter_indexed_t(func: Callable, start: int):
+    """
+    Transformation for Sequence.filter_indexed
+    :param func: filter_indexed function
+    :param start: start of element index
+    :return: transformation
+    """
+
+    def filter_indexed(predicate, sequence):
+        for i, element in enumerate(sequence, start):
+            if predicate(i, element):
+                yield element
+
+    return Transformation(
+        f"filter_indexed({name(func)}, {start})", partial(filter_indexed, func), None
+    )
+
+
 def reversed_t():
     """
     Transformation for Sequence.reverse

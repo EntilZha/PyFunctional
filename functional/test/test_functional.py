@@ -382,6 +382,24 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
+    @parametrize(
+        "sequence, start, expected",
+        [
+            ([1, 3, 5, 7, 9, 11], None, [5, 7, 9]),
+            ([1, 3, 5, 7, 9, 11], 1, [3, 5, 7, 9]),
+            ([], None, []),
+        ],
+    )
+    def test_filter_indexed(self, sequence, start, expected):
+        if start is None:
+            result = self.seq(sequence).filter_indexed(lambda i, x: i > 1 and x < 10)
+        else:
+            result = self.seq(sequence).filter_indexed(
+                lambda i, x: i > 1 and x < 10, start
+            )
+        self.assertIteratorEqual(expected, result)
+        self.assert_type(result)
+
     def test_where(self):
         def f(x):
             return x > 0

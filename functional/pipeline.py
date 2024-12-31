@@ -803,6 +803,22 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.filter_not_t(func))
 
+    def filter_indexed(
+        self, func: Callable[[int, _T], bool], start: int = 0
+    ) -> Sequence[_T]:
+        """
+        Filters sequence with predicate func that also provides each element's index,
+        which can be used to filter on.
+
+        >>> seq([-1, 1, -2, 2]).filter_indexed(lambda i, x: x < 0 and i > 1)
+        [-2]
+
+        :param func: function to filter on
+        :param start: beginning of index, zero by default
+        :return: filtered sequence
+        """
+        return self._transform(transformations.filter_indexed_t(func, start))
+
     def where(self, func: Callable[[_T_co], Any]) -> Sequence[_T_co]:
         """
         Selects elements where func evaluates to True.

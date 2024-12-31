@@ -92,6 +92,10 @@ if TYPE_CHECKING:
 
         t_filter_not: Sequence[int] = seq([-1, 1, -2, 2]).filter_not(lambda x: x > 0)
 
+        t_filter_indexed: Sequence[int] = seq([-1, 1, -2, 2]).filter_indexed(
+            lambda i, x: x > 0 and i > 1
+        )
+
         t_where: Sequence[int] = seq([-1, 1, -2, 2]).where(lambda x: x > 0)
 
         t_count: int = seq([-1, -2, 1, 2]).count(lambda x: x > 0)
