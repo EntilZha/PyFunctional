@@ -46,6 +46,9 @@ class ParallelExecutionEngine(ExecutionEngine):
         super(ParallelExecutionEngine, self).__init__()
         self.processes = processes
         self.partition_size = partition_size
+        self.parallel = partial(
+            parallelize, processes=self.processes, partition_size=self.partition_size
+        )
 
     def evaluate(self, sequence, transformations):
         """
@@ -55,9 +58,6 @@ class ParallelExecutionEngine(ExecutionEngine):
         :return: Resulting sequence or value
         """
         result = sequence
-        parallel = partial(
-            parallelize, processes=self.processes, partition_size=self.partition_size
-        )
         staged = []
         for transform in transformations:
             strategies = transform.execution_strategies or {}
@@ -65,11 +65,11 @@ class ParallelExecutionEngine(ExecutionEngine):
                 staged.insert(0, transform.function)
             else:
                 if staged:
-                    result = parallel(compose(*staged), result)
+                    result = self.parallel(compose(*staged), result)
                     staged = []
                 if ExecutionStrategies.PRE_COMPUTE in strategies:
                     result = list(result)
                 result = transform.function(result)
         if staged:
-            result = parallel(compose(*staged), result)
+            result = self.parallel(compose(*staged), result)
         return iter(result)
