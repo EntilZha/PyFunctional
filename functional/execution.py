@@ -25,11 +25,10 @@ class ExecutionEngine:
         """
         result = sequence
         for transform in transformations:
-            strategies = transform.execution_strategies
-            if strategies is not None and ExecutionStrategies.PRE_COMPUTE in strategies:
-                result = transform.function(list(result))
-            else:
-                result = transform.function(result)
+            strategies = transform.execution_strategies or {}
+            if ExecutionStrategies.PRE_COMPUTE in strategies:
+                result = list(result)
+            result = transform.function(result)
         return iter(result)
 
 
