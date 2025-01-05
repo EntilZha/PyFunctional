@@ -72,6 +72,10 @@ if TYPE_CHECKING:
 
         t_map: Sequence[int] = seq([1, 2, 3, 4]).map(lambda x: x * -1)
 
+        t_map_not_none: Sequence[int] = seq([1, 2, 3, 4]).map_not_none(
+            lambda x: x * -1 if x else x
+        )
+
         t_select: Sequence[int] = num_seq.select(lambda x: x * -1)
 
         t_starmap: Sequence[int] = seq([(2, 3), (-2, 1), (0, 10)]).starmap(

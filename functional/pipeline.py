@@ -627,6 +627,18 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.map_t(func))
 
+    def map_not_none(self, func: Callable[[_T_co], _T]) -> Sequence[_T]:
+        """
+        Maps func onto the elements of the sequence, returning only the non-None values.
+
+        >>> seq([1, 2, 3, 4, 5]).map_not_none(lambda x: None if x % 2 == 0 else x * -1)
+        [-1, -3, -5]
+
+        :param func: function to map with
+        :return: sequence with func mapped onto it excluding None values
+        """
+        return self._transform(transformations.map_not_none_t(func))
+
     def select(self, func: Callable[[_T_co], _T]) -> Sequence[_T]:
         """
         Selects f from the elements of the sequence.

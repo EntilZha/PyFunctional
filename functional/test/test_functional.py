@@ -348,6 +348,19 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(expect, result)
         self.assert_type(result)
 
+    @parametrize(
+        "sequence, expected",
+        [
+            ([1, 2, 3, 4, 5], [-1, -3, -5]),
+        ],
+    )
+    def test_map_not_none(self, sequence, expected):
+        result = self.seq(sequence).map_not_none(
+            lambda x: None if x % 2 == 0 else x * -1
+        )
+        self.assertIteratorEqual(expected, result)
+        self.assert_type(result)
+
     def test_select(self):
         l = [1, 2, 0, 5]
         expect = [2, 4, 0, 10]

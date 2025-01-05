@@ -63,6 +63,26 @@ def select_t(func: Callable):
     )
 
 
+def map_not_none_t(func: Callable):
+    """
+    Transformation for Sequence.map_not_none
+    :param func: map function
+    :return: transformation
+    """
+
+    def map_not_none(map_func, sequence):
+        for element in sequence:
+            result = map_func(element)
+            if result is not None:
+                yield result
+
+    return Transformation(
+        f"map_not_none({name(func)})",
+        partial(map_not_none, func),
+        {ExecutionStrategies.PARALLEL},
+    )
+
+
 def starmap_t(func: Callable):
     """
     Transformation for Sequence.starmap and Sequence.smap
