@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Added [run-test.sh](run-tests.sh) script that runs all checks on code
+
 ## Release 1.5
 
 ## Release 1.4
