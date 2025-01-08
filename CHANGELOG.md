@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
+
 ## Release 1.5
 
 ## Release 1.4
