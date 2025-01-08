@@ -311,14 +311,14 @@ class Sequence(Generic[_T_co]):
         """
         return self.head(no_wrap=no_wrap)
 
-    def head_option(self, no_wrap: bool | None = None) -> _T_co | None:
+    def head_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
-        >>> seq([1, 2, 3]).head_option()
+        >>> seq([1, 2, 3]).head_or_none()
         1
 
-        >>> seq([]).head_option()
+        >>> seq([]).head_or_none()
         None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence

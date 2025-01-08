@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
         t_first: int = seq([1, 2, 3]).first()
 
-        t_head_option: int | None = seq([1, 2, 3]).head_option()
+        t_head_or_none: int | None = seq([1, 2, 3]).head_or_none()
 
         t_last: int = seq([1, 2, 3]).last()
 
