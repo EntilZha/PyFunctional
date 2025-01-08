@@ -137,7 +137,7 @@ In the next example we have chat logs formatted in [json lines (jsonl)](http://j
 contain messages and metadata. A typical jsonl file will have one valid json on each line of a file.
 Below are a few lines out of `examples/chat_logs.jsonl`.
 
-```json
+```json lines
 {"message":"hello anyone there?","date":"10/09","user":"bob"}
 {"message":"need some help with a program","date":"10/09","user":"bob"}
 {"message":"sure thing. What do you need help with?","date":"10/09","user":"dave"}
