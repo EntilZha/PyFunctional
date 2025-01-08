@@ -1,5 +1,11 @@
 # Changelog
 
+## Release 2.0
+
+### New Features
+
+- Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
+
 ## Release 1.5
 
 ## Release 1.4
