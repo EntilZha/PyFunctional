@@ -2,6 +2,7 @@
 
 ## Release 2.0
 
+- Corrected and improved language consistency in readme and `CHANGELOG.md`
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
 ### New Features
 
