@@ -350,14 +350,14 @@ class Sequence(Generic[_T_co]):
         else:
             return _wrap(self.sequence[-1])  # type: ignore
 
-    def last_option(self, no_wrap: bool | None = None) -> _T_co | None:
+    def last_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
-        >>> seq([1, 2, 3]).last_option()
+        >>> seq([1, 2, 3]).last_or_none()
         3
 
-        >>> seq([]).last_option()
+        >>> seq([]).last_or_none()
         None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence

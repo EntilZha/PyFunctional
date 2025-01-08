@@ -32,7 +32,7 @@ if TYPE_CHECKING:
 
         t_last: int = seq([1, 2, 3]).last()
 
-        t_last_option: int | None = seq([1, 2, 3]).last_option()
+        t_last_or_none: int | None = seq([1, 2, 3]).last_or_none()
 
         t_init: Sequence[int] = seq([1, 2, 3]).init()
 
