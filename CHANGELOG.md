@@ -5,6 +5,7 @@
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
 ### New Features
 
+- Added `first_or_none`, a function to match `head_or_none`   
 - Added run_test.sh script
 - Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
 
