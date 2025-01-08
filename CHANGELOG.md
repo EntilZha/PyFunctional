@@ -5,6 +5,7 @@
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
 ### New Features
 
+- Added run_test.sh script
 - Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
 
 ## Release 1.5
