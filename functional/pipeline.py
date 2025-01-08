@@ -328,6 +328,21 @@ class Sequence(Generic[_T_co]):
             return None
         return self.head(no_wrap=no_wrap)
 
+    def first_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
+        """
+        Returns the first element of the sequence or None, if the sequence is empty.
+
+        >>> seq([1, 2, 3]).first_or_none()
+        1
+
+        >>> seq([]).first_or_none()
+        None
+
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
+        :return: first element of sequence or None if sequence is empty
+        """
+        return self.head_or_none(no_wrap=no_wrap)
+
     def last(self, no_wrap: bool | None = None) -> _T_co:
         """
         Returns the last element of the sequence.

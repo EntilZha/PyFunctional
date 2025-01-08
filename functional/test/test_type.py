@@ -30,6 +30,8 @@ if TYPE_CHECKING:
 
         t_head_or_none: int | None = seq([1, 2, 3]).head_or_none()
 
+        t_first_or_none: int | None = seq([1, 2, 3]).first_or_none()
+
         t_last: int = seq([1, 2, 3]).last()
 
         t_last_or_none: int | None = seq([1, 2, 3]).last_or_none()
