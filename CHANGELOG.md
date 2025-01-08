@@ -2,8 +2,14 @@
 
 ## Release 2.0
 
+- Renamed `head_option` and `last_option` to `head_or_none` and `last_or_none` respectively
+  - __N.B:__ This is potentially a breaking change as the renamed functions are being repurposed to return an `Option`
+    and will no longer return the raw value or `None`
+  - The old names are less applicable as the functions do not provide any 'option' apart from their single parameter,
+    which is no different to that of `head/first` and `last`
 - Corrected and improved language consistency in readme and `CHANGELOG.md`
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
+
 ### New Features
 
 - Added `first_or_none`, a function to match `head_or_none`   
