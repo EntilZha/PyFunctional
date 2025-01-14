@@ -135,7 +135,7 @@ seq(words).map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 
 In the next example we have chat logs formatted in [json lines (jsonl)](http://jsonlines.org/) which
 contain messages and metadata. A typical jsonl file will have one valid json on each line of a file.
-Below are a few lines out of `examples/chat_logs.jsonl`.
+Below are a few lines out of [examples/chat_logs.jsonl](examples/chat_logs.jsonl).
 
 ```json lines
 {"message":"hello anyone there?","date":"10/09","user":"bob"}
@@ -160,7 +160,7 @@ word_counts = messages\
 
 ```
 
-Next, let's continue that example but introduce a json database of users from `examples/users.json`.
+Next, let's continue that example but introduce a json database of users from [examples/users.json](examples/users.json).
 In the previous example we showed how `PyFunctional` can do word counts, in the next example let's
 show how `PyFunctional` can join different data sources.
 
@@ -187,8 +187,8 @@ data = users.inner_join(message_tuples)
 
 ### CSV, Aggregate Functions, and Set functions
 
-In `examples/camping_purchases.csv` there is a list of camping purchases. Let's do some cast
-analysis and compare it to the required camping gear list stored in `examples/gear_list.txt`.
+In [examples/camping_purchases.csv](examples/camping_purchases.csv) there is a list of camping purchases. Let's do some 
+cost analysis and compare it to the required camping gear list stored in [examples/gear_list.txt](examples/gear_list.txt).
 
 ```python
 purchases = seq.csv('examples/camping_purchases.csv')
