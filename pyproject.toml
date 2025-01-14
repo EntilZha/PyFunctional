@@ -35,15 +35,13 @@ pandas = { version = ">=1.0.3", optional = true }
 [tool.poetry.extras]
 all = ["pandas"]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^23.1"
 pytest = "^7.3.1"
 parametrize = "^0.1.1"
 pylint = "^2.17.4"
 pytest-cov = "^4.0.0"
 coverage = "^7.2.5"
-
-[tool.poetry.group.dev.dependencies]
 mypy = "^1.1.1"
 types-tabulate = "^0.9.0.3"
 pandas-stubs = "^2.0.3.230814"
