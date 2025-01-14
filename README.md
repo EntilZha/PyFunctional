@@ -144,6 +144,7 @@ Below are a few lines out of [examples/chat_logs.jsonl](examples/chat_logs.jsonl
 ```
 
 ```python
+from functional import seq
 from operator import add
 import re
 messages = seq.jsonl('examples/chat_logs.jsonl')
@@ -226,6 +227,7 @@ Writing to a SQLite3 database is similarly easy
 ```python
 import sqlite3
 from collections import namedtuple
+from functional import seq
 
 with sqlite3.connect(':memory:') as conn:
     conn.execute('CREATE TABLE user (id INT, name TEXT)')
