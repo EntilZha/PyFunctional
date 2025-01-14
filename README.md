@@ -544,3 +544,4 @@ These people have generously contributed their time to improving `PyFunctional`
 - [Digenis](https://github.com/Digenis)
 - [ChuyuHsu](https://github.com/ChuyuHsu)
 - [jsemric](https://github.com/jsemric)
+- [Samer](https://github.com/samer-hamood)
