@@ -16,4 +16,9 @@ else
   pipx install poetry
 fi
 
+if ! poetry install; then
+  poetry lock
+  poetry install
+fi
+
 poetry run pytest
