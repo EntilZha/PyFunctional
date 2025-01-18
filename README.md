@@ -513,6 +513,7 @@ In order to be merged, all pull requests must:
 
 ## Supported Python Versions
 
+- `PyFunctional` 2.0 is tested against Python 3.12 and Python 3.13.
 - `PyFunctional` 1.5 is tested against Python 3.8 to 3.11. PyPy3 is not tested, but bug fixed on best effort basis.
 - `PyFunctional` 1.4 supports and is tested against Python 3.6, Python 3.7, and PyPy3
 - `PyFunctional` 1.4 and above do not support python 2.7
