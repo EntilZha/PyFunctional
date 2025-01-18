@@ -8,6 +8,8 @@ from functional.pipeline import Sequence, is_iterable, _wrap, extend
 from functional.transformations import name
 from functional import seq, pseq
 
+from parametrize import parametrize  # type: ignore
+
 Data = namedtuple("Data", "x y")
 
 
