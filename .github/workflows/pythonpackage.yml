@@ -26,7 +26,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
-      - run: poetry install
+      - run: |
+          if ! poetry install; then
+            poetry lock
+            poetry install
+          fi
       - name: Pylint (Python v${{ matrix.python-version }})
         run: poetry run pylint functional
         if: matrix.python-version != '3.12' && matrix.python-version != '3.13'
