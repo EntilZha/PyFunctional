@@ -29,8 +29,8 @@ jobs:
       - run: poetry install
       - name: Pylint (Python v${{ matrix.python-version }})
         run: poetry run pylint functional
-        run: poetry run black --check functional
       - name: black (Python v${{ matrix.python-version }})
+        run: poetry run black --diff --check functional
         if: always()
       - name: Test with pytest (Python v${{ matrix.python-version }})
         run: poetry run pytest --cov=functional --cov-report=xml
