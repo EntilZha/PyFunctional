@@ -47,4 +47,6 @@ else
   poetry run ruff check functional
 fi
 
+poetry run black --check functional
+
 poetry run pytest
