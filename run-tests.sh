@@ -49,4 +49,6 @@ fi
 
 poetry run black --check functional
 
+poetry run mypy functional
+
 poetry run pytest
