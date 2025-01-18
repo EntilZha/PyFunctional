@@ -53,7 +53,7 @@ fi
 
 echo
 
-poetry run black --check functional
+poetry run black --diff --color --check functional
 
 echo
 
