@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
         include:
           - python-version: "3.11"
             use_pandas: 1
@@ -29,6 +29,10 @@ jobs:
       - run: poetry install
       - name: Pylint (Python v${{ matrix.python-version }})
         run: poetry run pylint functional
+        if: matrix.python-version != '3.12' && matrix.python-version != '3.13'
+      - name: Ruff (Python v${{ matrix.python-version }})
+        run: poetry run ruff check functional
+        if:  matrix.python-version == '3.12' || matrix.python-version == '3.13'
       - name: black (Python v${{ matrix.python-version }})
         run: poetry run black --diff --check functional
         if: always()
