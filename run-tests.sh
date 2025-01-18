@@ -9,4 +9,11 @@ else
   echo "Pipx version:   $pipx_version"
 fi
 
+poetry_version=$(pipx list | grep -oP poetry\\s+\\K\[0-9\]\.\[0-9\]+\.\[0-9\]+)
+if [[ -n $poetry_version ]]; then
+  echo "Poetry version: $poetry_version"
+else
+  pipx install poetry
+fi
+
 poetry run pytest
