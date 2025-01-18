@@ -36,10 +36,14 @@ else
   pipx install poetry
 fi
 
+echo
+
 if ! poetry install; then
   poetry lock
   poetry install
 fi
+
+echo
 
 if [[ $(compare_versions "$python_version" "3.12.0") -lt 0 ]]; then
   poetry run pylint functional
@@ -47,8 +51,14 @@ else
   poetry run ruff check functional
 fi
 
+echo
+
 poetry run black --check functional
 
+echo
+
 poetry run mypy functional
+
+echo
 
 poetry run pytest
