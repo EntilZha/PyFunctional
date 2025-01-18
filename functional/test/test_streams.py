@@ -26,9 +26,7 @@ class TestStreams(unittest.TestCase):
         self.assertListEqual(data, self.seq.open(file_name).to_list())
 
         text = "".join(data).split(",")
-        self.assertListEqual(
-            text, self.seq.open(file_name, delimiter=",").to_list()
-        )
+        self.assertListEqual(text, self.seq.open(file_name, delimiter=",").to_list())
 
         with self.assertRaises(ValueError):
             self.seq.open(file_name, mode="w").to_list()
@@ -37,21 +35,27 @@ class TestStreams(unittest.TestCase):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open(f"{project_root}/functional/test/data/test.txt.gz", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.gz", mode="rt"
+            ).to_list(),
         )
 
     def test_open_bz2(self):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open(f"{project_root}/functional/test/data/test.txt.bz2", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.bz2", mode="rt"
+            ).to_list(),
         )
 
     def test_open_xz(self):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open(f"{project_root}/functional/test/data/test.txt.xz", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.xz", mode="rt"
+            ).to_list(),
         )
 
     def test_disable_compression(self):
@@ -155,28 +159,36 @@ class TestStreams(unittest.TestCase):
             self.seq.csv_dict_reader(1)
 
     def test_gzip_csv(self):
-        result = self.seq.csv(f"{project_root}/functional/test/data/test.csv.gz").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.gz"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_bz2_csv(self):
-        result = self.seq.csv(f"{project_root}/functional/test/data/test.csv.bz2").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.bz2"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_xz_csv(self):
-        result = self.seq.csv(f"{project_root}/functional/test/data/test.csv.xz").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.xz"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_jsonl(self):
-        result_0 = self.seq.jsonl(f"{project_root}/functional/test/data/test.jsonl").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
         result_1 = self.seq.jsonl(["[1, 2, 3]", "[4, 5, 6]"])
@@ -184,17 +196,23 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(expect_1, result_1)
 
     def test_gzip_jsonl(self):
-        result_0 = self.seq.jsonl(f"{project_root}/functional/test/data/test.jsonl.gz").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.gz"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
     def test_bz2_jsonl(self):
-        result_0 = self.seq.jsonl(f"{project_root}/functional/test/data/test.jsonl.bz2").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.bz2"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
     def test_xz_jsonl(self):
-        result_0 = self.seq.jsonl(f"{project_root}/functional/test/data/test.jsonl.xz").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.xz"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
