@@ -22,6 +22,13 @@ compare_versions() {
 
 python_version=$(python --version | grep -Eo \[0-9\]\.\[0-9\]+\.\[0-9\]+)
 echo "Python version: $python_version"
+# capitalise(word)
+# Capitalizes a word.
+capitalize() {
+  local word=$1
+  echo "$(tr '[:lower:]' '[:upper:]' <<< ${word:0:1})${word:1}"
+}
+
 
 pipx_version=$(pipx --version)
 if [[ -z "$pipx_version" ]]; then
