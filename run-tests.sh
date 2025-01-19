@@ -66,7 +66,7 @@ install_package() {
 
 pipx_version=$(pipx --version)
 if [[ -z "$pipx_version" ]]; then
-  echo "Pipx is not installed"
+  echo "Please install Pipx before running this script."
   exit 1
 else
   echo "Pipx version:   $pipx_version"
