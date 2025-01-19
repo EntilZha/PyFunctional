@@ -63,42 +63,48 @@ install_package() {
   fi
 }
 
+main() {
+  python_version=$(python --version | grep -Eo \[0-9\]\.\[0-9\]+\.\[0-9\]+)
+  print_version "Python" "$python_version"
 
-pipx_version=$(pipx --version)
-if [[ -z "$pipx_version" ]]; then
-  echo "Please install Pipx before running this script."
-  exit 1
-else
-  print_version "Pipx" "$pipx_version"
-fi
+  pipx_version=$(pipx --version)
+  if [[ -z "$pipx_version" ]]; then
+    echo "Please install Pipx before running this script."
+    exit 1
+  else
+    print_version "Pipx" "$pipx_version"
+  fi
 
-install_package "poetry"
+  install_package "poetry"
 
-install_package "pre-commit" false
+  install_package "pre-commit" false
 
-echo
+  echo
 
-if ! poetry install; then
-  poetry lock
-  poetry install
-fi
+  if ! poetry install; then
+    poetry lock
+    poetry install
+  fi
 
-echo
+  echo
 
-if [[ $(compare_versions "$python_version" "3.12.0") -lt 0 ]]; then
-  poetry run pylint functional
-else
-  poetry run ruff check functional
-fi
+  if [[ $(compare_versions "$python_version" "3.12.0") -lt 0 ]]; then
+    poetry run pylint functional
+  else
+    poetry run ruff check functional
+  fi
 
-echo
+  echo
 
-poetry run black --diff --color --check functional
+  poetry run black --diff --color --check functional
 
-echo
+  echo
 
-poetry run mypy functional
+  poetry run mypy functional
 
-echo
+  echo
 
-poetry run pytest
+  poetry run pytest
+}
+
+main "$@"
