@@ -36,6 +36,17 @@ capitalize() {
   echo "$(tr '[:lower:]' '[:upper:]' <<< ${word:0:1})${word:1}"
 }
 
+# print_version(name, version, capitalize, width)
+# Prints the version of the software with option to capitalize name and change left-aligned padding.
+print_version() {
+  local name=$1
+  local version=$2
+  local capitalize=${3:-true}
+  local width=${4:-19}
+  name=$([[ $capitalize == 'true' ]] && capitalize "$name" || echo "$name")
+  printf "%-${width}s %s\n" "$name version:" "$version"
+}
+
 
 pipx_version=$(pipx --version)
 if [[ -z "$pipx_version" ]]; then
