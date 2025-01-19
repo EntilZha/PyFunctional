@@ -69,7 +69,7 @@ if [[ -z "$pipx_version" ]]; then
   echo "Please install Pipx before running this script."
   exit 1
 else
-  echo "Pipx version:   $pipx_version"
+  print_version "Pipx" "$pipx_version"
 fi
 
 poetry_version=$(pipx list | grep -oP poetry\\s+\\K\[0-9\]\.\[0-9\]+\.\[0-9\]+)
