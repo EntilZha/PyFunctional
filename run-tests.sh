@@ -1,4 +1,6 @@
 
+# campare_versions(v1, v2)
+# Compares two 3-part sematic versions, returning -1 if v1 is less than v2, 1 if v1 is greater than v2 or 0 if v1 and v2 are equal.
 compare_versions() {
   local v1=(${1//./ })
   local v2=(${2//./ })
