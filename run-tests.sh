@@ -47,6 +47,22 @@ print_version() {
   printf "%-${width}s %s\n" "$name version:" "$version"
 }
 
+# install_package(package_name)
+# Installs specified package with Pipx or displays the its version if it's already installed.
+install_package() {
+  local package_name=$1
+  local capitalize=${2:-true}
+
+  local version
+  version=$(get_version_in_pipx "$package_name")
+  if [[ -n $version ]]; then
+    print_version "$package_name" "$version" "$capitalize"
+  else
+    pipx install "$package_name"
+    pipx ensurepath
+  fi
+}
+
 
 pipx_version=$(pipx --version)
 if [[ -z "$pipx_version" ]]; then
