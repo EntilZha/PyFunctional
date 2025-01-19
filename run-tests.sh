@@ -20,8 +20,15 @@ compare_versions() {
   echo 0
 }
 
-python_version=$(python --version | grep -Eo \[0-9\]\.\[0-9\]+\.\[0-9\]+)
-echo "Python version: $python_version"
+# get_version_in_pipx(package_name)
+# Gets the standard semantic version of a package installed in Pipx if installed.
+get_version_in_pipx() {
+  local package_name=$1
+  local version
+  version=$(pipx list | grep -oP "$package_name"\\s+\\K\[0-9\]+\.\[0-9\]+\.\[0-9\]+)
+  echo "$version"
+}
+
 # capitalise(word)
 # Capitalizes a word.
 capitalize() {
