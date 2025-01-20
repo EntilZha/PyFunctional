@@ -12,6 +12,7 @@
 
 ### New Features
 
+- Implemented `map_not_none` map function that excludes from sequence elements mapped to `None` 
 - Added `first_or_none`, a function to match `head_or_none`   
 - Added run_test.sh script
 - Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
