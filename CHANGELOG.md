@@ -12,6 +12,7 @@
 
 ### New Features
 
+- Implemented `filter_indexed` filter function that provides both the index of the element and the element as arguments  
 - Added `first_or_none`, a function to match `head_or_none`   
 - Added run_test.sh script
 - Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
