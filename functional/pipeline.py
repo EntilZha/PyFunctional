@@ -39,7 +39,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     # pylint: disable=deprecated-class
-    from typing import Callable, Any, Iterator, NoReturn, Hashable
+    from collections.abc import Callable, Iterator, Hashable
+    from typing import Any, NoReturn
     from _typeshed import SupportsRichComparison
     from _typeshed import SupportsRichComparisonT
     from typing_extensions import TypeGuard
@@ -311,14 +312,14 @@ class Sequence(Generic[_T_co]):
         """
         return self.head(no_wrap=no_wrap)
 
-    def head_option(self, no_wrap: bool | None = None) -> _T_co | None:
+    def head_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
         """
         Returns the first element of the sequence or None, if the sequence is empty.
 
-        >>> seq([1, 2, 3]).head_option()
+        >>> seq([1, 2, 3]).head_or_none()
         1
 
-        >>> seq([]).head_option()
+        >>> seq([]).head_or_none()
         None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
@@ -327,6 +328,21 @@ class Sequence(Generic[_T_co]):
         if not self.sequence:
             return None
         return self.head(no_wrap=no_wrap)
+
+    def first_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
+        """
+        Returns the first element of the sequence or None, if the sequence is empty.
+
+        >>> seq([1, 2, 3]).first_or_none()
+        1
+
+        >>> seq([]).first_or_none()
+        None
+
+        :param no_wrap: If set to True, the returned value will never be wrapped with Sequence
+        :return: first element of sequence or None if sequence is empty
+        """
+        return self.head_or_none(no_wrap=no_wrap)
 
     def last(self, no_wrap: bool | None = None) -> _T_co:
         """
@@ -350,14 +366,14 @@ class Sequence(Generic[_T_co]):
         else:
             return _wrap(self.sequence[-1])  # type: ignore
 
-    def last_option(self, no_wrap: bool | None = None) -> _T_co | None:
+    def last_or_none(self, no_wrap: bool | None = None) -> _T_co | None:
         """
         Returns the last element of the sequence or None, if the sequence is empty.
 
-        >>> seq([1, 2, 3]).last_option()
+        >>> seq([1, 2, 3]).last_or_none()
         3
 
-        >>> seq([]).last_option()
+        >>> seq([]).last_or_none()
         None
 
         :param no_wrap: If set to True, the returned value will never be wrapped with Sequence

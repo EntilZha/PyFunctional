@@ -28,11 +28,13 @@ if TYPE_CHECKING:
 
         t_first: int = seq([1, 2, 3]).first()
 
-        t_head_option: int | None = seq([1, 2, 3]).head_option()
+        t_head_or_none: int | None = seq([1, 2, 3]).head_or_none()
+
+        t_first_or_none: int | None = seq([1, 2, 3]).first_or_none()
 
         t_last: int = seq([1, 2, 3]).last()
 
-        t_last_option: int | None = seq([1, 2, 3]).last_option()
+        t_last_or_none: int | None = seq([1, 2, 3]).last_or_none()
 
         t_init: Sequence[int] = seq([1, 2, 3]).init()
 

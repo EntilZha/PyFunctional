@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
         include:
           - python-version: "3.11"
             use_pandas: 1
@@ -26,16 +26,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
-      - run: poetry install
-      - name: Pylint
+      - run: |
+          if ! poetry install; then
+            poetry lock
+            poetry install
+          fi
+      - name: Pylint (Python v${{ matrix.python-version }})
         run: poetry run pylint functional
-      - name: black
-        run: poetry run black --check functional
+        if: matrix.python-version != '3.12' && matrix.python-version != '3.13'
+      - name: Ruff (Python v${{ matrix.python-version }})
+        run: poetry run ruff check functional
+        if:  matrix.python-version == '3.12' || matrix.python-version == '3.13'
+      - name: black (Python v${{ matrix.python-version }})
+        run: poetry run black --diff --check functional
         if: always()
-      - name: Test with pytest
+      - name: Test with pytest (Python v${{ matrix.python-version }})
         run: poetry run pytest --cov=functional --cov-report=xml
         if: always()
-      - name: mypy
+      - name: mypy (Python v${{ matrix.python-version }})
         run: poetry run mypy functional
         if: always()
       - uses: codecov/codecov-action@v1

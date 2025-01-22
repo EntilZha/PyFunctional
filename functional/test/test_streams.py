@@ -3,12 +3,15 @@ import unittest
 import collections
 import sys
 import gzip
+from pathlib import Path
 from platform import system
 import lzma
 import bz2
 
 from functional import seq, pseq
 from functional.streams import Stream, ParallelStream
+
+project_root = Path(__file__).parent.parent.parent.absolute()
 
 
 class TestStreams(unittest.TestCase):
@@ -17,41 +20,46 @@ class TestStreams(unittest.TestCase):
         self.seq_c_disabled = Stream(disable_compression=True)
 
     def test_open(self):
-        with open("LICENSE.txt", encoding="utf8") as f:
+        file_name = f"{project_root}/LICENSE.txt"
+        with open(file_name, encoding="utf8") as f:
             data = f.readlines()
-        self.assertListEqual(data, self.seq.open("LICENSE.txt").to_list())
+        self.assertListEqual(data, self.seq.open(file_name).to_list())
 
         text = "".join(data).split(",")
-        self.assertListEqual(
-            text, self.seq.open("LICENSE.txt", delimiter=",").to_list()
-        )
+        self.assertListEqual(text, self.seq.open(file_name, delimiter=",").to_list())
 
         with self.assertRaises(ValueError):
-            self.seq.open("LICENSE.txt", mode="w").to_list()
+            self.seq.open(file_name, mode="w").to_list()
 
     def test_open_gzip(self):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open("functional/test/data/test.txt.gz", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.gz", mode="rt"
+            ).to_list(),
         )
 
     def test_open_bz2(self):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open("functional/test/data/test.txt.bz2", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.bz2", mode="rt"
+            ).to_list(),
         )
 
     def test_open_xz(self):
         expect = ["line0\n", "line1\n", "line2"]
         self.assertListEqual(
             expect,
-            self.seq.open("functional/test/data/test.txt.xz", mode="rt").to_list(),
+            self.seq.open(
+                f"{project_root}/functional/test/data/test.txt.xz", mode="rt"
+            ).to_list(),
         )
 
     def test_disable_compression(self):
-        file_name = "functional/test/data/test.txt.gz"
+        file_name = f"{project_root}/functional/test/data/test.txt.gz"
         with open(file_name, "rb") as f:
             expect = f.readlines()
         self.assertListEqual(
@@ -119,18 +127,18 @@ class TestStreams(unittest.TestCase):
         self.assertEqual([1], self.seq.chain([1]).to_list())
 
     def test_csv(self):
-        result = self.seq.csv("functional/test/data/test.csv").to_list()
+        file_name = f"{project_root}/functional/test/data/test.csv"
+        result = self.seq.csv(file_name).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
-        with open("functional/test/data/test.csv", "r", encoding="utf8") as csv_file:
+        with open(file_name, "r", encoding="utf8") as csv_file:
             self.assertEqual(expect, self.seq.csv(csv_file).to_list())
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_csv_dict_reader(self):
-        result = self.seq.csv_dict_reader(
-            "functional/test/data/test_header.csv"
-        ).to_list()
+        file_name = f"{project_root}/functional/test/data/test_header.csv"
+        result = self.seq.csv_dict_reader(file_name).to_list()
         self.assertEqual(result[0]["a"], "1")
         self.assertEqual(result[0]["b"], "2")
         self.assertEqual(result[0]["c"], "3")
@@ -138,7 +146,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(result[1]["b"], "5")
         self.assertEqual(result[1]["c"], "6")
 
-        with open("functional/test/data/test_header.csv", "r", encoding="utf8") as f:
+        with open(file_name, "r", encoding="utf8") as f:
             result = self.seq.csv_dict_reader(f).to_list()
         self.assertEqual(result[0]["a"], "1")
         self.assertEqual(result[0]["b"], "2")
@@ -151,28 +159,36 @@ class TestStreams(unittest.TestCase):
             self.seq.csv_dict_reader(1)
 
     def test_gzip_csv(self):
-        result = self.seq.csv("functional/test/data/test.csv.gz").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.gz"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_bz2_csv(self):
-        result = self.seq.csv("functional/test/data/test.csv.bz2").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.bz2"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_xz_csv(self):
-        result = self.seq.csv("functional/test/data/test.csv.xz").to_list()
+        result = self.seq.csv(
+            f"{project_root}/functional/test/data/test.csv.xz"
+        ).to_list()
         expect = [["1", "2", "3", "4"], ["a", "b", "c", "d"]]
         self.assertEqual(expect, result)
         with self.assertRaises(ValueError):
             self.seq.csv(1)
 
     def test_jsonl(self):
-        result_0 = self.seq.jsonl("functional/test/data/test.jsonl").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
         result_1 = self.seq.jsonl(["[1, 2, 3]", "[4, 5, 6]"])
@@ -180,23 +196,29 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(expect_1, result_1)
 
     def test_gzip_jsonl(self):
-        result_0 = self.seq.jsonl("functional/test/data/test.jsonl.gz").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.gz"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
     def test_bz2_jsonl(self):
-        result_0 = self.seq.jsonl("functional/test/data/test.jsonl.bz2").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.bz2"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
     def test_xz_jsonl(self):
-        result_0 = self.seq.jsonl("functional/test/data/test.jsonl.xz").to_list()
+        result_0 = self.seq.jsonl(
+            f"{project_root}/functional/test/data/test.jsonl.xz"
+        ).to_list()
         expect_0 = [[1, 2, 3], {"a": 1, "b": 2, "c": 3}]
         self.assertEqual(expect_0, result_0)
 
     def test_json(self):
-        list_test_path = "functional/test/data/test_list.json"
-        dict_test_path = "functional/test/data/test_dict.json"
+        list_test_path = f"{project_root}/functional/test/data/test_list.json"
+        dict_test_path = f"{project_root}/functional/test/data/test_dict.json"
         list_expect = [1, 2, 3, 4, 5]
         dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
@@ -216,8 +238,8 @@ class TestStreams(unittest.TestCase):
             self.seq.json(1)
 
     def test_gzip_json(self):
-        list_test_path = "functional/test/data/test_list.json.gz"
-        dict_test_path = "functional/test/data/test_dict.json.gz"
+        list_test_path = f"{project_root}/functional/test/data/test_list.json.gz"
+        dict_test_path = f"{project_root}/functional/test/data/test_dict.json.gz"
         list_expect = [1, 2, 3, 4, 5]
         dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
@@ -230,8 +252,8 @@ class TestStreams(unittest.TestCase):
             self.seq.json(1)
 
     def test_bz2_json(self):
-        list_test_path = "functional/test/data/test_list.json.bz2"
-        dict_test_path = "functional/test/data/test_dict.json.bz2"
+        list_test_path = f"{project_root}/functional/test/data/test_list.json.bz2"
+        dict_test_path = f"{project_root}/functional/test/data/test_dict.json.bz2"
         list_expect = [1, 2, 3, 4, 5]
         dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
@@ -244,8 +266,8 @@ class TestStreams(unittest.TestCase):
             self.seq.json(1)
 
     def test_xz_json(self):
-        list_test_path = "functional/test/data/test_list.json.xz"
-        dict_test_path = "functional/test/data/test_dict.json.xz"
+        list_test_path = f"{project_root}/functional/test/data/test_list.json.xz"
+        dict_test_path = f"{project_root}/functional/test/data/test_dict.json.xz"
         list_expect = [1, 2, 3, 4, 5]
         dict_expect = list({"a": 1, "b": 2, "c": 3}.items())
 
@@ -258,7 +280,7 @@ class TestStreams(unittest.TestCase):
             self.seq.json(1)
 
     def test_sqlite3(self):
-        db_file = "functional/test/data/test_sqlite3.db"
+        db_file = f"{project_root}/functional/test/data/test_sqlite3.db"
 
         # test failure case
         with self.assertRaises(ValueError):
@@ -313,7 +335,7 @@ class TestStreams(unittest.TestCase):
             pass
 
     def test_to_file(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         sequence = self.seq(1, 2, 3, 4)
         sequence.to_file(tmp_path)
         with open(tmp_path, "r", encoding="utf8") as output:
@@ -324,7 +346,7 @@ class TestStreams(unittest.TestCase):
             self.assertEqual("1:2:3:4", output.readlines()[0])
 
     def test_to_file_compressed(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         sequence = self.seq(1, 2, 3, 4)
         sequence.to_file(tmp_path, compression="gzip")
         with gzip.open(tmp_path, "rt") as output:
@@ -339,7 +361,7 @@ class TestStreams(unittest.TestCase):
             self.assertEqual("[1, 2, 3, 4]", output.readlines()[0])
 
     def test_to_jsonl(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [{"a": 1, "b": 2}, {"c": 3}, {"d": 4}]
         sequence = self.seq(elements)
 
@@ -348,7 +370,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(elements, result)
 
     def test_to_jsonl_compressed(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [{"a": 1, "b": 2}, {"c": 3}, {"d": 4}]
         sequence = self.seq(elements)
 
@@ -365,7 +387,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(elements, result)
 
     def test_to_json(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [["a", 1], ["b", 2], ["c", 3]]
         sequence = self.seq(elements)
 
@@ -379,7 +401,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(dict_expect, result)
 
     def test_to_json_compressed(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [["a", 1], ["b", 2], ["c", 3]]
         dict_expect = {"a": 1, "b": 2, "c": 3}
         sequence = self.seq(elements)
@@ -409,7 +431,7 @@ class TestStreams(unittest.TestCase):
         self.assertEqual(dict_expect, result)
 
     def test_to_csv(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [[1, 2, 3], [4, 5, 6], ["a", "b", "c"]]
         expect = [["1", "2", "3"], ["4", "5", "6"], ["a", "b", "c"]]
         sequence = self.seq(elements)
@@ -419,7 +441,7 @@ class TestStreams(unittest.TestCase):
 
     @unittest.skipUnless(system().startswith("Win"), "Skip CSV test if not on Windows")
     def test_to_csv_win(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [[1, 2, 3], [4, 5, 6], ["a", "b", "c"]]
         expect = [["1", "2", "3"], [], ["4", "5", "6"], [], ["a", "b", "c"], []]
         sequence = self.seq(elements)
@@ -428,7 +450,7 @@ class TestStreams(unittest.TestCase):
         self.assertNotEqual(expect, result)
 
     def test_to_csv_compressed(self):
-        tmp_path = "functional/test/data/tmp/output.txt"
+        tmp_path = f"{project_root}/functional/test/data/tmp/output.txt"
         elements = [[1, 2, 3], [4, 5, 6], ["a", "b", "c"]]
         expect = [["1", "2", "3"], ["4", "5", "6"], ["a", "b", "c"]]
         sequence = self.seq(elements)
@@ -452,7 +474,7 @@ class TestStreams(unittest.TestCase):
             self.seq(elements).to_sqlite3(1, insert_sql)
 
     def test_to_sqlite3_file(self):
-        tmp_path = "functional/test/data/tmp/test.db"
+        tmp_path = f"{project_root}/functional/test/data/tmp/test.db"
 
         with sqlite3.connect(tmp_path) as conn:
             conn.execute("DROP TABLE IF EXISTS user;")

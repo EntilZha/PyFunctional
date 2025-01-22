@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyFunctional"
-version = "1.5.0"
+version = "2.0.0"
 description = "Package for creating data pipelines with chain functional programming"
 authors = ["Pedro Rodriguez <me@pedro.ai>"]
 maintainers = ["Pedro Rodriguez <me@pedro.ai>"]
@@ -18,6 +18,8 @@ classifiers = [
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: PyPy',
     'Natural Language :: English',
@@ -35,14 +37,14 @@ pandas = { version = ">=1.0.3", optional = true }
 [tool.poetry.extras]
 all = ["pandas"]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^23.1"
 pytest = "^7.3.1"
+parametrize = "^0.1.1"
 pylint = "^2.17.4"
+ruff = "^0.9.2"
 pytest-cov = "^4.0.0"
 coverage = "^7.2.5"
-
-[tool.poetry.group.dev.dependencies]
 mypy = "^1.1.1"
 types-tabulate = "^0.9.0.3"
 pandas-stubs = "^2.0.3.230814"
