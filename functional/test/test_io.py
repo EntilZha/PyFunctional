@@ -1,7 +1,7 @@
 import unittest
 
-from functional.io import ReusableFile, GZFile, BZ2File, XZFile, universal_write_open
 from pathlib import Path
+from functional.io import ReusableFile, GZFile, BZ2File, XZFile, universal_write_open
 
 project_root = Path(__file__).parent.parent.parent.absolute()
 
