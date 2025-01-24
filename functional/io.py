@@ -21,6 +21,8 @@ class ReusableFile(Generic[_FileConv_co]):
     lazy.
     """
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
@@ -84,6 +86,8 @@ class ReusableFile(Generic[_FileConv_co]):
 class CompressedFile(ReusableFile):
     magic_bytes: bytes | None = None
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
@@ -115,6 +119,8 @@ class CompressedFile(ReusableFile):
 class GZFile(CompressedFile):
     magic_bytes: bytes = b"\x1f\x8b\x08"
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
@@ -170,6 +176,8 @@ class GZFile(CompressedFile):
 class BZ2File(CompressedFile):
     magic_bytes: bytes = b"\x42\x5a\x68"
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
@@ -220,6 +228,8 @@ class XZFile(CompressedFile):
     magic_bytes: bytes = b"\xfd\x37\x7a\x58\x5a\x00"
 
     # pylint: disable=too-many-instance-attributes
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         path,
@@ -294,6 +304,8 @@ def get_read_function(filename: str, disable_compression: bool):
         return ReusableFile
 
 
+# pylint: disable=unknown-option-value
+# pylint: disable=too-many-positional-arguments
 def universal_write_open(
     path: str,
     mode: str,
