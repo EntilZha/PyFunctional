@@ -26,7 +26,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
-      - run: poetry install
+      - run: |
+          if ! poetry install; then
+            poetry lock
+            poetry install
+          fi
       - name: Pylint
         run: poetry run pylint functional
       - name: black
