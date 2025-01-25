@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Upgraded pre-commit hooks (pre-commit-hooks to `v5.0.0` and ruff-pre-commit to `v0.6.0`)
+
 ## Release 1.5
 
 ## Release 1.4
