@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Added support for Python 3.12 and 3.13 by upgrading Pylint and disabling/fixing Pylint errors
+
 ## Release 1.5
 
 ## Release 1.4
