@@ -39,7 +39,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     # pylint: disable=deprecated-class
-    from typing import Callable, Any, Iterator, NoReturn, Hashable
+    from typing import Callable, Any, NoReturn
+    from collections.abc import Iterator, Hashable
     from _typeshed import SupportsRichComparison
     from _typeshed import SupportsRichComparisonT
     from typing_extensions import TypeGuard
