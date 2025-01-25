@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Corrected and improved language consistency in [readme](README.md) and `CHANGELOG.md`
+
 ## Release 1.5
 
 ## Release 1.4
