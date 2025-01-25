@@ -1,5 +1,9 @@
 # Changelog
 
+## Release 1.6
+
+- Added Python version to GitHub Action workflow job steps and set Black to show required formatting changes
+
 ## Release 1.5
 
 ## Release 1.4
