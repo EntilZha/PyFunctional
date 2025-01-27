@@ -3,32 +3,33 @@
 ## Release 1.6
 
 - Added Python version to GitHub Action workflow job steps and set Black to show required formatting changes
+- Corrected and improved language consistency in [readme](README.md) and `CHANGELOG.md`
 
 ## Release 1.5
 
 ## Release 1.4
 
-- Allow empty sequence expressions `seq()`, `pseq()` (#159)
-- Add `no_wrap` option to `head()`, `head_option()`, `first()`, `last()` and `last_option()`, as well as to `seq()`, `pseq()` and `Sequence` constructor
+- Added support for empty sequence expressions `seq()`, `pseq()` (#159)
+- Added `no_wrap` option to `head()`, `head_option()`, `first()`, `last()` and `last_option()`, as well as to `seq()`, `pseq()` and `Sequence` constructor
 
 ## Release 1.3.0
 
-- added precompute attribute to reverse transformation (#137)
-- Update setup.py dill to requirements.txt (#138)
+- Added precompute attribute to reverse transformation (#137)
+- Updated setup.py dill to requirements.txt (#138)
 - Docstring of tail fixed (#140)
-- adding extend feature (#144)
+- Added extend feature (#144)
 
 ## Release 1.2.0
 
-- Fix Broken link in readme
-- Loosen version requirements #129
-- Fix lint errors
-- Fix StopIteration errors for Python 3.7 #132
-- Drop support for python 3.4
+- Fixed Broken link in readme
+- Loosened version requirements #129
+- Fixed lint errors
+- Fixed StopIteration errors for Python 3.7 #132
+- Dropped support for python 3.4
 
 ## Release 1.1.3
 
-- Fix bug in `partition` https://github.com/EntilZha/PyFunctional/issues/124
+- Fixed bug in `partition` https://github.com/EntilZha/PyFunctional/issues/124
 
 ## Release 1.1.0
 
@@ -36,19 +37,22 @@
 - Implemented `count_by_key`
 - Implemented `count_by_value`
 - Implemented `accumulate` https://github.com/EntilZha/PyFunctional/pull/104
-- Fix bug in `grouped` https://github.com/EntilZha/PyFunctional/pull/123
-- Fix bug in `to_csv` https://github.com/EntilZha/PyFunctional/pull/123
-- Fix bug with incorrect wrapping of pandas dataframes https://github.com/EntilZha/PyFunctional/pull/122
-- Allow variance on versions of certain packages: https://github.com/EntilZha/PyFunctional/pull/117 and https://github.com/EntilZha/PyFunctional/pull/116
+- Added support for variance on versions of certain packages: https://github.com/EntilZha/PyFunctional/pull/117 and https://github.com/EntilZha/PyFunctional/pull/116
 - Various typo fixes
 - Various CI fixes
-- Fix issue with `first/head` evaluating entire sequence https://github.com/EntilZha/PyFunctional/commit/fb8f3686cf94f072f4e6ed23a361952de1447dc8
-- Drop CI testing and official support for Python 3.3
-- Make import much faster by loading pandas more lazily https://github.com/EntilZha/PyFunctional/issues/99
+- Dropped CI testing and official support for Python 3.3
+- Made import much faster by loading pandas more lazily https://github.com/EntilZha/PyFunctional/issues/99
+
+### Bug Fixes
+
+- Fixed bug in `grouped` https://github.com/EntilZha/PyFunctional/pull/123
+- Fixed bug in `to_csv` https://github.com/EntilZha/PyFunctional/pull/123
+- Fixed bug with incorrect wrapping of pandas dataframes https://github.com/EntilZha/PyFunctional/pull/122
+- Fixed issue with `first/head` evaluating entire sequence https://github.com/EntilZha/PyFunctional/commit/fb8f3686cf94f072f4e6ed23a361952de1447dc8
 
 ## Release 1.0.0
 
-Reaching `1.0` primarily means that API stability has been reached so I don't expect to run into many new breaking changes.
+Reaching `1.0` primarily means that API stability has been reached, so I don't expect to run into many new breaking changes.
 
 ### New Features
 
@@ -71,13 +75,13 @@ Reaching `1.0` primarily means that API stability has been reached so I don't ex
 
 - Implemented pretty html repr for Jupyter
 - Implemented proper parsing of pandas DataFrames
-- Detect when its possible to pretty print a table and do so
+- Added feature to detect when it's possible to pretty print a table and do so
 - `list`/`to_list` have a parameter `n` to limit number of results
 
 ### Bug Fixes
 
 - Fixed bug where `grouped` unnecessarily forces precomputation of sequence
-- Remove package installations from default requirements that sometimes break installation on barebones systems in python 2.7
+- Removed package installations from default requirements that sometimes break installation on barebones systems in python 2.7
 
 ## Release 0.7.0
 
@@ -100,14 +104,14 @@ Reaching `1.0` primarily means that API stability has been reached so I don't ex
 ### Contributors
 
 - Thanks to [versae](https://github.com/versae) for implementing most of the `pseq` feature!
-- Thanks to [ChuyuHsu](https://github.com/ChuyuHsu) for implemented large parts of the compression feature!
+- Thanks to [ChuyuHsu](https://github.com/ChuyuHsu) for implementing large parts of the compression feature!
 
 ## Release 0.6.0
 
 ### New Features
 
 - Added support for reading to and from SQLite databases
-- Change project name to `PyFunctional` from `ScalaFunctional`
+- Changed project name from `ScalaFunctional` to `PyFunctional` 
 - Added `to_pandas` call integration
 
 ### Internal Changes
@@ -129,13 +133,13 @@ Reaching `1.0` primarily means that API stability has been reached so I don't ex
 
 - Fixed case where `_wrap` is changing named tuples to arrays when it should preserve them
 - Fixed documentation on `to_file` which incorrectly copied from `seq.open` delimiter parameter
-- Fixed `Sequence.zip_with_index` behavior. used to mimic `enumerate` by zipping on the left size
-  while scala and spark do zip on the right side. This introduces different behavior and more flexible
-  behavior in combination with `enumerate` A start parameter was also added like in `enumerate`
+- Fixed `Sequence.zip_with_index` behavior, which used to mimic `enumerate` by zipping on the left side
+  while Scala and Spark zip on the right side. This introduces different but more flexible
+  behavior in combination with `enumerate`. A start parameter was also added like in `enumerate`
 
 ## Release 0.4.1
 
-Fix python 3 build error due to wheel installation of enum34. Package no longer depends on enum34
+Fixed python 3 build error due to wheel installation of enum34. Package no longer depends on enum34
 
 ## Release 0.4.0
 
@@ -160,7 +164,7 @@ Fix python 3 build error due to wheel installation of enum34. Package no longer 
 - `Sequence.to_file` to save files
 - `Sequence.to_csv` to save csv files
 - Improved documentation with more examples and mention LINQ explicitly
-- Change PyPi keywords to improve discoverability
+- Changed PyPi keywords to improve discoverability
 - Created [Google groups mailing list](https://groups.google.com/forum/#!forum/scalafunctional)
 
 ### Bug Fixes
