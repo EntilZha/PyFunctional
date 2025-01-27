@@ -135,9 +135,9 @@ seq(words).map(lambda word: (word, 1)).reduce_by_key(lambda x, y: x + y)
 
 In the next example we have chat logs formatted in [json lines (jsonl)](http://jsonlines.org/) which
 contain messages and metadata. A typical jsonl file will have one valid json on each line of a file.
-Below are a few lines out of `examples/chat_logs.jsonl`.
+Below are a few lines out of [examples/chat_logs.jsonl](examples/chat_logs.jsonl).
 
-```json
+```json lines
 {"message":"hello anyone there?","date":"10/09","user":"bob"}
 {"message":"need some help with a program","date":"10/09","user":"bob"}
 {"message":"sure thing. What do you need help with?","date":"10/09","user":"dave"}
@@ -160,8 +160,8 @@ word_counts = messages\
 
 ```
 
-Next, lets continue that example but introduce a json database of users from `examples/users.json`.
-In the previous example we showed how `PyFunctional` can do word counts, in the next example lets
+Next, let's continue that example but introduce a json database of users from [examples/users.json](examples/users.json).
+In the previous example we showed how `PyFunctional` can do word counts, in the next example let's
 show how `PyFunctional` can join different data sources.
 
 ```python
@@ -187,8 +187,8 @@ data = users.inner_join(message_tuples)
 
 ### CSV, Aggregate Functions, and Set functions
 
-In `examples/camping_purchases.csv` there are a list of camping purchases. Lets do some cost
-analysis and compare it the required camping gear list stored in `examples/gear_list.txt`.
+In [examples/camping_purchases.csv](examples/camping_purchases.csv) there is a list of camping purchases. Let's do some 
+cost analysis and compare it to the required camping gear list stored in [examples/gear_list.txt](examples/gear_list.txt).
 
 ```python
 purchases = seq.csv('examples/camping_purchases.csv')
@@ -277,7 +277,7 @@ operations are run in parallel with more to be implemented in a future release:
 
 Parallelization uses python `multiprocessing` and squashes chains of embarrassingly parallel
 operations to reduce overhead costs. For example, a sequence of maps and filters would be executed
-all at once rather than in multiple loops using `multiprocessing`
+all at once rather than in multiple loops using `multiprocessing`.
 
 ## Documentation
 
@@ -337,29 +337,29 @@ complete documentation reference
 [transformation and actions API](http://docs.pyfunctional.pedro.ai/en/latest/functional.html#module-functional.pipeline).
 
 | Function                                                                  | Description                                                                                                                                                                                    | Type           |
-| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|
 | `map(func)/select(func)`                                                  | Maps `func` onto elements of sequence                                                                                                                                                          | transformation |
-| `starmap(func)/smap(func)`                                                | Apply `func` to sequence with `itertools.starmap`                                                                                                                                              | transformation |
+| `starmap(func)/smap(func)`                                                | Applies `func` to sequence with `itertools.starmap`                                                                                                                                            | transformation |
 | `filter(func)/where(func)`                                                | Filters elements of sequence to only those where `func(element)` is `True`                                                                                                                     | transformation |
 | `filter_not(func)`                                                        | Filters elements of sequence to only those where `func(element)` is `False`                                                                                                                    | transformation |
 | `flatten()`                                                               | Flattens sequence of lists to a single sequence                                                                                                                                                | transformation |
-| `flat_map(func)`                                                          | `func` must return an iterable. Maps `func` to each element, then merges the result to one flat sequence                                                                                       | transformation |
+| `flat_map(func)`                                                          | Maps `func` to each element, then merges the result to one flat sequence. `func` must return an iterable                                                                                       | transformation |
 | `group_by(func)`                                                          | Groups sequence into `(key, value)` pairs where `key=func(element)` and `value` is from the original sequence                                                                                  | transformation |
 | `group_by_key()`                                                          | Groups sequence of `(key, value)` pairs by `key`                                                                                                                                               | transformation |
 | `reduce_by_key(func)`                                                     | Reduces list of `(key, value)` pairs using `func`                                                                                                                                              | transformation |
-| `count_by_key()`                                                          | Counts occurrences of each `key` in list of `(key, value)` pairs                                                                                                                               | transformation |
-| `count_by_value()`                                                        | Counts occurrence of each value in a list                                                                                                                                                      | transformation |
+| `count_by_key()`                                                          | Counts occurrence of each `key` in sequence of `(key, value)` pairs                                                                                                                            | transformation |
+| `count_by_value()`                                                        | Counts occurrence of each value in the sequence                                                                                                                                                | transformation |
 | `union(other)`                                                            | Union of unique elements in sequence and `other`                                                                                                                                               | transformation |
 | `intersection(other)`                                                     | Intersection of unique elements in sequence and `other`                                                                                                                                        | transformation |
 | `difference(other)`                                                       | New sequence with unique elements present in sequence but not in `other`                                                                                                                       | transformation |
 | `symmetric_difference(other)`                                             | New sequence with unique elements present in sequence or `other`, but not both                                                                                                                 | transformation |
 | `distinct()`                                                              | Returns distinct elements of sequence. Elements must be hashable                                                                                                                               | transformation |
 | `distinct_by(func)`                                                       | Returns distinct elements of sequence using `func` as a key                                                                                                                                    | transformation |
-| `drop(n)`                                                                 | Drop the first `n` elements of the sequence                                                                                                                                                    | transformation |
-| `drop_right(n)`                                                           | Drop the last `n` elements of the sequence                                                                                                                                                     | transformation |
-| `drop_while(func)`                                                        | Drop elements while `func` evaluates to `True`, then returns the rest                                                                                                                          | transformation |
+| `drop(n)`                                                                 | Drops the first `n` elements of the sequence                                                                                                                                                   | transformation |
+| `drop_right(n)`                                                           | Drops the last `n` elements of the sequence                                                                                                                                                    | transformation |
+| `drop_while(func)`                                                        | Drops elements while `func` evaluates to `True`, returning the rest                                                                                                                            | transformation |
 | `take(n)`                                                                 | Returns sequence of first `n` elements                                                                                                                                                         | transformation |
-| `take_while(func)`                                                        | Take elements while `func` evaluates to `True`, then drops the rest                                                                                                                            | transformation |
+| `take_while(func)`                                                        | Takes elements while `func` evaluates to `True`, dropping the rest                                                                                                                             | transformation |
 | `init()`                                                                  | Returns sequence without the last element                                                                                                                                                      | transformation |
 | `tail()`                                                                  | Returns sequence without the first element                                                                                                                                                     | transformation |
 | `inits()`                                                                 | Returns consecutive inits of sequence                                                                                                                                                          | transformation |
@@ -368,12 +368,12 @@ complete documentation reference
 | `zip_with_index(start=0)`                                                 | Zips the sequence with the index starting at `start` on the right side                                                                                                                         | transformation |
 | `enumerate(start=0)`                                                      | Zips the sequence with the index starting at `start` on the left side                                                                                                                          | transformation |
 | `cartesian(*iterables, repeat=1)`                                         | Returns cartesian product from itertools.product                                                                                                                                               | transformation |
-| `inner_join(other)`                                                       | Returns inner join of sequence with other. Must be a sequence of `(key, value)` pairs                                                                                                          | transformation |
-| `outer_join(other)`                                                       | Returns outer join of sequence with other. Must be a sequence of `(key, value)` pairs                                                                                                          | transformation |
-| `left_join(other)`                                                        | Returns left join of sequence with other. Must be a sequence of `(key, value)` pairs                                                                                                           | transformation |
-| `right_join(other)`                                                       | Returns right join of sequence with other. Must be a sequence of `(key, value)` pairs                                                                                                          | transformation |
-| `join(other, join_type='inner')`                                          | Returns join of sequence with other as specified by `join_type`. Must be a sequence of `(key, value)` pairs                                                                                    | transformation |
-| `partition(func)`                                                         | Partitions the sequence into elements which satisfy `func(element)` and those that don't                                                                                                       | transformation |
+| `inner_join(other)`                                                       | Returns inner join of sequence with `other`. Must be a sequence of `(key, value)` pairs                                                                                                        | transformation |
+| `outer_join(other)`                                                       | Returns outer join of sequence with `other`. Must be a sequence of `(key, value)` pairs                                                                                                        | transformation |
+| `left_join(other)`                                                        | Returns left join of sequence with `other`. Must be a sequence of `(key, value)` pairs                                                                                                         | transformation |
+| `right_join(other)`                                                       | Returns right join of sequence with `other`. Must be a sequence of `(key, value)` pairs                                                                                                        | transformation |
+| `join(other, join_type='inner')`                                          | Returns join of sequence with `other` as specified by `join_type`. Must be a sequence of `(key, value)` pairs                                                                                  | transformation |
+| `partition(func)`                                                         | Partitions the sequence into elements that satisfy `func(element)` and those that don't                                                                                                        | transformation |
 | `grouped(size)`                                                           | Partitions the elements into groups of size `size`                                                                                                                                             | transformation |
 | `sorted(key=None, reverse=False)/order_by(func)`                          | Returns elements sorted according to python `sorted`                                                                                                                                           | transformation |
 | `reverse()`                                                               | Returns the reversed sequence                                                                                                                                                                  | transformation |
@@ -389,7 +389,7 @@ complete documentation reference
 | `all()`                                                                   | Returns `True` if all elements in sequence are truthy                                                                                                                                          | action         |
 | `exists(func)`                                                            | Returns `True` if `func(element)` for any element in the sequence is `True`                                                                                                                    | action         |
 | `for_all(func)`                                                           | Returns `True` if `func(element)` is `True` for all elements in the sequence                                                                                                                   | action         |
-| `find(func)`                                                              | Returns the element that first evaluates `func(element)` to `True`                                                                                                                             | action         |
+| `find(func)`                                                              | Returns the first element for which `func(element)` evaluates to `True`                                                                                                                        | action         |
 | `any()`                                                                   | Returns `True` if any element in sequence is truthy                                                                                                                                            | action         |
 | `max()`                                                                   | Returns maximal element in sequence                                                                                                                                                            | action         |
 | `min()`                                                                   | Returns minimal element in sequence                                                                                                                                                            | action         |
@@ -398,33 +398,33 @@ complete documentation reference
 | `sum()/sum(projection)`                                                   | Returns the sum of elements possibly using a projection                                                                                                                                        | action         |
 | `product()/product(projection)`                                           | Returns the product of elements possibly using a projection                                                                                                                                    | action         |
 | `average()/average(projection)`                                           | Returns the average of elements possibly using a projection                                                                                                                                    | action         |
-| `aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)` | Aggregate using `func` starting with `seed` or first element of list then apply `result_map` to the result                                                                                     | action         |
+| `aggregate(func)/aggregate(seed, func)/aggregate(seed, func, result_map)` | Aggregates using `func` starting with `seed` or first element of list then applies `result_map` to the result                                                                                  | action         |
 | `fold_left(zero_value, func)`                                             | Reduces element from left to right using `func` and initial value `zero_value`                                                                                                                 | action         |
 | `fold_right(zero_value, func)`                                            | Reduces element from right to left using `func` and initial value `zero_value`                                                                                                                 | action         |
 | `make_string(separator)`                                                  | Returns string with `separator` between each `str(element)`                                                                                                                                    | action         |
 | `dict(default=None)` / `to_dict(default=None)`                            | Converts a sequence of `(Key, Value)` pairs to a `dictionary`. If `default` is not None, it must be a value or zero argument callable which will be used to create a `collections.defaultdict` | action         |
 | `list()` / `to_list()`                                                    | Converts sequence to a list                                                                                                                                                                    | action         |
 | `set() / to_set()`                                                        | Converts sequence to a set                                                                                                                                                                     | action         |
-| `to_file(path)`                                                           | Saves the sequence to a file at path with each element on a newline                                                                                                                            | action         |
-| `to_csv(path)`                                                            | Saves the sequence to a csv file at path with each element representing a row                                                                                                                  | action         |
+| `to_file(path)`                                                           | Saves the sequence to a file at `path` with each element on a newline                                                                                                                          | action         |
+| `to_csv(path)`                                                            | Saves the sequence to a csv file at `path` with each element representing a row                                                                                                                | action         |
 | `to_jsonl(path)`                                                          | Saves the sequence to a jsonl file with each element being transformed to json and printed to a new line                                                                                       | action         |
 | `to_json(path)`                                                           | Saves the sequence to a json file. The contents depend on if the json root is an array or dictionary                                                                                           | action         |
-| `to_sqlite3(conn, tablename_or_query, *args, **kwargs)`                   | Save the sequence to a SQLite3 db. The target table must be created in advance.                                                                                                                | action         |
+| `to_sqlite3(conn, tablename_or_query, *args, **kwargs)`                   | Saves the sequence to a SQLite3 db. The target table must be created in advance                                                                                                                | action         |
 | `to_pandas(columns=None)`                                                 | Converts the sequence to a pandas DataFrame                                                                                                                                                    | action         |
 | `cache()`                                                                 | Forces evaluation of sequence immediately and caches the result                                                                                                                                | action         |
 | `for_each(func)`                                                          | Executes `func` on each element of the sequence                                                                                                                                                | action         |
-| `peek(func)`                                                              | Executes `func` on each element of the sequence but returns the element                                                                                                                        | transformation |
+| `peek(func)`                                                              | Executes `func` on each element of the sequence and returns it                                                                                                                                 | transformation |
 
 ### Lazy Execution
 
 Whenever possible, `PyFunctional` will compute lazily. This is accomplished by tracking the list
 of transformations that have been applied to the sequence and only evaluating them when an action is
-called. In `PyFunctional` this is called tracking lineage. This is also responsible for the
-ability for `PyFunctional` to cache results of computation to prevent expensive re-computation.
+called. In `PyFunctional` this is called tracking lineage. This is also responsible for `PyFunctional`'s
+ability to cache the results of computations to prevent expensive re-computation.
 This is predominantly done to preserve sensible behavior and used sparingly. For example, calling
 `size()` will cache the underlying sequence. If this was not done and the input was an iterator,
 then further calls would operate on an expired iterator since it was used to compute the length.
-Similarly, `repr` also caches since it is most often used during interactive sessions where its
+Similarly, `repr` also caches since it is most often used during interactive sessions where it's
 undesirable to keep recomputing the same value. Below are some examples of inspecting lineage.
 
 ```python
@@ -457,7 +457,7 @@ l_elements = elements.to_list()
 
 Files are given special treatment if opened through the `seq.open` and related APIs.
 `functional.util.ReusableFile` implements a wrapper around the standard python file to support
-multiple iteration over a single file object while correctly handling iteration termination and
+multiple iterations over a single file object while correctly handling iteration termination and
 file closing.
 
 ### `no_wrap` option
@@ -478,7 +478,7 @@ That behaviour can be changed with `no_wrap` option:
 <class 'list'>
 ```
 
-The option is also accpeted by `seq()`/`pseq()` as well as `Sequence()` constructor, for example:
+The option is also accepted by `seq()`/`pseq()` as well as `Sequence()` constructor, for example:
 
 ```
 >>> type(seq([list(), list()], no_wrap=True).last())
@@ -501,7 +501,7 @@ To contribute, create a fork of `PyFunctional`, make your changes, then make sur
 In order to be merged, all pull requests must:
 
 - Pass all the unit tests
-- Pass all the pylint tests, or ignore warnings with explanation of why its correct to do so
+- Pass all the pylint tests, or ignore warnings with explanation of why it's correct to do so
 - Not significantly reduce coverage without a good reason ([coveralls.io](coveralls.io/github/EntilZha/PyFunctional))
 - Edit the `CHANGELOG.md` file in the `Next Release` heading with changes
 
