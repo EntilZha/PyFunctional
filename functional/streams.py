@@ -134,6 +134,8 @@ class Stream:
                 no_wrap=_no_wrap,
             )
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def open(
         self,
         path: str,
@@ -233,6 +235,8 @@ class Stream:
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
         return self(csv_input).cache(delete_lineage=True)
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def csv_dict_reader(
         self,
         csv_file: str | Iterator[str],
