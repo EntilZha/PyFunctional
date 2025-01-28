@@ -6,8 +6,8 @@ import sqlite3 as sqlite3api
 import builtins
 
 from itertools import chain
-from typing import Any, Iterable, Iterator, SupportsIndex
-from typing import TypeVar, overload
+from typing import Any, SupportsIndex, TypeVar, overload
+from collections.abc import Iterable, Iterator
 import typing
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
@@ -134,6 +134,8 @@ class Stream:
                 no_wrap=_no_wrap,
             )
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def open(
         self,
         path: str,
@@ -233,6 +235,8 @@ class Stream:
         csv_input = csvapi.reader(input_file, dialect=dialect, **fmt_params)
         return self(csv_input).cache(delete_lineage=True)
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def csv_dict_reader(
         self,
         csv_file: str | Iterator[str],

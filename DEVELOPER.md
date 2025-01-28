@@ -4,7 +4,7 @@
 For every release, the following process is used.
 
 ### Before Release
-1. From the project directory, run `./run-tests.sh` to insure unit tests pass (on python 2 and 3),
+1. From the project directory, run [./run-tests.sh](run-tests.sh) to insure unit tests pass (on python 2 and 3),
 and that pylint succeeds
 2. Push commit which is the candidate release to Github master
 3. Wait for tests to pass on [TravisCI](https://travis-ci.org/EntilZha/PyFunctional)

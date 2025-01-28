@@ -39,7 +39,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     # pylint: disable=deprecated-class
-    from typing import Callable, Any, Iterator, NoReturn, Hashable
+    from typing import Callable, Any, NoReturn
+    from collections.abc import Iterator, Hashable
     from _typeshed import SupportsRichComparison
     from _typeshed import SupportsRichComparisonT
     from typing_extensions import TypeGuard
@@ -71,6 +72,8 @@ class Sequence(Generic[_T_co]):
     functional transformations and reductions in a data pipeline style
     """
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         sequence: Iterable[_T_co],
@@ -442,6 +445,8 @@ class Sequence(Generic[_T_co]):
     ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4]]:
         ...
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     @overload
     def cartesian(
         self,
@@ -454,6 +459,8 @@ class Sequence(Generic[_T_co]):
     ) -> Sequence[tuple[_T_co, _T1, _T2, _T3, _T4, _T5]]:
         ...
 
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     @overload
     def cartesian(
         self,
@@ -1757,6 +1764,8 @@ class Sequence(Generic[_T_co]):
         return self.to_dict(default=default)  # type: ignore
 
     # pylint: disable=too-many-locals
+    # pylint: disable=unknown-option-value
+    # pylint: disable=too-many-positional-arguments
     def to_file(
         self,
         path: str,
