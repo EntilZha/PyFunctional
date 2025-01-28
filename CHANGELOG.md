@@ -3,6 +3,7 @@
 ## Release 1.6
 
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
+- Added Python version to GitHub Action workflow job steps and set Black to show required formatting changes
 - Upgraded pre-commit hooks (pre-commit-hooks to `v5.0.0` and ruff-pre-commit to `v0.6.0`)
 - Added [run-test.sh](run-tests.sh) script that runs all checks on code
 - Added support for Python 3.12 and 3.13 by upgrading Pylint and disabling/fixing Pylint errors
