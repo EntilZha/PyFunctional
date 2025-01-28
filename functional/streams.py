@@ -6,8 +6,8 @@ import sqlite3 as sqlite3api
 import builtins
 
 from itertools import chain
-from typing import Any, Iterable, Iterator, SupportsIndex
-from typing import TypeVar, overload
+from typing import Any, SupportsIndex, TypeVar, overload
+from collections.abc import Iterable, Iterator
 import typing
 
 from functional.execution import ExecutionEngine, ParallelExecutionEngine
