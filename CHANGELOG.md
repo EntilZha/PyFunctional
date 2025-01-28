@@ -2,6 +2,7 @@
 
 ## Release 1.6
 
+- Added [run-test.sh](run-tests.sh) script that runs all checks on code
 - Added support for Python 3.12 and 3.13 by upgrading Pylint and disabling/fixing Pylint errors
 - Corrected and improved language consistency in [readme](README.md) and `CHANGELOG.md`
 
