@@ -569,7 +569,7 @@ def grouped_impl(size, sequence):
             batch = islice(iterator, size)
             yield list(chain((next(batch),), batch))
     except StopIteration:
-        return
+        pass
 
 
 def grouped_t(size):
