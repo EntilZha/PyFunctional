@@ -10,6 +10,10 @@
 - Added support for Python 3.12 and 3.13 by upgrading Pylint and disabling/fixing Pylint errors
 - Corrected and improved language consistency in [readme](README.md) and `CHANGELOG.md`
 
+### New Features
+
+- Implemented `zip_with_next` function
+
 ## Release 1.5
 
 ## Release 1.4
