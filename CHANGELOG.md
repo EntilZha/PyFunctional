@@ -2,6 +2,7 @@
 
 ## Release 1.6
 
+- Added [parametrize](https://pypi.org/project/parametrize/) for parameterized unit tests
 - Fixed tests failing (to find test files) when running from the IDE or the terminal when not in the right directory
 - Added Python version to GitHub Action workflow job steps and set Black to show required formatting changes
 - Upgraded pre-commit hooks (pre-commit-hooks to `v5.0.0` and ruff-pre-commit to `v0.6.0`)
