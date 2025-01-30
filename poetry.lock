@@ -434,6 +434,18 @@ numpy = {version = ">=1.25.0", markers = "python_version >= \"3.9\""}
 types-pytz = ">=2022.1.1"
 
 [[package]]
+name = "parametrize"
+version = "0.1.1"
+description = "Drop-in @pytest.mark.parametrize replacement working with unittest.TestCase"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+groups = ["dev"]
+files = [
+    {file = "parametrize-0.1.1-py3-none-any.whl", hash = "sha256:618fc00d15a03df7177691e83e59aeb976b20c410ce39af5063d1839a4673645"},
+    {file = "parametrize-0.1.1.tar.gz", hash = "sha256:d7ac0f61b781d1eadfa81d9e57ea80d5e184078e1976b7bb052ab682d9ef35de"},
+]
+
+[[package]]
 name = "pathspec"
 version = "0.12.1"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -687,4 +699,4 @@ all = ["pandas"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9.0"
-content-hash = "de928370fbf75434bdf0422126d9eb7445e765daac804d0cabab5649fb12d737"
+content-hash = "1ad7e4e1a128c4f392fa2a2095f7881b91610fa029006ac21333c09ab0ef873f"

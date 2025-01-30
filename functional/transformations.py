@@ -307,6 +307,16 @@ def zip_with_index_t(start):
     )
 
 
+def zip_with_next_t():
+    """
+    Transformation for Sequence.zip_with_next
+    :return: transformation
+    """
+    return Transformation(
+        "zip_with_next", lambda sequence: zip(sequence, sequence[1:]), None
+    )
+
+
 def enumerate_t(start):
     """
     Transformation for Sequence.enumerate

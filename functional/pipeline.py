@@ -1394,6 +1394,18 @@ class Sequence(Generic[_T_co]):
         """
         return self._transform(transformations.zip_with_index_t(start))
 
+    def zip_with_next(self) -> Sequence[tuple[_T_co, _T_co]]:
+        """
+        Zips this sequence minus last element with itself minus first element,
+        resulting in sequence of each element paired with the next.
+
+        >>> seq([1, 2, 3, 4]).zip_with_next()
+        [(1, 2), (2, 3), (3, 4)]
+
+        :return: sequence of adjacent elements paired
+        """
+        return self._transform(transformations.zip_with_next_t())
+
     def enumerate(self, start: int = 0) -> Sequence[tuple[int, _T_co]]:
         """
         Uses python enumerate to to zip the sequence with indexes starting at start.
