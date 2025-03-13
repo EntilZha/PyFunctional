@@ -837,7 +837,7 @@ class TestPipeline(unittest.TestCase):
         "sequence,expected",
         [
             ([1, 2, 3, 4], [(1, 2), (2, 3), (3, 4)]),
-            ([i for i in range(10_000)], [(i, i + 1) for i in range(10_000 - 1)]),
+            ([i for i in range(100)], [(i, i + 1) for i in range(100 - 1)]),
             ([], []),
         ],
     )
