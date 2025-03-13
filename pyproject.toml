@@ -39,6 +39,7 @@ all = ["pandas"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1"
+parametrize = "^0.1.1"
 pytest = "^7.3.1"
 pylint = "^3.3.3"
 pytest-cov = "^4.0.0"

@@ -8,6 +8,8 @@ from functional.pipeline import Sequence, is_iterable, _wrap, extend
 from functional.transformations import name
 from functional import seq, pseq
 
+from parametrize import parametrize  # type: ignore
+
 Data = namedtuple("Data", "x y")
 
 
@@ -829,6 +831,19 @@ class TestPipeline(unittest.TestCase):
         e = [(2, 5), (3, 6), (4, 7)]
         result = self.seq(l).zip_with_index(5)
         self.assertIteratorEqual(result, e)
+        self.assert_type(result)
+
+    @parametrize(
+        "sequence,expected",
+        [
+            ([1, 2, 3, 4], [(1, 2), (2, 3), (3, 4)]),
+            ([i for i in range(100)], [(i, i + 1) for i in range(100 - 1)]),
+            ([], []),
+        ],
+    )
+    def test_zip_with_next(self, sequence, expected):
+        result = self.seq(sequence).zip_with_next()
+        self.assertIteratorEqual(result, expected)
         self.assert_type(result)
 
     def test_to_list(self):
