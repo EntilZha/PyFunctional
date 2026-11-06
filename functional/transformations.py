@@ -313,7 +313,9 @@ def zip_with_next_t():
     :return: transformation
     """
     return Transformation(
-        "zip_with_next", lambda sequence: zip(sequence, sequence[1:]), None
+        "zip_with_next",
+        lambda sequence: zip(sequence, sequence[1:]),
+        {ExecutionStrategies.PRE_COMPUTE},
     )
 
 

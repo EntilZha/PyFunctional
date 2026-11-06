@@ -846,6 +846,26 @@ class TestPipeline(unittest.TestCase):
         self.assertIteratorEqual(result, expected)
         self.assert_type(result)
 
+    def test_zip_with_next_after_lazy_transform(self):
+        # Regression: zip_with_next must work when it is chained after a lazy
+        # (non-PRE_COMPUTE) transform such as map/filter, which feeds an
+        # iterator (not a list) into the transform. The transform subscripts
+        # the input (sequence[1:]), so it requires PRE_COMPUTE.
+        data = [1, 2, 3, 4]
+        expected = [(1, 2), (2, 3), (3, 4)]
+
+        after_map = self.seq(data).map(lambda x: x).zip_with_next()
+        self.assertIteratorEqual(after_map, expected)
+        self.assert_type(after_map)
+
+        after_filter = self.seq(data).filter(lambda x: True).zip_with_next()
+        self.assertIteratorEqual(after_filter, expected)
+        self.assert_type(after_filter)
+
+        after_select = self.seq(data).select(lambda x: x).zip_with_next()
+        self.assertIteratorEqual(after_select, expected)
+        self.assert_type(after_select)
+
     def test_to_list(self):
         l = [1, 2, 3, "abc", {1: 2}, {1, 2, 3}]
         result = self.seq(l).to_list()
